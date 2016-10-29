@@ -714,7 +714,7 @@ chkSinglePageMode=false
 &gt;&gt;
 See the ConfigOptionsMacro</pre>
 </div>
-<div title="ConfigOptionsMacro" modifier="Jack" created="200705311155" modified="201610291250" tags="Plugin systemConfig" changecount="5">
+<div title="ConfigOptionsMacro" modifier="Marc Cawood" created="200705311155" modified="201610291347" tags="Plugin systemConfigDisable" changecount="6">
 <pre>/***
 |''Name:''|ConfigOptionsMacro|
 |''Description:''|Allows you to store TiddlyWiki options in a tiddler.|
@@ -991,7 +991,7 @@ config.commands.cancelTiddler.handler = function(event,src,title)
 <div title="Index" creator="Marc Cawood" modifier="Marc Cawood" created="201610291020" modified="201610291026" tags="Config" changecount="5">
 <pre>&lt;&lt;tiddlerList tags:&quot;-Config,-systemConfig,-Template,-systemServer&quot; group:'tiddler.title.toUpperCase().substr(0,1)' groupTemplate:&quot;&lt;&lt;section %group\n&quot; groupFooterTemplate:&quot;$))\n&quot;&gt;&gt;</pre>
 </div>
-<div title="MainMenu" creator="Marc Cawood" modifier="Marc Cawood" created="201610290859" modified="201610291220" changecount="4">
+<div title="MainMenu" creator="Marc Cawood" modifier="Marc Cawood" created="201610290859" modified="201610291348" changecount="5">
 <pre>|[[Plugins]]|
 
 [[Hacks]]
@@ -1080,7 +1080,7 @@ config.macros.xxx.handler = function(place,macroName,params,wikifier,paramString
 <pre>&lt;&lt;tiddlerList tags:&quot;Plugin,-Template&quot; header:&quot;|!Plugin|!Description|!Version|!Date|&quot; itemTemplate:&quot;|%link|&lt;&lt;slicer tiddler:%title field:Description$))|&lt;&lt;slicer tiddler:%title field:Version$))|&lt;&lt;slicer tiddler:%title field:Date$))|\n&quot;&gt;&gt;
 {{{&lt;&lt;tiddlerList tags:&quot;Plugin&quot; header:&quot;|!Plugin|!Description|!Version|!Date|&quot; itemTemplate:&quot;|%link|&lt;&lt;slicer tiddler:%title field:Description$))|&lt;&lt;slicer tiddler:%title field:Version$))|&lt;&lt;slicer tiddler:%title field:Date$))|\n&quot;&gt;&gt;}}}</pre>
 </div>
-<div title="PluralAliasPlugin" modifier="Jack" created="200604161433" modified="201610291253" tags="Plugin systemConfig" changecount="5">
+<div title="PluralAliasPlugin" modifier="Marc Cawood" created="200604161433" modified="201610291253" tags="Plugin systemConfig" changecount="5">
 <pre>/***
 |''Name:''|PluralAliasPlugin|
 |''Description:''|This plugin ensures links to tiddlers in plural or singular form.|
@@ -1571,8 +1571,9 @@ config.macros.section.slider = function(place,cookie,text,title,tooltips) {
 <div title="ShadowPages" modifier="Marc Cawood" created="200604161857" modified="200604200835" tags="Config">
 <pre>&lt;&lt;list shadowed&gt;&gt;</pre>
 </div>
-<div title="SideBarOptions" creator="Marc Cawood" modifier="Marc Cawood" created="201610291012" modified="201610291028" tags="Config" changecount="5">
-<pre>&lt;&lt;search&gt;&gt;&lt;&lt;closeAll&gt;&gt;&lt;&lt;newTiddler&gt;&gt;/%&lt;&lt;doBackup&gt;&gt;&lt;&lt;doPublish&gt;&gt;%/&lt;&lt;saveChanges&gt;&gt;</pre>
+<div title="SideBarOptions" creator="Marc Cawood" modifier="Marc Cawood" created="201610291012" modified="201610291316" tags="Config" changecount="6">
+<pre>&lt;&lt;search&gt;&gt;&lt;&lt;closeAll&gt;&gt;&lt;&lt;newTiddler&gt;&gt;/%&lt;&lt;doBackup&gt;&gt;&lt;&lt;doPublish&gt;&gt;%/&lt;&lt;saveChanges&gt;&gt;
+AdvancedOptions</pre>
 </div>
 <div title="SideBarTabs" modifier="Marc Cawood" created="200604161942" modified="201610291028" tags="Config" changecount="3">
 <pre>&lt;&lt;tabs txtMainTab
@@ -2561,6 +2562,7 @@ function TLLockData()
 // Get the contents of the lock file, if it exists
 function TLIsLocked()
 {
+	if (document.location.protocol.match(/^http/)) return false;
   TiddlyLock.LockData = TLLockData();
   if (TiddlyLock.LockData
       &amp;&amp; ( TLLockedBy(TiddlyLock.LockData)!='' // someone has it locked

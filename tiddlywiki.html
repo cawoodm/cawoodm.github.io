@@ -2417,11 +2417,11 @@ config.shadowTiddlers.PageTemplate=config.shadowTiddlers.PageTemplate.replace(/&
 
 //}}}</pre>
 </div>
-<div title="TiddlyLockPlugin" creator="YourName" modifier="Marc Cawood" created="201610290642" modified="201610290749" tags="systemConfig" changecount="4">
+<div title="TiddlyLockPlugin" creator="YourName" modifier="Marc Cawood" created="201610290642" modified="201610291401" tags="systemConfig" changecount="5">
 <pre>/***
 |Name|TiddlyLockPlugin|
 |Source|http://www.minormania.com/tiddlylock/tiddlylock.html|
-|Version|1.2|
+|Version|1.2.1|
 |Author|Richard Hobbis|
 |License|[[Creative Commons Attribution-ShareAlike 3.0 License|http://creativecommons.org/licenses/by-sa/3.0/]]|
 |Type|plugin|
@@ -2462,6 +2462,7 @@ This feature was developed by Richard Hobbis (rhobbis [at] hotmail [dot] com).
 ***/
 
 //{{{
+if (!document.location.protocol.match(/^http/)) {
 // Convert a date to UTC YYYYMMDDHHMMSSMMM string format
 // This is the same as the builtin function convertToYYYYMMDDHHMMSSMMM() but
 // without the '.' in the middle - this allows simple date comparisons
@@ -2562,7 +2563,6 @@ function TLLockData()
 // Get the contents of the lock file, if it exists
 function TLIsLocked()
 {
-	if (document.location.protocol.match(/^http/)) return false;
   TiddlyLock.LockData = TLLockData();
   if (TiddlyLock.LockData
       &amp;&amp; ( TLLockedBy(TiddlyLock.LockData)!='' // someone has it locked
@@ -2728,7 +2728,7 @@ config.commands.saveTiddler.handler=function(event,src,title)
   TLUnlock(new Date().TLConvertToYYYYMMDDHHMMSSMMM());
   return ret;
 }
-
+}
 //}}}</pre>
 </div>
 <div title="Two" creator="Marc Cawood" modifier="Marc Cawood" created="201610291144" tags="Data" changecount="1">

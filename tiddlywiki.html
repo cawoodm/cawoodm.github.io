@@ -41,9 +41,11 @@ DAMAGE.
 
 " />
 <!--PRE-HEAD-START-->
-<!--{{{-->
-<link rel='alternate' type='application/rss+xml' title='RSS' href='index.xml' />
-<!--}}}-->
+<hta:application applicationname="PowerUp" version="1.0" icon="icon.ico"/>
+<style type="text/css">#contentWrapper {display:none;}</style>
+<div id="SplashScreen" style="border: 3px solid #ccc; display: block; text-align: center; width: 320px; margin: 100px auto; padding: 50px; color:#000; font-size: 20px; background-color:#eee;">
+<b>My Wiki</b> is loading...
+</div>
 <!--PRE-HEAD-END-->
 <title> My Wiki -  </title>
 <style id="styleArea" type="text/css">
@@ -527,17 +529,17 @@ noscript {display:none;} /* Fixes a feature in Firefox 1.5.0.2 where print previ
 
 This tiddler was automatically created to record the details of this server</pre>
 </div>
-<div title="AdvancedOptions" creator="Marc Cawood" modifier="Marc Cawood" created="201610290927" changecount="1">
+<div title="AdvancedOptions" modifier="Marc Cawood" created="201610290927" changecount="1">
 <pre>&lt;&lt;options&gt;&gt;
 &lt;&lt;option chkSinglePageMode&gt;&gt; Display one tiddler at a time</pre>
 </div>
-<div title="ArchivePlugin" modifier="Marc Cawood" created="200705051504" modified="201610291225" tags="Plugin systemConfigDisable" changecount="3">
+<div title="ArchivePlugin" modifier="Marc Cawood" modified="201610291549" created="200705051504" tags="Plugin systemConfig" changecount="4">
 <pre>/***
 |''Name:''|ArchivePlugin|
 |''Description:''|The archive plugin allows you to store tiddler text outside of the tiddlywiki file.|
 |''Version:''|2.4.0|
 |''Date:''|2 Jun 2008|
-|''Source''|http://jackparke.googlepages.com/jtw.html#ArchivePlugin ([[del.icio.us|http://del.icio.us/post?url=http://jackparke.googlepages.com/jtw.html%23ArchivePlugin]])|
+|''Source''|http://cawoodm.github.io/tiddlywiki.html#ArchivePlugin|
 |''Author:''|[[Marc Cawood]]|
 |''Type:''|Plugin|
 !Description
@@ -679,7 +681,105 @@ function ieDeleteFile(filePath) {
 }
 //}}}</pre>
 </div>
-<div title="ColorPalette" modifier="Marc Cawood" created="200705311549" modified="201610290933" changecount="2">
+<div title="BreadCrumbsPlugin" modifier="Marc Cawood" modified="201610300956" created="200604161431" tags="Plugin systemConfig" changecount="1">
+<pre>/***
+|''Name:''|BreadCrumbsPlugin|
+|''Version:''|2.2.1|
+|''Date:''|Jul 5, 2007|
+|''Author:''|AlanHecht|
+|''Adapted By:''|[[Marc Cawood]]|
+|''Type:''|Plugin|
+!Description
+This plugin creates an area at the top of the tiddler area that displays &quot;breadcrumbs&quot; of where you've been. This is especially useful for ~TWs using SinglePageMode by Eric Schulman.
+!Usage
+Just install the plugin and tag with systemConfig. Optionally position the following div in your PageTemplate to control the positioning of the breadcrumbs menu:
+{{{
+&lt;div id='breadCrumbs'&gt;&lt;/div&gt;
+}}}
+!Revision History
+* Original by AlanHecht
+* 2.0 Made 2.0.x compatible by [[Marc Cawood]]
+* Made 2.0.10 compatible (onstart paramifier)
+* Bugfix -&gt; return false in onClickTiddlerLink()
+* 2.2 Made 2.2.x compatible
+!Code
+***/
+
+// // Use the following line to set the number of breadcrumbs to display before rotating them off the list.
+//{{{
+version.extensions.breadCrumbs = {major: 2, minor: 2, revision: 1, date: new Date(&quot;Jul 5, 2007&quot;)};
+var crumbsToShow = 7;
+var breadCrumbs = [];
+
+onClickTiddlerLink_orig_breadCrumbs = onClickTiddlerLink;
+onClickTiddlerLink = function(e){
+ onClickTiddlerLink_orig_breadCrumbs(e);
+ breadcrumbsAdd(e);
+ return false;
+}
+
+restart_orig_breadCrumbs = restart;
+function restart() {
+ invokeParamifier(params,&quot;onstart&quot;);
+ var defaultParams = store.getTiddlerText(&quot;DefaultTiddlers&quot;).parseParams(&quot;open&quot;,null,false);
+ invokeParamifier(defaultParams,&quot;onstart&quot;);
+ breadCrumbs = [];
+ breadcrumbsRefresh();
+ window.scrollTo(0,0);
+ return false;
+}
+
+function breadcrumbsAdd(e) {
+ var uniqueCrumb = true;
+ var crumbIndex = 0;
+ if (!e) var e = window.event;
+ var target = resolveTarget(e);
+ var thisCrumb=&quot;[[&quot;+resolveTarget(e).getAttribute(&quot;tiddlyLink&quot;)+&quot;]]&quot;;
+ var lastInactiveCrumb = breadCrumbs.length -(breadCrumbs.length &lt; crumbsToShow ? breadCrumbs.length : crumbsToShow);
+ for(t=lastInactiveCrumb; t&lt;breadCrumbs.length; t++)
+ if(breadCrumbs[t] == thisCrumb) {
+ uniqueCrumb = false;
+ crumbIndex = t+1;
+ }
+ if(uniqueCrumb)
+ breadCrumbs.push(thisCrumb);
+ else
+ breadCrumbs = breadCrumbs.slice(0,crumbIndex);
+ breadcrumbsRefresh(); 
+}
+
+function breadcrumbsRefresh() {
+ 
+ if (!document.getElementById(&quot;breadCrumbs&quot;)) {
+ // Create breadCrumbs div
+ var ca = document.createElement(&quot;div&quot;);
+ ca.id = &quot;breadCrumbs&quot;;
+ ca.style.visibility= &quot;hidden&quot;;
+ var targetArea = document.getElementById(&quot;tiddlerDisplay&quot;)||document.getElementById(&quot;storyDisplay&quot;);
+ targetArea.parentNode.insertBefore(ca,targetArea);
+ }
+
+ var crumbArea = document.getElementById(&quot;breadCrumbs&quot;);
+ crumbArea.style.visibility = &quot;visible&quot;;
+ removeChildren(crumbArea);
+ createTiddlyButton(crumbArea,&quot;Home&quot;,null,restart);
+ crumbArea.appendChild(document.createTextNode(&quot; &gt; &quot;));
+ 
+ var crumbLine = &quot;&quot;;
+ var crumbCount = breadCrumbs.length;
+ var firstCrumb = crumbCount -(crumbCount &lt; crumbsToShow ? crumbCount : crumbsToShow);
+ for(t=firstCrumb; t&lt;crumbCount; t++) {
+ if(t != firstCrumb)
+ crumbLine += &quot; &gt; &quot;;
+ crumbLine += breadCrumbs[t];
+ }
+ wikify(crumbLine,crumbArea)
+}
+
+
+//}}}</pre>
+</div>
+<div title="ColorPalette" modifier="Marc Cawood" modified="201610290933" created="200705311549" changecount="2">
 <pre>Background: #fff
 Foreground: #000
 PrimaryPale: #EEE
@@ -696,7 +796,7 @@ TertiaryMid: #999
 TertiaryDark: #333
 Error: #f88</pre>
 </div>
-<div title="Config" modifier="Marc Cawood" created="200604161504" modified="200604291124">
+<div title="Config" modifier="Marc Cawood" modified="201610301020" created="200604161504" tags="Favorite Config" changecount="1">
 <pre>&lt;&lt;tabs tabsClass
 Layout &quot;Layout Templates&quot; SystemLayout
 System &quot;System Tiddlers&quot; SystemTiddlers
@@ -707,20 +807,20 @@ Plugins &quot;Installed Plugins&quot; SystemPlugins
 Shadows &quot;Hidden System Pages&quot; ShadowPages
 &gt;&gt;</pre>
 </div>
-<div title="ConfigOptions" modifier="Marc Cawood" created="200705311149" modified="201610290939" tags="Config" changecount="2">
+<div title="ConfigOptions" modifier="Marc Cawood" modified="201610290939" created="200705311149" tags="Config" changecount="2">
 <pre>&lt;&lt;configOptions
 chkHttpReadOnly=false
 chkSinglePageMode=false
 &gt;&gt;
 See the ConfigOptionsMacro</pre>
 </div>
-<div title="ConfigOptionsMacro" modifier="Marc Cawood" created="200705311155" modified="201610291347" tags="Plugin systemConfigDisable" changecount="6">
+<div title="ConfigOptionsMacro" modifier="Marc Cawood" modified="201610291347" created="200705311155" tags="Plugin systemConfigDisable" changecount="7">
 <pre>/***
 |''Name:''|ConfigOptionsMacro|
-|''Description:''|Allows you to store TiddlyWiki options in a tiddler.|
+|''Description:''|Allows you to store Tiddlywiki options in a tiddler.|
 |''Version:''|0.1|
 |''Date:''|May 31, 2007|
-|''Source''|http://jackparke.googlepages.com/jtw.html#ConfigOptionsMacro ([[del.icio.us|http://del.icio.us/post?url=http://jackparke.googlepages.com/jtw.html%23ConfigOptionsMacro]])|
+|''Source''|http://cawoodm.github.io/tiddlywiki.html#ConfigOptionsMacro|
 |''Author:''|[[Marc Cawood]]|
 !Description
 This plugin allows you to store TiddlyWiki options in a tiddler. This means the options are part of the store and are not shared among TiddlyWiki files. The options are also more robust and persist when cookies are loaded.
@@ -800,19 +900,19 @@ config.macros.configOptions.updateOption = function(name, value) {
 }
 //}}}</pre>
 </div>
-<div title="Data List" creator="Marc Cawood" modifier="Marc Cawood" created="201610291145" modified="201610291222" changecount="12">
+<div title="Data List" modifier="Marc Cawood" modified="201610291222" created="201610291145" changecount="12">
 <pre>&lt;&lt;tiddlerList tags:&quot;Data&quot; itemTemplate:&quot;* %link (&lt;&lt;slicer tiddler:%title field:version$)))\n&quot;&gt;&gt;</pre>
 </div>
-<div title="DefaultTiddlers" modifier="Marc Cawood" created="200604161426" modified="201610291249" tags="Config" changecount="4">
-<pre>[[Plugins]]</pre>
+<div title="DefaultTiddlers" modifier="Marc Cawood" modified="201610301002" created="200604161426" tags="Config" changecount="5">
+<pre>[[Config]] [[Plugins]]</pre>
 </div>
-<div title="DefinitionMacro" modifier="Marc Cawood" created="200606142218" modified="201610291234" tags="Plugin systemConfig" changecount="3">
+<div title="DefinitionMacro" modifier="Marc Cawood" modified="201610291234" created="200606142218" tags="Plugin systemConfig" changecount="3">
 <pre>/***
 |''Name:''|Definition Macro|
 |''Description:''|Define glossary terms for use in tool tips.|
 |''Version:''|0.1|
 |''Date:''|May 24 2006|
-|''Source''|http://jackparke.googlepages.com/jtw.html#DefinitionMacro ([[del.icio.us|http://del.icio.us/post?url=http://jackparke.googlepages.com/jtw.html%23DefinitionMacro]])|
+|''Source''|http://cawoodm.github.io/tiddlywiki.html#DefinitionMacro|
 |''Author:''|[[Marc Cawood]]|
 |''Type:''|Macro|
 !Description
@@ -847,13 +947,13 @@ setStylesheet(&quot;a.definition {position:relative; z-index:24;} a.definition:h
 
 //}}}</pre>
 </div>
-<div title="DeliciousTagging" modifier="Marc Cawood" created="200706110858" modified="201610291235" tags="Plugin systemConfig" changecount="3">
+<div title="DeliciousTagging" modifier="Marc Cawood" modified="201610291235" created="200706110858" tags="Plugin systemConfig" changecount="3">
 <pre>/***
 |''Name:''|DeliciousTaggingPlugin|
 |''Description:''|Allows easy 'del.icio.us'-like tagging by showing all tags as a list of link-buttons.|
 |''Version:''|0.1|
 |''Date:''|Jun 11, 2007|
-|''Source''|http://jackparke.googlepages.com/jtw.html#DeliciousTaggingPlugin ([[del.icio.us|http://del.icio.us/post?url=http://jackparke.googlepages.com/jtw.html%DeliciousTaggingPlugin]])|
+|''Source''|http://cawoodm.github.io/tiddlywiki.html#DeliciousTaggingPlugin|
 |''Author:''|[[Marc Cawood]]|
 !Description
 Allows easy 'del.icio.us'-like tagging in the EditTemplate by showing all tags as a list of link-buttons.
@@ -896,10 +996,49 @@ config.macros.deliciousTagging.handler = function(place,macroName,params,wikifie
 };
 //}}}</pre>
 </div>
-<div title="EDM" creator="Marc Cawood" modifier="Marc Cawood" created="201610291234" changecount="1">
-<pre>Electronic Distance Measurement</pre>
+<div title="DoBackupMacro" modifier="Marc Cawood" modified="201610300956" created="200604101550" tags="Plugin systemConfig" changecount="4">
+<pre>/***
+|''Name:''|DoBackupMacro|
+|''Description:''|Creates a button which allows you to backup your wiki on demand.|
+|''Version:''|2.0|
+|''Date:''|Apr 9, 2006|
+|''Author:''|[[Marc Cawood]]|
+|''Type:''|Macro|
+!Description
+Creates a button which allows you to backup your TiddlyWiki on demand.
+!Usage
+Add the following command to your SideBarOptions tiddler:
+{{{&lt;&lt;doBackup&gt;&gt;}}}
+!Revision History
+* Original by [[Marc Cawood]] 9-Apr-2006
+!To Do
+* List non-explicit links (e.g. from tagging macro)
+
+!Code
+***/
+//{{{
+version.extensions.doBackup= {major: 2, minor: 0, revision: 0, date: new Date(&quot;Apr 9, 2006&quot;)};
+config.macros.doBackup={label: &quot;backup&quot;, prompt: &quot;Backup this TiddlyWiki&quot;}
+config.macros.doBackup.handler = function(place)
+{
+ if(!readOnly)
+ createTiddlyButton(place,this.label,this.prompt,function ()
+{doBackup(); return false;},null,null,this.accessKey);
+}
+
+doBackup = function() {
+ var optSaveBackups = config.options.chkSaveBackups
+ config.options.chkSaveBackups = true
+ saveChanges()
+ config.options.chkSaveBackups = optSaveBackups
+}
+
+//}}}</pre>
 </div>
-<div title="EditTemplate" modifier="Marc Cawood" created="200706110901" modified="200706110902">
+<div title="EDM" modifier="Marc Cawood" modified="201610291550" created="201610291234" tags="Archive" changecount="2">
+<pre></pre>
+</div>
+<div title="EditTemplate" modifier="Marc Cawood" modified="200706110902" created="200706110901">
 <pre>&lt;div class='toolbar' macro='toolbar +saveTiddler saveClose -cancelTiddler deleteTiddler'&gt;&lt;/div&gt;
 &lt;div class='title' macro='view title'&gt;&lt;/div&gt;
 &lt;div class='editor' macro='edit title'&gt;&lt;/div&gt;
@@ -907,13 +1046,12 @@ config.macros.deliciousTagging.handler = function(place,macroName,params,wikifie
 &lt;div class='editor' macro='edit tags'&gt;&lt;/div&gt;
 &lt;div class='editorFooter' macro='deliciousTagging'&gt;&lt;/div&gt;</pre>
 </div>
-<div title="Favorite" creator="Marc Cawood" modifier="Marc Cawood" created="201610291009" tags="Config" changecount="1">
+<div title="Favorite" modifier="Marc Cawood" created="201610291009" tags="Config" changecount="1">
 <pre>&lt;&lt;tiddlerList tags:&quot;Favorite&quot;&gt;&gt;</pre>
 </div>
-<div title="Hacks" creator="Marc Cawood" modifier="Marc Cawood" created="201610290654" modified="201610291249" tags="systemConfig Config" changecount="28">
+<div title="Hacks" modifier="Marc Cawood" modified="201610301419" created="201610290654" tags="systemConfig Config Favorite" changecount="35">
 <pre>/***
 My favorite hacks!
-
 !!Fix javascript; issue
 Fix new window issue with javascript:;
 ***/
@@ -926,6 +1064,17 @@ createTiddlyButton = function() {
   btn.style.cursor = &quot;pointer&quot;;
   //btn.setAttribute('href', '#');
   return btn;
+}
+//}}}
+/***
+!!Message Area
+Close message automatically after 3 seconds
+***/
+//{{{
+hacks.displayMessage = displayMessage;
+displayMessage = function() {
+  hacks.displayMessage.apply(this, arguments);
+  window.setTimeout(clearMessage, 3000);
 }
 //}}}
 /***
@@ -986,18 +1135,41 @@ config.commands.cancelTiddler.handler = function(event,src,title)
   }
   return ret;
 }
+//}}}
+
+/***
+!!!Other
+***/
+//{{{
+// Hide backstage open text
+config.messages.backstage.open.text='';
+config.messages.backstage.close.text='';
+config.messages.backstage.prompt='';
 //}}}</pre>
 </div>
-<div title="Index" creator="Marc Cawood" modifier="Marc Cawood" created="201610291020" modified="201610291026" tags="Config" changecount="5">
+<div title="Index" modifier="Marc Cawood" modified="201610291026" created="201610291020" tags="Config" changecount="5">
 <pre>&lt;&lt;tiddlerList tags:&quot;-Config,-systemConfig,-Template,-systemServer&quot; group:'tiddler.title.toUpperCase().substr(0,1)' groupTemplate:&quot;&lt;&lt;section %group\n&quot; groupFooterTemplate:&quot;$))\n&quot;&gt;&gt;</pre>
 </div>
-<div title="MainMenu" creator="Marc Cawood" modifier="Marc Cawood" created="201610290859" modified="201610291348" changecount="5">
+<div title="MainMenu" modifier="Marc Cawood" modified="201610301020" created="201610290859" tags="Favorite" changecount="9">
 <pre>|[[Plugins]]|
 
+[[MainMenu]]
 [[Hacks]]
-[[Config]]</pre>
+[[StyleSheet]]
+[[Config]]
+[[To Do]]</pre>
 </div>
-<div title="MyMacroMacro" modifier="Marc Cawood" created="200604221110" modified="201610291236" tags="Plugin systemConfig" changecount="3">
+<div title="Marc Cawood" modifier="Marc Cawood" created="201610300957" changecount="1">
+<pre>cawoodm [at] gmail</pre>
+</div>
+<div title="MarkupPreHead" modifier="Marc Cawood" modified="201610301744" created="201610300834" changecount="6">
+<pre>&lt;hta:application applicationname=&quot;PowerUp&quot; version=&quot;1.0&quot; icon=&quot;icon.ico&quot;/&gt;
+&lt;style type=&quot;text/css&quot;&gt;#contentWrapper {display:none;}&lt;/style&gt;
+&lt;div id=&quot;SplashScreen&quot; style=&quot;border: 3px solid #ccc; display: block; text-align: center; width: 320px; margin: 100px auto; padding: 50px; color:#000; font-size: 20px; background-color:#eee;&quot;&gt;
+&lt;b&gt;My Wiki&lt;/b&gt; is loading...
+&lt;/div&gt;</pre>
+</div>
+<div title="MyMacroMacro" modifier="Marc Cawood" modified="201610291236" created="200604221110" tags="Plugin systemConfig" changecount="3">
 <pre>/***
 |''Name:''|~MyMacroMacro|
 |''Description:''|Allows you to define named shortcuts to your own macros with parameters.|
@@ -1033,27 +1205,48 @@ config.macros.myMacro.handler=function(place,macroName,params,wikifier,paramStri
 }
 //}}}</pre>
 </div>
-<div title="MyMacros" modifier="Marc Cawood" created="200604232038" modified="200801111334" tags="Config Favorite">
+<div title="MyMacros" modifier="Marc Cawood" modified="200801111334" created="200604232038" tags="Config Favorite">
 <pre>&lt;&lt;defineMyMacro niceList tiddlerList header:&quot;|&gt;|!Plugin|\n|bgcolor(#ddf):''Title''|bgcolor(#ddf):''Version''|&quot; itemTemplate:&quot;|%link|%custom|\n&quot; format:&quot;table&quot; group:&quot;tiddler.modified.formatString('DDD, DD MMM YYYY')&quot; groupTemplate:&quot;|&gt;|bgcolor(#eef):%group |\n&quot; order:&quot;-modified&quot; customParameter:&quot;tiddler.text.match(/\|[^|]*Version[^|]*\|(.*)\|/)[1]&quot;&gt;&gt;
 &lt;&lt;defineMyMacro docDate tiddlerList header:{{(new Date(document.lastModified)).formatString('DDD, DD MMM YYYY')}} top:0&gt;&gt;</pre>
 </div>
-<div title="New" creator="Marc Cawood" modifier="Marc Cawood" created="201610291009" modified="201610291249" tags="Config" changecount="8">
-<pre>&lt;&lt;tiddlerList top:20 tags:&quot;-Config&quot; order:&quot;-modified&quot;&gt;&gt;</pre>
+<div title="New" modifier="Marc Cawood" modified="201610301434" created="201610291009" tags="Config" changecount="9">
+<pre>&lt;&lt;tiddlerList top:20 order:&quot;-modified&quot;&gt;&gt;</pre>
 </div>
-<div title="One" creator="Marc Cawood" modifier="Marc Cawood" created="201610291144" tags="Data" changecount="1">
+<div title="One" modifier="Marc Cawood" created="201610291144" tags="Data" changecount="1">
 <pre>version:1.0</pre>
 </div>
-<div title="OptionsPanel" modifier="Marc Cawood" created="200604172205" modified="200706010958" tags="Config">
+<div title="OptionsPanel" modifier="Marc Cawood" modified="200706010958" created="200604172205" tags="Config">
 <pre>&lt;&lt;option chkSinglePageMode&gt;&gt; Single Page Mode
 &lt;&lt;option chkAutoSave&gt;&gt; AutoSave
 See AdvancedOptions and ConfigOptions</pre>
 </div>
-<div title="PluginTemplate" modifier="Marc Cawood" created="200604170854" modified="201610291227" tags="Plugin Template systemConfig" changecount="1">
+<div title="PageTemplate" modifier="Marc Cawood" modified="201610301025" created="201610300826" tags="Favorite Config" changecount="12">
+<pre>&lt;!--{{{--&gt;
+&lt;div class='header' role='banner'&gt;
+ &lt;div class='headerShadow'&gt;
+  &lt;span class='searchBar' macro='search'&gt;&lt;/span&gt;
+  &lt;span class='siteTitle' refresh='content' tiddler='SiteTitle'&gt;&lt;/span&gt;&amp;nbsp;
+  &lt;span class='siteSubtitle' refresh='content' tiddler='SiteSubtitle'&gt;&lt;/span&gt;
+ &lt;/div&gt;&lt;/div&gt;
+&lt;div id='mainMenu' role='navigation' refresh='content' tiddler='MainMenu'&gt;&lt;/div&gt;
+&lt;div id='sidebar'&gt;
+&lt;div id='sidebarOptions' role='navigation' refresh='content' tiddler='SideBarOptions'&gt;&lt;/div&gt;
+&lt;div id='sidebarTabs' role='complementary' refresh='content' force='true' tiddler='SideBarTabs'&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div id='displayArea' role='main'&gt;
+&lt;div id='messageArea'&gt;&lt;/div&gt;
+&lt;div id='breadCrumbs'&gt;&lt;/div&gt;
+&lt;div id='tiddlersBar' refresh='content' ondblclick='config.macros.tiddlersBar.onTiddlersBarAction(event)'&gt;&lt;/div&gt;
+&lt;div id='tiddlerDisplay'&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;!--}}}--&gt;</pre>
+</div>
+<div title="PluginTemplate" modifier="Marc Cawood" modified="201610291227" created="200604170854" tags="Plugin Template systemConfig" changecount="1">
 <pre>/***
 |''Name:''||
 |''Description:''||
 |''Version:''|x.x.x|
-|''Source''|http://jackparke.googlepages.com/jtw.html#XXX ([[del.icio.us|http://del.icio.us/post?url=http://jackparke.googlepages.com/jtw.html%23XXX]])|
+|''Source''|http://cawoodm.github.io/tiddlywiki.html#XXX|
 |''Author:''|[[Marc Cawood]]|
 |''Type:''|xxx|
 !Description
@@ -1076,13 +1269,15 @@ config.macros.xxx.handler = function(place,macroName,params,wikifier,paramString
 }
 //}}}</pre>
 </div>
-<div title="Plugins" creator="Marc Cawood" modifier="Marc Cawood" created="201610291220" modified="201610291404" changecount="10">
+<div title="Plugins" modifier="Marc Cawood" modified="201610300955" created="201610291220" changecount="12">
 <pre>&lt;&lt;tiddlerList tags:&quot;Plugin,-Template&quot; header:&quot;|!Plugin|!Description|!Version|!Date|&quot; itemTemplate:&quot;|%link|&lt;&lt;slicer tiddler:%title field:Description$))|&lt;&lt;slicer tiddler:%title field:Version$))|&lt;&lt;slicer tiddler:%title field:Date$))|\n&quot;&gt;&gt;
 
 Table generated by the TiddlerListMacro using:
-{{{&lt;&lt;tiddlerList tags:&quot;Plugin,-Template&quot; header:&quot;|!Plugin|!Description|!Version|!Date|&quot; itemTemplate:&quot;|%link|&lt;&lt;slicer tiddler:%title field:Description$))|&lt;&lt;slicer tiddler:%title field:Version$))|&lt;&lt;slicer tiddler:%title field:Date$))|\n&quot;&gt;&gt;}}}</pre>
+{{{&lt;&lt;tiddlerList tags:&quot;Plugin,-Template&quot; header:&quot;|!Plugin|!Description|!Version|!Date|&quot; itemTemplate:&quot;|%link|&lt;&lt;slicer tiddler:%title field:Description$))|&lt;&lt;slicer tiddler:%title field:Version$))|&lt;&lt;slicer tiddler:%title field:Date$))|\n&quot;&gt;&gt;}}}
+
+&lt;&lt;tiddlerList tags:&quot;systemConfig,-Plugin,-Template&quot; header:&quot;|!Plugin|!Description|!Version|!Date|&quot; itemTemplate:&quot;|%link|&lt;&lt;slicer tiddler:%title field:Description$))|&lt;&lt;slicer tiddler:%title field:Version$))|&lt;&lt;slicer tiddler:%title field:Date$))|\n&quot;&gt;&gt;</pre>
 </div>
-<div title="PluralAliasPlugin" modifier="Marc Cawood" created="200604161433" modified="201610291253" tags="Plugin systemConfig" changecount="5">
+<div title="PluralAliasPlugin" modifier="Marc Cawood" modified="201610291253" created="200604161433" tags="Plugin systemConfig" changecount="5">
 <pre>/***
 |''Name:''|PluralAliasPlugin|
 |''Description:''|This plugin ensures links to tiddlers in plural or singular form.|
@@ -1139,13 +1334,13 @@ TiddlyWiki.prototype.reverseLookup = function(lookupField,lookupValue,lookupMatc
 }
 //}}}</pre>
 </div>
-<div title="PublishMacro" modifier="Marc Cawood" created="200701021553" modified="201610291227" tags="Plugin systemConfigDisable" changecount="4">
+<div title="PublishMacro" modifier="Marc Cawood" modified="201610291559" created="200701021553" tags="Plugin systemConfig" changecount="5">
 <pre>/***
 |''Name:''|Publish Macro|
 |''Description:''|Export selected tiddlers as .html files.|
 |''Version:''|2.4.1|
 |''Date:''|Jul 2, 2008|
-|''Source''|http://jackparke.googlepages.com/jtw.html#PublishMacro ([[del.icio.us|http://del.icio.us/post?url=http://jackparke.googlepages.com/jtw.html%23PublishMacro]])|
+|''Source''|http://cawoodm.github.io/tiddlywiki.html#PublishMacro|
 |''Author:''|[[Marc Cawood]]|
 |''Type:''|Macro|
 !Description
@@ -1391,7 +1586,7 @@ String.prototype.filenameEncode = function()
 &lt;hr&gt;%4, %5&amp;nbsp;(created %6)
 &lt;/div&gt;</pre>
 </div>
-<div title="ReferrersMacro" modifier="Marc Cawood" created="200604161445" modified="201610291228" tags="Plugin systemConfig" changecount="4">
+<div title="ReferrersMacro" modifier="Marc Cawood" modified="201610291228" created="200604161445" tags="Plugin systemConfig" changecount="4">
 <pre>/***
 |''Name:''|ReferrersMacro|
 |''Description:''|Display a list of tiddlers linking to the current tiddler.|
@@ -1423,24 +1618,24 @@ config.macros.referrers.handler = function(place,macroName,params,wikifier,param
 }
 //}}}</pre>
 </div>
-<div title="SQLConfig" modifier="Marc Cawood" created="200708231038" modified="200708231056">
+<div title="SQLConfig" modifier="Marc Cawood" modified="200708231056" created="200708231038">
 <pre>Connection1: DRIVER={SQL Server};SERVER=(local);DATABASE=Northwind;
 pubs: DRIVER={SQL Server};SERVER=(local);DATABASE=pubs;</pre>
 </div>
-<div title="SQLExamples" modifier="Marc Cawood" created="200708230922" modified="200708231104">
+<div title="SQLExamples" modifier="Marc Cawood" modified="200708231104" created="200708230922">
 <pre>{{{&lt;&lt;SQLQuery sql:&quot;SELECT TOP 10 ProductID, ProductName FROM Products&quot;&gt;&gt;}}}
 &lt;&lt;SQLQuery sql:&quot;SELECT TOP 10 ProductID, ProductName FROM Products&quot;&gt;&gt;
 
 {{{&lt;&lt;SQLQuery sql:&quot;SELECT TOP 10 au_id, au_lname, au_fname FROM Authors&quot; connection:pubs&gt;&gt;}}}
 &lt;&lt;SQLQuery sql:&quot;SELECT TOP 10 au_id, au_lname, au_fname FROM Authors&quot; connection:pubs&gt;&gt;</pre>
 </div>
-<div title="SQLQueryPlugin" modifier="Marc Cawood" created="200708230921" modified="201610291228" tags="Plugin systemConfig" changecount="3">
+<div title="SQLQueryPlugin" modifier="Marc Cawood" modified="201610291228" created="200708230921" tags="Plugin systemConfig" changecount="3">
 <pre>/***
 |''Name:''|SQLQueryPlugin|
 |''Description:''|Query a SQL database and display results in a tiddler.|
 |''Version:''|0.1|
 |''Date:''|Aug 23, 2007|
-|''Source''|http://jackparke.googlepages.com/jtw.html#SQLQueryPlugin ([[del.icio.us|http://del.icio.us/post?url=http://jackparke.googlepages.com/jtw.html%23SQLQueryPlugin]])|
+|''Source''|http://cawoodm.github.io/tiddlywiki.html#SQLQueryPlugin|
 |''Author:''|[[Marc Cawood]]|
 
 !Description
@@ -1514,7 +1709,7 @@ function sql_DBQuery(ConnStr, SQL, RowStart, ColSep, RowEnd, HeaderStart, NoData
 }
 //}}}</pre>
 </div>
-<div title="ScratchPad" modifier="Marc Cawood" created="200604161455" modified="200801081940" tags="Favorite">
+<div title="ScratchPad" modifier="Marc Cawood" modified="200801081940" created="200604161455" tags="Favorite">
 <pre>&lt;&lt;tiddlerList tags:Plugin group:&quot;tiddler.title.substr(0,1)&quot; groupTemplate:&quot;!%group\n&quot; itemTemplate:&quot;%link&quot;  separator:&quot; - &quot; groupFooterTemplate:&quot;\n&quot;&gt;&gt;
 
 
@@ -1525,7 +1720,7 @@ function sql_DBQuery(ConnStr, SQL, RowStart, ColSep, RowEnd, HeaderStart, NoData
 
 &lt;&lt;tiddlerList tags:Menu itemTemplate:{{'%link\n&lt;&lt;tiddlerList tags:Menu-%title$))'}}&gt;&gt;</pre>
 </div>
-<div title="SectionMacro" modifier="Marc Cawood" created="200604280239" modified="201610291228" tags="Plugin systemConfig" changecount="3">
+<div title="SectionMacro" modifier="Marc Cawood" modified="201610291228" created="200604280239" tags="Plugin systemConfig" changecount="3">
 <pre>/***
 |''Name:''|~SectionMacro|
 |''Description:''|Create collapsable sections within one tiddler.|
@@ -1570,14 +1765,15 @@ config.macros.section.slider = function(place,cookie,text,title,tooltips) {
 };
 //}}}</pre>
 </div>
-<div title="ShadowPages" modifier="Marc Cawood" created="200604161857" modified="200604200835" tags="Config">
+<div title="ShadowPages" modifier="Marc Cawood" modified="200604200835" created="200604161857" tags="Config">
 <pre>&lt;&lt;list shadowed&gt;&gt;</pre>
 </div>
-<div title="SideBarOptions" creator="Marc Cawood" modifier="Marc Cawood" created="201610291012" modified="201610291316" tags="Config" changecount="6">
-<pre>&lt;&lt;search&gt;&gt;&lt;&lt;closeAll&gt;&gt;&lt;&lt;newTiddler&gt;&gt;/%&lt;&lt;doBackup&gt;&gt;&lt;&lt;doPublish&gt;&gt;%/&lt;&lt;saveChanges&gt;&gt;
-AdvancedOptions</pre>
+<div title="SideBarOptions" modifier="Marc Cawood" modified="201610301409" created="201610291012" tags="Config" changecount="11">
+<pre>&lt;&lt;closeAll&gt;&gt;&lt;&lt;newTiddler&gt;&gt;&lt;&lt;doBackup&gt;&gt;&lt;&lt;saveChanges&gt;&gt;
+|[[Config]]|
+|AdvancedOptions|</pre>
 </div>
-<div title="SideBarTabs" modifier="Marc Cawood" created="200604161942" modified="201610291028" tags="Config" changecount="3">
+<div title="SideBarTabs" modifier="Marc Cawood" modified="201610291028" created="200604161942" tags="Config" changecount="3">
 <pre>&lt;&lt;tabs txtMainTab
 Tags 'All tags' TabTags
 New 'Recently modified tiddlers' New
@@ -1585,7 +1781,7 @@ Fav 'Favorite Tiddlers' Favorite
 All 'Index' Index
 &gt;&gt;</pre>
 </div>
-<div title="SinglePageModePlugin" modifier="Marc Cawood" created="200604161501" modified="200701040737" tags="systemConfig">
+<div title="SinglePageModePlugin" modifier="Marc Cawood" modified="200701040737" created="200604161501" tags="systemConfig">
 <pre>/***
 |Version:|2.1.1|
 ***/
@@ -1635,13 +1831,13 @@ Story.prototype.displayTiddlers = function(srcElement,titles,template,unused1,un
 }
 //}}}</pre>
 </div>
-<div title="SiteSubtitle" creator="Marc Cawood" modifier="Marc Cawood" created="201610291006" changecount="1">
+<div title="SiteSubtitle" modifier="Marc Cawood" created="201610291006" changecount="1">
 <pre></pre>
 </div>
-<div title="SiteTitle" creator="Marc Cawood" modifier="Marc Cawood" created="201610291006" changecount="1">
+<div title="SiteTitle" modifier="Marc Cawood" created="201610291006" changecount="1">
 <pre>My Wiki</pre>
 </div>
-<div title="SlicerMacro" creator="Marc Cawood" modifier="Marc Cawood" created="201610291203" modified="201610291220" tags="systemConfig Plugin" changecount="12">
+<div title="SlicerMacro" modifier="Marc Cawood" modified="201610291220" created="201610291203" tags="systemConfig Plugin" changecount="12">
 <pre>/***
 |''Name:''|SliceMacro|
 |''Description:''|Display value of a tiddler's slice|
@@ -1677,12 +1873,102 @@ config.macros.slicer.handler = function(place,macroName,params,wikifier,paramStr
 }
 //}}}</pre>
 </div>
-<div title="StyleSheet" modifier="Marc Cawood" created="200604191343" modified="201610290936" tags="Config" changecount="1">
+<div title="SplashScreenPlugin" modifier="Marc Cawood" modified="201610300837" created="201610300834" tags="systemConfig" changecount="2">
 <pre>/***
-''My Styles'' /%------------------------------------------------%/
+|Name|SplashScreenPlugin|
+|Created by|SaqImtiaz|
+|Location|http://tw.lewcid.org/#SplashScreenPlugin|
+|Version|0.21 |
+|Requires|~TW2.08+|
+!Description:
+Provides a simple splash screen that is visible while the TW is loading.
+
+!Installation
+Copy the source text of this tiddler to your TW in a new tiddler, tag it with systemConfig and save and reload. The SplashScreen will now be installed and will be visible the next time you reload your TW.
+
+!Customizing
+Once the SplashScreen has been installed and you have reloaded your TW, the splash screen html will be present in the MarkupPreHead tiddler. You can edit it and customize to your needs.
+
+!History
+* 20-07-06 : version 0.21, modified to hide contentWrapper while SplashScreen is displayed.
+* 26-06-06 : version 0.2, first release
+
+!Code
+***/
+//{{{
+window.old_lewcid_splash_restart=window.restart;
+
+window.restart = function()
+{   if (document.getElementById(&quot;SplashScreen&quot;))
+        document.getElementById(&quot;SplashScreen&quot;).style.display = &quot;none&quot;;
+      if (document.getElementById(&quot;contentWrapper&quot;))
+        document.getElementById(&quot;contentWrapper&quot;).style.display = &quot;block&quot;;
+    
+    window.old_lewcid_splash_restart();
+   
+    if (splashScreenInstall)
+       {if(config.options.chkAutoSave)
+			{saveChanges();}
+        displayMessage(&quot;TW SplashScreen has been installed, please save and refresh your TW.&quot;);
+        }
+}
+
+
+var oldText = store.getTiddlerText(&quot;MarkupPreHead&quot;);
+if (oldText.indexOf(&quot;SplashScreen&quot;)==-1)
+   {var siteTitle = store.getTiddlerText(&quot;SiteTitle&quot;);
+   var splasher='\n\n&lt;style type=&quot;text/css&quot;&gt;#contentWrapper {display:none;}&lt;/style&gt;&lt;div id=&quot;SplashScreen&quot; style=&quot;border: 3px solid #ccc; display: block; text-align: center; width: 320px; margin: 100px auto; padding: 50px; color:#000; font-size: 28px; font-family:Tahoma; background-color:#eee;&quot;&gt;&lt;b&gt;'+siteTitle +'&lt;/b&gt; is loading&lt;blink&gt; ...&lt;/blink&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size: 14px; color:red;&quot;&gt;Requires Javascript.&lt;/span&gt;&lt;/div&gt;';
+   if (! store.tiddlerExists(&quot;MarkupPreHead&quot;))
+       {var myTiddler = store.createTiddler(&quot;MarkupPreHead&quot;);}
+   else
+      {var myTiddler = store.getTiddler(&quot;MarkupPreHead&quot;);}
+      myTiddler.set(myTiddler.title,oldText+splasher,config.options.txtUserName,null,null);
+      store.setDirty(true);
+      var splashScreenInstall = true;
+}
+//}}}</pre>
+</div>
+<div title="StyleSheet" modifier="Marc Cawood" modified="201610301437" created="200604191343" tags="Config Favorite" changecount="50">
+<pre>/*{{{*/
+#mainMenu {display:none;}
+#displayArea {margin:1em 17em 0 1em;}
+div.toolbar {float:right}
+body {background-color:#ddd;}
+.tiddler {background-color:#eee;}
+.viewer {background-color:#fff;}
+span.tabUnselected , span.tabSelected {padding:0px;}
+span.tabUnselected a, span.tabSelected a {padding:5px;}
+/*}}}*/
+/***
+!!!Message Area
 ***/
 /*{{{*/
-#breadCrumbs {display:none;}
+* {font-family:Consolas}
+#messageArea {position:fixed; top:0px; right:300; margin:0.5em; padding:0.5em; z-index:2000; _position:absolute;}
+#messageArea a {color:888;}
+/*}}}*/
+
+/***
+!!!Smaller header bar
+***/
+/*{{{*/
+.headerShadow {background-color: [[ColorPalette::TertiaryMid]]; position:relative; padding:0.5em 0 1em 1em; left:-1px; top:-1px;}
+/*}}}*/
+
+/***
+!!!Search Bar in Header
+***/
+/*{{{*/
+.searchBar {position:absolute !important; margin-top:1.3em; right:10px;}
+.searchBar .button {color:#999;}
+.searchBar .button:hover {color:#4F4B45;}
+.searchBar input {border: 1px solid #CCC; margin-right:3px;}
+.searchBar a {display:none;}
+/*}}}*/
+
+/*{{{*/
+#mainMenu {left:0; width:10em; text-align:right; line-height:1.6em; padding:1.5em 0.5em 0.5em 0.5em; font-size:1.1em;}
+#_breadCrumbs {display:none;}
 .view {
  border-top:1px dashed #ddd;
  border-bottom:1px dashed #ddd;
@@ -1751,39 +2037,34 @@ th a {
 .tabContents li.listLink {
  margin-left: .75em;
 }
-/*}}}*/
-/***
-!Message Area /%==================================================%/
-***/
-/*{{{*/
-#messageArea a {color:888;}
 /*}}}*/</pre>
 </div>
-<div title="StyleSheets" modifier="Marc Cawood" created="200604161859" modified="200705311551" tags="Config">
+<div title="StyleSheets" modifier="Marc Cawood" modified="200705311551" created="200604161859" tags="Config">
 <pre>* StyleSheet
 * StyleSheetColors
 * StyleSheetLayout
 * StyleSheetPrint
 * ColorPalette</pre>
 </div>
-<div title="SystemLayout" modifier="Marc Cawood" created="200604161504" modified="200712071412" tags="Config">
-<pre>|&gt;|&gt;|!PageTemplate|
+<div title="SystemLayout" modifier="Marc Cawood" modified="201610301410" created="200604161504" tags="Config" changecount="4">
+<pre>|&gt;|&gt;|![[SplashScreen|MarkupPreHead]]|
+|&gt;|&gt;|!PageTemplate|
 |&gt;|&gt;|[[SiteTitle]] - [[SiteSubtitle]]|
-|[[MainMenu]]|[[DefaultTiddlers]]&lt;br&gt;&lt;br&gt;[[ViewTemplate]]&lt;br&gt;&lt;br&gt;[[EditTemplate]]|[[SideBarOptions]]|
+|[[MainMenu]]|[[DefaultTiddlers]]&lt;br&gt;&lt;br&gt;[[ViewTemplate]]&lt;br&gt;[[ToolbarCommands]]&lt;br&gt;[[EditTemplate]]|[[SideBarOptions]]|
 |~|~|[[OptionsPanel]]&lt;br&gt;AdvancedOptions|
 |~|~|SideBarTabs|
 |&gt;|&gt;|[[SiteUrl]]|</pre>
 </div>
-<div title="SystemOptions" modifier="Marc Cawood" created="200604161856" modified="200604200838" tags="Config">
+<div title="SystemOptions" modifier="Marc Cawood" modified="200604200838" created="200604161856" tags="Config">
 <pre>* AdvancedOptions
 * OptionsPanel</pre>
 </div>
-<div title="SystemPlugins" modifier="Marc Cawood" created="200604161857" modified="200701042020" tags="Config">
+<div title="SystemPlugins" modifier="Marc Cawood" modified="200701042020" created="200604161857" tags="Config">
 <pre>&lt;&lt;section Mine &lt;&lt;tiddlerList tags:&quot;-Template,Plugin&quot; $&gt;$&gt; &gt;&gt;
 &lt;&lt;section 3rdParty &lt;&lt;tiddlerList tags:&quot;systemConfig,-Template,-Plugin&quot;$&gt;$&gt; &gt;&gt;
 &lt;&lt;section All &lt;&lt;tiddlerList tags:&quot;systemConfig,-Template&quot;$&gt;$&gt; &gt;&gt;</pre>
 </div>
-<div title="SystemSideBars" modifier="Marc Cawood" created="200604161858" modified="200604200835" tags="Config">
+<div title="SystemSideBars" modifier="Marc Cawood" modified="200604200835" created="200604161858" tags="Config">
 <pre>* SideBarOptions
 * SideBarTabs
 * TabAll
@@ -1793,14 +2074,14 @@ th a {
 * TabTags
 * TabTimeline</pre>
 </div>
-<div title="SystemTiddlers" modifier="Marc Cawood" created="200604161856" modified="200604200837" tags="Config">
+<div title="SystemTiddlers" modifier="Marc Cawood" modified="200604200837" created="200604161856" tags="Config">
 <pre>* DefaultTiddlers
 * MainMenu
 * SiteSubtitle
 * SiteTitle
 * SiteUrl</pre>
 </div>
-<div title="TabEditPlugin" modifier="Marc Cawood" created="200604270228" modified="200701040749" tags="systemConfig">
+<div title="TabEditPlugin" modifier="Marc Cawood" modified="200701040749" created="200604270228" tags="systemConfig">
 <pre>/***
 |Name|TabEditPlugin|
 |Created by|SaqImtiaz|
@@ -1878,20 +2159,20 @@ config.macros.tabs.switchTab = function(tabset,tab)
 
 //}}}</pre>
 </div>
-<div title="TabTags" creator="Marc Cawood" modifier="Marc Cawood" created="201610291007" modified="201610291008" tags="Config" changecount="2">
+<div title="TabTags" modifier="Marc Cawood" modified="201610291008" created="201610291007" tags="Config" changecount="2">
 <pre>&lt;&lt;allTags excludeLists&gt;&gt;
 TiddlersAndTags</pre>
 </div>
-<div title="TiddlerListMacro" modifier="Marc Cawood" created="200604172103" modified="201610291229" tags="Plugin Favorite systemConfig" changecount="5">
+<div title="TiddlerListMacro" modifier="Marc Cawood" modified="201610301428" created="200604172103" tags="Plugin Favorite systemConfig" changecount="7">
 <pre>/***
 |''Name:''|TiddlerListMacro|
 |''Description:''|List tiddlers in any way you like.|
 |''Version:''|2.3|
 |''Date:''|Jan 8, 2008|
-|''Source''|http://jackparke.googlepages.com/jtw.html#TiddlerListMacro ([[del.icio.us|http://del.icio.us/post?url=http://jackparke.googlepages.com/jtw.html%23TiddlerListMacro]])|
+|''Source''|http://cawoodm.github.io/tiddlywiki.html#TiddlerListMacro|
 |''Author:''|[[Marc Cawood]]|
 |''Type:''|Macro|
-|''Documentation:''|http://jackparke.googlepages.com/jtw.html#TiddlerListMacroDoc|
+|''Documentation:''|http://cawoodm.github.io/tiddlywiki.html#TiddlerListMacroDoc|
 !Description
 List tiddlers in any way you like.
 !Usage
@@ -2097,7 +2378,7 @@ String.prototype.prettyTrim = function(len,prefix,postfix) {
 
 //}}}</pre>
 </div>
-<div title="TiddlerListMacroDocumentation" modifier="Marc Cawood" created="200604200824" modified="200706032036" tags="Favorite">
+<div title="TiddlerListMacroDocumentation" modifier="Marc Cawood" modified="200706032036" created="200604200824" tags="Favorite">
 <pre>!Description
 The TiddlerListMacro lists tiddlers with ~SQL-Like features:
 * List tiddlers containing a word in the title or text (case-sensitive)
@@ -2182,7 +2463,7 @@ Placeholder values for itemTemplate parameter
 !Style
 No styles are pre-assigned to the lists. Use {{{@@}}} notation to define custom styles in the header, footer, groupTemplate and itemTemplate parameters.</pre>
 </div>
-<div title="TiddlerListMacroExamples" modifier="Marc Cawood" created="200604172114" modified="200705251811">
+<div title="TiddlerListMacroExamples" modifier="Marc Cawood" modified="200705251811" created="200604172114">
 <pre>Examples using the TiddlerListMacro:
 !List Formatting
 List all tiddlers tagged with &quot;Plugin&quot;
@@ -2239,10 +2520,10 @@ Fancy table with grouping on modified date
 {{{&lt;&lt;tiddlerList top:&quot;10&quot; header:&quot;|&gt;|!Tiddlers|\n|bgcolor(#ddf):''Title''|bgcolor(#ddf):''Created''|&quot; itemTemplate:&quot;|%0|%4|\n&quot; format:&quot;table&quot; group:&quot;tiddler.created.formatString('DD MMM YYYY')&quot; groupTemplate:&quot;|&gt;|bgcolor(#eef): ''Updated: %group'' |\n&quot; dateFormat:&quot;DDD, DD MM YYYY&quot;&gt;&gt;}}}
 &lt;&lt;tiddlerList top:&quot;10&quot; header:&quot;|&gt;|!Tiddlers|\n|bgcolor(#ddf):''Title''|bgcolor(#ddf):''Created''|&quot; itemTemplate:&quot;|%0|%4|\n&quot; format:&quot;table&quot; group:&quot;tiddler.created.formatString('DD MMM YYYY')&quot; groupTemplate:&quot;|&gt;|bgcolor(#eef): ''Updated: %group'' |\n&quot; dateFormat:&quot;DDD, DD MM YYYY&quot;&gt;&gt;</pre>
 </div>
-<div title="TiddlersAndTags" creator="Marc Cawood" modifier="Marc Cawood" created="201610291008" modified="201610291019" tags="Config" changecount="6">
+<div title="TiddlersAndTags" modifier="Marc Cawood" modified="201610291019" created="201610291008" tags="Config" changecount="6">
 <pre>&lt;&lt;tiddlerList top:100 tags:Config format:table itemTemplate:&quot;|%link|&lt;&lt;tags %title$))|\n&quot; header:&quot;|!Tiddler|!Tags|&quot;&gt;&gt;</pre>
 </div>
-<div title="TiddlersBarPlugin" modifier="Marc Cawood" created="200801071447" modified="200801071448" tags="systemConfig">
+<div title="TiddlersBarPlugin" modifier="Marc Cawood" modified="201610301433" created="200801071447" tags="systemConfig" changecount="5">
 <pre>/***
 |''Name:''|TiddlersBarPlugin|
 |''Description:''|A bar to switch between tiddlers through tabs (like browser tabs bar).|
@@ -2292,6 +2573,7 @@ config.macros.tiddlersBar = {
 					var d = createTiddlyElement(place,&quot;span&quot;,null,&quot;tab tabUnselected&quot;);
 					var btn = createTiddlyButton(d,title,config.macros.tiddlersBar.tooltip + title,config.macros.tiddlersBar.onSelectTab);
 					btn.setAttribute(&quot;tiddler&quot;, title);
+					btn.className += &quot; tiddlerTab&quot;;
 				}
 				var isDirty =story.isDirty(title);
 				var c = createTiddlyButton(d,isDirty ?&quot;!&quot;:&quot;x&quot;,isDirty?config.macros.tiddlersBar.tooltipSave:config.macros.tiddlersBar.tooltipClose, isDirty ? config.macros.tiddlersBar.onTabSave : config.macros.tiddlersBar.onTabClose,&quot;tabButton&quot;);
@@ -2317,7 +2599,7 @@ config.macros.tiddlersBar = {
 		if (!config.options.chkHideTabsBarWhenSingleTab) return true;
 		var cpt=0;
 		story.forEachTiddler(function(){cpt++});
-		return (cpt&gt;1);
+		return (cpt&gt;=0);
 	},
 	selectNextTab : function(){  //used when the current tab is closed (to select another tab)
 		var previous=&quot;&quot;;
@@ -2419,7 +2701,7 @@ config.shadowTiddlers.PageTemplate=config.shadowTiddlers.PageTemplate.replace(/&
 
 //}}}</pre>
 </div>
-<div title="TiddlyLockPlugin" creator="YourName" modifier="Marc Cawood" created="201610290642" modified="201610291405" tags="systemConfig Plugin" changecount="9">
+<div title="TiddlyLockPlugin" modifier="Marc Cawood" modified="201610291405" created="201610290642" tags="systemConfig Plugin" changecount="9">
 <pre>/***
 |Name|TiddlyLockPlugin|
 |Source|http://www.minormania.com/tiddlylock/tiddlylock.html|
@@ -2736,20 +3018,32 @@ config.commands.saveTiddler.handler=function(event,src,title)
 }
 //}}}</pre>
 </div>
-<div title="Two" creator="Marc Cawood" modifier="Marc Cawood" created="201610291144" tags="Data" changecount="1">
+<div title="To Do" modifier="Marc Cawood" modified="201610300937" created="201610300829" changecount="3">
+<pre>* Replace banner with narrow toolbar including search bar right
+* Message area to top middle
+* Collapsabile left/right menu
+* Splash scren?
+* Logon screen?
+* Remember last tiddlers open at startup</pre>
+</div>
+<div title="ToolbarCommands" modifier="Marc Cawood" created="201610301750" changecount="1">
+<pre>|~ViewToolbar|closeTiddler closeOthers +editTiddler references jump|
+|~EditToolbar|+saveTiddler -cancelTiddler deleteTiddler|</pre>
+</div>
+<div title="Two" modifier="Marc Cawood" created="201610291144" tags="Data" changecount="1">
 <pre>version:2.0</pre>
 </div>
-<div title="ViewTemplate" creator="Marc Cawood" modifier="Marc Cawood" created="201610290931" modified="201610290945" tags="Config" changecount="3">
+<div title="ViewTemplate" modifier="Marc Cawood" modified="201610301430" created="201610290931" tags="Config" changecount="8">
 <pre>&lt;!--{{{--&gt;
 &lt;div class='toolbar' role='navigation' macro='toolbar [[ToolbarCommands::ViewToolbar]]'&gt;&lt;/div&gt;
 &lt;div class='title' macro='view title'&gt;&lt;/div&gt;
-&lt;div class='subtitle'&gt;&lt;span macro='view modifier link'&gt;&lt;/span&gt;, &lt;span macro='view modified date'&gt;&lt;/span&gt; (&lt;span macro='message views.wikified.createdPrompt'&gt;&lt;/span&gt; &lt;span macro='view created date'&gt;&lt;/span&gt;)&lt;/div&gt;
-&lt;div class='viewer' macro='view text wikified'&gt;&lt;/div&gt;
 &lt;div class='tagged' macro='tags'&gt;&lt;/div&gt;
-&lt;div class='tagClear'&gt;&lt;/div&gt;
+&lt;div class='viewer' macro='view text wikified'&gt;&lt;/div&gt;
+&lt;!--&lt;div class='subtitle'&gt;&lt;span macro='view modifier link'&gt;&lt;/span&gt;, &lt;span macro='view modified date'&gt;&lt;/span&gt; (&lt;span macro='message views.wikified.createdPrompt'&gt;&lt;/span&gt; &lt;span macro='view created date'&gt;&lt;/span&gt;)&lt;/div&gt;
+&lt;div class='tagClear'&gt;&lt;/div&gt;--&gt;
 &lt;!--}}}--&gt;</pre>
 </div>
-<div title="YourSearchPlugin" creator="Marc Cawood" modifier="Marc Cawood" created="201610291017" tags="systemConfig" changecount="1">
+<div title="YourSearchPlugin" modifier="Marc Cawood" created="201610291017" tags="systemConfig" changecount="1">
 <pre>/***
 |''Name:''|YourSearchPlugin|
 |''Version:''|2.1.6 (2012-04-19)|
@@ -2776,13 +3070,13 @@ Use this [[link|http://tiddlywiki.abego-software.de/archive/YourSearchPlugin/2.1
 if(!version.extensions.YourSearchPlugin){version.extensions.YourSearchPlugin={major:2,minor:1,revision:6,source:&quot;http://tiddlywiki.abego-software.de/#YourSearchPlugin&quot;,licence:&quot;[[BSD open source license (abego Software)|http://www.abego-software.de/legal/apl-v10.html]]&quot;,copyright:&quot;Copyright (c) abego Software GmbH, 2005-2012 (www.abego-software.de)&quot;};if(!window.abego){window.abego={}}if(!Array.forEach){Array.forEach=function(c,e,d){for(var b=0,a=c.length;b&lt;a;b++){e.call(d,c[b],b,c)}};Array.prototype.forEach=function(d,c){for(var b=0,a=this.length;b&lt;a;b++){d.call(c,this[b],b,this)}}}abego.toInt=function(b,a){if(!b){return a}var c=parseInt(b);return(c==NaN)?a:c};abego.createEllipsis=function(a){var b=createTiddlyElement(a,&quot;span&quot;);b.innerHTML=&quot;&amp;hellip;&quot;};abego.shallowCopy=function(b){if(!b){return b}var a={};for(var c in b){a[c]=b[c]}return a};abego.copyOptions=function(a){return !a?{}:abego.shallowCopy(a)};abego.countStrings=function(d,c){if(!c){return 0}var a=c.length;var f=0;var e=0;while(true){var b=d.indexOf(c,e);if(b&lt;0){return f}f++;e=b+a}return f};abego.getBracedText=function(j,e,a){if(!e){e=0}var k=/\{([^\}]*)\}/gm;k.lastIndex=e;var d=k.exec(j);if(d){var l=d[1];var b=abego.countStrings(l,&quot;{&quot;);if(!b){if(a){a.lastIndex=k.lastIndex}return l}var g=j.length;for(var f=k.lastIndex;f&lt;g&amp;&amp;b;f++){var h=j.charAt(f);if(h==&quot;{&quot;){b++}else{if(h==&quot;}&quot;){b--}}}if(!b){if(a){a.lastIndex=f-1}return j.substring(d.index+1,f-1)}}};abego.select=function(d,c,b,a){if(!a){a=[]}d.forEach(function(e){if(c.call(b,e)){a.push(e)}});return a};abego.consumeEvent=function(a){if(a.stopPropagation){a.stopPropagation()}if(a.preventDefault){a.preventDefault()}a.cancelBubble=true;a.returnValue=true};abego.TiddlerFilterTerm=function(d,b){if(!b){b={}}var c=d;if(!b.textIsRegExp){c=d.escapeRegExp();if(b.fullWordMatch){c=&quot;\\b&quot;+c+&quot;\\b&quot;}}var a=new RegExp(c,&quot;m&quot;+(b.caseSensitive?&quot;&quot;:&quot;i&quot;));this.tester=new abego.MultiFieldRegExpTester(a,b.fields,b.withExtendedFields)};abego.TiddlerFilterTerm.prototype.test=function(a){return this.tester.test(a)};abego.parseNewTiddlerCommandLine=function(c){var a=/(.*?)\.(?:\s+|$)([^#]*)(#.*)?/.exec(c);if(!a){a=/([^#]*)()(#.*)?/.exec(c)}if(a){var d;if(a[3]){var b=a[3].replace(/#/g,&quot;&quot;);d=b.parseParams(&quot;tag&quot;)}else{d=[[]]}var e=a[2]?a[2].trim():&quot;&quot;;d.push({name:&quot;text&quot;,value:e});d[0].text=[e];return{title:a[1].trim(),params:d}}else{return{title:c.trim(),params:[[]]}}};abego.parseTiddlerFilterTerm=function(queryText,offset,options){var re=/\s*(?:(?:\{([^\}]*)\})|(?:(=)|([#%!])|(?:(\w+)\s*\:(?!\/\/))|(?:(?:(&quot;(?:(?:\\&quot;)|[^&quot;])+&quot;)|(?:\/((?:(?:\\\/)|[^\/])+)\/)|(\w+\:\/\/[^\s]+)|([^\s\)\-\&quot;]+)))))/mg;var shortCuts={&quot;!&quot;:&quot;title&quot;,&quot;%&quot;:&quot;text&quot;,&quot;#&quot;:&quot;tags&quot;};var fieldNames={};var fullWordMatch=false;re.lastIndex=offset;while(true){var i=re.lastIndex;var m=re.exec(queryText);if(!m||m.index!=i){throw&quot;Word or String literal expected&quot;}if(m[1]){var lastIndexRef={};var code=abego.getBracedText(queryText,0,lastIndexRef);if(!code){throw&quot;Invalid {...} syntax&quot;}var f=Function(&quot;tiddler&quot;,&quot;return (&quot;+code+&quot;);&quot;);return{func:f,lastIndex:lastIndexRef.lastIndex,markRE:null}}if(m[2]){fullWordMatch=true}else{if(m[3]){fieldNames[shortCuts[m[3]]]=1}else{if(m[4]){fieldNames[m[4]]=1}else{var textIsRegExp=m[6];var text=m[5]?window.eval(m[5]):m[6]?m[6]:m[7]?m[7]:m[8];options=abego.copyOptions(options);options.fullWordMatch=fullWordMatch;options.textIsRegExp=textIsRegExp;var fields=[];for(var n in fieldNames){fields.push(n)}if(fields.length==0){options.fields=options.defaultFields}else{options.fields=fields;options.withExtendedFields=false}var term=new abego.TiddlerFilterTerm(text,options);var markREText=textIsRegExp?text:text.escapeRegExp();if(markREText&amp;&amp;fullWordMatch){markREText=&quot;\\b&quot;+markREText+&quot;\\b&quot;}return{func:function(tiddler){return term.test(tiddler)},lastIndex:re.lastIndex,markRE:markREText?&quot;(?:&quot;+markREText+&quot;)&quot;:null}}}}}};abego.BoolExp=function(i,c,j){this.s=i;var h=j&amp;&amp;j.defaultOperationIs_OR;var e=/\s*\)/g;var f=/\s*(?:(and|\&amp;\&amp;)|(or|\|\|))/gi;var b=/\s*(\-|not)?(\s*\()?/gi;var a;var d=function(p){b.lastIndex=p;var l=b.exec(i);var o=false;var k=null;if(l&amp;&amp;l.index==p){p+=l[0].length;o=l[1];if(l[2]){var n=a(p);e.lastIndex=n.lastIndex;if(!e.exec(i)){throw&quot;Missing ')'&quot;}k={func:n.func,lastIndex:e.lastIndex,markRE:n.markRE}}}if(!k){k=c(i,p,j)}if(o){k.func=(function(m){return function(q){return !m(q)}})(k.func);k.markRE=null}return k};a=function(s){var n=d(s);while(true){var p=n.lastIndex;f.lastIndex=p;var k=f.exec(i);var o;var q;if(k&amp;&amp;k.index==p){o=!k[1];q=d(f.lastIndex)}else{try{q=d(p)}catch(r){return n}o=h}n.func=(function(t,m,l){return l?function(u){return t(u)||m(u)}:function(u){return t(u)&amp;&amp;m(u)}})(n.func,q.func,o);n.lastIndex=q.lastIndex;if(!n.markRE){n.markRE=q.markRE}else{if(q.markRE){n.markRE=n.markRE+&quot;|&quot;+q.markRE}}}};var g=a(0);this.evalFunc=g.func;if(g.markRE){this.markRegExp=new RegExp(g.markRE,j.caseSensitive?&quot;mg&quot;:&quot;img&quot;)}};abego.BoolExp.prototype.exec=function(){return this.evalFunc.apply(this,arguments)};abego.BoolExp.prototype.getMarkRegExp=function(){return this.markRegExp};abego.BoolExp.prototype.toString=function(){return this.s};abego.MultiFieldRegExpTester=function(b,a,c){this.re=b;this.fields=a?a:[&quot;title&quot;,&quot;text&quot;,&quot;tags&quot;];this.withExtendedFields=c};abego.MultiFieldRegExpTester.prototype.test=function(b){var d=this.re;for(var a=0;a&lt;this.fields.length;a++){var c=store.getValue(b,this.fields[a]);if(typeof c==&quot;string&quot;&amp;&amp;d.test(c)){return this.fields[a]}}if(this.withExtendedFields){return store.forEachField(b,function(e,g,f){return typeof f==&quot;string&quot;&amp;&amp;d.test(f)?g:null},true)}return null};abego.TiddlerQuery=function(b,a,d,c,e){if(d){this.regExp=new RegExp(b,a?&quot;mg&quot;:&quot;img&quot;);this.tester=new abego.MultiFieldRegExpTester(this.regExp,c,e)}else{this.expr=new abego.BoolExp(b,abego.parseTiddlerFilterTerm,{defaultFields:c,caseSensitive:a,withExtendedFields:e})}this.getQueryText=function(){return b};this.getUseRegExp=function(){return d};this.getCaseSensitive=function(){return a};this.getDefaultFields=function(){return c};this.getWithExtendedFields=function(){return e}};abego.TiddlerQuery.prototype.test=function(a){if(!a){return false}if(this.regExp){return this.tester.test(a)}return this.expr.exec(a)};abego.TiddlerQuery.prototype.filter=function(a){return abego.select(a,this.test,this)};abego.TiddlerQuery.prototype.getMarkRegExp=function(){if(this.regExp){return&quot;&quot;.search(this.regExp)&gt;=0?null:this.regExp}return this.expr.getMarkRegExp()};abego.TiddlerQuery.prototype.toString=function(){return(this.regExp?this.regExp:this.expr).toString()};abego.PageWiseRenderer=function(){this.firstIndexOnPage=0};merge(abego.PageWiseRenderer.prototype,{setItems:function(a){this.items=a;this.setFirstIndexOnPage(0)},getMaxPagesInNavigation:function(){return 10},getItemsCount:function(a){return this.items?this.items.length:0},getCurrentPageIndex:function(){return Math.floor(this.firstIndexOnPage/this.getItemsPerPage())},getLastPageIndex:function(){return Math.floor((this.getItemsCount()-1)/this.getItemsPerPage())},setFirstIndexOnPage:function(a){this.firstIndexOnPage=Math.min(Math.max(0,a),this.getItemsCount()-1)},getFirstIndexOnPage:function(){this.firstIndexOnPage=Math.floor(this.firstIndexOnPage/this.getItemsPerPage())*this.getItemsPerPage();return this.firstIndexOnPage},getLastIndexOnPage:function(){return Math.min(this.getFirstIndexOnPage()+this.getItemsPerPage()-1,this.getItemsCount()-1)},onPageChanged:function(a,b){},renderPage:function(a){if(a.beginRendering){a.beginRendering(this)}try{if(this.getItemsCount()){var d=this.getLastIndexOnPage();var c=-1;for(var b=this.getFirstIndexOnPage();b&lt;=d;b++){c++;a.render(this,this.items[b],b,c)}}}finally{if(a.endRendering){a.endRendering(this)}}},addPageNavigation:function(c){if(!this.getItemsCount()){return}var k=this;var g=function(n){if(!n){n=window.event}abego.consumeEvent(n);var i=abego.toInt(this.getAttribute(&quot;page&quot;),0);var m=k.getCurrentPageIndex();if(i==m){return}var l=i*k.getItemsPerPage();k.setFirstIndexOnPage(l);k.onPageChanged(i,m)};var e;var h=this.getCurrentPageIndex();var f=this.getLastPageIndex();if(h&gt;0){e=createTiddlyButton(c,&quot;Previous&quot;,&quot;Go to previous page (Shortcut: Alt-'&lt;')&quot;,g,&quot;prev&quot;);e.setAttribute(&quot;page&quot;,(h-1).toString());e.setAttribute(&quot;accessKey&quot;,&quot;&lt;&quot;)}for(var d=-this.getMaxPagesInNavigation();d&lt;this.getMaxPagesInNavigation();d++){var b=h+d;if(b&lt;0){continue}if(b&gt;f){break}var a=(d+h+1).toString();var j=b==h?&quot;currentPage&quot;:&quot;otherPage&quot;;e=createTiddlyButton(c,a,&quot;Go to page %0&quot;.format([a]),g,j);e.setAttribute(&quot;page&quot;,(b).toString())}if(h&lt;f){e=createTiddlyButton(c,&quot;Next&quot;,&quot;Go to next page (Shortcut: Alt-'&gt;')&quot;,g,&quot;next&quot;);e.setAttribute(&quot;page&quot;,(h+1).toString());e.setAttribute(&quot;accessKey&quot;,&quot;&gt;&quot;)}}});abego.LimitedTextRenderer=function(){var l=40;var c=4;var k=function(p,z,v){var q=p.length;if(q==0){p.push({start:z,end:v});return}var u=0;for(;u&lt;q;u++){var w=p[u];if(w.start&lt;=v&amp;&amp;z&lt;=w.end){var o;var s=u+1;for(;s&lt;q;s++){o=p[s];if(o.start&gt;v||z&gt;w.end){break}}var x=z;var y=v;for(var t=u;t&lt;s;t++){o=p[t];x=Math.min(x,o.start);y=Math.max(y,o.end)}p.splice(u,s-u,{start:x,end:y});return}if(w.start&gt;v){break}}p.splice(u,0,{start:z,end:v})};var d=function(n){var q=0;for(var p=0;p&lt;n.length;p++){var o=n[p];q+=o.end-o.start}return q};var b=function(n){return(n&gt;=&quot;a&quot;&amp;&amp;n&lt;=&quot;z&quot;)||(n&gt;=&quot;A&quot;&amp;&amp;n&lt;=&quot;Z&quot;)||n==&quot;_&quot;};var f=function(p,r){if(!b(p[r])){return null}for(var o=r-1;o&gt;=0&amp;&amp;b(p[o]);o--){}var q=o+1;var t=p.length;for(o=r+1;o&lt;t&amp;&amp;b(p[o]);o++){}return{start:q,end:o}};var a=function(o,q,p){var n;if(p){n=f(o,q)}else{if(q&lt;=0){return q}n=f(o,q-1)}if(!n){return q}if(p){if(n.start&gt;=q-c){return n.start}if(n.end&lt;=q+c){return n.end}}else{if(n.end&lt;=q+c){return n.end}if(n.start&gt;=q-c){return n.start}}return q};var j=function(r,q){var n=[];if(q){var u=0;do{q.lastIndex=u;var o=q.exec(r);if(o){if(u&lt;o.index){var p=r.substring(u,o.index);n.push({text:p})}n.push({text:o[0],isMatch:true});u=o.index+o[0].length}else{n.push({text:r.substr(u)});break}}while(true)}else{n.push({text:r})}return n};var i=function(p){var n=0;for(var o=0;o&lt;p.length;o++){if(p[o].isMatch){n++}}return n};var h=function(v,u,q,t,o){var w=Math.max(Math.floor(o/(t+1)),l);var n=Math.max(w-(q-u),0);var r=Math.min(Math.floor(q+n/3),v.length);var p=Math.max(r-w,0);p=a(v,p,true);r=a(v,r,false);return{start:p,end:r}};var m=function(r,y,o){var n=[];var v=i(r);var u=0;for(var p=0;p&lt;r.length;p++){var x=r[p];var w=x.text;if(x.isMatch){var q=h(y,u,u+w.length,v,o);k(n,q.start,q.end)}u+=w.length}return n};var g=function(t,p,o){var n=o-d(p);while(n&gt;0){if(p.length==0){k(p,0,a(t,o,false));return}else{var q=p[0];var v;var r;if(q.start==0){v=q.end;if(p.length&gt;1){r=p[1].start}else{k(p,v,a(t,v+n,false));return}}else{v=0;r=q.start}var u=Math.min(r,v+n);k(p,v,u);n-=(u-v)}}};var e=function(p,x,w,n,o){if(n.length==0){return}var u=function(z,I,D,F,C){var H;var G;var E=0;var B=0;var A=0;for(;B&lt;D.length;B++){H=D[B];G=H.text;if(F&lt;E+G.length){A=F-E;break}E+=G.length}var y=C-F;for(;B&lt;D.length&amp;&amp;y&gt;0;B++){H=D[B];G=H.text.substr(A);A=0;if(G.length&gt;y){G=G.substr(0,y)}if(H.isMatch){createTiddlyElement(z,&quot;span&quot;,null,&quot;marked&quot;,G)}else{createTiddlyText(z,G)}y-=G.length}if(C&lt;I.length){abego.createEllipsis(z)}};if(n[0].start&gt;0){abego.createEllipsis(p)}var q=o;for(var r=0;r&lt;n.length&amp;&amp;q&gt;0;r++){var t=n[r];var v=Math.min(t.end-t.start,q);u(p,x,w,t.start,t.start+v);q-=v}};this.render=function(p,q,o,t){if(q.length&lt;o){o=q.length}var r=j(q,t);var n=m(r,q,o);g(q,n,o);e(p,q,r,n,o)}};(function(){function alertAndThrow(msg){alert(msg);throw msg}if(version.major&lt;2||(version.major==2&amp;&amp;version.minor&lt;1)){alertAndThrow(&quot;YourSearchPlugin requires TiddlyWiki 2.1 or newer.\n\nCheck the archive for YourSearch plugins\nsupporting older versions of TiddlyWiki.\n\nArchive: http://tiddlywiki.abego-software.de/archive&quot;)}abego.YourSearch={};var lastResults=undefined;var lastQuery=undefined;var setLastResults=function(array){lastResults=array};var getLastResults=function(){return lastResults?lastResults:[]};var getLastResultsCount=function(){return lastResults?lastResults.length:0};var matchInTitleWeight=4;var precisionInTitleWeight=10;var matchInTagsWeight=2;var getMatchCount=function(s,re){var m=s.match(re);return m?m.length:0};var standardRankFunction=function(tiddler,query){var markRE=query.getMarkRegExp();if(!markRE){return 1}var matchesInTitle=tiddler.title.match(markRE);var nMatchesInTitle=matchesInTitle?matchesInTitle.length:0;var nMatchesInTags=getMatchCount(tiddler.getTags(),markRE);var lengthOfMatchesInTitle=matchesInTitle?matchesInTitle.join(&quot;&quot;).length:0;var precisionInTitle=tiddler.title.length&gt;0?lengthOfMatchesInTitle/tiddler.title.length:0;var rank=nMatchesInTitle*matchInTitleWeight+nMatchesInTags*matchInTagsWeight+precisionInTitle*precisionInTitleWeight+1;return rank};var findMatches=function(store,searchText,caseSensitive,useRegExp,sortField,excludeTag){lastQuery=null;var candidates=store.reverseLookup(&quot;tags&quot;,excludeTag,false);try{var defaultFields=[];if(config.options.chkSearchInTitle){defaultFields.push(&quot;title&quot;)}if(config.options.chkSearchInText){defaultFields.push(&quot;text&quot;)}if(config.options.chkSearchInTags){defaultFields.push(&quot;tags&quot;)}lastQuery=new abego.TiddlerQuery(searchText,caseSensitive,useRegExp,defaultFields,config.options.chkSearchExtendedFields)}catch(e){return[]}var results=lastQuery.filter(candidates);var rankFunction=abego.YourSearch.getRankFunction();for(var i=0;i&lt;results.length;i++){var tiddler=results[i];var rank=rankFunction(tiddler,lastQuery);tiddler.searchRank=rank}if(!sortField){sortField=&quot;title&quot;}var sortFunction=function(a,b){var searchRankDiff=a.searchRank-b.searchRank;if(searchRankDiff==0){if(a[sortField]==b[sortField]){return(0)}else{return(a[sortField]&lt;b[sortField])?-1:+1}}else{return(searchRankDiff&gt;0)?-1:+1}};results.sort(sortFunction);return results};var maxCharsInTitle=80;var maxCharsInTags=50;var maxCharsInText=250;var maxCharsInField=50;var itemsPerPageDefault=25;var itemsPerPageWithPreviewDefault=10;var yourSearchResultID=&quot;yourSearchResult&quot;;var yourSearchResultItemsID=&quot;yourSearchResultItems&quot;;var lastSearchText=null;var resultElement=null;var searchInputField=null;var searchButton=null;var lastNewTiddlerButton=null;var initStylesheet=function(){if(version.extensions.YourSearchPlugin.styleSheetInited){return}version.extensions.YourSearchPlugin.styleSheetInited=true;setStylesheet(store.getTiddlerText(&quot;YourSearchStyleSheet&quot;),&quot;yourSearch&quot;)};var isResultOpen=function(){return resultElement!=null&amp;&amp;resultElement.parentNode==document.body};var closeResult=function(){if(isResultOpen()){document.body.removeChild(resultElement)}};var closeResultAndDisplayTiddler=function(e){closeResult();var title=this.getAttribute(&quot;tiddlyLink&quot;);if(title){var withHilite=this.getAttribute(&quot;withHilite&quot;);var oldHighlightHack=highlightHack;if(withHilite&amp;&amp;withHilite==&quot;true&quot;&amp;&amp;lastQuery){highlightHack=lastQuery.getMarkRegExp()}story.displayTiddler(this,title);highlightHack=oldHighlightHack}return(false)};var adjustResultPositionAndSize=function(){if(!searchInputField){return}var root=searchInputField;var rootLeft=findPosX(root);var rootTop=findPosY(root);var rootHeight=root.offsetHeight;var popupLeft=rootLeft;var popupTop=rootTop+rootHeight;var winWidth=findWindowWidth();if(winWidth&lt;resultElement.offsetWidth){resultElement.style.width=(winWidth-100)+&quot;px&quot;;winWidth=findWindowWidth()}var popupWidth=resultElement.offsetWidth;if(popupLeft+popupWidth&gt;winWidth){popupLeft=winWidth-popupWidth-30}if(popupLeft&lt;0){popupLeft=0}resultElement.style.left=popupLeft+&quot;px&quot;;resultElement.style.top=popupTop+&quot;px&quot;;resultElement.style.display=&quot;block&quot;};var scrollVisible=function(){if(resultElement){window.scrollTo(0,ensureVisible(resultElement))}if(searchInputField){window.scrollTo(0,ensureVisible(searchInputField))}};var ensureResultIsDisplayedNicely=function(){adjustResultPositionAndSize();scrollVisible()};var indexInPage=undefined;var currentTiddler=undefined;var pager=new abego.PageWiseRenderer();var MyItemRenderer=function(parent){this.itemHtml=store.getTiddlerText(&quot;YourSearchItemTemplate&quot;);if(!this.itemHtml){alertAndThrow(&quot;YourSearchItemTemplate not found&quot;)}this.place=document.getElementById(yourSearchResultItemsID);if(!this.place){this.place=createTiddlyElement(parent,&quot;div&quot;,yourSearchResultItemsID)}};merge(MyItemRenderer.prototype,{render:function(pager,object,index,indexOnPage){indexInPage=indexOnPage;currentTiddler=object;var item=createTiddlyElement(this.place,&quot;div&quot;,null,&quot;yourSearchItem&quot;);item.innerHTML=this.itemHtml;applyHtmlMacros(item,null);refreshElements(item,null)},endRendering:function(pager){currentTiddler=null}});var refreshResult=function(){if(!resultElement||!searchInputField){return}var html=store.getTiddlerText(&quot;YourSearchResultTemplate&quot;);if(!html){html=&quot;&lt;b&gt;Tiddler YourSearchResultTemplate not found&lt;/b&gt;&quot;}resultElement.innerHTML=html;applyHtmlMacros(resultElement,null);refreshElements(resultElement,null);var itemRenderer=new MyItemRenderer(resultElement);pager.renderPage(itemRenderer);ensureResultIsDisplayedNicely()};pager.getItemsPerPage=function(){var n=(config.options.chkPreviewText)?abego.toInt(config.options.txtItemsPerPageWithPreview,itemsPerPageWithPreviewDefault):abego.toInt(config.options.txtItemsPerPage,itemsPerPageDefault);return(n&gt;0)?n:1};pager.onPageChanged=function(){refreshResult()};var reopenResultIfApplicable=function(){if(searchInputField==null||!config.options.chkUseYourSearch){return}if((searchInputField.value==lastSearchText)&amp;&amp;lastSearchText&amp;&amp;!isResultOpen()){if(resultElement&amp;&amp;(resultElement.parentNode!=document.body)){document.body.appendChild(resultElement);ensureResultIsDisplayedNicely()}else{abego.YourSearch.onShowResult(true)}}};var invalidateResult=function(){closeResult();resultElement=null;lastSearchText=null};var isDescendantOrSelf=function(self,e){while(e!=null){if(self==e){return true}e=e.parentNode}return false};var onDocumentClick=function(e){if(e.target==searchInputField){return}if(e.target==searchButton){return}if(resultElement&amp;&amp;isDescendantOrSelf(resultElement,e.target)){return}closeResult()};var onDocumentKeyup=function(e){if(e.keyCode==27){closeResult()}};addEvent(document,&quot;click&quot;,onDocumentClick);addEvent(document,&quot;keyup&quot;,onDocumentKeyup);var myStorySearch=function(text,useCaseSensitive,useRegExp){lastSearchText=text;setLastResults(findMatches(store,text,useCaseSensitive,useRegExp,&quot;title&quot;,&quot;excludeSearch&quot;));abego.YourSearch.onShowResult()};var myMacroSearchHandler=function(place,macroName,params,wikifier,paramString,tiddler){initStylesheet();lastSearchText=&quot;&quot;;var searchTimeout=null;var doSearch=function(txt){if(config.options.chkUseYourSearch){myStorySearch(txt.value,config.options.chkCaseSensitiveSearch,config.options.chkRegExpSearch)}else{story.search(txt.value,config.options.chkCaseSensitiveSearch,config.options.chkRegExpSearch)}lastSearchText=txt.value};var clickHandler=function(e){doSearch(searchInputField);return false};var keyHandler=function(e){if(!e){e=window.event}searchInputField=this;switch(e.keyCode){case 13:if(e.ctrlKey&amp;&amp;lastNewTiddlerButton&amp;&amp;isResultOpen()){lastNewTiddlerButton.onclick.apply(lastNewTiddlerButton,[e])}else{doSearch(this)}break;case 27:if(isResultOpen()){closeResult()}else{this.value=&quot;&quot;;clearMessage()}break}if(String.fromCharCode(e.keyCode)==this.accessKey||e.altKey){reopenResultIfApplicable()}if(this.value.length&lt;3&amp;&amp;searchTimeout){clearTimeout(searchTimeout)}if(this.value.length&gt;2){if(this.value!=lastSearchText){if(!config.options.chkUseYourSearch||config.options.chkSearchAsYouType){if(searchTimeout){clearTimeout(searchTimeout)}var txt=this;searchTimeout=setTimeout(function(){doSearch(txt)},500)}}else{if(searchTimeout){clearTimeout(searchTimeout)}}}if(this.value.length==0){closeResult()}};var focusHandler=function(e){this.select();clearMessage();reopenResultIfApplicable()};var args=paramString.parseParams(&quot;list&quot;,null,true);var buttonAtRight=getFlag(args,&quot;buttonAtRight&quot;);var sizeTextbox=getParam(args,&quot;sizeTextbox&quot;,this.sizeTextbox);var txt=createTiddlyElement(null,&quot;input&quot;,null,&quot;txtOptionInput searchField&quot;,null);if(params[0]){txt.value=params[0]}txt.onkeyup=keyHandler;txt.onfocus=focusHandler;txt.setAttribute(&quot;size&quot;,sizeTextbox);txt.setAttribute(&quot;accessKey&quot;,this.accessKey);txt.setAttribute(&quot;autocomplete&quot;,&quot;off&quot;);if(config.browser.isSafari){txt.setAttribute(&quot;type&quot;,&quot;search&quot;);txt.setAttribute(&quot;results&quot;,&quot;5&quot;)}else{if(!config.browser.isIE){txt.setAttribute(&quot;type&quot;,&quot;text&quot;)}}var btn=createTiddlyButton(null,this.label,this.prompt,clickHandler);if(place){if(!buttonAtRight){place.appendChild(btn)}place.appendChild(txt);if(buttonAtRight){place.appendChild(btn)}}searchInputField=txt;searchButton=btn};var openAllFoundTiddlers=function(){closeResult();var results=getLastResults();var n=results.length;if(n){var titles=[];for(var i=0;i&lt;n;i++){titles.push(results[i].title)}story.displayTiddlers(null,titles)}};var createOptionWithRefresh=function(place,optionParams,wikifier,tiddler){invokeMacro(place,&quot;option&quot;,optionParams,wikifier,tiddler);var elem=place.lastChild;var oldOnClick=elem.onclick;elem.onclick=function(e){var result=oldOnClick.apply(this,arguments);refreshResult();return result};return elem};var removeTextDecoration=function(s){var removeThis=[&quot;''&quot;,&quot;{{{&quot;,&quot;}}}&quot;,&quot;//&quot;,&quot;&lt;&lt;&lt;&quot;,&quot;/***&quot;,&quot;***/&quot;];var reText=&quot;&quot;;for(var i=0;i&lt;removeThis.length;i++){if(i!=0){reText+=&quot;|&quot;}reText+=&quot;(&quot;+removeThis[i].escapeRegExp()+&quot;)&quot;}return s.replace(new RegExp(reText,&quot;mg&quot;),&quot;&quot;).trim()};var getShortCutNumber=function(){var i=indexInPage;return(i&gt;=0&amp;&amp;i&lt;=9)?(i&lt;9?(i+1):0):-1};var limitedTextRenderer=new abego.LimitedTextRenderer();var renderLimitedText=function(place,s,maxLen){limitedTextRenderer.render(place,s,maxLen,lastQuery.getMarkRegExp())};var oldTiddlyWikiSaveTiddler=TiddlyWiki.prototype.saveTiddler;TiddlyWiki.prototype.saveTiddler=function(title,newTitle,newBody,modifier,modified,tags,fields){oldTiddlyWikiSaveTiddler.apply(this,arguments);invalidateResult()};var oldTiddlyWikiRemoveTiddler=TiddlyWiki.prototype.removeTiddler;TiddlyWiki.prototype.removeTiddler=function(title){oldTiddlyWikiRemoveTiddler.apply(this,arguments);invalidateResult()};config.macros.yourSearch={label:&quot;yourSearch&quot;,prompt:&quot;Gives access to the current/last YourSearch result&quot;,handler:function(place,macroName,params,wikifier,paramString,tiddler){if(params.length==0){return}var name=params[0];var func=config.macros.yourSearch.funcs[name];if(func){func(place,macroName,params,wikifier,paramString,tiddler)}},tests:{&quot;true&quot;:function(){return true},&quot;false&quot;:function(){return false},found:function(){return getLastResultsCount()&gt;0},previewText:function(){return config.options.chkPreviewText}},funcs:{itemRange:function(place){if(getLastResultsCount()){var lastIndex=pager.getLastIndexOnPage();var s=&quot;%0 - %1&quot;.format([pager.getFirstIndexOnPage()+1,lastIndex+1]);createTiddlyText(place,s)}},count:function(place){createTiddlyText(place,getLastResultsCount().toString())},query:function(place){if(lastQuery){createTiddlyText(place,lastQuery.toString())}},version:function(place){var t=&quot;YourSearch %0.%1.%2&quot;.format([version.extensions.YourSearchPlugin.major,version.extensions.YourSearchPlugin.minor,version.extensions.YourSearchPlugin.revision]);var e=createTiddlyElement(place,&quot;a&quot;);e.setAttribute(&quot;href&quot;,&quot;http://tiddlywiki.abego-software.de/#YourSearchPlugin&quot;);e.innerHTML='&lt;font color=&quot;black&quot; face=&quot;Arial, Helvetica, sans-serif&quot;&gt;'+t+&quot;&lt;font&gt;&quot;},copyright:function(place){var e=createTiddlyElement(place,&quot;a&quot;);e.setAttribute(&quot;href&quot;,&quot;http://www.abego-software.de&quot;);e.innerHTML='&lt;font color=&quot;black&quot; face=&quot;Arial, Helvetica, sans-serif&quot;&gt;&amp;copy; 2005-2008 &lt;b&gt;&lt;font color=&quot;red&quot;&gt;abego&lt;/font&gt;&lt;/b&gt; Software&lt;font&gt;'},newTiddlerButton:function(place){if(lastQuery){var r=abego.parseNewTiddlerCommandLine(lastQuery.getQueryText());var btn=config.macros.newTiddler.createNewTiddlerButton(place,r.title,r.params,&quot;new tiddler&quot;,&quot;Create a new tiddler based on search text. (Shortcut: Ctrl-Enter; Separators: '.', '#')&quot;,null,&quot;text&quot;);var oldOnClick=btn.onclick;btn.onclick=function(){closeResult();oldOnClick.apply(this,arguments)};lastNewTiddlerButton=btn}},linkButton:function(place,macroName,params,wikifier,paramString,tiddler){if(params&lt;2){return}var tiddlyLink=params[1];var text=params&lt;3?tiddlyLink:params[2];var tooltip=params&lt;4?text:params[3];var accessKey=params&lt;5?null:params[4];var btn=createTiddlyButton(place,text,tooltip,closeResultAndDisplayTiddler,null,null,accessKey);btn.setAttribute(&quot;tiddlyLink&quot;,tiddlyLink)},closeButton:function(place,macroName,params,wikifier,paramString,tiddler){createTiddlyButton(place,&quot;close&quot;,&quot;Close the Search Results (Shortcut: ESC)&quot;,closeResult)},openAllButton:function(place,macroName,params,wikifier,paramString,tiddler){var n=getLastResultsCount();if(n==0){return}var title=n==1?&quot;open tiddler&quot;:&quot;open all %0 tiddlers&quot;.format([n]);var button=createTiddlyButton(place,title,&quot;Open all found tiddlers (Shortcut: Alt-O)&quot;,openAllFoundTiddlers);button.setAttribute(&quot;accessKey&quot;,&quot;O&quot;)},naviBar:function(place,macroName,params,wikifier,paramString,tiddler){pager.addPageNavigation(place)},&quot;if&quot;:function(place,macroName,params,wikifier,paramString,tiddler){if(params.length&lt;2){return}var testName=params[1];var negate=(testName==&quot;not&quot;);if(negate){if(params.length&lt;3){return}testName=params[2]}var test=config.macros.yourSearch.tests[testName];var showIt=false;try{if(test){showIt=test(place,macroName,params,wikifier,paramString,tiddler)!=negate}else{showIt=(!eval(testName))==negate}}catch(ex){}if(!showIt){place.style.display=&quot;none&quot;}},chkPreviewText:function(place,macroName,params,wikifier,paramString,tiddler){var elem=createOptionWithRefresh(place,&quot;chkPreviewText&quot;,wikifier,tiddler);elem.setAttribute(&quot;accessKey&quot;,&quot;P&quot;);elem.title=&quot;Show text preview of found tiddlers (Shortcut: Alt-P)&quot;;return elem}}};config.macros.foundTiddler={label:&quot;foundTiddler&quot;,prompt:&quot;Provides information on the tiddler currently processed on the YourSearch result page&quot;,handler:function(place,macroName,params,wikifier,paramString,tiddler){var name=params[0];var func=config.macros.foundTiddler.funcs[name];if(func){func(place,macroName,params,wikifier,paramString,tiddler)}},funcs:{title:function(place,macroName,params,wikifier,paramString,tiddler){if(!currentTiddler){return}var shortcutNumber=getShortCutNumber();var tooltip=shortcutNumber&gt;=0?&quot;Open tiddler (Shortcut: Alt-%0)&quot;.format([shortcutNumber.toString()]):&quot;Open tiddler&quot;;var btn=createTiddlyButton(place,null,tooltip,closeResultAndDisplayTiddler,null);btn.setAttribute(&quot;tiddlyLink&quot;,currentTiddler.title);btn.setAttribute(&quot;withHilite&quot;,&quot;true&quot;);renderLimitedText(btn,currentTiddler.title,maxCharsInTitle);if(shortcutNumber&gt;=0){btn.setAttribute(&quot;accessKey&quot;,shortcutNumber.toString())}},tags:function(place,macroName,params,wikifier,paramString,tiddler){if(!currentTiddler){return}renderLimitedText(place,currentTiddler.getTags(),maxCharsInTags)},text:function(place,macroName,params,wikifier,paramString,tiddler){if(!currentTiddler){return}renderLimitedText(place,removeTextDecoration(currentTiddler.text),maxCharsInText)},field:function(place,macroName,params,wikifier,paramString,tiddler){if(!currentTiddler){return}var name=params[1];var len=params.length&gt;2?abego.toInt(params[2],maxCharsInField):maxCharsInField;var v=store.getValue(currentTiddler,name);if(v){renderLimitedText(place,removeTextDecoration(v),len)}},number:function(place,macroName,params,wikifier,paramString,tiddler){var numberToDisplay=getShortCutNumber();if(numberToDisplay&gt;=0){var text=&quot;%0)&quot;.format([numberToDisplay.toString()]);createTiddlyElement(place,&quot;span&quot;,null,&quot;shortcutNumber&quot;,text)}}}};var opts={chkUseYourSearch:true,chkPreviewText:true,chkSearchAsYouType:true,chkSearchInTitle:true,chkSearchInText:true,chkSearchInTags:true,chkSearchExtendedFields:true,txtItemsPerPage:itemsPerPageDefault,txtItemsPerPageWithPreview:itemsPerPageWithPreviewDefault};for(var n in opts){if(config.options[n]==undefined){config.options[n]=opts[n]}}config.shadowTiddlers.AdvancedOptions+=&quot;\n&lt;&lt;option chkUseYourSearch&gt;&gt; Use 'Your Search' //([[more options|YourSearch Options]]) ([[help|YourSearch Help]])// &quot;;config.shadowTiddlers[&quot;YourSearch Help&quot;]=&quot;!Field Search\nWith the Field Search you can restrict your search to certain fields of a tiddler, e.g only search the tags or only the titles. The general form is //fieldname//'':''//textToSearch// (e.g. {{{title:intro}}}). In addition one-character shortcuts are also supported for the standard fields {{{title}}}, {{{text}}} and {{{tags}}}:\n|!What you want|!What you type|!Example|\n|Search ''titles only''|start word with ''!''|{{{!jonny}}} (shortcut for {{{title:jonny}}})|\n|Search ''contents/text only''|start word with ''%''|{{{%football}}} (shortcut for {{{text:football}}})|\n|Search ''tags only''|start word with ''#''|{{{#Plugin}}} (shortcut for {{{tags:Plugin}}})|\n\nUsing this feature you may also search the extended fields (\&quot;Metadata\&quot;) introduced with TiddlyWiki 2.1, e.g. use {{{priority:1}}} to find all tiddlers with the priority field set to \&quot;1\&quot;.\n\nYou may search a word in more than one field. E.g. {{{!#Plugin}}} (or {{{title:tags:Plugin}}} in the \&quot;long form\&quot;) finds tiddlers containing \&quot;Plugin\&quot; either in the title or in the tags (but does not look for \&quot;Plugin\&quot; in the text). \n\n!Boolean Search\nThe Boolean Search is useful when searching for multiple words.\n|!What you want|!What you type|!Example|\n|''All words'' must exist|List of words|{{{jonny jeremy}}} (or {{{jonny and jeremy}}})|\n|''At least one word'' must exist|Separate words by ''or''|{{{jonny or jeremy}}}|\n|A word ''must not exist''|Start word with ''-''|{{{-jonny}}} (or {{{not jonny}}})|\n\n''Note:'' When you specify two words, separated with a space, YourSearch finds all tiddlers that contain both words, but not necessarily next to each other. If you want to find a sequence of word, e.g. '{{{John Brown}}}', you need to put the words into quotes. I.e. you type: {{{\&quot;john brown\&quot;}}}.\n\nUsing parenthesis you may change the default \&quot;left to right\&quot; evaluation of the boolean search. E.g. {{{not (jonny or jeremy)}}} finds all tiddlers that contain neither \&quot;jonny\&quot; nor \&quot;jeremy. In contrast to this {{{not jonny or jeremy}}} (i.e. without parenthesis) finds all tiddlers that either don't contain \&quot;jonny\&quot; or that contain \&quot;jeremy\&quot;.\n\n!'Exact Word' Search\nBy default a search result all matches that 'contain' the searched text. E.g. if you search for {{{Task}}} you will get all tiddlers containing 'Task', but also '~CompletedTask', '~TaskForce' etc.\n\nIf you only want to get the tiddlers that contain 'exactly the word' you need to prefix it with a '='. E.g. typing '=Task' will find the tiddlers that contain the word 'Task', ignoring words that just contain 'Task' as a substring.\n\n!~CaseSensitiveSearch and ~RegExpSearch\nThe standard search options ~CaseSensitiveSearch and ~RegExpSearch are fully supported by YourSearch. However when ''~RegExpSearch'' is on Filtered and Boolean Search are disabled.\n\nIn addition you may do a \&quot;regular expression\&quot; search even with the ''~RegExpSearch'' set to false by directly entering the regular expression into the search field, framed with {{{/.../}}}. \n\nExample: {{{/m[ae][iy]er/}}} will find all tiddlers that contain either \&quot;maier\&quot;, \&quot;mayer\&quot;, \&quot;meier\&quot; or \&quot;meyer\&quot;.\n\n!~JavaScript Expression Filtering\nIf you are familiar with JavaScript programming and know some TiddlyWiki internals you may also use JavaScript expression for the search. Just enter a JavaScript boolean expression into the search field, framed with {{{ { ... } }}}. In the code refer to the variable tiddler and evaluate to {{{true}}} when the given tiddler should be included in the result. \n\nExample: {{{ { tiddler.modified &gt; new Date(\&quot;Jul 4, 2005\&quot;)} }}} returns all tiddler modified after July 4th, 2005.\n\n!Combined Search\nYou are free to combine the various search options. \n\n''Examples''\n|!What you type|!Result|\n|{{{!jonny !jeremy -%football}}}|all tiddlers with both {{{jonny}}} and {{{jeremy}}} in its titles, but no {{{football}}} in content.|\n|{{{#=Task}}}|All tiddlers tagged with 'Task' (the exact word). Tags named '~CompletedTask', '~TaskForce' etc. are not considered.|\n\n!Access Keys\nYou are encouraged to use the access keys (also called \&quot;shortcut\&quot; keys) for the most frequently used operations. For quick reference these shortcuts are also mentioned in the tooltip for the various buttons etc.\n\n|!Key|!Operation|\n|{{{Alt-F}}}|''The most important keystroke'': It moves the cursor to the search input field so you can directly start typing your query. Pressing {{{Alt-F}}} will also display the previous search result. This way you can quickly display multiple tiddlers using \&quot;Press {{{Alt-F}}}. Select tiddler.\&quot; sequences.|\n|{{{ESC}}}|Closes the [[YourSearch Result]]. When the [[YourSearch Result]] is already closed and the cursor is in the search input field the field's content is cleared so you start a new query.|\n|{{{Alt-1}}}, {{{Alt-2}}},... |Pressing these keys opens the first, second etc. tiddler from the result list.|\n|{{{Alt-O}}}|Opens all found tiddlers.|\n|{{{Alt-P}}}|Toggles the 'Preview Text' mode.|\n|{{{Alt-'&lt;'}}}, {{{Alt-'&gt;'}}}|Displays the previous or next page in the [[YourSearch Result]].|\n|{{{Return}}}|When you have turned off the 'as you type' search mode pressing the {{{Return}}} key actually starts the search (as does pressing the 'search' button).|\n\n//If some of these shortcuts don't work for you check your browser if you have other extensions installed that already \&quot;use\&quot; these shortcuts.//&quot;;config.shadowTiddlers[&quot;YourSearch Options&quot;]=&quot;|&gt;|!YourSearch Options|\n|&gt;|&lt;&lt;option chkUseYourSearch&gt;&gt; Use 'Your Search'|\n|!|&lt;&lt;option chkPreviewText&gt;&gt; Show Text Preview|\n|!|&lt;&lt;option chkSearchAsYouType&gt;&gt; 'Search As You Type' Mode (No RETURN required to start search)|\n|!|Default Search Filter:&lt;&lt;option chkSearchInTitle&gt;&gt;Title ('!')     &lt;&lt;option chkSearchInText&gt;&gt;Text ('%')     &lt;&lt;option chkSearchInTags&gt;&gt;Tags ('#')    &lt;&lt;option chkSearchExtendedFields&gt;&gt;Extended Fields&lt;html&gt;&lt;br&gt;&lt;font size=\&quot;-2\&quot;&gt;The fields of a tiddlers that are searched when you don't explicitly specify a filter in the search text &lt;br&gt;(Explictly specify fields using one or more '!', '%', '#' or 'fieldname:' prefix before the word/text to find).&lt;/font&gt;&lt;/html&gt;|\n|!|Number of items on search result page: &lt;&lt;option txtItemsPerPage&gt;&gt;|\n|!|Number of items on search result page with preview text: &lt;&lt;option txtItemsPerPageWithPreview&gt;&gt;|\n&quot;;config.shadowTiddlers.YourSearchStyleSheet=&quot;/***\n!~YourSearchResult Stylesheet\n***/\n/*{{{*/\n.yourSearchResult {\n\tposition: absolute;\n\twidth: 800px;\n\n\tpadding: 0.2em;\n\tlist-style: none;\n\tmargin: 0;\n\n\tbackground: #ffd;\n\tborder: 1px solid DarkGray;\n}\n\n/*}}}*/\n/***\n!!Summary Section\n***/\n/*{{{*/\n.yourSearchResult .summary {\n\tborder-bottom-width: thin;\n\tborder-bottom-style: solid;\n\tborder-bottom-color: #999999;\n\tpadding-bottom: 4px;\n}\n\n.yourSearchRange, .yourSearchCount, .yourSearchQuery   {\n\tfont-weight: bold;\n}\n\n.yourSearchResult .summary .button {\n\tfont-size: 10px;\n\n\tpadding-left: 0.3em;\n\tpadding-right: 0.3em;\n}\n\n.yourSearchResult .summary .chkBoxLabel {\n\tfont-size: 10px;\n\n\tpadding-right: 0.3em;\n}\n\n/*}}}*/\n/***\n!!Items Area\n***/\n/*{{{*/\n.yourSearchResult .marked {\n\tbackground: none;\n\tfont-weight: bold;\n}\n\n.yourSearchItem {\n\tmargin-top: 2px;\n}\n\n.yourSearchNumber {\n\tcolor: #808080;\n}\n\n\n.yourSearchTags {\n\tcolor: #008000;\n}\n\n.yourSearchText {\n\tcolor: #808080;\n\tmargin-bottom: 6px;\n}\n\n/*}}}*/\n/***\n!!Footer\n***/\n/*{{{*/\n.yourSearchFooter {\n\tmargin-top: 8px;\n\tborder-top-width: thin;\n\tborder-top-style: solid;\n\tborder-top-color: #999999;\n}\n\n.yourSearchFooter a:hover{\n\tbackground: none;\n\tcolor: none;\n}\n/*}}}*/\n/***\n!!Navigation Bar\n***/\n/*{{{*/\n.yourSearchNaviBar a {\n\tfont-size: 16px;\n\tmargin-left: 4px;\n\tmargin-right: 4px;\n\tcolor: black;\n\ttext-decoration: underline;\n}\n\n.yourSearchNaviBar a:hover {\n\tbackground-color: none;\n}\n\n.yourSearchNaviBar .prev {\n\tfont-weight: bold;\n\tcolor: blue;\n}\n\n.yourSearchNaviBar .currentPage {\n\tcolor: #FF0000;\n\tfont-weight: bold;\n\ttext-decoration: none;\n}\n\n.yourSearchNaviBar .next {\n\tfont-weight: bold;\n\tcolor: blue;\n}\n/*}}}*/\n&quot;;config.shadowTiddlers.YourSearchResultTemplate='&lt;!--\n{{{\n--&gt;\n&lt;span macro=&quot;yourSearch if found&quot;&gt;\n&lt;!-- The Summary Header ============================================ --&gt;\n&lt;table class=&quot;summary&quot; border=&quot;0&quot; width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tbody&gt;\n  &lt;tr&gt;\n\t&lt;td align=&quot;left&quot;&gt;\n\t\tYourSearch Result &lt;span class=&quot;yourSearchRange&quot; macro=&quot;yourSearch itemRange&quot;&gt;&lt;/span&gt;\n\t\t&amp;nbsp;of&amp;nbsp;&lt;span class=&quot;yourSearchCount&quot; macro=&quot;yourSearch count&quot;&gt;&lt;/span&gt;\n\t\tfor&amp;nbsp;&lt;span class=&quot;yourSearchQuery&quot; macro=&quot;yourSearch query&quot;&gt;&lt;/span&gt;\n\t&lt;/td&gt;\n\t&lt;td class=&quot;yourSearchButtons&quot; align=&quot;right&quot;&gt;\n\t\t&lt;span macro=&quot;yourSearch chkPreviewText&quot;&gt;&lt;/span&gt;&lt;span class=&quot;chkBoxLabel&quot;&gt;preview text&lt;/span&gt;\n\t\t&lt;span macro=&quot;yourSearch newTiddlerButton&quot;&gt;&lt;/span&gt;\n\t\t&lt;span macro=&quot;yourSearch openAllButton&quot;&gt;&lt;/span&gt;\n\t\t&lt;span macro=&quot;yourSearch linkButton \'YourSearch Options\' options \'Configure YourSearch\'&quot;&gt;&lt;/span&gt;\n\t\t&lt;span macro=&quot;yourSearch linkButton \'YourSearch Help\' help \'Get help how to use YourSearch\'&quot;&gt;&lt;/span&gt;\n\t\t&lt;span macro=&quot;yourSearch closeButton&quot;&gt;&lt;/span&gt;\n\t&lt;/td&gt;\n  &lt;/tr&gt;\n&lt;/tbody&gt;&lt;/table&gt;\n\n&lt;!-- The List of Found Tiddlers ============================================ --&gt;\n&lt;div id=&quot;yourSearchResultItems&quot; itemsPerPage=&quot;25&quot; itemsPerPageWithPreview=&quot;10&quot;&gt;&lt;/div&gt;\n\n&lt;!-- The Footer (with the Navigation) ============================================ --&gt;\n&lt;table class=&quot;yourSearchFooter&quot; border=&quot;0&quot; width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tbody&gt;\n  &lt;tr&gt;\n\t&lt;td align=&quot;left&quot;&gt;\n\t\tResult page: &lt;span class=&quot;yourSearchNaviBar&quot; macro=&quot;yourSearch naviBar&quot;&gt;&lt;/span&gt;\n\t&lt;/td&gt;\n\t&lt;td align=&quot;right&quot;&gt;&lt;span macro=&quot;yourSearch version&quot;&gt;&lt;/span&gt;, &lt;span macro=&quot;yourSearch copyright&quot;&gt;&lt;/span&gt;\n\t&lt;/td&gt;\n  &lt;/tr&gt;\n&lt;/tbody&gt;&lt;/table&gt;\n&lt;!-- end of the \'tiddlers found\' case =========================================== --&gt;\n&lt;/span&gt;\n\n\n&lt;!-- The &quot;No tiddlers found&quot; case =========================================== --&gt;\n&lt;span macro=&quot;yourSearch if not found&quot;&gt;\n&lt;table class=&quot;summary&quot; border=&quot;0&quot; width=&quot;100%&quot; cellspacing=&quot;0&quot; cellpadding=&quot;0&quot;&gt;&lt;tbody&gt;\n  &lt;tr&gt;\n\t&lt;td align=&quot;left&quot;&gt;\n\t\tYourSearch Result: No tiddlers found for &lt;span class=&quot;yourSearchQuery&quot; macro=&quot;yourSearch query&quot;&gt;&lt;/span&gt;.\n\t&lt;/td&gt;\n\t&lt;td class=&quot;yourSearchButtons&quot; align=&quot;right&quot;&gt;\n\t\t&lt;span macro=&quot;yourSearch newTiddlerButton&quot;&gt;&lt;/span&gt;\n\t\t&lt;span macro=&quot;yourSearch linkButton \'YourSearch Options\' options \'Configure YourSearch\'&quot;&gt;&lt;/span&gt;\n\t\t&lt;span macro=&quot;yourSearch linkButton \'YourSearch Help\' help \'Get help how to use YourSearch\'&quot;&gt;&lt;/span&gt;\n\t\t&lt;span macro=&quot;yourSearch closeButton&quot;&gt;&lt;/span&gt;\n\t&lt;/td&gt;\n  &lt;/tr&gt;\n&lt;/tbody&gt;&lt;/table&gt;\n&lt;/span&gt;\n\n\n&lt;!--\n}}}\n--&gt;\n';config.shadowTiddlers.YourSearchItemTemplate=&quot;&lt;!--\n{{{\n--&gt;\n&lt;span class='yourSearchNumber' macro='foundTiddler number'&gt;&lt;/span&gt;\n&lt;span class='yourSearchTitle' macro='foundTiddler title'/&gt;&lt;/span&gt;&amp;nbsp;-&amp;nbsp;\n&lt;span class='yourSearchTags' macro='foundTiddler field tags 50'/&gt;&lt;/span&gt;\n&lt;span macro=\&quot;yourSearch if previewText\&quot;&gt;&lt;div class='yourSearchText' macro='foundTiddler field text 250'/&gt;&lt;/div&gt;&lt;/span&gt;\n&lt;!--\n}}}\n--&gt;&quot;;config.shadowTiddlers.YourSearch=&quot;&lt;&lt;tiddler [[YourSearch Help]]&gt;&gt;&quot;;config.shadowTiddlers[&quot;YourSearch Result&quot;]=&quot;The popup-like window displaying the result of a YourSearch query.&quot;;config.macros.search.handler=myMacroSearchHandler;var checkForOtherHijacker=function(){if(config.macros.search.handler!=myMacroSearchHandler){alert(&quot;Message from YourSearchPlugin:\n\n\nAnother plugin has disabled the 'Your Search' features.\n\n\nYou may disable the other plugin or change the load order of \nthe plugins (by changing the names of the tiddlers)\nto enable the 'Your Search' features.&quot;)}};setTimeout(checkForOtherHijacker,5000);abego.YourSearch.getStandardRankFunction=function(){return standardRankFunction};abego.YourSearch.getRankFunction=function(){return abego.YourSearch.getStandardRankFunction()};abego.YourSearch.getCurrentTiddler=function(){return currentTiddler};abego.YourSearch.closeResult=function(){closeResult()};abego.YourSearch.getFoundTiddlers=function(){return lastResults};abego.YourSearch.getQuery=function(){return lastQuery};abego.YourSearch.onShowResult=function(useOldResult){highlightHack=lastQuery?lastQuery.getMarkRegExp():null;if(!useOldResult){pager.setItems(getLastResults())}if(!resultElement){resultElement=createTiddlyElement(document.body,&quot;div&quot;,yourSearchResultID,&quot;yourSearchResult&quot;)}else{if(resultElement.parentNode!=document.body){document.body.appendChild(resultElement)}}refreshResult();highlightHack=null}})()};
 //%/</pre>
 </div>
-<div title="aaa" creator="Marc Cawood" modifier="Marc Cawood" created="201610290644" changecount="1">
+<div title="aaa" modifier="Marc Cawood" created="201610290644" changecount="1">
 <pre>Type the text for 'New Tiddler'</pre>
 </div>
-<div title="bbb" creator="Marc Cawood" modifier="Marc Cawood" created="201610290645" changecount="1">
+<div title="bbb" modifier="Marc Cawood" created="201610290645" changecount="1">
 <pre>Type the text for 'New Tiddler'</pre>
 </div>
-<div title="sss" creator="Marc Cawood" modifier="Marc Cawood" created="201610290653" changecount="1">
+<div title="sss" modifier="Marc Cawood" created="201610290653" changecount="1">
 <pre>Type the text for 'New Tiddler'</pre>
 </div>
 </div>

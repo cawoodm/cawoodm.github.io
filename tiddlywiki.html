@@ -41,7 +41,6 @@ DAMAGE.
 
 " />
 <!--PRE-HEAD-START-->
-<hta:application applicationname="PowerUp" version="1.0" icon="icon.ico"/>
 <style type="text/css">#contentWrapper {display:none;}</style>
 <div id="SplashScreen" style="border: 3px solid #ccc; display: block; text-align: center; width: 320px; margin: 100px auto; padding: 50px; color:#000; font-size: 20px; background-color:#eee;">
 <b>My Wiki</b> is loading...
@@ -533,7 +532,7 @@ This tiddler was automatically created to record the details of this server</pre
 <pre>&lt;&lt;options&gt;&gt;
 &lt;&lt;option chkSinglePageMode&gt;&gt; Display one tiddler at a time</pre>
 </div>
-<div title="ArchivePlugin" modifier="Marc Cawood" created="200705051504" modified="201610301811" tags="Plugin systemConfigDisable" changecount="5">
+<div title="ArchivePlugin" modifier="Marc Cawood" modified="201610301845" created="200705051504" tags="Plugin systemConfig" changecount="5">
 <pre>/***
 |''Name:''|ArchivePlugin|
 |''Description:''|The archive plugin allows you to store tiddler text outside of the tiddlywiki file.|
@@ -551,6 +550,7 @@ then be archived as separate html files in the sub folder called &quot;archive&q
 #Install the Archive Plugin and reload your tiddlywiki
 #Tag your bulky tiddlers with &quot;Archive&quot;
 #Save your tiddlywiki file
+#Don't tag your systemConfig tiddlers (e.g. Plugins) with Archive. It doesn't work.
 !To Do
 * Synchronize tiddler renames/deletions with file system
 * Lazy loading of archived files via HTTP
@@ -611,6 +611,7 @@ Tiddler.prototype.saveMe = function() {
 // This hijack ensures plugins can also be archived
 var archivePlugin_getPluginInfo = getPluginInfo;
 getPluginInfo = function(tiddler) {
+alert(tiddler.title)
  tiddler.text = store.getValue(tiddler, 'text');
  return archivePlugin_getPluginInfo(tiddler);
 }
@@ -645,12 +646,13 @@ String.prototype.filenameEncode = function() {
 }
 
 function getWikiPath(folderName) {
+ if (!document.location.protocol.match(/file/)) return '';
  var originalPath = document.location.toString();
  if(originalPath.substr(0,5) != 'file:') {
-	alert(config.messages.notFileUrlError);
-	if(store.tiddlerExists(config.messages.saveInstructions))
-		story.displayTiddler(null,config.messages.saveInstructions);
-	return;
+  alert(config.messages.notFileUrlError);
+  if(store.tiddlerExists(config.messages.saveInstructions))
+   story.displayTiddler(null,config.messages.saveInstructions);
+  return;
  }
  var localPath = getLocalPath(originalPath);
  var backSlash = localPath.lastIndexOf('\\') == -1 ? '/' : '\\';
@@ -680,7 +682,7 @@ function ieDeleteFile(filePath) {
 }
 //}}}</pre>
 </div>
-<div title="BreadCrumbsPlugin" modifier="Marc Cawood" created="200604161431" modified="201610300956" tags="Plugin systemConfig" changecount="1">
+<div title="BreadCrumbsPlugin" modifier="Marc Cawood" modified="201610300956" created="200604161431" tags="Plugin systemConfig" changecount="1">
 <pre>/***
 |''Name:''|BreadCrumbsPlugin|
 |''Version:''|2.2.1|
@@ -778,13 +780,13 @@ function breadcrumbsRefresh() {
 
 //}}}</pre>
 </div>
-<div title="ColorPalette" modifier="Marc Cawood" created="200705311549" modified="201610301823" changecount="4">
+<div title="ColorPalette" modifier="Marc Cawood" modified="201610301845" created="200705311549" changecount="3">
 <pre>Background: #fff
 Foreground: #000
 PrimaryPale: #EEE
 PrimaryLight: #777
 PrimaryMid: #111
-PrimaryDark: #C0C
+PrimaryDark: #D0D
 SecondaryPale: #EEF
 SecondaryLight: #CCF
 SecondaryMid: #69C
@@ -795,7 +797,7 @@ TertiaryMid: #999
 TertiaryDark: #333
 Error: #f88</pre>
 </div>
-<div title="Config" modifier="Marc Cawood" created="200604161504" modified="201610301020" tags="Favorite Config" changecount="1">
+<div title="Config" modifier="Marc Cawood" modified="201610301846" created="200604161504" tags="Favorite Config" changecount="2">
 <pre>&lt;&lt;tabs tabsClass
 Layout &quot;Layout Templates&quot; SystemLayout
 System &quot;System Tiddlers&quot; SystemTiddlers
@@ -806,14 +808,14 @@ Plugins &quot;Installed Plugins&quot; SystemPlugins
 Shadows &quot;Hidden System Pages&quot; ShadowPages
 &gt;&gt;</pre>
 </div>
-<div title="ConfigOptions" modifier="Marc Cawood" created="200705311149" modified="201610290939" tags="Config" changecount="2">
+<div title="ConfigOptions" modifier="Marc Cawood" modified="201610290939" created="200705311149" tags="Config" changecount="2">
 <pre>&lt;&lt;configOptions
 chkHttpReadOnly=false
 chkSinglePageMode=false
 &gt;&gt;
 See the ConfigOptionsMacro</pre>
 </div>
-<div title="ConfigOptionsMacro" modifier="Marc Cawood" created="200705311155" modified="201610291347" tags="Plugin systemConfigDisable" changecount="7">
+<div title="ConfigOptionsMacro" modifier="Marc Cawood" modified="201610291347" created="200705311155" tags="Plugin systemConfigDisable" changecount="7">
 <pre>/***
 |''Name:''|ConfigOptionsMacro|
 |''Description:''|Allows you to store Tiddlywiki options in a tiddler.|
@@ -899,13 +901,13 @@ config.macros.configOptions.updateOption = function(name, value) {
 }
 //}}}</pre>
 </div>
-<div title="Data List" modifier="Marc Cawood" created="201610291145" modified="201610291222" changecount="12">
+<div title="Data List" modifier="Marc Cawood" modified="201610291222" created="201610291145" changecount="12">
 <pre>&lt;&lt;tiddlerList tags:&quot;Data&quot; itemTemplate:&quot;* %link (&lt;&lt;slicer tiddler:%title field:version$)))\n&quot;&gt;&gt;</pre>
 </div>
-<div title="DefaultTiddlers" modifier="Marc Cawood" created="200604161426" modified="201610301803" tags="Config" changecount="7">
-<pre>[[Config]] [[Plugins]]</pre>
+<div title="DefaultTiddlers" modifier="Marc Cawood" modified="201610301844" created="200604161426" tags="Config" changecount="6">
+<pre>[[Plugins]]</pre>
 </div>
-<div title="DefinitionMacro" modifier="Marc Cawood" created="200606142218" modified="201610291234" tags="Plugin systemConfig" changecount="3">
+<div title="DefinitionMacro" modifier="Marc Cawood" modified="201610291234" created="200606142218" tags="Plugin systemConfig" changecount="3">
 <pre>/***
 |''Name:''|Definition Macro|
 |''Description:''|Define glossary terms for use in tool tips.|
@@ -946,7 +948,7 @@ setStylesheet(&quot;a.definition {position:relative; z-index:24;} a.definition:h
 
 //}}}</pre>
 </div>
-<div title="DeliciousTagging" modifier="Marc Cawood" created="200706110858" modified="201610291235" tags="Plugin systemConfig" changecount="3">
+<div title="DeliciousTagging" modifier="Marc Cawood" modified="201610291235" created="200706110858" tags="Plugin systemConfig" changecount="3">
 <pre>/***
 |''Name:''|DeliciousTaggingPlugin|
 |''Description:''|Allows easy 'del.icio.us'-like tagging by showing all tags as a list of link-buttons.|
@@ -995,7 +997,7 @@ config.macros.deliciousTagging.handler = function(place,macroName,params,wikifie
 };
 //}}}</pre>
 </div>
-<div title="DoBackupMacro" modifier="Marc Cawood" created="200604101550" modified="201610300956" tags="Plugin systemConfig" changecount="4">
+<div title="DoBackupMacro" modifier="Marc Cawood" modified="201610300956" created="200604101550" tags="Plugin systemConfig" changecount="4">
 <pre>/***
 |''Name:''|DoBackupMacro|
 |''Description:''|Creates a button which allows you to backup your wiki on demand.|
@@ -1034,22 +1036,21 @@ doBackup = function() {
 
 //}}}</pre>
 </div>
-<div title="EDM" modifier="Marc Cawood" created="201610291234" modified="201610291550" tags="Archive" changecount="2">
+<div title="EDM" modifier="Marc Cawood" modified="201610291550" created="201610291234" tags="Archive" changecount="2">
 <pre></pre>
 </div>
-<div title="EditTemplate" modifier="Marc Cawood" created="200706110901" modified="201610301822" changecount="1">
+<div title="EditTemplate" modifier="Marc Cawood" modified="200706110902" created="200706110901">
 <pre>&lt;div class='toolbar' macro='toolbar +saveTiddler saveClose -cancelTiddler deleteTiddler'&gt;&lt;/div&gt;
 &lt;div class='title' macro='view title'&gt;&lt;/div&gt;
 &lt;div class='editor' macro='edit title'&gt;&lt;/div&gt;
-&lt;div class='editor' macro='edit tags'&gt;&lt;/div&gt;
-&lt;div class='editorFooter' macro='deliciousTagging'&gt;&lt;/div&gt;
 &lt;div class='editor' macro='edit text'&gt;&lt;/div&gt;
-</pre>
+&lt;div class='editor' macro='edit tags'&gt;&lt;/div&gt;
+&lt;div class='editorFooter' macro='deliciousTagging'&gt;&lt;/div&gt;</pre>
 </div>
 <div title="Favorite" modifier="Marc Cawood" created="201610291009" tags="Config" changecount="1">
 <pre>&lt;&lt;tiddlerList tags:&quot;Favorite&quot;&gt;&gt;</pre>
 </div>
-<div title="Hacks" modifier="Marc Cawood" created="201610290654" modified="201610301419" tags="systemConfig Config Favorite" changecount="35">
+<div title="Hacks" modifier="Marc Cawood" modified="201610301419" created="201610290654" tags="systemConfig Config Favorite" changecount="35">
 <pre>/***
 My favorite hacks!
 !!Fix javascript; issue
@@ -1147,10 +1148,10 @@ config.messages.backstage.close.text='';
 config.messages.backstage.prompt='';
 //}}}</pre>
 </div>
-<div title="Index" modifier="Marc Cawood" created="201610291020" modified="201610291026" tags="Config" changecount="5">
+<div title="Index" modifier="Marc Cawood" modified="201610291026" created="201610291020" tags="Config" changecount="5">
 <pre>&lt;&lt;tiddlerList tags:&quot;-Config,-systemConfig,-Template,-systemServer&quot; group:'tiddler.title.toUpperCase().substr(0,1)' groupTemplate:&quot;&lt;&lt;section %group\n&quot; groupFooterTemplate:&quot;$))\n&quot;&gt;&gt;</pre>
 </div>
-<div title="MainMenu" modifier="Marc Cawood" created="201610290859" modified="201610301020" tags="Favorite" changecount="9">
+<div title="MainMenu" modifier="Marc Cawood" modified="201610301020" created="201610290859" tags="Favorite" changecount="9">
 <pre>|[[Plugins]]|
 
 [[MainMenu]]
@@ -1162,14 +1163,13 @@ config.messages.backstage.prompt='';
 <div title="Marc Cawood" modifier="Marc Cawood" created="201610300957" changecount="1">
 <pre>cawoodm [at] gmail</pre>
 </div>
-<div title="MarkupPreHead" modifier="Marc Cawood" created="201610300834" modified="201610301744" changecount="6">
-<pre>&lt;hta:application applicationname=&quot;PowerUp&quot; version=&quot;1.0&quot; icon=&quot;icon.ico&quot;/&gt;
-&lt;style type=&quot;text/css&quot;&gt;#contentWrapper {display:none;}&lt;/style&gt;
+<div title="MarkupPreHead" modifier="Marc Cawood" modified="201610300839" created="201610300834" changecount="5">
+<pre>&lt;style type=&quot;text/css&quot;&gt;#contentWrapper {display:none;}&lt;/style&gt;
 &lt;div id=&quot;SplashScreen&quot; style=&quot;border: 3px solid #ccc; display: block; text-align: center; width: 320px; margin: 100px auto; padding: 50px; color:#000; font-size: 20px; background-color:#eee;&quot;&gt;
 &lt;b&gt;My Wiki&lt;/b&gt; is loading...
 &lt;/div&gt;</pre>
 </div>
-<div title="MyMacroMacro" modifier="Marc Cawood" created="200604221110" modified="201610291236" tags="Plugin systemConfig" changecount="3">
+<div title="MyMacroMacro" modifier="Marc Cawood" modified="201610291236" created="200604221110" tags="Plugin systemConfig" changecount="3">
 <pre>/***
 |''Name:''|~MyMacroMacro|
 |''Description:''|Allows you to define named shortcuts to your own macros with parameters.|
@@ -1205,26 +1205,27 @@ config.macros.myMacro.handler=function(place,macroName,params,wikifier,paramStri
 }
 //}}}</pre>
 </div>
-<div title="MyMacros" modifier="Marc Cawood" created="200604232038" modified="200801111334" tags="Config Favorite">
+<div title="MyMacros" modifier="Marc Cawood" modified="200801111334" created="200604232038" tags="Config Favorite">
 <pre>&lt;&lt;defineMyMacro niceList tiddlerList header:&quot;|&gt;|!Plugin|\n|bgcolor(#ddf):''Title''|bgcolor(#ddf):''Version''|&quot; itemTemplate:&quot;|%link|%custom|\n&quot; format:&quot;table&quot; group:&quot;tiddler.modified.formatString('DDD, DD MMM YYYY')&quot; groupTemplate:&quot;|&gt;|bgcolor(#eef):%group |\n&quot; order:&quot;-modified&quot; customParameter:&quot;tiddler.text.match(/\|[^|]*Version[^|]*\|(.*)\|/)[1]&quot;&gt;&gt;
 &lt;&lt;defineMyMacro docDate tiddlerList header:{{(new Date(document.lastModified)).formatString('DDD, DD MMM YYYY')}} top:0&gt;&gt;</pre>
 </div>
-<div title="New" modifier="Marc Cawood" created="201610291009" modified="201610301434" tags="Config" changecount="9">
+<div title="New" modifier="Marc Cawood" modified="201610301434" created="201610291009" tags="Config" changecount="9">
 <pre>&lt;&lt;tiddlerList top:20 order:&quot;-modified&quot;&gt;&gt;</pre>
 </div>
 <div title="One" modifier="Marc Cawood" created="201610291144" tags="Data" changecount="1">
 <pre>version:1.0</pre>
 </div>
-<div title="OptionsPanel" modifier="Marc Cawood" created="200604172205" modified="200706010958" tags="Config">
+<div title="OptionsPanel" modifier="Marc Cawood" modified="200706010958" created="200604172205" tags="Config">
 <pre>&lt;&lt;option chkSinglePageMode&gt;&gt; Single Page Mode
 &lt;&lt;option chkAutoSave&gt;&gt; AutoSave
 See AdvancedOptions and ConfigOptions</pre>
 </div>
-<div title="PageTemplate" modifier="Marc Cawood" created="201610300826" modified="201610301025" tags="Favorite Config" changecount="12">
+<div title="PageTemplate" modifier="Marc Cawood" modified="201610301850" created="201610300826" tags="Favorite Config" changecount="16">
 <pre>&lt;!--{{{--&gt;
 &lt;div class='header' role='banner'&gt;
  &lt;div class='headerShadow'&gt;
   &lt;span class='searchBar' macro='search'&gt;&lt;/span&gt;
+  &lt;img src=icon.png width=32&gt;
   &lt;span class='siteTitle' refresh='content' tiddler='SiteTitle'&gt;&lt;/span&gt;&amp;nbsp;
   &lt;span class='siteSubtitle' refresh='content' tiddler='SiteSubtitle'&gt;&lt;/span&gt;
  &lt;/div&gt;&lt;/div&gt;
@@ -1241,7 +1242,7 @@ See AdvancedOptions and ConfigOptions</pre>
 &lt;/div&gt;
 &lt;!--}}}--&gt;</pre>
 </div>
-<div title="PluginTemplate" modifier="Marc Cawood" created="200604170854" modified="201610291227" tags="Plugin Template systemConfig" changecount="1">
+<div title="PluginTemplate" modifier="Marc Cawood" modified="201610291227" created="200604170854" tags="Plugin Template systemConfig" changecount="1">
 <pre>/***
 |''Name:''||
 |''Description:''||
@@ -1269,15 +1270,15 @@ config.macros.xxx.handler = function(place,macroName,params,wikifier,paramString
 }
 //}}}</pre>
 </div>
-<div title="Plugins" modifier="Marc Cawood" created="201610291220" modified="201610301821" changecount="14">
-<pre>&lt;&lt;tiddlerList tags:&quot;Plugin,-Template,systemConfigDisable&quot; header:&quot;|!Plugin|!Description|!Version|!Date|&quot; itemTemplate:&quot;|%link|&lt;&lt;slicer tiddler:%title field:Description$))|&lt;&lt;slicer tiddler:%title field:Version$))|&lt;&lt;slicer tiddler:%title field:Date$))|\n&quot;&gt;&gt;
+<div title="Plugins" modifier="Marc Cawood" modified="201610300955" created="201610291220" changecount="12">
+<pre>&lt;&lt;tiddlerList tags:&quot;Plugin,-Template&quot; header:&quot;|!Plugin|!Description|!Version|!Date|&quot; itemTemplate:&quot;|%link|&lt;&lt;slicer tiddler:%title field:Description$))|&lt;&lt;slicer tiddler:%title field:Version$))|&lt;&lt;slicer tiddler:%title field:Date$))|\n&quot;&gt;&gt;
 
 Table generated by the TiddlerListMacro using:
 {{{&lt;&lt;tiddlerList tags:&quot;Plugin,-Template&quot; header:&quot;|!Plugin|!Description|!Version|!Date|&quot; itemTemplate:&quot;|%link|&lt;&lt;slicer tiddler:%title field:Description$))|&lt;&lt;slicer tiddler:%title field:Version$))|&lt;&lt;slicer tiddler:%title field:Date$))|\n&quot;&gt;&gt;}}}
 
 &lt;&lt;tiddlerList tags:&quot;systemConfig,-Plugin,-Template&quot; header:&quot;|!Plugin|!Description|!Version|!Date|&quot; itemTemplate:&quot;|%link|&lt;&lt;slicer tiddler:%title field:Description$))|&lt;&lt;slicer tiddler:%title field:Version$))|&lt;&lt;slicer tiddler:%title field:Date$))|\n&quot;&gt;&gt;</pre>
 </div>
-<div title="PluralAliasPlugin" modifier="Marc Cawood" created="200604161433" modified="201610291253" tags="Plugin systemConfig" changecount="5">
+<div title="PluralAliasPlugin" modifier="Marc Cawood" modified="201610291253" created="200604161433" tags="Plugin systemConfig" changecount="5">
 <pre>/***
 |''Name:''|PluralAliasPlugin|
 |''Description:''|This plugin ensures links to tiddlers in plural or singular form.|
@@ -1334,7 +1335,7 @@ TiddlyWiki.prototype.reverseLookup = function(lookupField,lookupValue,lookupMatc
 }
 //}}}</pre>
 </div>
-<div title="PublishMacro" modifier="Marc Cawood" created="200701021553" modified="201610301806" tags="Plugin systemConfigDisable" changecount="6">
+<div title="PublishMacro" modifier="Marc Cawood" modified="201610291559" created="200701021553" tags="Plugin systemConfig" changecount="5">
 <pre>/***
 |''Name:''|Publish Macro|
 |''Description:''|Export selected tiddlers as .html files.|
@@ -1415,6 +1416,7 @@ function publishTiddler(title) {
  //debugger
  
  var PublishFolder = getWikiPath('publish');
+ if (!PublishFolder) return;
  var place = document.getElementById(story.container)
  var HTMLTemplateHead = store.getTiddlerText(&quot;PublishTemplateHead&quot;);
  var HTMLTemplateBody = store.getTiddlerText(&quot;PublishTemplateBodySingle&quot;) || store.getTiddlerText(&quot;PublishTemplateBody&quot;);
@@ -1531,9 +1533,9 @@ function wiki2Web(wikiHTML) {
 
 }
 function getWikiPath(folderName) {
+ if (!document.location.protocol.match(/file/)) return '';
  var originalPath = document.location.toString();
  if (originalPath.substr(0, 5) != 'file:') {
- 	alert(arguments['caller']);
   alert(config.messages.notFileUrlError);
   if (store.tiddlerExists(config.messages.saveInstructions))
   story.displayTiddler(null, config.messages.saveInstructions);
@@ -1586,7 +1588,7 @@ String.prototype.filenameEncode = function()
 &lt;hr&gt;%4, %5&amp;nbsp;(created %6)
 &lt;/div&gt;</pre>
 </div>
-<div title="ReferrersMacro" modifier="Marc Cawood" created="200604161445" modified="201610291228" tags="Plugin systemConfig" changecount="4">
+<div title="ReferrersMacro" modifier="Marc Cawood" modified="201610291228" created="200604161445" tags="Plugin systemConfig" changecount="4">
 <pre>/***
 |''Name:''|ReferrersMacro|
 |''Description:''|Display a list of tiddlers linking to the current tiddler.|
@@ -1618,18 +1620,18 @@ config.macros.referrers.handler = function(place,macroName,params,wikifier,param
 }
 //}}}</pre>
 </div>
-<div title="SQLConfig" modifier="Marc Cawood" created="200708231038" modified="200708231056">
+<div title="SQLConfig" modifier="Marc Cawood" modified="200708231056" created="200708231038">
 <pre>Connection1: DRIVER={SQL Server};SERVER=(local);DATABASE=Northwind;
 pubs: DRIVER={SQL Server};SERVER=(local);DATABASE=pubs;</pre>
 </div>
-<div title="SQLExamples" modifier="Marc Cawood" created="200708230922" modified="200708231104">
+<div title="SQLExamples" modifier="Marc Cawood" modified="200708231104" created="200708230922">
 <pre>{{{&lt;&lt;SQLQuery sql:&quot;SELECT TOP 10 ProductID, ProductName FROM Products&quot;&gt;&gt;}}}
 &lt;&lt;SQLQuery sql:&quot;SELECT TOP 10 ProductID, ProductName FROM Products&quot;&gt;&gt;
 
 {{{&lt;&lt;SQLQuery sql:&quot;SELECT TOP 10 au_id, au_lname, au_fname FROM Authors&quot; connection:pubs&gt;&gt;}}}
 &lt;&lt;SQLQuery sql:&quot;SELECT TOP 10 au_id, au_lname, au_fname FROM Authors&quot; connection:pubs&gt;&gt;</pre>
 </div>
-<div title="SQLQueryPlugin" modifier="Marc Cawood" created="200708230921" modified="201610291228" tags="Plugin systemConfig" changecount="3">
+<div title="SQLQueryPlugin" modifier="Marc Cawood" modified="201610291228" created="200708230921" tags="Plugin systemConfig" changecount="3">
 <pre>/***
 |''Name:''|SQLQueryPlugin|
 |''Description:''|Query a SQL database and display results in a tiddler.|
@@ -1709,7 +1711,7 @@ function sql_DBQuery(ConnStr, SQL, RowStart, ColSep, RowEnd, HeaderStart, NoData
 }
 //}}}</pre>
 </div>
-<div title="ScratchPad" modifier="Marc Cawood" created="200604161455" modified="200801081940" tags="Favorite">
+<div title="ScratchPad" modifier="Marc Cawood" modified="200801081940" created="200604161455" tags="Favorite">
 <pre>&lt;&lt;tiddlerList tags:Plugin group:&quot;tiddler.title.substr(0,1)&quot; groupTemplate:&quot;!%group\n&quot; itemTemplate:&quot;%link&quot;  separator:&quot; - &quot; groupFooterTemplate:&quot;\n&quot;&gt;&gt;
 
 
@@ -1720,7 +1722,7 @@ function sql_DBQuery(ConnStr, SQL, RowStart, ColSep, RowEnd, HeaderStart, NoData
 
 &lt;&lt;tiddlerList tags:Menu itemTemplate:{{'%link\n&lt;&lt;tiddlerList tags:Menu-%title$))'}}&gt;&gt;</pre>
 </div>
-<div title="SectionMacro" modifier="Marc Cawood" created="200604280239" modified="201610291228" tags="Plugin systemConfig" changecount="3">
+<div title="SectionMacro" modifier="Marc Cawood" modified="201610291228" created="200604280239" tags="Plugin systemConfig" changecount="3">
 <pre>/***
 |''Name:''|~SectionMacro|
 |''Description:''|Create collapsable sections within one tiddler.|
@@ -1765,15 +1767,15 @@ config.macros.section.slider = function(place,cookie,text,title,tooltips) {
 };
 //}}}</pre>
 </div>
-<div title="ShadowPages" modifier="Marc Cawood" created="200604161857" modified="200604200835" tags="Config">
+<div title="ShadowPages" modifier="Marc Cawood" modified="200604200835" created="200604161857" tags="Config">
 <pre>&lt;&lt;list shadowed&gt;&gt;</pre>
 </div>
-<div title="SideBarOptions" modifier="Marc Cawood" created="201610291012" modified="201610301409" tags="Config" changecount="11">
+<div title="SideBarOptions" modifier="Marc Cawood" modified="201610301409" created="201610291012" tags="Config" changecount="11">
 <pre>&lt;&lt;closeAll&gt;&gt;&lt;&lt;newTiddler&gt;&gt;&lt;&lt;doBackup&gt;&gt;&lt;&lt;saveChanges&gt;&gt;
 |[[Config]]|
 |AdvancedOptions|</pre>
 </div>
-<div title="SideBarTabs" modifier="Marc Cawood" created="200604161942" modified="201610291028" tags="Config" changecount="3">
+<div title="SideBarTabs" modifier="Marc Cawood" modified="201610291028" created="200604161942" tags="Config" changecount="3">
 <pre>&lt;&lt;tabs txtMainTab
 Tags 'All tags' TabTags
 New 'Recently modified tiddlers' New
@@ -1781,7 +1783,7 @@ Fav 'Favorite Tiddlers' Favorite
 All 'Index' Index
 &gt;&gt;</pre>
 </div>
-<div title="SinglePageModePlugin" modifier="Marc Cawood" created="200604161501" modified="200701040737" tags="systemConfig">
+<div title="SinglePageModePlugin" modifier="Marc Cawood" modified="200701040737" created="200604161501" tags="systemConfig">
 <pre>/***
 |Version:|2.1.1|
 ***/
@@ -1837,7 +1839,7 @@ Story.prototype.displayTiddlers = function(srcElement,titles,template,unused1,un
 <div title="SiteTitle" modifier="Marc Cawood" created="201610291006" changecount="1">
 <pre>My Wiki</pre>
 </div>
-<div title="SlicerMacro" modifier="Marc Cawood" created="201610291203" modified="201610291220" tags="systemConfig Plugin" changecount="12">
+<div title="SlicerMacro" modifier="Marc Cawood" modified="201610291220" created="201610291203" tags="systemConfig Plugin" changecount="12">
 <pre>/***
 |''Name:''|SliceMacro|
 |''Description:''|Display value of a tiddler's slice|
@@ -1873,7 +1875,7 @@ config.macros.slicer.handler = function(place,macroName,params,wikifier,paramStr
 }
 //}}}</pre>
 </div>
-<div title="SplashScreenPlugin" modifier="Marc Cawood" created="201610300834" modified="201610300837" tags="systemConfig" changecount="2">
+<div title="SplashScreenPlugin" modifier="Marc Cawood" modified="201610300837" created="201610300834" tags="systemConfig" changecount="2">
 <pre>/***
 |Name|SplashScreenPlugin|
 |Created by|SaqImtiaz|
@@ -1928,7 +1930,7 @@ if (oldText.indexOf(&quot;SplashScreen&quot;)==-1)
 }
 //}}}</pre>
 </div>
-<div title="StyleSheet" modifier="Marc Cawood" created="200604191343" modified="201610301437" tags="Config Favorite" changecount="50">
+<div title="StyleSheet" modifier="Marc Cawood" modified="201610301851" created="200604191343" tags="Config Favorite" changecount="47">
 <pre>/*{{{*/
 #mainMenu {display:none;}
 #displayArea {margin:1em 17em 0 1em;}
@@ -1936,8 +1938,9 @@ div.toolbar {float:right}
 body {background-color:#ddd;}
 .tiddler {background-color:#eee;}
 .viewer {background-color:#fff;}
-span.tabUnselected , span.tabSelected {padding:0px;}
-span.tabUnselected a, span.tabSelected a {padding:5px;}
+span.tabUnselected, span.tabSelected {padding:0px;}
+span.tabUnselected a, span.tabSelected a {padding:7px;}
+#sidebar {padding-top:45px}
 /*}}}*/
 /***
 !!!Message Area
@@ -2039,15 +2042,14 @@ th a {
 }
 /*}}}*/</pre>
 </div>
-<div title="StyleSheets" modifier="Marc Cawood" created="200604161859" modified="201610301823" tags="Config" changecount="2">
+<div title="StyleSheets" modifier="Marc Cawood" modified="201610301845" created="200604161859" tags="Config" changecount="1">
 <pre>* StyleSheet
 ** StyleSheetColors
 *** ColorPalette
 ** StyleSheetLayout
-** StyleSheetPrint
-</pre>
+** StyleSheetPrint</pre>
 </div>
-<div title="SystemLayout" modifier="Marc Cawood" created="200604161504" modified="201610301410" tags="Config" changecount="4">
+<div title="SystemLayout" modifier="Marc Cawood" modified="201610301410" created="200604161504" tags="Config" changecount="4">
 <pre>|&gt;|&gt;|![[SplashScreen|MarkupPreHead]]|
 |&gt;|&gt;|!PageTemplate|
 |&gt;|&gt;|[[SiteTitle]] - [[SiteSubtitle]]|
@@ -2056,16 +2058,16 @@ th a {
 |~|~|SideBarTabs|
 |&gt;|&gt;|[[SiteUrl]]|</pre>
 </div>
-<div title="SystemOptions" modifier="Marc Cawood" created="200604161856" modified="200604200838" tags="Config">
+<div title="SystemOptions" modifier="Marc Cawood" modified="200604200838" created="200604161856" tags="Config">
 <pre>* AdvancedOptions
 * OptionsPanel</pre>
 </div>
-<div title="SystemPlugins" modifier="Marc Cawood" created="200604161857" modified="200701042020" tags="Config">
+<div title="SystemPlugins" modifier="Marc Cawood" modified="200701042020" created="200604161857" tags="Config">
 <pre>&lt;&lt;section Mine &lt;&lt;tiddlerList tags:&quot;-Template,Plugin&quot; $&gt;$&gt; &gt;&gt;
 &lt;&lt;section 3rdParty &lt;&lt;tiddlerList tags:&quot;systemConfig,-Template,-Plugin&quot;$&gt;$&gt; &gt;&gt;
 &lt;&lt;section All &lt;&lt;tiddlerList tags:&quot;systemConfig,-Template&quot;$&gt;$&gt; &gt;&gt;</pre>
 </div>
-<div title="SystemSideBars" modifier="Marc Cawood" created="200604161858" modified="200604200835" tags="Config">
+<div title="SystemSideBars" modifier="Marc Cawood" modified="200604200835" created="200604161858" tags="Config">
 <pre>* SideBarOptions
 * SideBarTabs
 * TabAll
@@ -2075,14 +2077,14 @@ th a {
 * TabTags
 * TabTimeline</pre>
 </div>
-<div title="SystemTiddlers" modifier="Marc Cawood" created="200604161856" modified="200604200837" tags="Config">
+<div title="SystemTiddlers" modifier="Marc Cawood" modified="200604200837" created="200604161856" tags="Config">
 <pre>* DefaultTiddlers
 * MainMenu
 * SiteSubtitle
 * SiteTitle
 * SiteUrl</pre>
 </div>
-<div title="TabEditPlugin" modifier="Marc Cawood" created="200604270228" modified="200701040749" tags="systemConfig">
+<div title="TabEditPlugin" modifier="Marc Cawood" modified="200701040749" created="200604270228" tags="systemConfig">
 <pre>/***
 |Name|TabEditPlugin|
 |Created by|SaqImtiaz|
@@ -2160,11 +2162,11 @@ config.macros.tabs.switchTab = function(tabset,tab)
 
 //}}}</pre>
 </div>
-<div title="TabTags" modifier="Marc Cawood" created="201610291007" modified="201610291008" tags="Config" changecount="2">
+<div title="TabTags" modifier="Marc Cawood" modified="201610291008" created="201610291007" tags="Config" changecount="2">
 <pre>&lt;&lt;allTags excludeLists&gt;&gt;
 TiddlersAndTags</pre>
 </div>
-<div title="TiddlerListMacro" modifier="Marc Cawood" created="200604172103" modified="201610301428" tags="Plugin Favorite systemConfig" changecount="7">
+<div title="TiddlerListMacro" modifier="Marc Cawood" modified="201610301428" created="200604172103" tags="Plugin Favorite systemConfig" changecount="7">
 <pre>/***
 |''Name:''|TiddlerListMacro|
 |''Description:''|List tiddlers in any way you like.|
@@ -2379,7 +2381,7 @@ String.prototype.prettyTrim = function(len,prefix,postfix) {
 
 //}}}</pre>
 </div>
-<div title="TiddlerListMacroDocumentation" modifier="Marc Cawood" created="200604200824" modified="200706032036" tags="Favorite">
+<div title="TiddlerListMacroDocumentation" modifier="Marc Cawood" modified="200706032036" created="200604200824" tags="Favorite">
 <pre>!Description
 The TiddlerListMacro lists tiddlers with ~SQL-Like features:
 * List tiddlers containing a word in the title or text (case-sensitive)
@@ -2464,7 +2466,7 @@ Placeholder values for itemTemplate parameter
 !Style
 No styles are pre-assigned to the lists. Use {{{@@}}} notation to define custom styles in the header, footer, groupTemplate and itemTemplate parameters.</pre>
 </div>
-<div title="TiddlerListMacroExamples" modifier="Marc Cawood" created="200604172114" modified="200705251811">
+<div title="TiddlerListMacroExamples" modifier="Marc Cawood" modified="200705251811" created="200604172114">
 <pre>Examples using the TiddlerListMacro:
 !List Formatting
 List all tiddlers tagged with &quot;Plugin&quot;
@@ -2521,10 +2523,10 @@ Fancy table with grouping on modified date
 {{{&lt;&lt;tiddlerList top:&quot;10&quot; header:&quot;|&gt;|!Tiddlers|\n|bgcolor(#ddf):''Title''|bgcolor(#ddf):''Created''|&quot; itemTemplate:&quot;|%0|%4|\n&quot; format:&quot;table&quot; group:&quot;tiddler.created.formatString('DD MMM YYYY')&quot; groupTemplate:&quot;|&gt;|bgcolor(#eef): ''Updated: %group'' |\n&quot; dateFormat:&quot;DDD, DD MM YYYY&quot;&gt;&gt;}}}
 &lt;&lt;tiddlerList top:&quot;10&quot; header:&quot;|&gt;|!Tiddlers|\n|bgcolor(#ddf):''Title''|bgcolor(#ddf):''Created''|&quot; itemTemplate:&quot;|%0|%4|\n&quot; format:&quot;table&quot; group:&quot;tiddler.created.formatString('DD MMM YYYY')&quot; groupTemplate:&quot;|&gt;|bgcolor(#eef): ''Updated: %group'' |\n&quot; dateFormat:&quot;DDD, DD MM YYYY&quot;&gt;&gt;</pre>
 </div>
-<div title="TiddlersAndTags" modifier="Marc Cawood" created="201610291008" modified="201610291019" tags="Config" changecount="6">
+<div title="TiddlersAndTags" modifier="Marc Cawood" modified="201610291019" created="201610291008" tags="Config" changecount="6">
 <pre>&lt;&lt;tiddlerList top:100 tags:Config format:table itemTemplate:&quot;|%link|&lt;&lt;tags %title$))|\n&quot; header:&quot;|!Tiddler|!Tags|&quot;&gt;&gt;</pre>
 </div>
-<div title="TiddlersBarPlugin" modifier="Marc Cawood" created="200801071447" modified="201610301433" tags="systemConfig" changecount="5">
+<div title="TiddlersBarPlugin" modifier="Marc Cawood" modified="201610301433" created="200801071447" tags="systemConfig" changecount="5">
 <pre>/***
 |''Name:''|TiddlersBarPlugin|
 |''Description:''|A bar to switch between tiddlers through tabs (like browser tabs bar).|
@@ -2702,7 +2704,7 @@ config.shadowTiddlers.PageTemplate=config.shadowTiddlers.PageTemplate.replace(/&
 
 //}}}</pre>
 </div>
-<div title="TiddlyLockPlugin" modifier="Marc Cawood" created="201610290642" modified="201610301821" tags="Plugin systemConfig" changecount="11">
+<div title="TiddlyLockPlugin" modifier="Marc Cawood" modified="201610291405" created="201610290642" tags="systemConfig Plugin" changecount="9">
 <pre>/***
 |Name|TiddlyLockPlugin|
 |Source|http://www.minormania.com/tiddlylock/tiddlylock.html|
@@ -3019,7 +3021,7 @@ config.commands.saveTiddler.handler=function(event,src,title)
 }
 //}}}</pre>
 </div>
-<div title="To Do" modifier="Marc Cawood" created="201610300829" modified="201610300937" changecount="3">
+<div title="To Do" modifier="Marc Cawood" modified="201610300937" created="201610300829" changecount="3">
 <pre>* Replace banner with narrow toolbar including search bar right
 * Message area to top middle
 * Collapsabile left/right menu
@@ -3027,14 +3029,10 @@ config.commands.saveTiddler.handler=function(event,src,title)
 * Logon screen?
 * Remember last tiddlers open at startup</pre>
 </div>
-<div title="ToolbarCommands" modifier="Marc Cawood" created="201610301750" changecount="1">
-<pre>|~ViewToolbar|closeTiddler closeOthers +editTiddler references jump|
-|~EditToolbar|+saveTiddler -cancelTiddler deleteTiddler|</pre>
-</div>
 <div title="Two" modifier="Marc Cawood" created="201610291144" tags="Data" changecount="1">
 <pre>version:2.0</pre>
 </div>
-<div title="ViewTemplate" modifier="Marc Cawood" created="201610290931" modified="201610301430" tags="Config" changecount="8">
+<div title="ViewTemplate" modifier="Marc Cawood" modified="201610301430" created="201610290931" tags="Config" changecount="8">
 <pre>&lt;!--{{{--&gt;
 &lt;div class='toolbar' role='navigation' macro='toolbar [[ToolbarCommands::ViewToolbar]]'&gt;&lt;/div&gt;
 &lt;div class='title' macro='view title'&gt;&lt;/div&gt;
@@ -3044,11 +3042,12 @@ config.commands.saveTiddler.handler=function(event,src,title)
 &lt;div class='tagClear'&gt;&lt;/div&gt;--&gt;
 &lt;!--}}}--&gt;</pre>
 </div>
-<div title="YourSearchPlugin" modifier="Marc Cawood" created="201610291017" tags="systemConfig" changecount="1">
+<div title="YourSearchPlugin" modifier="Marc Cawood" modified="201610301853" created="201610291017" tags="systemConfig" changecount="2">
 <pre>/***
 |''Name:''|YourSearchPlugin|
-|''Version:''|2.1.6 (2012-04-19)|
-|''Summary:''|Search your TiddlyWiki with advanced search features such as result lists, tiddler preview, result ranking, search filters, combined searches and many more.|
+|''Version:''|2.1.6|
+|''Date:''|2012-04-19|
+|''Description:''|Advanced search features.|
 |''Source:''|http://tiddlywiki.abego-software.de/#YourSearchPlugin|
 |''Twitter:''|[[@abego|https://twitter.com/#!/abego]]|
 |''GitHub:''|https://github.com/abego/YourSearchPlugin|

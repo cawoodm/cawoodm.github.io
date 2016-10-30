@@ -611,7 +611,6 @@ Tiddler.prototype.saveMe = function() {
 // This hijack ensures plugins can also be archived
 var archivePlugin_getPluginInfo = getPluginInfo;
 getPluginInfo = function(tiddler) {
-alert(tiddler.title)
  tiddler.text = store.getValue(tiddler, 'text');
  return archivePlugin_getPluginInfo(tiddler);
 }
@@ -648,10 +647,10 @@ String.prototype.filenameEncode = function() {
 function getWikiPath(folderName) {
  var originalPath = document.location.toString();
  if(originalPath.substr(0,5) != 'file:') {
- alert(config.messages.notFileUrlError);
- if(store.tiddlerExists(config.messages.saveInstructions))
- story.displayTiddler(null,config.messages.saveInstructions);
- return;
+	alert(config.messages.notFileUrlError);
+	if(store.tiddlerExists(config.messages.saveInstructions))
+		story.displayTiddler(null,config.messages.saveInstructions);
+	return;
  }
  var localPath = getLocalPath(originalPath);
  var backSlash = localPath.lastIndexOf('\\') == -1 ? '/' : '\\';
@@ -903,7 +902,7 @@ config.macros.configOptions.updateOption = function(name, value) {
 <div title="Data List" modifier="Marc Cawood" modified="201610291222" created="201610291145" changecount="12">
 <pre>&lt;&lt;tiddlerList tags:&quot;Data&quot; itemTemplate:&quot;* %link (&lt;&lt;slicer tiddler:%title field:version$)))\n&quot;&gt;&gt;</pre>
 </div>
-<div title="DefaultTiddlers" modifier="Marc Cawood" modified="201610301002" created="200604161426" tags="Config" changecount="5">
+<div title="DefaultTiddlers" modifier="Marc Cawood" modified="201610301803" created="200604161426" tags="Config" changecount="7">
 <pre>[[Config]] [[Plugins]]</pre>
 </div>
 <div title="DefinitionMacro" modifier="Marc Cawood" modified="201610291234" created="200606142218" tags="Plugin systemConfig" changecount="3">
@@ -1334,7 +1333,7 @@ TiddlyWiki.prototype.reverseLookup = function(lookupField,lookupValue,lookupMatc
 }
 //}}}</pre>
 </div>
-<div title="PublishMacro" modifier="Marc Cawood" modified="201610291559" created="200701021553" tags="Plugin systemConfig" changecount="5">
+<div title="PublishMacro" modifier="Marc Cawood" modified="201610301806" created="200701021553" tags="Plugin systemConfigDisable" changecount="6">
 <pre>/***
 |''Name:''|Publish Macro|
 |''Description:''|Export selected tiddlers as .html files.|

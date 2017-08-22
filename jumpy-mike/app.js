@@ -3,7 +3,8 @@ function rnd(min,max){return Math.round(Math.random() * (max - min) + min);}
 function prob(p){return Math.random()*100<=p}
 function dpd() {if(DEBUG) console.log.apply(this, arguments)}
 function dp() {console.log.apply(this, arguments)}
-function $(i) {return document.getElementById(i)}//FILE: init.js
+function $(i) {return document.getElementById(i)}
+//FILE: init.js
 var G = {};
 var DEBUG = false;
 G.ui = {}
@@ -39,10 +40,9 @@ function init() {
 	G.ui.area.height=Math.floor(G.ui.height*G.ui.scaleY);
 	G.ui.area.style.backgroundColor='#DDD';
 	G.ui.pts = {}
-
 	G.restart();
-
-}//FILE: sprites.js
+}
+//FILE: sprites.js
 function makeSprite(X,H,a) {
 	var res = []
 	for (var i=0; i<a.length; i++) {
@@ -217,7 +217,7 @@ G.music.restart = function() {
 	
 	G.music.seq1.counter=0;
 	G.music.seq4.counter=0;
-}
+};
 G.music.play = function() {
 	G.music.seq1.play( G.music.ac.currentTime );
 	var foo1 = function() {
@@ -247,19 +247,20 @@ G.music.play = function() {
 		G.music.seq3.osc.onended = foo3;
 	}
 	G.music.seq3.osc.onended = foo3;
-}
+};
 G.music.stop = function() {
 	G.music.seq1.stop();
 	G.music.seq2.stop();
 	G.music.seq3.stop();
-}//FILE: events.js
+};
+//FILE: events.js
 G.clickTimer = 0;
 G.ui.setupEvents=function(){
 	document.body.addEventListener('mousedown', G.click)
 	document.body.addEventListener('mouseup', G.clickEnd)
 	document.body.addEventListener('touchstart', G.click, {passive: false})
 	document.body.addEventListener('touchend', G.clickEnd, {passive: false})
-}
+};
 G.click = function(e) {
 	var button0 = e.key==' ' || e.type == 'touchstart' || e.type == 'mousedown';
 	if(G.state == 3 && button0) {G.restart(); return;}
@@ -271,12 +272,14 @@ G.click = function(e) {
 		else if(G.player.y=G.player.minY) {//dp("Jump Up Ticks:",G.ticks);
 		window.xx=G.ticks;G.clickTimer = G.minJump;}
 	}
-}
+};
 G.clickEnd = function(e) {
 	if (G.clickTimer>0) {
 		G.clickTimer = 0;
 	}
-}G.restart = function() {
+};
+//FILE: restart.js
+G.restart = function() {
 	G.ticks = 0;
 	G.state = 1;
 	G.speed = 1.2;
@@ -323,7 +326,7 @@ G.clickEnd = function(e) {
 	}
 	G.player.image.onload = G.start;
 	G.music.restart();
-}//FILE: loop.js
+};//FILE: game.js
 G.update = function() {
 	G.ticks++;
 	
@@ -408,15 +411,13 @@ G.update = function() {
 	//G.player.score = G.player.jumps
 	G.ui.showScore(G.player.score)
 	if(G.ticks%1000==0) G.ui.palette = G.ui.palette==G.ui.palette0?G.ui.palette1:G.ui.palette0;
-}
-
+};
 G.loop = function() {
 	G.update();
 	G.clear();
 	G.draw();
 	if (G._intervalId) requestAnimationFrame(G.loop);
-}
-
+};
 G.ui.showScore = function(s) {
 	let char = ('00' + s).slice(-3);
 	let c3 = char[0];c2 = char[1];c1 = char[2];
@@ -424,26 +425,23 @@ G.ui.showScore = function(s) {
 	G.entity.get('char2').pts = G.ui.sprites['char'+c2];
 	G.entity.get('char1').pts = G.ui.sprites['char'+c1];
 	//let char3 = char.substring
-}
-
+};
 G.addCloud = function(x,t) {
 	G.entity.add({tag:t==0?'smallCloud':'cloud',x:x||G.ui.camera.x+G.ui.width,y:rnd(t*G.ui.height/60+G.ui.height/3,G.ui.height-15),pts:t==0?G.ui.sprites.smallCloud:G.ui.sprites.cloud,col:2, dx:G.speed/(2+t), dy:.01})
-}
+};
 G.addCactus = function(x,t) {
 	var h=9+t*9;
 	G.entity.add({tag:'cactus',obstacle:[9,h], x:G.ui.camera.x+G.ui.width+x, y:G.ui.floor, pts:G.ui.sprites['cactus'+t]})
-}
+};
 G.start = function() {
 	G._intervalId = requestAnimationFrame(G.loop);//setInterval(G.loop, 1000/G.ui.fps);
 	G.music.play();
-}
+};
 G.pause = function() {
 	if (G._intervalId) {
 		clearInterval(G._intervalId);
 		delete G._intervalId;
 		G.music.stop();
 	} else G.start();
-}
-
-
-init()
+};
+init();

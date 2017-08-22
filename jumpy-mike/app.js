@@ -1,12 +1,9 @@
-//FILE: tinymusic.js 
-!function(t,e){"function"==typeof define&&define.amd?define(["exports"],e):e("object"==typeof exports&&"string"!=typeof exports.nodeName?exports:t.TinyMusic={})}(this,function(t){function e(t){var s=t.split(c);this.frequency=e.getFrequency(s[0])||0,this.duration=e.getDuration(s[1])||0}function s(t,e,s){this.ac=t||new AudioContext,this.createFxNodes(),this.tempo=e||120,this.loop=!0,this.smoothing=0,this.staccato=0,this.notes=[],this.push.apply(this,s||[])}var i="B#-C|C#-Db|D|D#-Eb|E-Fb|E#-F|F#-Gb|G|G#-Ab|A|A#-Bb|B-Cb",o=440*Math.pow(Math.pow(2,1/12),-9),n=/^[0-9.]+$/,r=4,c=/\s+/,h=/(\d+)/,a={};i.split("|").forEach(function(t,e){t.split("-").forEach(function(t){a[t]=e})}),e.getFrequency=function(t){var e=t.split(h),s=a[e[0]],i=(e[1]||r)-r,n=o*Math.pow(Math.pow(2,1/12),s);return n*Math.pow(2,i)},e.getDuration=function(t){return n.test(t)?parseFloat(t):t.toLowerCase().split("").reduce(function(t,e){return t+("w"===e?4:"h"===e?2:"q"===e?1:"e"===e?.5:"s"===e?.25:0)},0)},s.prototype.createFxNodes=function(){var t=[["bass",100],["mid",1e3],["treble",2500]],e=this.gain=this.ac.createGain();return t.forEach(function(t,s){s=this[t[0]]=this.ac.createBiquadFilter(),s.type="peaking",s.frequency.value=t[1],e.connect(e=s)}.bind(this)),e.connect(this.ac.destination),this},s.prototype.push=function(){return Array.prototype.forEach.call(arguments,function(t){this.notes.push(t instanceof e?t:new e(t))}.bind(this)),this},s.prototype.createCustomWave=function(t,e){e||(e=t),this.waveType="custom",this.customWave=[new Float32Array(t),new Float32Array(e)]},s.prototype.createOscillator=function(){return this.stop(),this.osc=this.ac.createOscillator(),this.customWave?this.osc.setPeriodicWave(this.ac.createPeriodicWave.apply(this.ac,this.customWave)):this.osc.type=this.waveType||"square",this.osc.connect(this.gain),this},s.prototype.scheduleNote=function(t,e){var s=60/this.tempo*this.notes[t].duration,i=s*(1-(this.staccato||0));return this.setFrequency(this.notes[t].frequency,e),this.smoothing&&this.notes[t].frequency&&this.slide(t,e,i),this.setFrequency(0,e+i),e+s},s.prototype.getNextNote=function(t){return this.notes[t<this.notes.length-1?t+1:0]},s.prototype.getSlideStartDelay=function(t){return t-Math.min(t,60/this.tempo*this.smoothing)},s.prototype.slide=function(t,e,s){var i=this.getNextNote(t),o=this.getSlideStartDelay(s);return this.setFrequency(this.notes[t].frequency,e+o),this.rampFrequency(i.frequency,e+s),this},s.prototype.setFrequency=function(t,e){return this.osc.frequency.setValueAtTime(t,e),this},s.prototype.rampFrequency=function(t,e){return this.osc.frequency.linearRampToValueAtTime(t,e),this},s.prototype.play=function(t){return t="number"==typeof t?t:this.ac.currentTime,this.createOscillator(),this.osc.start(t),this.notes.forEach(function(e,s){t=this.scheduleNote(s,t)}.bind(this)),this.osc.stop(t),this.osc.onended=this.loop?this.play.bind(this,t):null,this},s.prototype.stop=function(){return this.osc&&(this.osc.onended=null,this.osc.disconnect(),this.osc=null),this},t.Note=e,t.Sequence=s});//FILE: functions.js 
-//FILE: functions.js
+!function(t,e){"function"==typeof define&&define.amd?define(["exports"],e):e("object"==typeof exports&&"string"!=typeof exports.nodeName?exports:t.TinyMusic={})}(this,function(t){function e(t){var s=t.split(c);this.frequency=e.getFrequency(s[0])||0,this.duration=e.getDuration(s[1])||0}function s(t,e,s){this.ac=t||new AudioContext,this.createFxNodes(),this.tempo=e||120,this.loop=!0,this.smoothing=0,this.staccato=0,this.notes=[],this.push.apply(this,s||[])}var i="B#-C|C#-Db|D|D#-Eb|E-Fb|E#-F|F#-Gb|G|G#-Ab|A|A#-Bb|B-Cb",o=440*Math.pow(Math.pow(2,1/12),-9),n=/^[0-9.]+$/,r=4,c=/\s+/,h=/(\d+)/,a={};i.split("|").forEach(function(t,e){t.split("-").forEach(function(t){a[t]=e})}),e.getFrequency=function(t){var e=t.split(h),s=a[e[0]],i=(e[1]||r)-r,n=o*Math.pow(Math.pow(2,1/12),s);return n*Math.pow(2,i)},e.getDuration=function(t){return n.test(t)?parseFloat(t):t.toLowerCase().split("").reduce(function(t,e){return t+("w"===e?4:"h"===e?2:"q"===e?1:"e"===e?.5:"s"===e?.25:0)},0)},s.prototype.createFxNodes=function(){var t=[["bass",100],["mid",1e3],["treble",2500]],e=this.gain=this.ac.createGain();return t.forEach(function(t,s){s=this[t[0]]=this.ac.createBiquadFilter(),s.type="peaking",s.frequency.value=t[1],e.connect(e=s)}.bind(this)),e.connect(this.ac.destination),this},s.prototype.push=function(){return Array.prototype.forEach.call(arguments,function(t){this.notes.push(t instanceof e?t:new e(t))}.bind(this)),this},s.prototype.createCustomWave=function(t,e){e||(e=t),this.waveType="custom",this.customWave=[new Float32Array(t),new Float32Array(e)]},s.prototype.createOscillator=function(){return this.stop(),this.osc=this.ac.createOscillator(),this.customWave?this.osc.setPeriodicWave(this.ac.createPeriodicWave.apply(this.ac,this.customWave)):this.osc.type=this.waveType||"square",this.osc.connect(this.gain),this},s.prototype.scheduleNote=function(t,e){var s=60/this.tempo*this.notes[t].duration,i=s*(1-(this.staccato||0));return this.setFrequency(this.notes[t].frequency,e),this.smoothing&&this.notes[t].frequency&&this.slide(t,e,i),this.setFrequency(0,e+i),e+s},s.prototype.getNextNote=function(t){return this.notes[t<this.notes.length-1?t+1:0]},s.prototype.getSlideStartDelay=function(t){return t-Math.min(t,60/this.tempo*this.smoothing)},s.prototype.slide=function(t,e,s){var i=this.getNextNote(t),o=this.getSlideStartDelay(s);return this.setFrequency(this.notes[t].frequency,e+o),this.rampFrequency(i.frequency,e+s),this},s.prototype.setFrequency=function(t,e){return this.osc.frequency.setValueAtTime(t,e),this},s.prototype.rampFrequency=function(t,e){return this.osc.frequency.linearRampToValueAtTime(t,e),this},s.prototype.play=function(t){return t="number"==typeof t?t:this.ac.currentTime,this.createOscillator(),this.osc.start(t),this.notes.forEach(function(e,s){t=this.scheduleNote(s,t)}.bind(this)),this.osc.stop(t),this.osc.onended=this.loop?this.play.bind(this,t):null,this},s.prototype.stop=function(){return this.osc&&(this.osc.onended=null,this.osc.disconnect(),this.osc=null),this},t.Note=e,t.Sequence=s});//FILE: functions.js
 function rnd(min,max){return Math.round(Math.random() * (max - min) + min);}
 function prob(p){return Math.random()*100<=p}
 function dpd() {if(DEBUG) console.log.apply(this, arguments)}
 function dp() {console.log.apply(this, arguments)}
-function $(i) {return document.getElementById(i)}//FILE: init.js 
-//FILE: init.js
+function $(i) {return document.getElementById(i)}//FILE: init.js
 var G = {};
 var DEBUG = false;
 G.ui = {}
@@ -45,8 +42,7 @@ function init() {
 
 	G.restart();
 
-}//FILE: sprites.js 
-//FILE: sprites.js
+}//FILE: sprites.js
 function makeSprite(X,H,a) {
 	var res = []
 	for (var i=0; i<a.length; i++) {
@@ -95,8 +91,7 @@ G.ui.sprites = {
   ,char7: spriteCombine([spriteQuad(0,0,6,2,10), spriteQuad(4,2,2,8,10)])
   ,char8: spriteCombine([spriteQuad(0,0,2,10,10), spriteQuad(0,0,6,2,10), spriteQuad(4,2,2,2,10), spriteQuad(0,4,6,2,10), spriteQuad(4,6,2,2,10), spriteQuad(0,8,6,2,10)])
   ,char9: spriteCombine([spriteQuad(0,0,6,2,10), spriteQuad(0,2,2,4,10), spriteQuad(2,4,2,2,10), spriteQuad(4,2,2,8,10)])
-}//FILE: entity.js 
-//FILE: entity.js
+}//FILE: entity.js
 G.entity = {
 	get: function(id) {
 		for (var e=0; e<G.ent.length; e++) if (G.ent[e].id==id) return G.ent[e];
@@ -162,9 +157,102 @@ function px(x,y,c) {
 	y = y*G.ui.scaleY;
 	G.ui.area.ctx.fillStyle = c==1?G.ui.palette.light:c==2?G.ui.palette.mid:G.ui.palette.dark;
 	G.ui.area.ctx.fillRect(x,y,G.ui.scaleX,G.ui.scaleY);
-}//FILE: draw.js 
-//FILE: events.js 
-//FILE: events.js
+}//FILE: music.js
+G.music={}
+G.music.restart = function() {
+	G.music.tempo=100;
+	G.music.ac = typeof AudioContext !== 'undefined' ? new AudioContext : new webkitAudioContext,
+	lead = [
+		'C3  e','C3  e','B3  e','C3  e','C3  s','C3  s','G3  s','C3  s','G3  s','C3  s','C3  s','-  s',
+		'A3  e','G3  e','A3  e','G3  e','C3  e','C3  e','C3  e','-  e',
+	],
+	lead1 = [
+		'C3  s','C3  s','A3  s','C3  s','G3  s','C4  s','C3  s','-  s','F3  e','C3  e','A3  e','F3  e',
+		'A3  e','G3  e','A3  e','G3  e','C3  e','D4  e','C3  e','-  e',
+	],
+	harmony = [
+		'-   e','D4  e','C4  e','D4  e','C3 e','C4  e','A3  e','C3 e',
+		'G3  e','A3  e','C3 e','A3  e','G3  e','A3  e','F3  q',
+		'-   e','D4  s','C4  s','D4  e','C3 e','C4  e','C3 e','A3  e','C3 e',
+		'G3  e','A3  e','C3 e','A3  e','G3  s','A3  s','G3  e','F3  q'
+	],
+	bass = [
+		'D3  q','-   h','D3  q',
+		'A3  q','-   h','A2  q',
+		'C2 q','-   h','C2 q',
+		'G2  h','A2  h'
+	];
+	G.music.seq1 = new TinyMusic.Sequence( G.music.ac, G.music.tempo, lead );
+	G.music.seq2 = new TinyMusic.Sequence( G.music.ac, G.music.tempo, harmony );
+	G.music.seq3 = new TinyMusic.Sequence( G.music.ac, G.music.tempo, bass );
+	G.music.seq4 = new TinyMusic.Sequence( G.music.ac, G.music.tempo, lead1 );
+
+	// set staccato and smoothing values for maximum coolness
+	G.music.seq1.staccato = 0.55;
+	G.music.seq4.staccato = 0.55;
+	G.music.seq2.staccato = 0.55;
+	G.music.seq3.staccato = 0.35;
+	G.music.seq3.smoothing = 0.9;
+
+	// adjust the levels so the bass and harmony aren't too loud
+	G.music.seq1.gain.gain.value = 1.0 / 10;
+	G.music.seq4.gain.gain.value = 1.0 / 10;
+	G.music.seq2.gain.gain.value = 0.8 / 10;
+	G.music.seq3.gain.gain.value = 0.65 / 10;
+
+	// apply EQ settings
+	G.music.seq1.mid.frequency.value = 800;
+	G.music.seq4.mid.frequency.value = 800;
+	G.music.seq1.mid.gain.value = 3;
+	G.music.seq4.mid.gain.value = 3;
+	G.music.seq2.mid.frequency.value = 1200;
+	
+	G.music.seq3.mid.gain.value = 3;
+	G.music.seq3.bass.gain.value = 6;
+	G.music.seq3.bass.frequency.value = 80;
+	G.music.seq3.mid.gain.value = -6;
+	G.music.seq3.mid.frequency.value = 500;
+	G.music.seq3.treble.gain.value = -2;
+	G.music.seq3.treble.frequency.value = 1400;
+	
+	G.music.seq1.counter=0;
+	G.music.seq4.counter=0;
+}
+G.music.play = function() {
+	G.music.seq1.play( G.music.ac.currentTime );
+	var foo1 = function() {
+		++G.music.seq1.counter;
+		if (G.music.seq1.counter%4!=0)
+			{G.music.seq1.play(G.music.ac.currentTime);G.music.seq1.osc.onended = foo1;}
+		else {G.music.seq4.play(G.music.ac.currentTime);G.music.seq4.osc.onended = foo4;}
+		
+	}
+	var foo4 = function() {
+		++G.music.seq4.counter;
+		if (G.music.seq4.counter%4!=0)
+		  {G.music.seq4.play(G.music.ac.currentTime);G.music.seq4.osc.onended = foo4;}
+		else {G.music.seq1.play(G.music.ac.currentTime);G.music.seq1.osc.onended = foo1;}
+	}
+	G.music.seq1.osc.onended = foo1;
+	G.music.seq2.play( G.music.ac.currentTime + ( 60 / G.music.tempo ) * 16 );
+	var foo2 = function() {
+		// After playing harmony once, wait 16 beats then play again
+		G.music.seq2.play( G.music.ac.currentTime + ( 60 / G.music.tempo ) * 16 );
+		G.music.seq2.osc.onended = foo2;
+	}
+	G.music.seq2.osc.onended = foo2;
+	G.music.seq3.play( G.music.ac.currentTime + (60 / G.music.tempo ) * 8 );
+	var foo3 = function() {
+		G.music.seq3.play( G.music.ac.currentTime + ( 60 / G.music.tempo ) * 16 );
+		G.music.seq3.osc.onended = foo3;
+	}
+	G.music.seq3.osc.onended = foo3;
+}
+G.music.stop = function() {
+	G.music.seq1.stop();
+	G.music.seq2.stop();
+	G.music.seq3.stop();
+}//FILE: events.js
 G.clickTimer = 0;
 G.ui.setupEvents=function(){
 	document.body.addEventListener('mousedown', G.click)
@@ -188,8 +276,7 @@ G.clickEnd = function(e) {
 	if (G.clickTimer>0) {
 		G.clickTimer = 0;
 	}
-}//FILE: restart.js 
-G.restart = function() {
+}G.restart = function() {
 	G.ticks = 0;
 	G.state = 1;
 	G.speed = 1.2;
@@ -236,8 +323,7 @@ G.restart = function() {
 	}
 	G.player.image.onload = G.start;
 	G.music.restart();
-}//FILE: game.js 
-//FILE: loop.js
+}//FILE: loop.js
 G.update = function() {
 	G.ticks++;
 	

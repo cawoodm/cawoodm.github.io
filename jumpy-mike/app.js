@@ -2,7 +2,7 @@
 function rnd(min,max){return Math.round(Math.random() * (max - min) + min);}
 function prob(p){return Math.random()*100<=p}
 function dpd() {if(DEBUG) console.log.apply(this, arguments)}
-function dp() {console.log.apply(this, arguments)}
+const dp=console.log
 function $(i) {return document.getElementById(i)}
 //FILE: init.js
 var G = {};
@@ -11,9 +11,11 @@ G.ui = {}
 G.ui.fps = 30 //50;
 G.ui.width = 150;
 G.ui.height = 150;
-G.ui.scaleX = (window.innerWidth/G.ui.width);
-G.ui.scaleY = (window.innerHeight/G.ui.height);
+G.ui.scaleX = Math.floor(window.innerWidth/G.ui.width)||1;
+G.ui.scaleY = Math.floor(window.innerHeight/G.ui.height)||1;
 if (G.ui.scaleX>G.ui.scaleY) G.ui.scaleX=G.ui.scaleY; else G.ui.scaleY=G.ui.scaleX;
+dp(G.ui.width, window.innerWidth, G.ui.scaleX)
+G.ui.width=Math.floor(window.innerWidth/G.ui.scaleX)
 G.gravity=.3;
 G.minJump=2;
 G.maxJump=12;
@@ -28,7 +30,7 @@ G.ui.camera = {}
 
 function init() {
 	document.body.style.padding=document.body.style.margin='0px';
-	document.body.style.backgroundColor=G.ui.palette.light;
+	document.body.style.backgroundColor='#000';//G.ui.palette.dark;
 	G.ui.area = $('c');
 	G.ui.area.ctx = G.ui.area.getContext("2d");
 	G.ui.setupEvents();
@@ -38,7 +40,7 @@ function init() {
 	G.ui.area.style.margin='0px';
 	G.ui.area.width=Math.floor(G.ui.width*G.ui.scaleX);
 	G.ui.area.height=Math.floor(G.ui.height*G.ui.scaleY);
-	G.ui.area.style.backgroundColor='#DDD';
+	//G.ui.area.style.backgroundColor='#DDD';
 	G.ui.pts = {}
 	G.restart();
 }
@@ -91,6 +93,14 @@ G.ui.sprites = {
   ,char7: spriteCombine([spriteQuad(0,0,6,2,10), spriteQuad(4,2,2,8,10)])
   ,char8: spriteCombine([spriteQuad(0,0,2,10,10), spriteQuad(0,0,6,2,10), spriteQuad(4,2,2,2,10), spriteQuad(0,4,6,2,10), spriteQuad(4,6,2,2,10), spriteQuad(0,8,6,2,10)])
   ,char9: spriteCombine([spriteQuad(0,0,6,2,10), spriteQuad(0,2,2,4,10), spriteQuad(2,4,2,2,10), spriteQuad(4,2,2,8,10)])
+}
+G.ui.sprites.animate=function(){
+	if (G.player.y==G.ui.floor) {
+		// Running: animate player 3 times a second
+		if (G.ticks%(G.ui.fps/3)==0) G.player.frame=G.player.frame<5?G.player.frame+1:0;
+	} else {
+		G.player.frame=4; // Jump
+	}	
 }//FILE: entity.js
 G.entity = {
 	get: function(id) {
@@ -116,10 +126,20 @@ G.entity = {
 		return count;
 	},
 	collision: function(ent) {
-		var X = G.player.x+G.ui.camera.x
-		//dp(G.player.y,ent.obstacle[1],G.player.y<=ent.obstacle[1])
-		if (G.player.y<=ent.obstacle[1]-1 && ent.x<=X+G.player.w-3 && ent.x+ent.obstacle[0]>X) {
-			//dp('player.x=',X,'player.x+w=',X+G.player.w,'cactus.x=', ent.x,'overlap',ent.x-(X+G.player.w),ent.obstacle[0],ent.x<=X+G.player.w)
+		var eX = Math.round(ent.x-+G.ui.camera.x);
+		var eH = ent.obstacle[1];
+		var eMaxX = Math.round(eX+ent.obstacle[0]);
+		var pX = Math.round(G.player.x)
+		var pMaxX = Math.round(pX+G.player.w)
+		var EasyY = Math.floor(eH/1.5);
+		var EasyX = 2;
+		var hitY=G.player.y+EasyY<=ent.y+eH;
+		var hitFront = eX+EasyX<=pMaxX;
+		var hitTop = eMaxX-EasyX>pX;
+		if (hitY && hitFront && hitTop) {
+			dp("pY+EasyY=",G.player.y+EasyY,"eH+eY=",ent.y+eH,"hitY=",hitY)
+			dp("eX=",eX,"pMaxXpX=",pMaxX,"overlap=",pMaxX-eX,"hitFront=",hitFront)
+			dp("eX=",eX,"px=",pX,"eMaxX=",eMaxX,"hitTop=",hitTop)
 			return true;}
 	}
 }
@@ -147,7 +167,7 @@ function pte(e) {
 			else px(e.x+e.pts[p].x-G.ui.camera.x, e.y+e.pts[p].y-G.ui.camera.y,e.pts[p].c||e.col);
 		}
 	} else if (e.image) {
-		G.ui.area.ctx.drawImage(G.player.image, e.w*e.frame, 0, e.w, e.h, (e.x)*G.ui.scaleX, (G.ui.height-e.y-e.h)*G.ui.scaleY, e.w*G.ui.scaleX, e.h*G.ui.scaleY);
+		G.ui.area.ctx.drawImage(G.player.image, e.w*e.frame, 0, e.w-1, e.h-1, (e.x)*G.ui.scaleX, (G.ui.height-e.y-e.h)*G.ui.scaleY, e.w*G.ui.scaleX, e.h*G.ui.scaleY);
 	}
 }
 var tt = 0;
@@ -303,12 +323,12 @@ G.restart = function() {
 		score:0,
 		//pts:G.ui.sprites.trex,
 		jumps:0,
-		w:26,
-		h:20,
+		w:28,
+		h:18,
 		frame:0,
 		image: new Image()
 	});
-	G.player.image.src = 'sprites.png';
+	G.player.image.src = 'sprites2.png';
 	G.addCloud(G.ui.width*0.3,1);
 	G.addCloud(G.ui.width*0.7,1);
 	G.addCloud(G.ui.width*0.6,0);
@@ -347,6 +367,7 @@ G.update = function() {
 	}
 
 	if (G.ticks%10==0) {G.speed+=0.005;G.spacing-=.1;}
+	if (G.ticks%100==0) {G.music.tempo+=10;}
 	
 	// Generate cactii 3 times a second according to spacing
 	if (G.ticks%(G.ui.fps/3)==0) {
@@ -370,12 +391,7 @@ G.update = function() {
 	
 	G.ui.camera.x+=G.speed||0;
 
-	if (G.player.y==G.ui.floor) {
-		// Running: animate player 3 times a second
-		if (G.ticks%(G.ui.fps/3)==0) G.player.frame=G.player.frame==0?1:0;
-	} else {
-		G.player.frame=2; // Jump
-	}
+	G.ui.sprites.animate();
 	var e = G.ent.length;
 	while (e--) {
 		var ent = G.ent[e]; 

@@ -328,7 +328,7 @@ G.restart = function() {
 		frame:0,
 		image: new Image()
 	});
-	G.player.image.src = 'sprites2.png';
+	G.player.image.src = 'sprites.png';
 	G.addCloud(G.ui.width*0.3,1);
 	G.addCloud(G.ui.width*0.7,1);
 	G.addCloud(G.ui.width*0.6,0);

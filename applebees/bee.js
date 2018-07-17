@@ -4,6 +4,7 @@ function Bee(options) {
     this.img = new Image();
     this.img.src='./resources/bee.png';
     this.tag="bee";
+    this.collider=4;
     this.velocity = options.velocity||5;
     ang = rnd(0,Math.PI);
     this.speed={x: this.velocity*Math.cos(ang), y: this.velocity*Math.sin(ang)};
@@ -12,25 +13,15 @@ function Bee(options) {
 }
 Bee.prototype.update = function(delta) {
     if (g.state!="play") return;
-    if (rnd(0,70)==0) this.bounce(true);
-    if (this.x + g.ui.blockSize*2+this.speed.x > g.ui.width || this.x+this.speed.x < g.ui.blockSize ) {
-        this.speed.x*=-1;
-        this.bounce();
-    }
-    if (this.y + g.ui.blockSize*2 + this.speed.y > g.ui.height || this.y+this.speed.y < g.ui.blockSize) {
-        this.speed.y*=-1;
-        this.bounce();
-        return
-    }
-    this.speed.x += this.acc.x;
-    this.speed.y += this.acc.y;
+    if (rnd(0,70)==0) this.bounce();
+    this.speed.x += this.acc.x * delta;
+    this.speed.y += this.acc.y * delta;
     this.x += this.speed.x;
     this.y += this.speed.y;
 }
-Bee.prototype.bounce = function(changeDir) {
-    if (changeDir) dir = {x:rnda([-1, 1]), y: rnda([-1, 1])}; else dir = {x: this.speed.x==0?0:Math.abs(this.speed.x)/this.speed.x, y: this.speed.y==0?0:Math.abs(this.speed.y)/this.speed.y};
-    ang = rnd(0,Math.PI);
-    this.speed={x: dir.x*Math.abs(this.velocity*Math.cos(ang)), y: dir.y*Math.abs(this.velocity*Math.sin(ang))};
+Bee.prototype.bounce = function(dir) {
+    if (!dir) {ang = rnd(0,Math.PI);dir={x: Math.cos(ang), y: Math.sin(ang)};}
+    this.speed = {x: dir.x*this.velocity, y: dir.y*this.velocity}
 }
 Bee.prototype.renderer = function(ctx) {
     let one = 1, off=0;

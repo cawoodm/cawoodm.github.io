@@ -7,8 +7,8 @@ function Bullet(options) {
     return this;
 }
 Bullet.prototype.update = function(delta) {
-    this.x += this.speed.x * 5;
-    this.y += this.speed.y * 5;
+    this.x += this.speed.x * 25 * delta;
+    this.y += this.speed.y * 25 * delta;
 }
 Bullet.prototype.renderer = function(ctx) {
     ctx.drawImage(this.img, this.x, this.y);

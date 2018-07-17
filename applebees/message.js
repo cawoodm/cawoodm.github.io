@@ -5,9 +5,10 @@ function Message(options) {
     this.text = options.text;
 }
 Message.prototype.renderer = function(ctx) {
-    ctx.fillStyle = '#000';
-    ctx.fillRect(4*g.ui.blockSize, 4*g.ui.blockSize, 8*g.ui.blockSize, 6*g.ui.blockSize);
-    ctx.fillStyle="#0F0";
-    ctx.scale(8, 8)
-    ctx.fillText(this.text, 72, 75);
+    g.ctx.globalAlpha=0.4;
+    g.ctx.fillStyle = '#000';
+    g.ctx.fillRect(4*g.ui.blockSize, 4*g.ui.blockSize, 8*g.ui.blockSize, 6*g.ui.blockSize);
+    g.ctx.scale(8, 8)
+    g.ctx.fillStyle="#0F0";
+    g.ctx.fillText(this.text, 72, 75);
 }

@@ -32,6 +32,7 @@ g.restart = function(title) {
 	// Cleanup
 	g.halt();
 	if (g.scene) g.scene.entities.length = 0;
+	g.level=0;
 	g.scenes = {
 		title: {entities: [new TitleScreen({text: "Apple-Beeeezzz"})]}
 		,levels: []
@@ -45,7 +46,6 @@ g.restart = function(title) {
 	} else {
 		// New Game
 		g.state="play";
-		g.level=0;
 		g.stats = new Stats({x: 35, y: 26, scale:3});
 		g.collider = new Collider;
 		g.nextLevel();
@@ -54,7 +54,7 @@ g.restart = function(title) {
 };
 g.nextLevel = function() {
 	if (g.level == g.scenes.levels.length) return g.gameWon();
-	g.level++;
+	g.level++;dp("level", g.level)
 	g.scene = g.scenes.levels[g.level-1];
 	g.entity.add(g.stats);
 	g.entity.add(g.collider);
@@ -80,12 +80,12 @@ function makeLevel(level) {
 	for (let i=0; i<g.ui.gridWidth; i++)
 		for (let j=0; j<g.ui.gridHeight; j++)
 			if (j==0 || j==g.ui.gridHeight-1 || i==0 || i==g.ui.gridWidth-1)
-				grid[i][j]='w';
+				grid[i][j]=grid[i][j]==0?'w':grid[i][j];
 	
 	// Make inside walls (1:20 i.e. 5%)
 	for (let i=1; i<g.ui.gridWidth-2; i++)
 		for (let j=1; j<g.ui.gridHeight-2; j++)
-			if (rnd(0,20)==10) grid[i][j]='w';
+			if (rnd(0,5)==0) grid[i][j]=grid[i][j]==0?'w':grid[i][j];
 
 	// Make Bees
 	for (let i=0; i<level; i++) {
@@ -101,11 +101,14 @@ function makeLevel(level) {
 		grid[x][y] = 'a';
 	}
 
+	// Player
+	grid[3][3]='p';
+
 	// Place objects on grid
 	for (let i=0; i<g.ui.gridWidth; i++) for (let j=0; j<g.ui.gridHeight; j++)
 	switch(grid[i][j]) {
 		case 'w': g.entity.add(new Wall({x: i*g.ui.blockSize, y:j*g.ui.blockSize, size: g.ui.blockSize})); break;
-		case 'b': g.entity.add(new Bee({x: i*g.ui.blockSize, y: j*g.ui.blockSize, velocity: 3+(g.level)})); break;
+		case 'b': g.entity.add(new Bee({x: i*g.ui.blockSize, y: j*g.ui.blockSize, velocity: 3+(level)})); break;
 		case 'a': g.entity.add(new Apple({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
 	}
 		
@@ -137,7 +140,6 @@ g.gameWon = function() {
 };
 g.gameOver = function() {
 	g.state="gameOver";
-	g.entity.remove(g.player);g.player=null;
 	g.entity.add(new Message({text:"Game Over"}))
 	//g.scene = g.scenes.gameOver;
 	g.entity.add(g.stats);

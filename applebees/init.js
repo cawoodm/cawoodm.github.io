@@ -40,7 +40,7 @@ window.addEventListener("load", function() {
 	Images.add("player", "./resources/player.png");
 	Images.add("wall", "./resources/wall.png");
 	Images.onload(function() {
-		//g.restart(true);
-		g.restart(false); // straight to game
+		if (location.hostname=="localhost") g.restart(false); // straight to game
+		else g.restart(true);
 	});
 });

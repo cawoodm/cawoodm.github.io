@@ -10,23 +10,19 @@ g.ui.keys = {
 };
 g.ui.keys.left.down = function() {
 	if (g.state!="play") return;
-	g.player.speed.y=g.player.acc.y=0;
-	g.player.speed.x=-g.player.velocity;
+	g.player.move(Vector.left())
 };
 g.ui.keys.right.down = function() {
 	if (g.state!="play") return;
-	g.player.speed.y=g.player.acc.y=0;
-	g.player.speed.x=g.player.velocity;
+	g.player.move(Vector.right())
 };
 g.ui.keys.up.down = function() {
 	if (g.state!="play") return;
-	g.player.speed.x=g.player.acc.x=0;
-	g.player.speed.y=-g.player.velocity;
+	g.player.move(Vector.up())
 };
 g.ui.keys.down.down = function() {
 	if (g.state!="play") return;
-	g.player.speed.x=g.player.acc.x=0;
-	g.player.speed.y=g.player.velocity;
+	g.player.move(Vector.down())
 };
 g.ui.keys.fire.press = function(e) {
 	if (g.state!="play") return g.restart();

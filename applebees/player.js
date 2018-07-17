@@ -6,22 +6,29 @@ function Player(options) {
     this.acc={x:0, y:0};
     this.speed={x:0, y:0};
     this.velocity = options.velocity || 5;
+    this.frame=0;
     return this;
 }
 Player.prototype.update = function(delta) {
     if (g.state!="play") return;
-    if (this.x + g.ui.blockSize*2+this.speed.x > g.ui.width || this.y + g.ui.blockSize*2 + this.speed.y > g.ui.height || this.x+this.speed.x < g.ui.blockSize || this.y+this.speed.y < g.ui.blockSize) {
-        this.speed={x:0,y:0};
-        this.acc={x:0,y:0};
-        return
-    }
     this.speed.x += this.acc.x;
     this.speed.y += this.acc.y;
     this.x += this.speed.x;
     this.y += this.speed.y;
+    if (this.speed.x>0) this.frame=0;
+    else if (this.speed.x<0) this.frame=1;
+    else if (this.speed.y<0) this.frame=2;
+    else if (this.speed.y>0) this.frame=3;
 }
 Player.prototype.renderer = function(ctx) {
     let one = 1, off=0;
-    if (this.speed.x<0) {one=-1;off=g.ui.blockSize;ctx.scale(-1,1);}
-    ctx.drawImage(this.img, one*this.x-off, this.y);
+    g.ctx.drawImage(this.img, this.frame*g.ui.blockSize, 0, g.ui.blockSize, g.ui.blockSize, one*this.x-off, this.y, g.ui.blockSize, g.ui.blockSize);
+    g.ctx.strokeStyle="#DDD";
+    g.ctx.strokeRect(this.x, this.y, g.ui.blockSize, g.ui.blockSize)
+}
+Player.prototype.shoot = function() {
+    g.entity.add(new Bullet({x: g.player.x, y: g.player.y, speed: this.speed}));
+}
+Player.prototype.stop = function() {
+    this.speed={x: 0, y:0};
 }

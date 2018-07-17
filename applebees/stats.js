@@ -6,9 +6,9 @@ function Stats(options) {
 }
 Stats.prototype.renderer = function(ctx) {
 	ctx.scale(this.scale, this.scale);
-	ctx.fillStyle="#DDF";
+	ctx.fillStyle="#445";
 	ctx.font="30px Arial";
-	ctx.fillText("Level: " + g.level + " Score: " + this.score, this.x, this.y);
+	ctx.fillText("Level: " + g.level + "                Score: " + this.score, this.x, this.y);
 }
 /*Stats.prototype.update = function(delta) {
 	if (!g.player) return;

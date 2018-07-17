@@ -12,33 +12,26 @@ g.ui.keys.left.down = function() {
 	if (g.state!="play") return;
 	g.player.speed.y=g.player.acc.y=0;
 	g.player.speed.x=-g.player.velocity;
-	//if(g.player.acc.x>-0.2) g.player.acc.x -= 0.1;
-	//if (g.player.speed.x>=0) {g.player.acc.x = -0.1; g.player.speed.x = -0.75;}
 };
 g.ui.keys.right.down = function() {
 	if (g.state!="play") return;
 	g.player.speed.y=g.player.acc.y=0;
 	g.player.speed.x=g.player.velocity;
-	//if(g.player.acc.x<0.2) g.player.acc.x += 0.1;
-	//if (g.player.speed.x<=0) {g.player.acc.x = 0.1; g.player.speed.x = 0.75;}
 };
 g.ui.keys.up.down = function() {
 	if (g.state!="play") return;
 	g.player.speed.x=g.player.acc.x=0;
 	g.player.speed.y=-g.player.velocity;
-	//if(g.player.acc.y>-0.2) g.player.acc.y -= 0.1;
-	//if (g.player.speed.y>=0) {g.player.acc.y = -0.1; g.player.speed.y = -0.75;}
 };
 g.ui.keys.down.down = function() {
 	if (g.state!="play") return;
 	g.player.speed.x=g.player.acc.x=0;
 	g.player.speed.y=g.player.velocity;
-	//if(g.player.acc.y<0.2) g.player.acc.y += 0.1;
-	//if (g.player.speed.y<=0) {g.player.acc.y = 0.1; g.player.speed.y = 0.75;}
 };
 g.ui.keys.fire.press = function(e) {
 	if (g.state!="play") return g.restart();
-	if (!e.touches) return;
+	if (!e || !e.touches) g.player.shoot();
+	return;
 	x = e.touches[0].clientX / g.ui.scaleX;
 	y = e.touches[0].clientY / g.ui.scaleY;
 	if (y > g.ui.height/4 && y < g.ui.height*3/4) {
@@ -48,7 +41,6 @@ g.ui.keys.fire.press = function(e) {
 		if (y < g.ui.height/4) return g.ui.keys.up.down()
 		else if (y > g.ui.height*3/4) return g.ui.keys.down.down()
 	}
-	g.entity.add(new Bullet({x: g.player.x, y: g.player.y, speed: g.player.speed.x}));
 }
 g.ui.keys.fireM.press = g.ui.keys.fire.press;
 
@@ -90,4 +82,30 @@ function Keyboard(keyCode) {
 		document.addEventListener("touchstart", key.clickHandler.bind(key), false);
 	}
 	return key;
+}
+
+// Swiping
+document.addEventListener('touchstart', handleTouchStart, false);        
+document.addEventListener('touchmove', handleTouchMove, false);
+var xDown = null;                                                        
+var yDown = null;                                                        
+function handleTouchStart(evt) {                                         
+    xDown = evt.touches[0].clientX;                                      
+    yDown = evt.touches[0].clientY;                                      
+}
+function handleTouchMove(evt) {
+    if (!xDown || !yDown) return;
+    var xUp = evt.touches[0].clientX;                                    
+    var yUp = evt.touches[0].clientY;
+    var xDiff = xDown - xUp;
+    var yDiff = yDown - yUp;
+    if (Math.abs(xDiff) > Math.abs(yDiff)) {
+		if (xDiff > 0) g.ui.keys.left.down()
+		else g.ui.keys.right.down()
+    } else {
+		if (yDiff > 0) g.ui.keys.up.down()
+		else g.ui.keys.down.down()                                                              
+    }
+    xDown = null;
+    yDown = null;                                             
 }

@@ -15,7 +15,7 @@ g.pause=function() {
 		g.ticker.start();
 	} else {
 		g.ticker.stop();
-		g.sounds.music.stop();
+		g.sounds.music.pause();
 		g.state="pause";
 	}
 };
@@ -46,7 +46,7 @@ g.restart = function(title) {
 		// New Game
 		g.state="play";
 		g.level=0;
-		g.stats = new Stats({x: 10, y: 26, scale:3});
+		g.stats = new Stats({x: 35, y: 26, scale:3});
 		g.collider = new Collider;
 		g.nextLevel();
 	}
@@ -58,7 +58,7 @@ g.nextLevel = function() {
 	g.scene = g.scenes.levels[g.level-1];
 	g.entity.add(g.stats);
 	g.entity.add(g.collider);
-	g.player = g.entity.add(new Player({x: rnd(1, 3)*g.ui.blockSize, y: rnd(1, 3)*g.ui.blockSize}));
+	g.player = g.entity.add(new Player({x: 3*g.ui.blockSize, y: 3*g.ui.blockSize}));
 	g.player.velocity += 1;
 	g.sounds.music.play();
 };
@@ -68,20 +68,47 @@ function makeLevel(level) {
 	g.scene = g.scenes.levels[g.scenes.levels.length-1]
 	// Make grass
 	g.entity.add(new Sprite({x: g.ui.blockSize, y: g.ui.blockSize, sprite: 'grass', w: g.ui.gridWidth*g.ui.blockSize, h: g.ui.gridHeight*g.ui.blockSize}));
-	// Make walls
+	
+	// Build a grid
+	let grid = [];
+	for (let i=0; i<g.ui.gridWidth; i++) {
+		grid.push([]);
+		for (let j=0; j<g.ui.gridHeight; j++)
+			grid[grid.length-1].push(0);
+	}
+	// Make outside walls
 	for (let i=0; i<g.ui.gridWidth; i++)
 		for (let j=0; j<g.ui.gridHeight; j++)
 			if (j==0 || j==g.ui.gridHeight-1 || i==0 || i==g.ui.gridWidth-1)
-				g.entity.add(new Wall({x: i*g.ui.blockSize, y:j*g.ui.blockSize, size: g.ui.blockSize}));
+				grid[i][j]='w';
+	
+	// Make inside walls (1:20 i.e. 5%)
+	for (let i=1; i<g.ui.gridWidth-2; i++)
+		for (let j=1; j<g.ui.gridHeight-2; j++)
+			if (rnd(0,20)==10) grid[i][j]='w';
+
 	// Make Bees
-	for (let i=0; i<level; i++)
-		g.entity.add(new Bee({x: rnd(4, g.ui.gridWidth-2)*g.ui.blockSize, y: rnd(4, g.ui.gridWidth-2)*g.ui.blockSize, velocity: 3+(g.level)}));
+	for (let i=0; i<level; i++) {
+		let x = rnd(4, g.ui.gridWidth-2)
+		let y = rnd(4, g.ui.gridHeight-2)
+		grid[x][y]='b';
+	}
+
 	// Make Apples
 	for (let i=0; i<2+2*level; i++) {
-		let x = rnd(1, g.ui.gridWidth-2)*g.ui.blockSize;
-		let y = rnd(1, g.ui.gridHeight-2)*g.ui.blockSize;
-		g.entity.add(new Apple({x: x, y: y}));
+		let x = rnd(1, g.ui.gridWidth-2);
+		let y = rnd(1, g.ui.gridHeight-2);
+		grid[x][y] = 'a';
 	}
+
+	// Place objects on grid
+	for (let i=0; i<g.ui.gridWidth; i++) for (let j=0; j<g.ui.gridHeight; j++)
+	switch(grid[i][j]) {
+		case 'w': g.entity.add(new Wall({x: i*g.ui.blockSize, y:j*g.ui.blockSize, size: g.ui.blockSize})); break;
+		case 'b': g.entity.add(new Bee({x: i*g.ui.blockSize, y: j*g.ui.blockSize, velocity: 3+(g.level)})); break;
+		case 'a': g.entity.add(new Apple({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
+	}
+		
 }
 g.entity.add = function(ent) {
 	g.scene.entities.push(ent);
@@ -102,29 +129,6 @@ g.entity.get = function(tag) {
 };
 g.entity.count = function(tag) {
 	return this.get(tag).length;
-};
-g.entity.collides = function(tag1, tag2) {
-	let e1s = g.entity.get(tag1);
-	let e2s = g.entity.get(tag2);
-	for (let i=0; i<e1s.length; i++)
-		for (let j=0; j<e2s.length; j++) 
-			if (g.entity.collision(e1s[i], e2s[j], 10))
-				return [e1s[i], e2s[j]]
-	return false;
-};
-g.entity.collision = function(e1, e2, tol) {
-	tol = tol || 0;
-	let x1 = e1.x+tol/2;
-	let X1 = e1.x + g.ui.blockSize - tol/2;
-	let y1 = e1.y + tol/2;
-	let Y1 = e1.y + g.ui.blockSize - tol/2;
-	let x2 = e2.x + tol/2;
-	let X2 = e2.x + g.ui.blockSize - tol/2;
-	let y2 = e2.y + tol/2;
-	let Y2 = e2.y + g.ui.blockSize - tol/2;
-	let xOverlap = btw(x2, x1, X1) || btw(X2, x1, X1);
-	let yOverlap = btw(y2, y1, Y1) || btw(Y2, y1, Y1);
-	return xOverlap && yOverlap;
 };
 g.gameWon = function() {
 	g.state="gameWon";

@@ -1,3 +1,5 @@
 [1531719926] [error] [client 0.0.0.0] p: duplicate option
 [1531719926] [error] [client 0.0.0.0] r: duplicate option
 [1531719932] [error] [client 127.0.0.1] GET /favicon.ico: Error 404: Not Found
+[1531802302] [error] [client 127.0.0.1] GET /favicon.ico: Error 404: Not Found
+[1531805774] [error] [client 127.0.0.1] GET /resources/player2.png: Error 404: Not Found

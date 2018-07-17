@@ -27,6 +27,7 @@ document.body.style.width=window.innerWidth+'px'
 document.body.style.height=window.innerHeight+'px'
 g.ui.canvas = document.createElement("canvas");
 g.ctx = g.ui.canvas.getContext("2d");
+g.ctx.imageSmoothingEnabled=false;
 g.ui.canvas.width = window.innerWidth;
 g.ui.canvas.height = window.innerHeight;
 document.body.appendChild(g.ui.canvas);
@@ -39,7 +40,7 @@ window.addEventListener("load", function() {
 	Images.add("player", "./resources/player.png");
 	Images.add("wall", "./resources/wall.png");
 	Images.onload(function() {
-		g.restart(true);
-		//g.restart(false); // straight to game
+		//g.restart(true);
+		g.restart(false); // straight to game
 	});
 });

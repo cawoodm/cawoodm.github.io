@@ -146,9 +146,9 @@ g.gameWon = function() {
 };
 g.gameOver = function() {
 	g.state="gameOver";
+	g.entity.remove(g.collider);//Stop collisions
 	g.entity.add(new Message({text:"Game Over"}))
 	//g.scene = g.scenes.gameOver;
-	g.entity.add(g.stats);
 	g.sounds.music.pause();g.sounds.music.currentTime=0;
 	g.sounds.lose.play();
 };
@@ -158,9 +158,8 @@ g.gameUpdate = function(delta) {
 	}, this);
 };
 g.gameRender = function() {
-	
+	g.ctx.restore();
 	g.ctx.clearRect(0, 0, g.ui.canvas.width, g.ui.canvas.height);
-
 	g.scene.entities.forEach(function(ent) {
 		if (typeof ent.renderer === "function") {
 			g.ctx.save();
@@ -169,6 +168,7 @@ g.gameRender = function() {
 		}
 	}, this);
 	
-	//if (g.state=="gameOver") g.halt(g.state);
-	
+};
+g.goDebug = function() {
+	g.gameOver();
 };

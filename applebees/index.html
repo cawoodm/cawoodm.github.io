@@ -3,14 +3,14 @@
 <head>
 <meta charset = "utf-8"> 
 <title>Apple-Beeeezzz</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"> 
+<meta name="viewport" content="width=device-width, initial-scale=1.01,maximum-scale=1.0,user-scalable=0,minimal-ui"> 
 <meta name="apple-mobile-web-app-title" content="Apple-Beeeezzz">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="apple-touch-icon-precomposed" sizes="57x57" href="favicon.png" />
 <link rel="manifest" href="manifest.json">
 <style>
-html, body {overflow-x: hidden, position: fixed;}
+html, body {overflow-x: hidden; position: fixed;}
 body {position: relative}
 * {
     -webkit-touch-callout:none;
@@ -23,9 +23,9 @@ body {position: relative}
 </head>
 <body marginwidth="0" marginheight="0" bgcolor="#000">
   <div id="debug">
+    <button style="float:right" onclick="g.goDebug()">DBG</button>
     <button style="float:right" onclick="g.pause(event);">||</button>
-    <button style="float:right" onclick="g.halt();event.preventDefault();">[]</button>
-    <button style="float:right" onclick="g.step();event.preventDefault();">&gt;&gt;</button>
+    <button style="float:right" onclick="g.halt();event.preventDefault();">[ ]</button>
   </div>
 </body>
 <script src="functions.js"></script>

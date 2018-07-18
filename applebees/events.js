@@ -85,11 +85,13 @@ document.addEventListener('touchstart', handleTouchStart, false);
 document.addEventListener('touchmove', handleTouchMove, false);
 var xDown = null;                                                        
 var yDown = null;                                                        
-function handleTouchStart(evt) {                                         
+function handleTouchStart(evt) {
+evt.preventDefault();
     xDown = evt.touches[0].clientX;                                      
     yDown = evt.touches[0].clientY;                                      
 }
 function handleTouchMove(evt) {
+	evt.preventDefault();
     if (!xDown || !yDown) return;
     var xUp = evt.touches[0].clientX;                                    
     var yUp = evt.touches[0].clientY;

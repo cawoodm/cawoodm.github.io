@@ -11,13 +11,18 @@ const g = {
 	,level:0
 };
 console.clear();
-g.ui.width = g.ui.blockSize*g.ui.gridWidth;
-g.ui.height = g.ui.blockSize*g.ui.gridHeight;
-// Use max of screen
+
+// Measure screen
 g.ui.win = {
 	width: window.innerWidth||document.documentElement.clientWidth||document.body.offsetWidth
 	,height: window.innerHeight||document.documentElement.clientHeight||document.body.offsetHeight
 };
+// Use longest dimension as 16 blocks
+if (g.ui.win.width>=g.ui.win.height) g.ui.gridHeight = Math.floor(g.ui.gridWidth*g.ui.win.height/g.ui.win.width);
+else g.ui.gridWidth = Math.floor(g.ui.gridHeight*g.ui.win.width/g.ui.win.height);
+
+g.ui.width = g.ui.blockSize*g.ui.gridWidth;
+g.ui.height = g.ui.blockSize*g.ui.gridHeight;
 g.ui.scaleX = (g.ui.win.width/(g.ui.blockSize*g.ui.gridWidth));
 g.ui.scaleY = (g.ui.win.height/(g.ui.blockSize*g.ui.gridHeight));
 

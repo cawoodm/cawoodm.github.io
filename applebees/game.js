@@ -52,14 +52,14 @@ g.restart = function(title) {
 	}
 	g.start();
 };
-g.nextLevel = function() {
-	if (g.level == g.scenes.levels.length) return g.gameWon();
-	g.level++;dp("level", g.level)
+g.nextLevel = function(level) {
+	g.level = level || g.level+1;
+	if (g.level >= g.scenes.levels.length) return g.gameWon();
+	g.state="play";
 	g.scene = g.scenes.levels[g.level-1];
+	g.player = g.entity.get("player")[0];
 	g.entity.add(g.stats);
 	g.entity.add(g.collider);
-	g.player = g.entity.add(new Player({x: 3*g.ui.blockSize, y: 3*g.ui.blockSize}));
-	g.player.velocity += 1;
 	g.sounds.music.play();
 };
 function makeLevel(level) {
@@ -101,20 +101,26 @@ function makeLevel(level) {
 		grid[x][y] = 'a';
 	}
 
-	// Player
+	// Overwrite 3,3 with the player
 	grid[3][3]='p';
+	// Add Player before everything else so it appears "under" walls
+	g.entity.add(new Player({x: 3*g.ui.blockSize, y: 3*g.ui.blockSize}));
 
 	// Place objects on grid
 	for (let i=0; i<g.ui.gridWidth; i++) for (let j=0; j<g.ui.gridHeight; j++)
 	switch(grid[i][j]) {
 		case 'w': g.entity.add(new Wall({x: i*g.ui.blockSize, y:j*g.ui.blockSize, size: g.ui.blockSize})); break;
-		case 'b': g.entity.add(new Bee({x: i*g.ui.blockSize, y: j*g.ui.blockSize, velocity: 3+(level)})); break;
+		case 'b': g.entity.add(new Bee({x: i*g.ui.blockSize, y: j*g.ui.blockSize, velocity: 3+(level/3)})); break;
 		case 'a': g.entity.add(new Apple({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
 	}
 		
 }
 g.entity.add = function(ent) {
 	g.scene.entities.push(ent);
+	return ent;
+};
+g.entity.insert = function(ent) {
+	g.scene.entities.splice(0, 0, ent);
 	return ent;
 };
 g.entity.remove = function(ent) {

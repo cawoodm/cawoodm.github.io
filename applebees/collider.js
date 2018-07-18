@@ -1,7 +1,7 @@
 function Collider() {};
 Collider.prototype.renderer = function(delta) {
 	if (!g.player) return;
-    if (Collider.collides("player", "bee").length>0) return g.gameOver();
+    if (Collider.collide("player", "bee", 20)) return g.gameOver();
     //let ghost = {tag: "player", x: g.player.x+g.player.speed.x, y: g.player.y+g.player.speed.y};
 	if (Collider.collides("player", "wall", 2).length>0) g.player.stop();
     Collider.collides("player", "apple", 25).forEach((a, i)=>{
@@ -38,10 +38,9 @@ Collider.collides = function(tag1, tag2, tol) {
 	return [];
 };
 Collider.collision = function(e1, e2, tol) {
-    tol = tol || 0;
     let d1 = {x: e1.speed?e1.speed.x:0, y: e1.speed?e1.speed.y:0};
-    let t1 = e1.collider || tol;
-    let t2 = e2.collider || tol;
+    let t1 = tol || e1.collider;
+    let t2 = tol || e2.collider;
 	let x1 = e1.x + d1.x + t1;
 	let X1 = e1.x + d1.x + g.ui.blockSize - t1;
 	let y1 = e1.y + d1.y + t1;
@@ -55,7 +54,7 @@ Collider.collision = function(e1, e2, tol) {
     let collision = xOverlap && yOverlap;
     if (g.debug && e1.tag==g.debug[0] && e2.tag==g.debug[1]) {
         if (collision) g.ctx.lineWidth=5; else g.ctx.lineWidth=1;
-        if(e1.tag==g.debug[0]) {g.ctx.strokeStyle="#00F";g.ctx.strokeRect(x1, y1, X1-x1, Y1-y1)}
+        if(e1.tag==g.debug[0]) {g.ctx.strokeStyle="#0FF";g.ctx.strokeRect(x1, y1, X1-x1, Y1-y1)}
         if(e2.tag==g.debug[1]) {g.ctx.strokeStyle="#F00";g.ctx.strokeRect(x2, y2, X2-x2, Y2-y2)}
         //if(e1.tag=="bee" && e2.tag=="wall" && collision && g.papa) debugger
     }

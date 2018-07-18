@@ -25,8 +25,11 @@ Player.prototype.update = function(delta) {
 Player.prototype.renderer = function(ctx) {
     x = this.x;
     y = this.y;
-    //if (this.speed.y!=0) x = g.ui.blockSize * Math.round(x/g.ui.blockSize);
-    //else if (this.speed.x!=0) y = g.ui.blockSize * Math.round(y/g.ui.blockSize);
+    // Drop shadow
+    ctx.beginPath();
+    ctx.fillStyle="rgba(100,100,100,0.5)"
+    ctx.ellipse(x+g.ui.blockSize/2, y+g.ui.blockSize, g.ui.blockSize/2, g.ui.blockSize/5, 0, 0, 2 * Math.PI);
+    ctx.fill();
     g.ctx.drawImage(this.img, this.frame*g.ui.blockSize, 0, g.ui.blockSize, g.ui.blockSize, x, y, g.ui.blockSize, g.ui.blockSize);
 }
 Player.prototype.move = function(dir) {

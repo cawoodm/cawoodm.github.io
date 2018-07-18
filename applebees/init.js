@@ -46,7 +46,7 @@ window.addEventListener("load", function() {
 	Images.add("wall", "./resources/wall.png");
 	Images.onload(function() {
 		if (location.hostname=="localhost") {
-			$('#debug').style.display='block';
+			//$('#debug').style.display='block';
 			g.restart(false); // straight to game
 		}
 		else g.restart(true);

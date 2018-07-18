@@ -73,8 +73,6 @@ function Keyboard(keyCode) {
 		window.addEventListener("keydown", key.downHandler.bind(key), false);
 		window.addEventListener("keyup", key.upHandler.bind(key), false);
 	} else {
-		//g.ui.canvas
-		//document.addEventListener("mousedown", key.clickHandler.bind(key), false);
 		document.addEventListener("touchstart", key.clickHandler.bind(key), false);
 	}
 	return key;
@@ -82,19 +80,24 @@ function Keyboard(keyCode) {
 
 // Swiping
 document.addEventListener('touchstart', handleTouchStart, false);        
+document.addEventListener('touchend', handleTouchEnd, false);        
 document.addEventListener('touchmove', handleTouchMove, false);
-var xDown = null;                                                        
-var yDown = null;                                                        
-function handleTouchStart(evt) {                                         
-    xDown = evt.touches[0].clientX;                                      
-    yDown = evt.touches[0].clientY;                                      
+var xDown = null;                  
+var yDown = null;                  
+function handleTouchStart(evt) {
+	xDown = evt.touches[0].clientX;
+    yDown = evt.touches[0].clientY;
+}
+function handleTouchEnd(evt) {
+	if(xDown) g.ui.keys.fire.press();
 }
 function handleTouchMove(evt) {
     if (!xDown || !yDown) return;
     var xUp = evt.touches[0].clientX;                                    
     var yUp = evt.touches[0].clientY;
     var xDiff = xDown - xUp;
-    var yDiff = yDown - yUp;
+	var yDiff = yDown - yUp;
+	dp(xDiff, yDiff)
     if (Math.abs(xDiff) > Math.abs(yDiff)) {
 		if (xDiff > 0) g.ui.keys.left.down()
 		else g.ui.keys.right.down()
@@ -103,5 +106,5 @@ function handleTouchMove(evt) {
 		else g.ui.keys.down.down()                                                              
     }
     xDown = null;
-    yDown = null;                                             
+    yDown = null;       
 }

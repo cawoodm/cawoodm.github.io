@@ -5,7 +5,7 @@ Collider.prototype.renderer = function(delta) {
     if (Collider.collide("player", "bee", 20)) return g.gameOver();
     //let ghost = {tag: "player", x: g.player.x+g.player.speed.x, y: g.player.y+g.player.speed.y};
 	if (Collider.collides("player", "wall", 2).length>0) g.player.stop();
-    Collider.collides("player", "apple", 25).forEach((a, i)=>{
+    Collider.collides("player", "apple").forEach((a, i)=>{
         if (a.tag=="apple") {
             g.entity.remove(a);
             g.stats.score+=1;
@@ -27,10 +27,6 @@ Collider.prototype.renderer = function(delta) {
     Collider.collides("bullet", "wall", 1).forEach((a)=>{
         if (a.tag=="bullet") g.entity.remove(a);
     });
-    g.entity.get("bullet").forEach(bullet => {
-        if (bullet.x < g.ui.blockSize || bullet.y < g.ui.blockSize || bullet.x > (g.ui.gridWidth-2)*g.ui.blockSize || bullet.y > (g.ui.gridHeight-2)*g.ui.blockSize )
-            return g.entity.remove(bullet);
-	});
 }
 Collider.collide = function(tag1, tag2, tol) {return Collider.collides(tag1, tag2, tol).length>0;}
 Collider.collides = function(tag1, tag2, tol) {
@@ -62,7 +58,6 @@ Collider.collision = function(e1, e2, tol) {
         if (collision) g.ctx.lineWidth=5; else g.ctx.lineWidth=1;
         if(e1.tag==g.debug[0]) {g.ctx.strokeStyle="#0FF";g.ctx.strokeRect(x1, y1, X1-x1, Y1-y1)}
         if(e2.tag==g.debug[1]) {g.ctx.strokeStyle="#F00";g.ctx.strokeRect(x2, y2, X2-x2, Y2-y2)}
-        //if(e1.tag=="bee" && e2.tag=="wall" && collision && g.papa) debugger
     }
 	return collision;
 };

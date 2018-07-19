@@ -7,8 +7,7 @@ const g = {
 	}
 	,state: ""
 	,entity: {}
-	,keys: {}
-	,level:0
+	,levels:[]
 };
 //console.clear();
 

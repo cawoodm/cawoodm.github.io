@@ -36,7 +36,7 @@ g.ctx.imageSmoothingEnabled=false;
 g.ui.canvas.width = window.innerWidth;
 g.ui.canvas.height = window.innerHeight;
 document.body.appendChild(g.ui.canvas);
-//g.ctx.scale(g.ui.scaleX, g.ui.scaleY);
+g.ctx.scale(g.ui.scaleX, g.ui.scaleY);
 window.addEventListener("load", function() {
 	Images.add("sprites", "./resources/sprites.png");
 	Images.add("bee", "./resources/bee.png");

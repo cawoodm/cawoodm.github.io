@@ -27,7 +27,7 @@ Bee.prototype.renderer = function(ctx) {
     // Drop shadow
     ctx.beginPath();
     ctx.fillStyle="rgba(100,100,100,0.5)"
-    ctx.ellipse(this.x+g.ui.blockSize/2, this.y+g.ui.blockSize*1.3, g.ui.blockSize/2, g.ui.blockSize/5, 0, 0, 2 * Math.PI);
+    ctx.ellipse(this.x+15+g.ui.blockSize/2, this.y+g.ui.blockSize*1.3, g.ui.blockSize/2, g.ui.blockSize/5, 0, 0, 2 * Math.PI);
     ctx.fill();
     let one = 1, off=0;
     if (this.speed.x<0) {one=-1;off=g.ui.blockSize;ctx.scale(-1,1);}

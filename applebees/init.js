@@ -10,7 +10,7 @@ const g = {
 	,keys: {}
 	,level:0
 };
-console.clear();
+//console.clear();
 
 // Measure screen
 g.ui.win = {
@@ -36,18 +36,17 @@ g.ctx.imageSmoothingEnabled=false;
 g.ui.canvas.width = window.innerWidth;
 g.ui.canvas.height = window.innerHeight;
 document.body.appendChild(g.ui.canvas);
-g.ctx.scale(g.ui.scaleX, g.ui.scaleY);
+//g.ctx.scale(g.ui.scaleX, g.ui.scaleY);
 window.addEventListener("load", function() {
-	Images.add("apple", "./resources/apple.png");
+	Images.add("sprites", "./resources/sprites.png");
 	Images.add("bee", "./resources/bee.png");
-	Images.add("bullet", "./resources/bullet.png");
 	Images.add("grass", "./resources/grass.jpg");
-	Images.add("player", "./resources/player.png");
-	Images.add("wall", "./resources/wall.png");
 	Images.onload(function() {
 		if (location.hostname=="localhost") {
+			if (location.search=="?title") return g.restart(true); // straight to game
 			//$('#debug').style.display='block';
 			g.restart(false); // straight to game
+			if (location.search=="?gameover") return g.gameOver();
 		}
 		else g.restart(true);
 	});

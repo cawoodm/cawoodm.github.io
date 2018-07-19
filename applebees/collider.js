@@ -1,4 +1,5 @@
 function Collider() {};
+//Collider.prototype.update = function(delta) {
 Collider.prototype.renderer = function(delta) {
 	if (!g.player) return;
     if (Collider.collide("player", "bee", 20)) return g.gameOver();
@@ -11,11 +12,15 @@ Collider.prototype.renderer = function(delta) {
             g.sounds.ping.load();g.sounds.ping.play();
         }
     });
-    let z = Collider.collides("bullet", "bee", -1); if (z.length>0) {
+    let el = Collider.collides("bullet", "bee", -1); if (el.length>0) {
         g.stats.score+=1;
-        g.entity.remove(z);
+        g.entity.remove(el);
     }
-    let el = Collider.collides("bee", "wall", 1); if (el.length>0) {
+    el = Collider.collides("bee", "wall", 1); if (el.length>0) {
+        let bee = el[0];
+        bee.bounce(Vector.norm(Vector.subtract(bee, el[1])));
+    }
+     el = Collider.collides("bee", "bee", 1); if (el.length>0) {
         let bee = el[0];
         bee.bounce(Vector.norm(Vector.subtract(bee, el[1])));
     }
@@ -33,14 +38,15 @@ Collider.collides = function(tag1, tag2, tol) {
 	let e2s = g.entity.get(tag2);
 	for (let i=0; i<e1s.length; i++)
 		for (let j=0; j<e2s.length; j++) 
-			if (Collider.collision(e1s[i], e2s[j], tol))
-				return [e1s[i], e2s[j]]
+			if (e1s[i] != e2s[j])
+			    if (Collider.collision(e1s[i], e2s[j], tol))
+				    return [e1s[i], e2s[j]]
 	return [];
 };
 Collider.collision = function(e1, e2, tol) {
     let d1 = {x: e1.speed?e1.speed.x:0, y: e1.speed?e1.speed.y:0};
-    let t1 = tol || e1.collider;
-    let t2 = tol || e2.collider;
+    let t1 = tol || e1.collider || 0;
+    let t2 = tol || e2.collider || 0;
 	let x1 = e1.x + d1.x + t1;
 	let X1 = e1.x + d1.x + g.ui.blockSize - t1;
 	let y1 = e1.y + d1.y + t1;

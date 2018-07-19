@@ -67,7 +67,7 @@ function makeLevel(level) {
 	g.scenes.levels.push({entities: []});
 	g.scene = g.scenes.levels[g.scenes.levels.length-1]
 	// Make grass
-	g.entity.add(new Sprite({x: g.ui.blockSize, y: g.ui.blockSize, sprite: 'grass', w: g.ui.gridWidth*g.ui.blockSize, h: g.ui.gridHeight*g.ui.blockSize}));
+	g.entity.add(new Sprite({x: g.ui.blockSize, y: g.ui.blockSize, sprite: 'grass', w: g.ui.width-2*g.ui.blockSize, h: g.ui.height-2*g.ui.blockSize}));
 	
 	// Build a grid
 	let grid = [];
@@ -88,18 +88,22 @@ function makeLevel(level) {
 			if (rnd(0,5)==0) grid[i][j]=grid[i][j]==0?'w':grid[i][j];
 
 	// Make Bees
-	for (let i=0; i<level; i++) {
+	let count=0; do {
 		let x = rnd(4, g.ui.gridWidth-2)
 		let y = rnd(4, g.ui.gridHeight-2)
+		if (grid[x][y]) continue;
 		grid[x][y]='b';
-	}
+		count++;
+	} while (count < level)
 
 	// Make Apples
-	for (let i=0; i<2+2*level; i++) {
+	count=0; do {
 		let x = rnd(1, g.ui.gridWidth-2);
 		let y = rnd(1, g.ui.gridHeight-2);
+		if (grid[x][y]) continue;
 		grid[x][y] = 'a';
-	}
+		count++;
+	} while (count < 2+2*level)
 
 	// Overwrite 3,3 with the player
 	grid[3][3]='p';
@@ -146,9 +150,9 @@ g.gameWon = function() {
 };
 g.gameOver = function() {
 	g.state="gameOver";
-	g.entity.remove(g.collider);//Stop collisions
-	g.entity.add(new Message({text:"Game Over"}))
 	//g.scene = g.scenes.gameOver;
+	g.entity.remove(g.collider); //Stop collisions
+	g.entity.add(new GameOver());
 	g.sounds.music.pause();g.sounds.music.currentTime=0;
 	g.sounds.lose.play();
 };
@@ -158,7 +162,6 @@ g.gameUpdate = function(delta) {
 	}, this);
 };
 g.gameRender = function() {
-	g.ctx.restore();
 	g.ctx.clearRect(0, 0, g.ui.canvas.width, g.ui.canvas.height);
 	g.scene.entities.forEach(function(ent) {
 		if (typeof ent.renderer === "function") {

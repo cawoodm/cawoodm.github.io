@@ -1,6 +1,6 @@
 function Collider() {};
-//Collider.prototype.update = function(delta) {
-Collider.prototype.renderer = function(delta) {
+Collider.prototype.update = function(delta) {
+//Collider.prototype.renderer = function(delta) {
 	if (!g.player) return;
     if (Collider.collide("player", "bee", 20)) return g.gameOver();
 	if (Collider.collides("player", "wall", 2).length>0) g.player.stop();

@@ -4,9 +4,6 @@ Camera = function(options) {
     this.w=options.w||500;
     this.h=options.h||500;
     this.box={x:0, y:0, w: options.box||300, h: options.box||300}
-    g.ui.canvas.width=this.w;
-    g.ui.canvas.height=this.h;
-    g.ctx.scale(g.ui.scaleX, g.ui.scaleY);
 }
 Camera.prototype.update = function() {
     // Let box follow player if player reaches box's bounds
@@ -26,7 +23,7 @@ Camera.prototype.update = function() {
 Camera.prototype.renderer = function(ctx) {
     return;
     g.ctx.strokeStyle='#00F'
-    g.ctx.strokeRect(this.box.x, this.box.y, 300, 300)
+    g.ctx.strokeRect(this.box.x, this.box.y, this.box.w, this.box.h)
     g.ctx.fillStyle='#F00'
     g.ctx.fillRect(this.x+this.w/2-2, this.y+this.h/2-5, 4, 10)
     g.ctx.fillStyle='#00F'

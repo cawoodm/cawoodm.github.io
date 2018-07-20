@@ -6,7 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <link rel="apple-touch-icon-precomposed" sizes="120x120" href="favicon.png" />
 <style>
-html, body {overflow-x: hidden; position: fixed;}
+html, body {
+  overflow-x: hidden;
+  position: fixed;
+  overscroll-behavior-y: contain;
+}
 body {position: relative}
 * {
   -webkit-touch-callout:none;

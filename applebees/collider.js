@@ -3,7 +3,6 @@ function Collider() {};
 Collider.prototype.renderer = function(delta) {
 	if (!g.player) return;
     if (Collider.collide("player", "bee", 20)) return g.gameOver();
-    //let ghost = {tag: "player", x: g.player.x+g.player.speed.x, y: g.player.y+g.player.speed.y};
 	if (Collider.collides("player", "wall", 2).length>0) g.player.stop();
     Collider.collides("player", "apple").forEach((a, i)=>{
         if (a.tag=="apple") {
@@ -18,11 +17,14 @@ Collider.prototype.renderer = function(delta) {
     }
     el = Collider.collides("bee", "wall", 1); if (el.length>0) {
         let bee = el[0];
-        bee.bounce(Vector.norm(Vector.subtract(bee, el[1])));
+        pawang = Vector.norm(Vector.subtract(bee, el[1]));
+        if(Math.abs(pawang.x)>Math.abs(pawang.y)) pawang.y=null; else pawang.x=null;
+        bee.bounce(pawang);
     }
      el = Collider.collides("bee", "bee", 1); if (el.length>0) {
         let bee = el[0];
-        bee.bounce(Vector.norm(Vector.subtract(bee, el[1])));
+        pawang = Vector.norm(Vector.subtract(bee, el[1]));
+        bee.bounce(pawang);
     }
     Collider.collides("bullet", "wall", 1).forEach((a)=>{
         if (a.tag=="bullet") g.entity.remove(a);

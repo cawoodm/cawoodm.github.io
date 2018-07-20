@@ -61,7 +61,10 @@ g.nextLevel = function(level) {
 	g.player = g.entity.get("player")[0];
 	g.entity.add(g.stats);
 	g.entity.add(g.collider);
-	g.sounds.music.play();
+	if (!navigator.userAgent.match(/iPhone|iPod|iPad/))
+		g.sounds.music.play();
+	else
+		g.sounds.ping.play();
 };
 g.loadLevel = function(level) {
 	if (g.level >= g.levels.length-1) return false;
@@ -75,7 +78,8 @@ g.loadLevel = function(level) {
 
 	// Place objects on grid
 	for (let i=0; i<g.ui.gridWidth; i++) for (let j=0; j<g.ui.gridHeight; j++) {dp(i,j, grid);switch(grid[i][j]) {
-		case 1: g.entity.add(new Wall({x: i*g.ui.blockSize+(j>0&&j<g.ui.gridHeight-1?(i==0?-g.ui.blockSize/2:i==g.ui.gridWidth-1?g.ui.blockSize/2:0):0), y:j*g.ui.blockSize+(i>0&&i<g.ui.gridWidth-1?(j==0?-g.ui.blockSize/2:j==g.ui.gridHeight-1?g.ui.blockSize/2:0):0), size: g.ui.blockSize})); break;
+		//case 1: g.entity.add(new Wall({x: i*g.ui.blockSize+(j>0&&j<g.ui.gridHeight-1?(i==0?-g.ui.blockSize/2:i==g.ui.gridWidth-1?g.ui.blockSize/2:0):0), y:j*g.ui.blockSize+(i>0&&i<g.ui.gridWidth-1?(j==0?-g.ui.blockSize/2:j==g.ui.gridHeight-1?g.ui.blockSize/2:0):0), size: g.ui.blockSize})); break;
+		case 1: g.entity.add(new Wall({x: i*g.ui.blockSize, y:j*g.ui.blockSize, size: g.ui.blockSize})); break;
 		case 2: g.entity.add(new Apple({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
 		case 3: g.entity.add(new Bee({x: i*g.ui.blockSize, y: j*g.ui.blockSize, velocity: 3+(level/3)})); break;
 		case 9: g.entity.add(new Player({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
@@ -132,11 +136,11 @@ function makeLevel(level) {
 	// Place objects on grid
 	for (let i=0; i<g.ui.gridWidth; i++) for (let j=0; j<g.ui.gridHeight; j++)
 	switch(grid[i][j]) {
-		case 1: g.entity.add(new Wall({x: i*g.ui.blockSize+(j>0&&j<g.ui.gridHeight-1?(i==0?-g.ui.blockSize/2:i==g.ui.gridWidth-1?g.ui.blockSize/2:0):0), y:j*g.ui.blockSize+(i>0&&i<g.ui.gridWidth-1?(j==0?-g.ui.blockSize/2:j==g.ui.gridHeight-1?g.ui.blockSize/2:0):0), size: g.ui.blockSize})); break;
+		//case 1: g.entity.add(new Wall({x: i*g.ui.blockSize+(j>0&&j<g.ui.gridHeight-1?(i==0?-g.ui.blockSize/2:i==g.ui.gridWidth-1?g.ui.blockSize/2:0):0), y:j*g.ui.blockSize+(i>0&&i<g.ui.gridWidth-1?(j==0?-g.ui.blockSize/2:j==g.ui.gridHeight-1?g.ui.blockSize/2:0):0), size: g.ui.blockSize})); break;
+		case 1: g.entity.add(new Wall({x: i*g.ui.blockSize, y:j*g.ui.blockSize, size: g.ui.blockSize})); break;
 		case 2: g.entity.add(new Apple({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
 		case 3: g.entity.add(new Bee({x: i*g.ui.blockSize, y: j*g.ui.blockSize, velocity: 3+(level/3)})); break;
 	}
-
 }
 g.entity.add = function(ent) {
 	g.scene.entities.push(ent);

@@ -83,10 +83,14 @@ document.addEventListener('touchstart', handleTouchStart, false);
 document.addEventListener('touchend', handleTouchEnd, false);        
 document.addEventListener('touchmove', handleTouchMove, false);
 var xDown = null;                  
-var yDown = null;                  
+var yDown = null;  
+var never=null;                
 function handleTouchStart(evt) {
 	xDown = evt.touches[0].clientX;
     yDown = evt.touches[0].clientY;
+    if (never) return;
+    g.sounds.ping.play();
+    never=true;
 }
 function handleTouchEnd(evt) {
 	if(xDown) g.ui.keys.fire.press();

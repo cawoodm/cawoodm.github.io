@@ -38,7 +38,6 @@ document.body.appendChild(g.ui.canvas);
 g.ctx.scale(g.ui.scaleX, g.ui.scaleY);
 window.addEventListener("load", function() {
 	Images.add("sprites", "./resources/sprites.png");
-	Images.add("bee", "./resources/bee.png");
 	Images.add("grass", "./resources/grass.jpg");
 	Images.onload(function() {
 		if (location.hostname=="localhost") {

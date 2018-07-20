@@ -1,8 +1,7 @@
 function Bee(options) {
 	this.x = options.x || 0;
-	this.y = options.y  || 0;
-    this.img = new Image();
-    this.img.src='./resources/bee.png';
+    this.y = options.y  || 0;
+    this.sprite = new Sprite({sprite: "sprites", w: 100, h: 100, offX: 200, offY: 100, scale: 1});
     this.tag="bee";
     this.collider=1;
     this.velocity = options.velocity||5;
@@ -21,7 +20,8 @@ Bee.prototype.update = function(delta) {
 }
 Bee.prototype.bounce = function(dir) {
     if (!dir) {ang = rnd(0,Math.PI);dir={x: Math.cos(ang), y: Math.sin(ang)};}
-    this.speed = {x: dir.x*this.velocity, y: dir.y*this.velocity}
+    if (dir.x!=null) this.speed.x = dir.x*this.velocity;
+    if (dir.y!=null) this.speed.y = dir.y*this.velocity;
 }
 Bee.prototype.renderer = function(ctx) {
     // Drop shadow
@@ -30,6 +30,8 @@ Bee.prototype.renderer = function(ctx) {
     ctx.ellipse(this.x+15+g.ui.blockSize/2, this.y+g.ui.blockSize*1.3, g.ui.blockSize/2, g.ui.blockSize/5, 0, 0, 2 * Math.PI);
     ctx.fill();
     let one = 1, off=0;
-    if (this.speed.x<0) {one=-1;off=g.ui.blockSize;ctx.scale(-1,1);}
-    ctx.drawImage(this.img, one*this.x-off, this.y);
+    if (this.speed.x>0) {this.sprite.offX=200} else {this.sprite.offX=100}
+    this.sprite.x=this.x;
+    this.sprite.y=this.y;
+    this.sprite.renderer(ctx);
 }

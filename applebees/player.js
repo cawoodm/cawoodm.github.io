@@ -8,7 +8,7 @@ function Player(options) {
     this.speed={x:0, y:0};
     this.velocity = options.velocity || 5;
     this.frame=0;
-    this.bulletSpeed=25;
+    this.bulletSpeed=15;
     return this;
 }
 Player.prototype.update = function(delta) {
@@ -33,18 +33,31 @@ Player.prototype.renderer = function(ctx) {
     ctx.fill();
     this.sprite.x=this.x;
     this.sprite.y=this.y;
-    this.sprite.offX=this.frame*g.ui.blockSize;
+    this.sprite.offX=this.frame*(1+g.ui.blockSize);
     this.sprite.renderer(ctx);
 }
 Player.prototype.move = function(dir) {
+    this.nextMove = null;
     let oldSpeed = {x: this.speed.x, y: this.speed.y};
-    this.speed.x=dir.x*this.velocity;
-    this.speed.y=dir.y*this.velocity;
-    if (Collider.collide(this, "wall", 2)) {
+    let ghost = {x: this.x, y: this.y, speed: {x: dir.x*this.velocity, y: dir.y*this.velocity}}
+    let wouldCollide = Collider.collide(ghost, "wall", 2);
+    let isColliding = Collider.collide(this, "wall", 1);
+    let stationary = this.speed.x+this.speed.y==0;
+    // Move up/down only if on X-grid (left/right)
+    let onGrid = (dir.y!==0 && this.x % g.ui.blockSize == 0)||(dir.x!==0 && this.y % g.ui.blockSize == 0);
+    //dp(isColliding, wouldCollide, stationary, onGrid)
+    if (isColliding) {
+        // Do nothing
+    } else if (stationary && !wouldCollide) {
+        // Move now
+        this.speed = ghost.speed;
+    } else if (wouldCollide || !onGrid) {
         // If we can't move now, move later
-        this.speed = oldSpeed;
         this.nextMove=dir;
-    } else this.nextMove = null;
+    } else {
+        // Move now
+        this.speed = ghost.speed;
+    }
 }
 Player.prototype.shoot = function() {
     let off = {x: Math.sign(this.speed.x), y: Math.sign(this.speed.y)}

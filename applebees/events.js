@@ -66,7 +66,7 @@ function Keyboard(keyCode) {
 	};
 	key.clickHandler = function(event) {
 		key.press(event);
-		//event.preventDefault();
+		event.preventDefault();
 	}
 
 	if (keyCode!=="click") {

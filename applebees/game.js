@@ -45,7 +45,6 @@ g.restart = function(title) {
 		g.scene = g.scenes.title;
 	} else {
 		// New Game
-		g.state="play";
 		g.stats = new Stats({x: 35, y: 26, scale:3});
 		g.collider = new Collider;
 		g.nextLevel();
@@ -57,7 +56,7 @@ g.nextLevel = function(level) {
 	//if (!g.loadLevel(level)) return g.gameWon();
 	g.scene = g.scenes.levels[g.level];
 	g.level = level;
-	g.state="play";
+	g.state="play";dp("play")
 	g.player = g.entity.get("player")[0];
 	g.entity.add(g.stats);
 	g.entity.add(g.collider);

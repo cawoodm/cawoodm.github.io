@@ -36,7 +36,6 @@ g.restart = function(title) {
 	g.scenes = {
 		title: {entities: [new TitleScreen({text: "Apple-Beeeezzz"})]}
 		,levels: []
-		,gameOver: {entities: [new GameOver({text: "Game Over"})]}
 		,gameWon: {entities: [new GameOver({text: "Congratulations, you won!"})]}
 	};
 	for (let i=1; i<20; i++) makeLevel(i);
@@ -167,12 +166,12 @@ g.entity.count = function(tag) {
 };
 g.gameWon = function() {
 	g.state="gameWon";
-	g.scene = g.scenes.gameWon;
+	g.entity.remove(g.collider); //Stop collisions
+	g.entity.add(new GameWon());
 	g.sounds.music.pause();g.sounds.music.currentTime=0;
 };
 g.gameOver = function() {
 	g.state="gameOver";
-	//g.scene = g.scenes.gameOver;
 	g.entity.remove(g.collider); //Stop collisions
 	g.entity.add(new GameOver());
 	g.sounds.music.pause();g.sounds.music.currentTime=0;

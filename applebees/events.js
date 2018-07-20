@@ -101,7 +101,7 @@ function handleTouchMove(evt) {
     var yUp = evt.touches[0].clientY;
     var xDiff = xDown - xUp;
 	var yDiff = yDown - yUp;
-	dp(xDiff, yDiff)
+
     if (Math.abs(xDiff) > Math.abs(yDiff)) {
 		if (xDiff > 0) g.ui.keys.left.down()
 		else g.ui.keys.right.down()

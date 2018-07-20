@@ -47,6 +47,7 @@ g.restart = function(title) {
 		// New Game
 		g.stats = new Stats({x: 35, y: 26, scale:3});
 		g.collider = new Collider;
+		g.camera = new Camera({w: g.ui.fullWidth, h: g.ui.fullHeight, box: 200});
 		g.nextLevel();
 	}
 	g.start();
@@ -56,8 +57,9 @@ g.nextLevel = function(level) {
 	//if (!g.loadLevel(level)) return g.gameWon();
 	g.scene = g.scenes.levels[g.level];
 	g.level = level;
-	g.state="play";dp("play")
+	g.state="play";
 	g.player = g.entity.get("player")[0];
+	g.entity.add(g.camera);
 	g.entity.add(g.stats);
 	g.entity.add(g.collider);
 	if (!navigator.userAgent.match(/iPhone|iPod|iPad/))
@@ -73,7 +75,7 @@ g.loadLevel = function(level) {
 	g.scene.entities=[];
 
 	// Add grass
-	g.entity.add(new Sprite({x: 0, y: 0, sprite: 'grass', w: g.ui.width+g.ui.blockSize, h: g.ui.height+g.ui.blockSize, scale:1.2}));
+	g.entity.add(new Sprite({x: 0, y: 0, sprite: 'grass', w: g.ui.blockSize*g.ui.gridWidth, h: g.ui.height+g.ui.blockSize, scale:1}));
 
 	// Place objects on grid
 	for (let i=0; i<g.ui.gridWidth; i++) for (let j=0; j<g.ui.gridHeight; j++) {dp(i,j, grid);switch(grid[i][j]) {
@@ -90,7 +92,7 @@ function makeLevel(level) {
 	g.scenes.levels.push({entities: []});
 	g.scene = g.scenes.levels[g.scenes.levels.length-1]
 	// Make grass
-	g.entity.add(new Sprite({x: 0, y: 0, sprite: 'grass', w: g.ui.width+g.ui.blockSize, h: g.ui.height+g.ui.blockSize, scale:1.2}));
+	g.entity.add(new Sprite({x: 0, y: 0, sprite: 'grass', w: g.ui.width+g.ui.blockSize, h: g.ui.height+g.ui.blockSize, scale: 1}));
 	// Build a grid
 	let grid = [];
 	for (let i=0; i<g.ui.gridWidth; i++) {
@@ -140,6 +142,7 @@ function makeLevel(level) {
 		case 2: g.entity.add(new Apple({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
 		case 3: g.entity.add(new Bee({x: i*g.ui.blockSize, y: j*g.ui.blockSize, velocity: 3+(level/3)})); break;
 	}
+	//dp("level["+level+"]=", JSON.stringify(grid))
 }
 g.entity.add = function(ent) {
 	g.scene.entities.push(ent);
@@ -184,7 +187,10 @@ g.gameUpdate = function(delta) {
 	}, this);
 };
 g.gameRender = function() {
-	g.ctx.clearRect(0, 0, g.ui.width, g.ui.height);
+	g.ctx.fillStyle='#035'
+	g.ctx.fillRect(-g.ui.width, -g.ui.height, 2*g.ui.width, 2*g.ui.height);
+	g.ctx.save();
+	g.ctx.translate(-g.camera.x, -g.camera.y)
 	g.scene.entities.forEach(function(ent) {
 		if (typeof ent.renderer === "function") {
 			g.ctx.save();
@@ -192,7 +198,7 @@ g.gameRender = function() {
 			g.ctx.restore();
 		}
 	}, this);
-	
+	g.ctx.restore();
 };
 g.goDebug = function() {
 	g.gameOver();

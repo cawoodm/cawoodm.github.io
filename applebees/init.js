@@ -4,6 +4,7 @@ const g = {
 		,blockSize: 100
 		,gridWidth: 16
 		,gridHeight: 16
+		,blocksInView: 8
 	}
 	,state: ""
 	,entity: {}
@@ -16,14 +17,18 @@ g.ui.win = {
 	width: window.innerWidth||document.documentElement.clientWidth||document.body.offsetWidth
 	,height: window.innerHeight||document.documentElement.clientHeight||document.body.offsetHeight
 };
+if (false)
 // Use longest dimension as 16 blocks
 if (g.ui.win.width>=g.ui.win.height) g.ui.gridHeight = Math.floor(g.ui.gridWidth*g.ui.win.height/g.ui.win.width);
 else g.ui.gridWidth = Math.floor(g.ui.gridHeight*g.ui.win.width/g.ui.win.height);
 
 g.ui.width = g.ui.blockSize*g.ui.gridWidth;
 g.ui.height = g.ui.blockSize*g.ui.gridHeight;
-g.ui.scaleX = (g.ui.win.width/(g.ui.blockSize*g.ui.gridWidth));
-g.ui.scaleY = (g.ui.win.height/(g.ui.blockSize*g.ui.gridHeight));
+g.ui.fullWidth=window.innerWidth;
+g.ui.fullHeight=window.innerHeight;
+g.ui.scaleX = (g.ui.win.width/(g.ui.blockSize*g.ui.blocksInView));
+g.ui.scaleY = (g.ui.win.height/(g.ui.blockSize*g.ui.blocksInView));
+if (g.ui.scaleX>g.ui.scaleY) g.ui.scaleX=g.ui.scaleY; else g.ui.scaleY=g.ui.scaleX;
 
 document.body.style.padding=document.body.style.margin="0px";
 document.body.style.backgroundColor="#fff";
@@ -32,8 +37,8 @@ document.body.style.height=window.innerHeight+'px'
 g.ui.canvas = document.createElement("canvas");
 g.ctx = g.ui.canvas.getContext("2d");
 g.ctx.imageSmoothingEnabled=false;
-g.ui.canvas.width = window.innerWidth;
-g.ui.canvas.height = window.innerHeight;
+//g.ui.canvas.width = window.innerWidth;
+//g.ui.canvas.height = window.innerHeight;
 document.body.appendChild(g.ui.canvas);
 g.ctx.scale(g.ui.scaleX, g.ui.scaleY);
 window.addEventListener("load", function() {

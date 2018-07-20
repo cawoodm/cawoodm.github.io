@@ -1,7 +1,9 @@
 function Player(options) {
 	this.x = options.x || 0;
 	this.y = options.y || 0;
-    this.sprite = new Sprite({sprite: "sprites", w: 100, h: 100, offX: 300, offY: 0, scale: 1});
+	this.w = options.w || g.ui.blockSize;
+	this.h = options.h || g.ui.blockSize;
+    this.sprite = new Sprite({sprite: "sprites", w: this.w, h: this.h, offX: 300, offY: 0, scale: 1});
     this.collider=2;
     this.tag='player';
     this.acc={x:0, y:0};
@@ -46,7 +48,7 @@ Player.prototype.move = function(dir) {
     // Move up/down only if on X-grid (left/right)
     let onGrid = (dir.y!==0 && this.x % g.ui.blockSize == 0)||(dir.x!==0 && this.y % g.ui.blockSize == 0);
     //dp(isColliding, wouldCollide, stationary, onGrid)
-    if (isColliding) {
+    if (isColliding && wouldCollide) {
         // Do nothing
     } else if (stationary && !wouldCollide) {
         // Move now

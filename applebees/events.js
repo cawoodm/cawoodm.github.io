@@ -1,10 +1,10 @@
 /*global g*/
 g.ui.keys = {
-	left: Keyboard(["a", "ArrowLeft"]) // left arrow
-	,right: Keyboard(["d", "ArrowRight"]) // right arrow
-	,up: Keyboard(["w", "ArrowUp"])
-	,down: Keyboard(["s", "ArrowDown"])
-	,fire: Keyboard(" ") // space
+	left: Keyboard(["KeyA", "ArrowLeft"]) // left arrow
+	,right: Keyboard(["KeyD", "ArrowRight"]) // right arrow
+	,up: Keyboard(["KeyW", "ArrowUp"])
+	,down: Keyboard(["KeyS", "ArrowDown"])
+	,fire: Keyboard("Space") // space
 	,fireM: Keyboard("click") // Mouse click
 	,debug: Keyboard("clickCtrl") // Mouse click
 };
@@ -47,17 +47,17 @@ function Keyboard(keyCode) {
 	key.isUp = true;
 
 	key.downHandler = function(event) {
-		if (event.key === key.codes || key.codes.includes(event.key)) {
+		if (key.codes.includes(event.code)) {
 			if (key.down) key.down();
 			else if (key.isUp && key.press) key.press();
 			key.isDown = true;
 			key.isUp = false;
 			event.preventDefault();
-		}
+		} //elseif
 	};
 
 	key.upHandler = function(event) {
-		if (event.key === key.codes || key.codes.includes(event.key)) {
+		if (key.codes.includes(event.code)) {
 			if (key.isDown && key.release) key.release();
 			key.isDown = false;
 			key.isUp = true;
@@ -66,7 +66,7 @@ function Keyboard(keyCode) {
 	};
 	key.clickHandler = function(event) {
 		key.press(event);
-		event.preventDefault();
+		//chrome error event.preventDefault();
 	}
 
 	if (keyCode!=="click") {
@@ -86,6 +86,7 @@ var xDown = null;
 var yDown = null;  
 var never=null;                
 function handleTouchStart(evt) {
+	evt.preventDefault();
 	xDown = evt.touches[0].clientX;
     yDown = evt.touches[0].clientY;
     if (never) return;

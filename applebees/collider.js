@@ -8,7 +8,7 @@ Collider.prototype.update = function(delta) {
         if (a.tag=="apple") {
             g.entity.remove(a);
             g.stats.score+=1;
-            g.sounds.ping.load();g.sounds.ping.play();
+            g.sounds.ping.pause();g.sounds.ping.play();
         }
     });
     let el = Collider.collides("bullet", "bee", -1); if (el.length>0) {

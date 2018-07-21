@@ -40,8 +40,9 @@ g.ui.canvas = document.createElement("canvas");
 document.body.appendChild(g.ui.canvas);
 g.ctx = g.ui.canvas.getContext("2d");
 //g.ctx.imageSmoothingEnabled=false;
-g.ui.canvas.width=g.ui.vWidth;
-g.ui.canvas.height=g.ui.vHeight;
+// Canvas must exactly fit window or we have mobile swipe woes
+g.ui.canvas.width=g.ui.win.width;
+g.ui.canvas.height=g.ui.win.height;
 //g.ui.canvas.width = window.innerWidth;
 //g.ui.canvas.height = window.innerHeight;
 g.ctx.scale(g.ui.scaleX, g.ui.scaleY);

@@ -2,7 +2,8 @@ function Collider() {};
 Collider.prototype.update = function(delta) {
 //Collider.prototype.renderer = function(delta) {
 	if (!g.player) return;
-    if (Collider.collide("player", "bee", 20)) return g.gameOver();
+	if (g.state!="play") return;
+    if (Collider.collide("player", "bee", 20)) g.stats.die();
 	if (Collider.collides("player", "wall", 2).length>0) g.player.stop();
     Collider.collides("player", "apple").forEach((a, i)=>{
         if (a.tag=="apple") {

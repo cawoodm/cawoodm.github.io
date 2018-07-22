@@ -44,7 +44,7 @@ g.restart = function(title) {
 		g.scene = g.scenes.title;
 	} else {
 		// New Game
-		g.stats = new Stats({x: 35, y: 26, scale:2});
+		g.stats = new Stats({x: 15, y: 26, scale:2});
 		g.collider = new Collider;
 		g.camera = new Camera({w: g.ui.vWidth, h: g.ui.vHeight, box: 200});
 		g.nextLevel();
@@ -165,13 +165,13 @@ g.entity.count = function(tag) {
 	return this.get(tag).length;
 };
 g.gameWon = function() {
-	g.state="gameWon";
+	g.state="message";
 	g.entity.remove(g.collider); //Stop collisions
 	g.entity.add(new GameWon());
 	g.sounds.music.pause();g.sounds.music.currentTime=0;
 };
 g.gameOver = function() {
-	g.state="gameOver";
+	g.state="message";
 	g.entity.remove(g.collider); //Stop collisions
 	g.entity.add(new GameOver());
 	g.sounds.music.pause();g.sounds.music.currentTime=0;

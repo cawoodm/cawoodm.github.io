@@ -1,19 +1,23 @@
 function Message(options) {
-    this.x = options.x || 10;
-    this.y = options.y || 10;
     this.tag="message";
     this.scale=1;
+    this.static=true;
     this.text = options.text;
+    this.callback = options.callback;
 }
 Message.prototype.update = function(delta) {
-    this.scale = this.scale<8?this.scale+0.1:this.scale;
+    if (this.scale<30)
+        this.scale += 0.5;
+    else {
+        g.entity.remove(this);
+        if (typeof this.callback == "function") this.callback();
+    }
 }
 Message.prototype.renderer = function(ctx) {
-    g.ctx.globalAlpha=0.6;
-    g.ctx.fillStyle = '#000';
+    g.ctx.fillStyle = 'rgba(0,0,0,0.5)';
     let s = this.scale;
+    g.ctx.translate(g.ui.vWidth/2, g.ui.vHeight/2)
     g.ctx.scale(s, s)
-    g.ctx.fillRect(this.x, this.y, 100, 20);
-    g.ctx.fillStyle="#0F0";
-    g.ctx.fillText(this.text, this.x, (this.y+10));
+    g.ctx.fillRect(-50, -50, 100, 100);
+    g.ctx.fillStyle="#99C";g.ctx.fillText(this.text, -20, 0);
 }

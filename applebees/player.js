@@ -18,20 +18,18 @@ Player.prototype.update = function(delta) {
     if (this.nextMove) this.move(this.nextMove);
     this.speed.x += this.acc.x * delta;
     this.speed.y += this.acc.y * delta;
-    this.x += this.speed.x;
-    this.y += this.speed.y;
+    this.x += this.speed.x;// * delta;
+    this.y += this.speed.y;//    * delta;
     if (this.speed.x>0) this.frame=0;
     else if (this.speed.x<0) this.frame=1;
     else if (this.speed.y<0) this.frame=2;
     else if (this.speed.y>0) this.frame=3;
 }
 Player.prototype.renderer = function(ctx) {
-    x = this.x;
-    y = this.y;
     // Drop shadow
     ctx.beginPath();
     ctx.fillStyle="rgba(100,100,100,0.5)"
-    ctx.ellipse(x+g.ui.blockSize/2, y+g.ui.blockSize, g.ui.blockSize/2, g.ui.blockSize/5, 0, 0, 2 * Math.PI);
+    ctx.ellipse(this.x+g.ui.blockSize/2, this.y+g.ui.blockSize, g.ui.blockSize/2.5, g.ui.blockSize/5, 0, 0, 2 * Math.PI);
     ctx.fill();
     this.sprite.x=this.x;
     this.sprite.y=this.y;
@@ -47,7 +45,7 @@ Player.prototype.move = function(dir) {
     let stationary = this.speed.x+this.speed.y==0;
     // Move up/down only if on X-grid (left/right)
     let onGrid = (dir.y!==0 && this.x % g.ui.blockSize == 0)||(dir.x!==0 && this.y % g.ui.blockSize == 0);
-    //dp(isColliding, wouldCollide, stationary, onGrid)
+    //dp(isColliding, wouldCollide, stationary, onGrid, this.x, this.x);
     if (isColliding && wouldCollide) {
         // Do nothing
     } else if (stationary && !wouldCollide) {

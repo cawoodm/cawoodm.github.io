@@ -47,9 +47,9 @@ g.ui.canvas.height=g.ui.win.height;
 //g.ui.canvas.height = window.innerHeight;
 g.ctx.scale(g.ui.scaleX, g.ui.scaleY);
 window.addEventListener("load", function() {
-	Images.add("sprites", "./resources/sprites.png");
-	Images.add("grass", "./resources/grass.jpg");
-	Images.onload(function() {
+	ImageLoader.add("sprites", "./resources/sprites.png");
+	ImageLoader.add("grass", "./resources/grass.jpg");
+	ImageLoader.onload(function() {
 		if (location.hostname=="localhost") {
 			if (location.search=="?title") return g.restart(true); // straight to game
 			//$('#debug').style.display='block';

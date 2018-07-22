@@ -25,6 +25,7 @@ g.ui.keys.down.down = function() {
 	g.player.move(Vector.down())
 };
 g.ui.keys.fire.press = function(e) {
+	if (g.state=="message") return;
 	if (g.state!="play") return g.restart();
 	if (!e || !e.touches) g.player.shoot();
 	return;
@@ -86,7 +87,6 @@ var xDown = null;
 var yDown = null;  
 var never=null;                
 function handleTouchStart(evt) {
-	evt.preventDefault();
 	xDown = evt.touches[0].clientX;
     yDown = evt.touches[0].clientY;
     if (never) return;

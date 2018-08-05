@@ -61,6 +61,7 @@ function Sprite(options) {
 	this.y = options.y  || 0;
 	this.w = options.w || g.ui.blockSize;
     this.h = options.h || g.ui.blockSize;
+	this.tag = options.tag;
     this.offX = options.offX || 0;
     this.offY = options.offY || 0;
     this.scale = options.scale || 1;

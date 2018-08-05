@@ -1,7 +1,7 @@
 function Wall(options) {
 	this.x = options.x || 0;
 	this.y = options.y  || 0;
-    this.size = options.size  || 100;
+    this.w = this.h = options.size  || 100;
     this.collider=1;
     this.sprite = new Sprite({sprite: "sprites", x: this.x, y: this.y, w: 100, h: 100, offX: 400, offY: 100, scale: 1});
     this.tag = "wall";

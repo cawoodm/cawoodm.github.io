@@ -72,7 +72,7 @@ g.loadLevel = function(level) {
 	g.scene.entities=[];
 
 	// Add grass
-	g.entity.add(new Sprite({x: 0, y: 0, sprite: 'grass', w: g.ui.width, h: g.ui.height+g.ui.blockSize, scale:1}));
+	g.entity.add(new Sprite({x: 0, y: 0, tag: 'grass', sprite: 'grass', w: g.ui.width, h: g.ui.height+g.ui.blockSize, scale:1}));
 
 	// Place objects on grid
 	for (let j=0; j<g.ui.gridHeight; j++) for (let i=0; i<g.ui.gridWidth; i++) {switch(grid[i][j]) {
@@ -191,7 +191,7 @@ g.gameRender = function() {
 		if (typeof ent.renderer === "function") {
 			g.ctx.save();
 			if (ent.static && g.camera) g.ctx.translate(g.camera.x, g.camera.y)
-			ent.renderer(g.ctx);
+			if (!g.camera || g.camera.canSee(ent)) ent.renderer(g.ctx);
 			g.ctx.restore();
 		}
 	}, this);

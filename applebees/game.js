@@ -1,66 +1,59 @@
 /*global g*/
-g.start = function() {
-	this.ticker = new Ticker(this.ui.fps, function (delta) {
-		g.gameUpdate(delta);
-	}, function() {
-		g.gameRender();
-	});
-	g.ticker.start();
-};
-g.pause=function() {
-	if (g.state=="gameOver") {
-		g.restart();
-	} else if (g.ticker.state=="stop") {
-		g.state="play";
-		g.ticker.start();
-	} else {
-		g.ticker.stop();
-		g.sounds.music.pause();
-		g.state="pause";
-	}
-};
-g.halt=function(state){
-	if (!g.ticker) return;
-	g.ticker.stop();
-	g.state=state||"halt";
-}
-g.step=function() {
-	g.gameUpdate(1);
-	g.gameRender();
+g.init = function() {
+	g.ui.blockSize=100
+	g.ui.gridWidth=16
+	g.ui.gridHeight=16
+	g.ui.blocksInView=8
+
+	// UI Sizing
+	g.ui.width = g.ui.blockSize*g.ui.gridWidth;
+	g.ui.height = g.ui.blockSize*g.ui.gridHeight;
+	g.ui.fullWidth=window.innerWidth;
+	g.ui.fullHeight=window.innerHeight;
+	g.ui.scaleX = (g.ui.win.width/(g.ui.blockSize*g.ui.blocksInView));
+	g.ui.scaleY = (g.ui.win.height/(g.ui.blockSize*g.ui.blocksInView));
+	// Keep proportions by scaling both dimensions equally
+	if (g.ui.scaleX>g.ui.scaleY) g.ui.scaleX=g.ui.scaleY; else g.ui.scaleY=g.ui.scaleX;
+	// No up-scaling (i.e. if screen is large enough, use 1:1)
+	if (g.ui.scaleX>1){g.ui.scaleX=g.ui.scaleY=1}
+
+	g.ui.vWidth=g.ui.win.width/g.ui.scaleX;
+	g.ui.vHeight=g.ui.win.height/g.ui.scaleY;
+
+	g.ctx.scale(g.ui.scaleX, g.ui.scaleY);
+
+	g.ImageLoader.add("sprites", "./resources/sprites.png");
+	g.ImageLoader.add("grass", "./resources/grass.jpg");
+
+	return ()=>{g.restart(true)}
 }
 g.restart = function(title) {
 	// Cleanup
-	g.halt();
-	g.scene = {};
+	g.Halt();
+	g.scene = new g.Scene();
 	g.level=0;
-	g.scenes = {
-		title: {entities: [new TitleScreen({text: "Apple-Beeeezzz"})]}
-		,levels: []
-		,gameWon: {entities: [new GameOver({text: "Congratulations, you won!"})]}
-	};
-	for (let i=1; i<20; i++) makeLevel(i);
+	g.camera = new Camera({w: g.ui.vWidth, h: g.ui.vHeight, box: 200});
 	if (title) {
 		g.state="title";
-		g.scene = g.scenes.title;
+		g.scene.add(new GameTitle());
 	} else {
 		// New Game
-		g.stats = new Stats({x: 15, y: 26, scale:2});
+		g.stats = new Stats();
 		g.collider = new Collider;
-		g.camera = new Camera({w: g.ui.vWidth, h: g.ui.vHeight, box: 200});
 		g.nextLevel();
 	}
-	g.start();
+	g.Start();
 };
 g.nextLevel = function(level) {
 	level = level || g.level+1;
+	g.scene = new g.Scene();
 	if (!g.loadLevel(level)) return g.gameWon();
-	//g.scene = g.scenes.levels[g.level];
 	g.level = level;
 	g.state="play";
-	g.player = g.entity.get("player")[0];
-	g.entity.add(g.camera);
-	g.entity.add(g.stats);
-	g.entity.add(g.collider);
+	g.player = g.scene.get("player")[0];
+	g.scene.add(g.camera);
+	g.scene.add(g.stats);
+	g.scene.add(g.collider);
 	// Mobile version can't have music and sfx
 	if (!navigator.userAgent.match(/iPhone|iPod|iPad/)) g.sounds.music.play();
 };
@@ -68,18 +61,16 @@ g.loadLevel = function(level) {
 	if (g.level >= g.levels.length-1) return false;
 	// Get our grid
 	let grid = g.levels[level];
-	// Clear the sceene
-	g.scene.entities=[];
 
 	// Add grass
-	g.entity.add(new Sprite({x: 0, y: 0, tag: 'grass', sprite: 'grass', w: g.ui.width, h: g.ui.height+g.ui.blockSize, scale:1}));
+	g.scene.add(new Sprite({x: 0, y: 0, tag: 'grass', sprite: 'grass', w: g.ui.width, h: g.ui.height+g.ui.blockSize, scale:1}));
 
 	// Place objects on grid
 	for (let j=0; j<g.ui.gridHeight; j++) for (let i=0; i<g.ui.gridWidth; i++) {switch(grid[i][j]) {
-		case 1: g.entity.add(new Wall({x: i*g.ui.blockSize, y:j*g.ui.blockSize, size: g.ui.blockSize})); break;
-		case 2: g.entity.add(new Apple({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
-		case 3: g.entity.add(new Bee({x: i*g.ui.blockSize, y: j*g.ui.blockSize, velocity: 3+(level/3)})); break;
-		case 9: g.entity.add(new Player({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
+		case 1: g.scene.add(new Wall({x: i*g.ui.blockSize, y:j*g.ui.blockSize, size: g.ui.blockSize})); break;
+		case 2: g.scene.add(new Apple({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
+		case 3: g.scene.add(new Bee({x: i*g.ui.blockSize, y: j*g.ui.blockSize, velocity: 3+(level/3)})); break;
+		case 9: g.scene.add(new Player({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
 	}}
 	return true;
 }
@@ -88,7 +79,7 @@ function makeLevel(level) {
 	g.scenes.levels.push({entities: []});
 	g.scene = g.scenes.levels[g.scenes.levels.length-1]
 	// Make grass
-	g.entity.add(new Sprite({x: 0, y: 0, sprite: 'grass', w: g.ui.width+g.ui.blockSize, h: g.ui.height+g.ui.blockSize, scale: 1}));
+	g.scene.add(new Sprite({x: 0, y: 0, sprite: 'grass', w: g.ui.width+g.ui.blockSize, h: g.ui.height+g.ui.blockSize, scale: 1}));
 	// Build a grid
 	let grid = [];
 	for (let i=0; i<g.ui.gridWidth; i++) {
@@ -128,72 +119,34 @@ function makeLevel(level) {
 	// Overwrite 3,3 with the player
 	grid[3][3]=9;
 	// Add Player before everything else so it appears "under" walls
-	g.entity.add(new Player({x: 3*g.ui.blockSize, y: 3*g.ui.blockSize}));
+	g.scene.add(new Player({x: 3*g.ui.blockSize, y: 3*g.ui.blockSize}));
 
 	// Place objects on grid
 	for (let i=0; i<g.ui.gridWidth; i++) for (let j=0; j<g.ui.gridHeight; j++)
 	switch(grid[i][j]) {
-		//case 1: g.entity.add(new Wall({x: i*g.ui.blockSize+(j>0&&j<g.ui.gridHeight-1?(i==0?-g.ui.blockSize/2:i==g.ui.gridWidth-1?g.ui.blockSize/2:0):0), y:j*g.ui.blockSize+(i>0&&i<g.ui.gridWidth-1?(j==0?-g.ui.blockSize/2:j==g.ui.gridHeight-1?g.ui.blockSize/2:0):0), size: g.ui.blockSize})); break;
-		case 1: g.entity.add(new Wall({x: i*g.ui.blockSize, y:j*g.ui.blockSize, size: g.ui.blockSize})); break;
-		case 2: g.entity.add(new Apple({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
-		case 3: g.entity.add(new Bee({x: i*g.ui.blockSize, y: j*g.ui.blockSize, velocity: 3+(level/3)})); break;
+		//case 1: g.scene.add(new Wall({x: i*g.ui.blockSize+(j>0&&j<g.ui.gridHeight-1?(i==0?-g.ui.blockSize/2:i==g.ui.gridWidth-1?g.ui.blockSize/2:0):0), y:j*g.ui.blockSize+(i>0&&i<g.ui.gridWidth-1?(j==0?-g.ui.blockSize/2:j==g.ui.gridHeight-1?g.ui.blockSize/2:0):0), size: g.ui.blockSize})); break;
+		case 1: g.scene.add(new Wall({x: i*g.ui.blockSize, y:j*g.ui.blockSize, size: g.ui.blockSize})); break;
+		case 2: g.scene.add(new Apple({x: i*g.ui.blockSize, y: j*g.ui.blockSize})); break;
+		case 3: g.scene.add(new Bee({x: i*g.ui.blockSize, y: j*g.ui.blockSize, velocity: 3+(level/3)})); break;
 	}
 	//dp("level["+level+"]=", JSON.stringify(grid))
 }
-g.entity.add = function(ent) {
-	g.scene.entities.push(ent);
-	return ent;
-};
-g.entity.insert = function(ent) {
-	g.scene.entities.splice(0, 0, ent);
-	return ent;
-};
-g.entity.remove = function(ent) {
-	if (typeof ent.length == "number") ents = ent; else ents = [ent]
-	for(let j=0; j < ents.length; j++)
-		for(let i=0; i < g.scene.entities.length; i++)
-			if (g.scene.entities[i] == ents[j]) g.scene.entities.splice(i,1);
-};
-g.entity.get = function(tag) {
-	result=[];
-	g.scene.entities.forEach(function(ent) {
-		if (!tag || ent.tag === tag) result.push(ent);
-	}, this);
-	return result;
-};
-g.entity.count = function(tag) {
-	return this.get(tag).length;
-};
 g.gameWon = function() {
 	g.state="message";
-	g.entity.remove(g.collider); //Stop collisions
-	g.entity.add(new GameWon());
+	g.scene.remove(g.collider); //Stop collisions
+	g.scene.add(new GameWon());
 	g.sounds.music.pause();g.sounds.music.currentTime=0;
 };
 g.gameOver = function() {
 	g.state="message";
-	g.entity.remove(g.collider); //Stop collisions
-	g.entity.add(new GameOver());
+	g.scene.remove(g.collider); //Stop collisions
+	g.scene.add(new GameOver());
 	g.sounds.music.pause();g.sounds.music.currentTime=0;
 	g.sounds.lose.play();
 };
-g.gameUpdate = function(delta) {
-	g.scene.entities.forEach(function(ent) {
-		if (typeof ent.update === "function") ent.update(delta);
-	}, this);
-};
-g.gameRender = function() {
-	g.ctx.fillStyle='#035'
-	g.ctx.fillRect(-g.ui.width, -g.ui.height, 2*g.ui.width, 2*g.ui.height);
-	g.ctx.save();
-	if (g.camera) g.ctx.translate(-g.camera.x, -g.camera.y)
-	g.scene.entities.forEach(function(ent) {
-		if (typeof ent.renderer === "function") {
-			g.ctx.save();
-			if (ent.static && g.camera) g.ctx.translate(g.camera.x, g.camera.y)
-			if (!g.camera || g.camera.canSee(ent)) ent.renderer(g.ctx);
-			g.ctx.restore();
-		}
-	}, this);
-	g.ctx.restore();
+g.preGameRender = function(ctx) {
+	let w = g.ui.canvas.width/g.ui.scaleX
+	let h = g.ui.canvas.height/g.ui.scaleY;
+	ctx.fillStyle='#035'
+	ctx.fillRect(-w, -h, 2*w, 2*h);
 };

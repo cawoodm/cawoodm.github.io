@@ -7,14 +7,14 @@ Collider.prototype.update = function(delta) {
 	if (Collider.collides("player", "wall", 2).length>0) g.player.stop();
     Collider.collides("player", "apple").forEach((a, i)=>{
         if (a.tag=="apple") {
-            g.entity.remove(a);
+            g.scene.remove(a);
             g.stats.score+=1;
             g.sounds.ping.pause();g.sounds.ping.play();
         }
     });
     let el = Collider.collides("bullet", "bee", -1); if (el.length>0) {
         g.stats.score+=1;
-        g.entity.remove(el);
+        g.scene.remove(el);
     }
     el = Collider.collides("bee", "wall", 1); if (el.length>0) {
         let bee = el[0];
@@ -28,13 +28,13 @@ Collider.prototype.update = function(delta) {
         bee.bounce(pawang);
     }
     Collider.collides("bullet", "wall", 1).forEach((a)=>{
-        if (a.tag=="bullet") g.entity.remove(a);
+        if (a.tag=="bullet") g.scene.remove(a);
     });
 }
 Collider.collide = function(tag1, tag2, tol) {return Collider.collides(tag1, tag2, tol).length>0;}
 Collider.collides = function(tag1, tag2, tol) {
-	let e1s = typeof tag1 == "string"?g.entity.get(tag1):[tag1];
-	let e2s = g.entity.get(tag2);
+	let e1s = typeof tag1 == "string"?g.scene.get(tag1):[tag1];
+	let e2s = g.scene.get(tag2);
 	for (let i=0; i<e1s.length; i++)
 		for (let j=0; j<e2s.length; j++) 
 			if (e1s[i] != e2s[j])

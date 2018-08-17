@@ -9,7 +9,7 @@ Message.prototype.update = function(delta) {
     if (this.scale<30)
         this.scale += 0.5;
     else {
-        g.entity.remove(this);
+        g.scene.remove(this);
         if (typeof this.callback == "function") this.callback();
     }
 }

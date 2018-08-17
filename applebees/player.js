@@ -62,7 +62,7 @@ Player.prototype.move = function(dir) {
 Player.prototype.shoot = function() {
     let off = {x: Math.sign(this.speed.x), y: Math.sign(this.speed.y)}
     if (off.x==0 && off.y==0) off.x=1; // No bullet if we're not moving
-    g.entity.add(new Bullet({x: g.player.x+off.x*g.ui.blockSize/3, y: g.player.y+off.y*g.ui.blockSize/3, speed: off, velocity: this.bulletSpeed}));
+    g.scene.add(new Bullet({x: g.player.x+off.x*g.ui.blockSize/3, y: g.player.y+off.y*g.ui.blockSize/3, speed: off, velocity: this.bulletSpeed}));
 }
 Player.prototype.stop = function() {
     this.speed={x: 0, y:0};

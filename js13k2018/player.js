@@ -4,24 +4,27 @@ function Player(options) {
 	this.w = options.w || g.ui.bz;
     this.h = options.h || g.ui.bz;
     this.pizzas = [];
-    this.sprite = new Sprite({sprite: "spritemap", w: this.w, h: this.h, offX: 32*4, offY: 96, scale: 1});
+    this.sprite = new Sprite({w: this.w, h: this.h, offX: 32*4, offY: 96, scale: 1});
     this.collider=0;
     this.tag='player';
     this.acc={x:0, y:0};
     this.speed={x:0, y:0};
     this.velocity = options.velocity || 5;
     this.frame=0;
+    this.fuel=100;
     this.carrying=[];
     g.collider.check(this, ["house", "block"], (e1, e2)=>{g.player.stop()}) 
     return this;
 }
 Player.prototype.update = function(delta) {
     if (g.state!="play") return;
+    if (Math.round(this.distanceFrom(g.pizzeria)) == 0) g.manager.atPizzeria();
     if (this.nextMove) this.move(this.nextMove);
     this.speed.x += this.acc.x * delta;
     this.speed.y += this.acc.y * delta;
     this.x += this.speed.x;// * delta;
     this.y += this.speed.y;//    * delta;
+    if (this.speed.x+this.speed.y>0) this.fuel-=0.03;
     if (this.speed.x>0) this.frame=0;
     else if (this.speed.x<0) this.frame=1;
     else if (this.speed.y<0) this.frame=2;
@@ -32,8 +35,13 @@ Player.prototype.renderer = function(ctx) {
     this.sprite.y=this.y;
     this.sprite.offX=g.ui.bz*4+this.frame*(g.ui.bz);
     this.sprite.renderer(ctx);
-    ctx.fillStyle = 'white'
-    ctx.fillText(this.carrying.length, this.x+5, this.y+5)
+    this.carrying.forEach((p,i)=>{
+        let o = {x: 14, y: 7, xi:-3, yi:0};
+        if (this.frame==1) o = {x: 10, y:-2, xi:3, yi:0}
+        else if (this.frame==2) o = {x: 19, y:7, xi:0, yi:3}
+        else if (this.frame==3) o = {x: 6, y:7, xi:0, yi:-3}
+        g.sprites.minipizza.renderer(ctx, this.x+o.x+i*o.xi, this.y+o.y+i*o.yi, 0.5)
+    });
 }
 Player.prototype.move = function(dir) {
     this.nextMove = null;
@@ -62,7 +70,6 @@ Player.prototype.move = function(dir) {
 }
 Player.prototype.stop = function() {
     this.speed={x: 0, y:0};
-    g.manager.vanStops();
 }
 Player.prototype.distanceFrom = function(ent) {
     return Math.sqrt(Math.pow(ent.x-this.x,2)+Math.pow(ent.y-this.y,2))/g.ui.bz 

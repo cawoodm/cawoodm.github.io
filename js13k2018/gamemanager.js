@@ -3,11 +3,20 @@ function GameManager(options) {
     this.flash = false;
     this.level = 1;
     this.houses = g.scene.get("house")
-    ArrayShuffle(this.houses)
     this.prospects = []
     this.orders = []
     this.deliveries=0;
     this.money=0;
+    g.sprites = {
+        cloud: new Sprite({w: 32, h: 32, offX: 32*4, offY: 32*1}),
+        pizza: new Sprite({w: 14, h: 14, offX: 32*5, offY: 32*1}),
+        minipizza: new Sprite({w: 14, h: 14, offX: 32*5, offY: 32*1, scale: 0.5}),
+        sat: [
+            new Sprite({w: 32, h: 32, offX: 32*5, offY: 32*2}),
+            new Sprite({w: 32, h: 32, offX: 32*6, offY: 32*2}),
+            new Sprite({w: 32, h: 32, offX: 32*4, offY: 32*2})
+        ]
+    };
     return this;
 }
 GameManager.prototype.update = function(dt) {
@@ -15,7 +24,7 @@ GameManager.prototype.update = function(dt) {
     if (g.ticker.ticks % 30 == 0) this.flash = !this.flash;
     // Every 5s
     if (this.prospects.length+this.orders.length==0 || g.ticker.ticks % (60*5) == 0) {
-        if (this.prospects.length  < 2* this.level) this.getNewHungryHouse();
+        if (this.prospects.length  < 4*this.level) this.getNewHungryHouse();
     }
     this.level=Math.floor(this.deliveries/6)+1;
 }
@@ -41,21 +50,31 @@ GameManager.prototype.vanStops = function() {
             ArrayRemove(g.player.carrying, h)
         }
     });
-    if (Math.round(g.player.distanceFrom(g.pizzeria)) == 0) {
-        // Transfer all orders into carrying pizzas
-        this.orders.forEach((o)=>{if(!g.player.carrying.includes(o)) g.player.carrying.push(o)});
+}
+GameManager.prototype.atPizzeria = function() {
+    // Transfer all orders into carrying pizzas
+    if (g.ticker.ticks%60==0 && this.orders.length>0) {
+        let o = this.orders[0];
+        g.player.carrying.push(o)
+        ArrayRemove(this.orders, o)
+        //this.orders.forEach((o)=>{if(!g.player.carrying.includes(o)) g.player.carrying.push(o)});
     }
+    if (g.ticker.ticks%10==0)
+        if (this.money>0 && g.player.fuel<100) {
+            this.money--;
+            g.player.fuel++;
+        }
 }
 GameManager.prototype.getNewHungryHouse = function() {
     let possibles=[];
     for (i=0; i<this.houses.length; i++) {
         let h = this.houses[i];
-        if (this.prospects.includes(h) || this.orders.includes(h)) continue;
+        if (!h.state==0) continue;
+        if (h.satisfaction==0) continue;
         // Is this house within 5 x level blocks of the pizzeria?
         if (h.distanceFrom(g.pizzeria) < this.level*6) {possibles.push(h)}
     }
     if (possibles.length==0) return;
-    ArrayShuffle(possibles);
     let h = rnda(possibles)
     g.sound.play("prospect")
     return this.prospects.push(h.readyToOrder())

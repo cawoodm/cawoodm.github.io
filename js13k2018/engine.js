@@ -91,10 +91,11 @@ function Sprite(options) {
     this.img = g.ImageLoader.get[options.sprite||"sprites"];
     return this;
 }
-Sprite.prototype.renderer = function(ctx, x, y) {
+Sprite.prototype.renderer = function(ctx, x, y, scale) {
 	ctx.save();
 	this.x=x||this.x;
 	this.y=y||this.y;
+	this.scale=scale||this.scale;
     this.offW = this.w * this.scale;
     this.offH = this.h * this.scale;
     if (this.center) g.ctx.translate(-this.offW/2, -this.offH/2)
@@ -217,7 +218,7 @@ g.GameUpdate = function(delta) {
     if (typeof g.postGameUpdate=="function") g.postGameUpdate();
 };
 g.GameRender = function() {
-	g.ctx.clearRect(0, 0, g.ui.win.width/g.ui.scale.x, g.ui.win.height/g.ui.scale.y);
+	g.ctx.clearRect(0, 0, g.ui.canvas.width, g.ui.canvas.height);
 	g.ctx.save();
     if (typeof g.preGameRender=="function") {
 		g.ctx.save();

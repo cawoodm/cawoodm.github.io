@@ -2,28 +2,24 @@
 g.init = function() {
 	g.ui.bz=32
     g.ui.blocksInView=10
-
-    // g.ui.canvas = document.getElementById("c");
-    // g.ctx = g.ui.canvas.getContext("2d");
-
-    // Separate canvas for background (drawn once)
-    g.ui.canvas0 = document.createElement("canvas");
-    g.ctx0 = g.ui.canvas0.getContext("2d");
     
-    g.ui.hudWidth = 100;
+    g.ui.hudWidth = 50;
     g.ui.scale = {x: 2, y: 2};
-    g.ui.canvas.width=g.ui.hudWidth+g.ui.blocksInView*g.ui.bz*g.ui.scale.x;
-    g.ui.canvas.height=g.ui.blocksInView*g.ui.bz*g.ui.scale.y;
+    g.ui.width=g.ui.hudWidth+g.ui.blocksInView*g.ui.bz;
+    g.ui.canvas.width=g.ui.width*g.ui.scale.x;
+    g.ui.height=g.ui.blocksInView*g.ui.bz;
+    g.ui.canvas.height=g.ui.height*g.ui.scale.y;
     g.ui.canvas.style.position = "absolute";
-    g.ui.canvas.style.left = 0.5*g.ui.blocksInView*g.ui.bz*g.ui.scale.y + "px";
+    g.ui.canvas.style.left = g.ui.win.width/2-0.5*g.ui.width*g.ui.scale.x + "px";
+    g.ui.canvas.style.top = g.ui.win.height/2-0.5*g.ui.width*g.ui.scale.y + "px";
 
-	g.ctx.translate(g.ui.hudWidth, 0);
 	g.ctx.scale(g.ui.scale.x, g.ui.scale.y);
+	g.ctx.translate(g.ui.hudWidth, 0);
 	// We want pixelated scaling:
 	g.ctx.imageSmoothingEnabled=false
 
 	g.ImageLoader.add("tilemap", "./tilemap.png");
-	g.ImageLoader.add("spritemap", "./spritemap.png");
+	g.ImageLoader.add("sprites", "./spritemap.png");
 
 	return ()=>{g.ready()}
 }
@@ -49,27 +45,10 @@ g.restart = function(title) {
         g.player = g.scene.add(new Player({x: 28*g.ui.bz, y: 37*g.ui.bz, velocity: 2}));
 	    // Mobile version can't have music and sfx
 	    //if (!navigator.userAgent.match(/iPhone|iPod|iPad/)) g.sounds.music.play();
-        g.loadScene();
         g.state="play";
+        g.sound.music.play();
 	}
 	g.Start();
-};
-g.loadScene = function(level) {
-    let mapWidth = g.map[0].length;
-    let mapHeight = g.map.length;
-	for (let y = 0; y < mapHeight; y++) for (let x = 0; x < mapWidth; x++) {switch(g.map[y][x]) {
-		//case 3: g.scene.add(new House({x: x*g.ui.bz, y: y*g.ui.bz})); break;
-		//case -1: g.scene.add({tag: "block", x: x*g.ui.bz, y: y*g.ui.bz, w: g.ui.bz, h: g.ui.bz}); break;
-		//case 15: g.scene.add({tag: "block", x: x*g.ui.bz, y: y*g.ui.bz, w: g.ui.bz, h: g.ui.bz}); break;
-		//case 16: g.scene.add({tag: "block", x: x*g.ui.bz, y: y*g.ui.bz, w: g.ui.bz, h: g.ui.bz}); break;
-	}}
-	return true;
-}
-g.gameWon = function() {
-	// g.state="message";
-	// g.scene.remove(g.collider); //Stop collisions
-	// g.scene.add(new GameWon());
-	// g.sounds.music.pause();g.sounds.music.currentTime=0;
 };
 g.gameOver = function() {
 	// g.state="message";
@@ -80,10 +59,12 @@ g.gameOver = function() {
 };
 g.preGameRender = function(ctx) {
     // Draw background
-    g.ctx.drawImage(g.ui.canvas0, g.camera.x, g.camera.y, 320, 320, 0, 0, 320, 320)
+    if(!g.camera) return;
+    g.ctx.drawImage(g.c0, g.camera.x, g.camera.y, 320, 320, 0, 0, 320, 320)
 };
 g.postGameRender = function(ctx) {
     // Draw background
+    if(!g.minimap) return;
     g.minimap.draw(ctx);
 };
 g.loadMap = function() {
@@ -112,79 +93,77 @@ g.loadMap = function() {
         }
         if (y>0) g.map.push(row)
     }
-    //dp(JSON.stringify(g.map))
 };
+g.rect=function(x,y,w,h,c) {g.ctx.fillStyle=c;g.ctx.fillRect(x,y,w,h)}
+g.rect2=function(x,y,w,h,c) {g.ctx.fillStyle=c;g.ctx.fillRect(x*g.ui.bz,y*g.ui.bz,w*g.ui.bz,h*g.ui.bz)}
 g.drawMap = function() {
-    // Draw static map to hidden canvas0
-    let spriteSize = g.ui.bz;
-    let mapWidth = g.map[0].length;
-    let mapHeight = g.map.length;
-    g.ui.canvas0.width = mapWidth * spriteSize;
-    g.ui.canvas0.height = mapHeight * spriteSize;
-    let ctx = g.ctx0;
+    // Draw static map to hidden c0
+    let bz = g.ui.bz;
+    let mw = g.map[0].length;
+    let mh = g.map.length;
+    let c0 = document.createElement("canvas");g.c0=c0;
+    let ctx = c0.getContext("2d");
+    c0.width = mw * bz;
+    c0.height = mh * bz;
 
-    ctx.fillStyle='#DDD';
-    ctx.fillRect(0, 0, g.ui.canvas0.width, g.ui.canvas0.height);
-    let spriteSheet = g.ImageLoader.get["spritemap"];
+    g.rect(0, 0, c0.width, c0.height, '#DDD');
+    let spriteSheet = g.ImageLoader.get["sprites"];
     
     // Land background is green
-    ctx.globalAlpha=0.7;
-    for (let y = 0; y < mapHeight; y++)
-        for (let x = 0; x < mapWidth; x++)
-            if (g.map[y][x]>2) // If not landscape
-                ctx.drawImage(spriteSheet, 2*spriteSize, 0, spriteSize, spriteSize, x*spriteSize, y*spriteSize, spriteSize, spriteSize);
-    for (let y = 0; y < mapHeight; y++)
-        for (let x = 0; x < mapWidth; x++) {
+    for (let y = 0; y < mh; y++)
+        for (let x = 0; x < mw; x++)
+            if (g.map[y][x]==3) // House, draw green square
+                ctx.drawImage(spriteSheet, 2*bz, 3*bz, bz, bz, x*bz, y*bz, bz, bz);
+            else if (g.map[y][x]>=2) // If not sea, sand draw grass
+                ctx.drawImage(spriteSheet, 2*bz, 0*bz, bz, bz, x*bz, y*bz, bz, bz);
+    for (let y = 0; y < mh; y++)
+        for (let x = 0; x < mw; x++) {
             ctx.globalAlpha=1;
             let y1 = 0;
             let y2 = 1;
-            let y3 = 0;
+            // Don't put any block to the right of the pizzeria
+            if (x>0 && g.map[y][x-1]==15) {
+                g.scene.add({tag: "block", x: x*g.ui.bz, y: y*g.ui.bz, w: g.ui.bz, h: g.ui.bz});
+                continue;
+            }
             let rand = Math.random();
             // Sea, Sand and Grass alpha variations
             if (g.map[y][x]==0) ctx.globalAlpha=0.9 + rand*0.1;
-            if (g.map[y][x]==1) ctx.globalAlpha=0.5 + rand*0.4;
-            if (g.map[y][x]==2) ctx.globalAlpha=0.7 //+ rand*0.3;
-            if (g.map[y][x]==0) { // Sea variations
-                if (rand<0.25) y1 = 1;
-            }
-            if (g.map[y][x]==1) { // Sand variations
-                if (rand<0.25) y1 = 1;
-                //g.scene.add({tag: "block", x: x*g.ui.bz, y: y*g.ui.bz, w: g.ui.bz, h: g.ui.bz});
-            }
+            if (g.map[y][x]==1) ctx.globalAlpha=0.7 + rand*0.2;
+            if (g.map[y][x]==0 && rand<0.25) y1 = 1; // Sea variations
+            if (g.map[y][x]==1 && rand<0.25) y1 = 1; // Sand variations
             if (g.map[y][x]==3) { // House variations
                 if (rand<0.25) y1 = 1; // Red House
                 else if (rand<0.50) y1 = 2; // Black house
                 else if (rand<0.75) y1 = 3; // Green house
                 else {
                     // Block 
+                    ctx.drawImage(spriteSheet, 2*bz, 0*bz, bz, bz, x*bz, y*bz, bz, bz);
                     g.scene.add({tag: "block", x: x*g.ui.bz, y: y*g.ui.bz, w: g.ui.bz, h: g.ui.bz})
                     g.map[y][x]=-1 
                     continue; // No house
                 }
+                // Shadow
+                ctx.fillStyle="rgba(70,70,70,0.8)";ctx.fillRect((x+0.8)*bz, (y+0.6)*bz, 0.4*bz, 0.4*bz, )
                 g.scene.add(new House({x: x*g.ui.bz, y: y*g.ui.bz}));
             }
-            if (g.map[y][x]==2) { // Grass variations
-                ctx.drawImage(spriteSheet, 2*spriteSize, y1*spriteSize*y2, spriteSize, y2*spriteSize, x*spriteSize, y*spriteSize-y3*spriteSize, spriteSize, spriteSize*y2);
-                continue; // No house
-                if (rand<0.5) y1 = 1;
-                else if (rand<0.6) y1 = 2;
-                else if (rand<0.7) y1 = 3;
+            else if (g.map[y][x]==2) { // Grass variations
+                if (rand<0.3) y1 = 1; // Tree
+                else if (rand<0.5) y1 = 2; // Bush
             }
-            if (g.map[y][x]==15) { // Pizzeria
+            else if (g.map[y][x]>=4 && g.map[y][x]<=14) { // Road
+                //ctx.drawImage(spriteSheet, 2*bz, 3*bz, bz, bz, x*bz, y*bz, bz, bz);
+            }
+            else if (g.map[y][x]==15) { // Pizzeria
                 g.pizzeria = g.scene.add({tag: "pizzeria", x: x*g.ui.bz, y: y*g.ui.bz, w: g.ui.bz, h: g.ui.bz});
-                y2 = 2;
-                y3 = 1;
+                ctx.drawImage(spriteSheet, 0, 2*bz, bz*2, 2*bz, x*bz, (y-1)*bz, bz*2, bz*2);
+                continue;
             }
-            if (g.map[y][x]==16) { // High building
-                g.scene.add({tag: "block", x: x*g.ui.bz, y: y*g.ui.bz, w: g.ui.bz, h: g.ui.bz});
-                y2 = 2;
-                y3 = 1;
-            }
-            if (g.map[y][x]==17) { // Block
+            else if (g.map[y][x]==17) { // Block
                 g.scene.add({tag: "block", x: x*g.ui.bz, y: y*g.ui.bz, w: g.ui.bz, h: g.ui.bz});
                 continue;
             }
-            ctx.drawImage(spriteSheet, g.map[y][x]*spriteSize, y1*spriteSize*y2, spriteSize, y2*spriteSize, x*spriteSize, y*spriteSize-y3*spriteSize, spriteSize, spriteSize*y2);
+            ctx.drawImage(spriteSheet, g.map[y][x]*bz, y1*bz*y2, bz, y2*bz, x*bz, y*bz, bz, bz*y2);
         }
 }
 g.ui.keys = {
@@ -216,6 +195,7 @@ g.ui.keys.down.down = function() {
 };
 g.ui.keys.fire.press = function(e) {
 	if (g.state=="message") return;
+	if (g.state=="title") {new AudioContext;return g.restart(false);}
     if (g.state!="play") return g.restart();
-    g.player.stop();
+    g.manager.vanStops();
 }

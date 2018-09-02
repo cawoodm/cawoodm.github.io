@@ -7,40 +7,63 @@ function House(options) {
     this.lastFlash = 0  ;
     this.flashing = false;
     this.state = 0;
-    this.readySprite = new Sprite({sprite: "spritemap", w: 32, h: 32, offX: 32*4, offY: 32*1});
-    this.orderedSprite = new Sprite({sprite: "spritemap", w: 32, h: 32, offX: 32*5, offY: 32*1});
+    this.waittime = -1;
+    this.satisfaction = -1;
     return this;
 };
+// House states 0=nothing, 1=waiting to order, 2=ordered, 3=lost customer
+House.colors=['', 'white', 'blue', 'orange'];
 House.prototype.update = function(dt) {
     if (g.ticker.ticks % 60 == 0) {
         // Approx every second
-        if (this.state==2) {
-            this.waittime++;
+        if (this.state==1) this.waittime+=0.5;
+        if (this.state==2) this.waittime++;
+        
+        if (this.waittime>=0) {
+            if (this.waittime/this.patience<0.5) this.satisfaction=2;
+            else if (this.waittime < this.patience) this.satisfaction=1;
+            else if (this.waittime/this.patience>3) {
+                // Lost customer
+                if (this.state==1) ArrayRemove(g.manager.prospects, this);
+                else if (this.state==2) {ArrayRemove(g.manager.orders, this);ArrayRemove(g.player.carrying, this);}
+                this.satisfaction = 0;
+                this.waittime = 0;
+                //this.flashing = false
+                this.state = 3;
+                g.sound.play("lost")
+            }
+            else this.satisfaction = 0;
         }
     }
 };
-House.colors=['', 'white', 'blue', 'red'];
 House.prototype.renderer = function(ctx) {
     if (this.flashing && g.manager.flash) {
         if (this.state==1) {
-            this.readySprite.renderer(ctx, this.x, this.y)
+            g.sprites.cloud.renderer(ctx, this.x, this.y)
+            g.sprites.pizza.renderer(ctx, this.x+6, this.y+4)
         } else if (this.state==2) {
-            this.orderedSprite.renderer(ctx, this.x, this.y)
-            arc(ctx, this.x+12, this.y+11, 5, this.waittime/this.patience, '#4B1716')
-        } else {
-            ctx.strokeStyle = House.colors[this.state]
-            ctx.lineWidth='2';
-            ctx.strokeRect(this.x, this.y, this.w, this.h)
+            g.sprites.cloud.renderer(ctx, this.x, this.y)
+            g.sprites.pizza.renderer(ctx, this.x+6, this.y+4)
+            arc(ctx, this.x+13, this.y+11, 5, this.waittime/this.patience, '#4B1716')
         }
+    }
+    if (this.state==3) {
+        ctx.strokeStyle = House.colors[this.state]
+        ctx.lineWidth='2';
+        ctx.strokeRect(this.x, this.y, this.w, this.h)
+    }
+    if (this.satisfaction>=0) {
+        g.sprites.sat[this.satisfaction].renderer(ctx, this.x+16, this.y+16)
     }
 };
 House.prototype.readyToOrder = function() {
+    this.patience = Math.round(this.distanceFrom(g.pizzeria))*5;
     this.state=1; // Waiting to order
+    this.waittime = 0;
     this.flashing = true
     return this
 };
 House.prototype.placeOrder = function() {
-    this.patience = Math.round(this.distanceFrom(g.pizzeria))*20;
     this.state=2; // Waiting for order
     this.flashing = true
     this.waittime = 0;
@@ -49,6 +72,7 @@ House.prototype.placeOrder = function() {
 };
 House.prototype.deliverOrder = function() {
     this.state=0;
+    this.waittime = -1;
     this.flashing=false;
 }
 House.prototype.distanceFrom = function(ent) {

@@ -1,0 +1,28 @@
+{
+	"jshint": {
+		"global": [
+			"window","console", "$", "require", "define"
+		],
+		"options": {
+			"browser"       : true,
+			"jquery"        : true
+		}
+	},
+	 
+	"ui": {
+		"font":"Consolas",
+		"font_size":14
+	},
+	
+	"formatter": {
+		"js": {
+		  "indent_size": 2
+		}
+	},
+	
+	"lint" : {
+		//The directories to exclude while running jslint/jshint
+		exclude_dirs : 'node_modules',
+	 }
+	 
+}

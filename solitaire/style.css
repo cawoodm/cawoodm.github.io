@@ -1,0 +1,23 @@
+﻿div#board {
+	width: 280px;
+}
+
+div#board div {
+	width: 28px;
+	height: 28px;
+	float: left;
+	border: 1px solid #fff;
+}
+
+div#board div.piece {
+	background-color: #b00 !important;
+}
+
+div#board div.valid {
+	background-color: #bbb;
+}
+
+div#board div.on {
+	border: 1px solid #0f0;
+	background-color: #0dd;
+}

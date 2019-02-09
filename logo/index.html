@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8"/>
+		<title>Logo</title>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.1/css/bootstrap.css"/>
+		<style>
+		#code {
+			font-family: Consolas;
+			font-size:large;
+			font-weight:bold;
+			width: 600px;
+		}
+		#c {
+			border:1px solid #ccc;
+		}
+		#history {
+			height: 300px;
+			font-family: Consolas;
+			font-size:large;
+			font-weight:bold;
+		}
+		</style>
+	</head>
+	<body>
+			<div class="row">
+				<div class="span8">
+				<h3><img class="img-rounded" src="./logo.png">&nbsp;Logo v0.4.1</h3>
+				<input id="code" width="600" placeHolder="Enter command (e.g. fd 100)" autofocus="autofocus" autocorrect="off" autocapitalize="off"><br/>
+				<canvas id="c" width="600" height="400"></canvas>
+				
+				</div>
+				<div class="span4">
+					<div class="row">
+						<div class="row">
+							<h3>My Program</h3>
+						</div>
+						<div class="row">
+							<div class="controls controls-row">
+								<button id="btnRun" class="btn btn-info"><i class="icon-play"></i>Run</button>
+								<button id="btnNew" class="btn">New</button>
+								<button id="btnSquare" class="btn">Square</button>
+							</div>
+						</div>
+						<div class="row">
+							<textarea class="span4" id="history" autocorrect="off" autocapitalize="off"></textarea>
+						</div>
+						<div class="row">
+							<div class="input-append">
+								<input id="progName" class="span3" type="text">
+								<button class="btn" title="Save Program" id="btnSave"><i class="icon-folder-close"></i></button>
+								<button class="btn" title="Load Program" id="btnLoad"><i class="icon-folder-open"></i></button>
+							</div>
+						</div>
+						<div class="row" id="help">
+							<h4>Help</h4>
+							<ul>
+								<li><b>fd 100</b> - move forward (100px)</li>
+								<li><b>rt 90</b> - turn right (90°)</li>
+								<li><b>arc 100</b> - draw a circle (radius 100)</li>
+								<li><b>cs</b> - Clear Screen</li>
+								<li><b>pu/pd</b> - Pen Up/Pen Down</li>
+								<li><b>setpc 255 0 0</b> - Set pen color (red)</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+		<script src="canto.js" type="text/javascript"></script>
+		<script src="app.js"></script>
+	</body>
+</html>

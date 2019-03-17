@@ -2,22 +2,25 @@
 require("jquery-ui-bundle");
 require("bootstrap3");*/
 
+// Our global application
+var pw = {};
+
+// Load components list
+$.getJSON('./components.json').done((data)=>{pw.components=data}).fail((jqxhr, textStatus, error )=>{var err = textStatus + ", " + error;console.log(err);alert("Error loading pipeline1.json!")});
+
 // Our pipeline data model
-var pw = {
-	pipeline: {
-		steps: [
-			{"id": "A1", "name": "Read CSV", "component": "ReadFile"},
-			{"id": "B1", "name": "Convert to JSON", "component": "Data2JSON"},
-			{"id": "B2", "name": "Fill Template", "component": "JavaScript"},
-			{"id": "C1", "name": "Filter", "component": "Filter"},
-			{"id": "C2", "name": "Send Email", "component": "JavaScript"},
-			{"id": "C3", "name": "Run Script", "component": "JavaScript"},
-			{"id": "D1", "name": "Save to Database", "component": "DatabaseWrite"},
-		]
-	}
-};
+
+pipelineManager.reset();
+$.getJSON('../examples/pipeline1/pipeline.json').done((data)=>{
+	pw.pipeline1=data;
+	pipelineManager.import(pw.pipeline1);
+	showSteps(pipelineManager.getSteps());
+	spacers();
+}).fail((jqxhr, textStatus, error )=>{var err = textStatus + ", " + error;console.log(err);alert("Error loading pipeline1.json!")});
+//testPipeline = { "id": "pipeline1", "name": "Send mail to young voters", "description": "Read voters.txt, get all voters under 21yrs of age and send them an email", "parameters": { "DataSource": { "default": ".\\data\\voters.txt", "type": "string" }, "p2": { "default": "{Get-Date}" } }, "globals": { "foo": "bar" }, "checks": { "run": "some checks that we have all we need (e.g. ./data/voters.txt) to run?" }, "input": {}, "output": {}, "steps": [ { "id":"A1", "name":"Read Voters File", "reference":"../components/ReadFile.ps1", "input":"", "parameters": { "Path": "{$PipelineParams.DataSource}" } }, { "id":"B1", "name":"Convert2JSON", "reference":"../components/CSV2JSON.ps1", "input": "A", "parameters": { "Delimiter": "|", "Header": "{\"name\", \"age\", \"email\", \"source\"}" } }, { "id":"C1", "name":"Select Name and Email", "reference":"../components/SelectFields.ps1", "input": "B", "parameters": { "Fields": "{\"name\", \"age\", \"email\"}" } } ] };
+
 // Setup UI, dialogs, dragging and matrix of spacers
-$( function() {
+$(function() {
 
 	// Fix jQuery-UI/Bootstrap conflicts
 	//$.fn.bootstrapBtn = $.fn.button.noConflict();
@@ -36,13 +39,11 @@ $( function() {
 	// Make all components draggable
 	$(".pw_comp").draggable({helper: "clone", zIndex : 10});
 
-	showPipeline(pw.pipeline)
-	
 	// Create placeholder "spacers" in the matrix
 	spacers()
 });
-function showPipeline(pipeline) {
-	pipeline.steps.forEach((step) => {
+function showSteps(steps) {
+	steps.forEach((step) => {
 		setStep(step.id.substr(0, 1), null, step)
 	});
 }
@@ -60,7 +61,7 @@ let mapIcons = {
 function editStep(el) {
 	data = JSON.parse(el.getAttribute("data"));
 	data.step = el.id.substring(5);
-	data.name=data.name||data.component;
+	data.name=data.name||data.reference.match(/([a-z]+).ps1/i)[1];
 	pw.form.formFromJSON(data);
 	pw.formData = data;
 	pw.dialog.modal("show");
@@ -73,7 +74,7 @@ function saveStep(frm) {
 	let dataJson = JSON.stringify(pw.formData)
 	dp("data saved", data)
 	$el.attr('data', dataJson);
-	// TODO: Update pw.pipeline.steps
+	// TODO: Update pipelineManager.updateStep()
 	$el.find('.stepHead').text(data.name);	
 	pw.dialog.modal('hide');
 }
@@ -82,12 +83,13 @@ function dropStep(event, ui) {
 	var src = ui.draggable[0];
 	var dest = event.target.parentElement;
 	let col = dest.id.substr(dest.id.length-1);
-	var el, data, fromComponent=false;
+	var el, data, step, fromComponent=false;
 	if (src.id.match(/^comp_/)) {
 		// Component (from library) is dropped -> Generate a step
 		data = JSON.parse(src.getAttribute("data"));
-		el = comp2Step(data);
-		setStep(col, null, data)
+		step = pipelineManager.addComponent(col, null, data);
+		el = comp2Step(step);
+		setStep(col, null, step)
 		$(el).trigger("click");
 		return
 	} else {
@@ -107,10 +109,10 @@ function dropStep(event, ui) {
 	$(".pw_step").on("click", () => {editStep(el)});
 	//TODO: Add new columns if required
 }
-function setStep(col, row, data) {
+function setStep(col, row, step) {
 	dest = $('#col_'+col)[0];
-	let el = comp2Step(data);
-	el.setAttribute("data", JSON.stringify(data));
+	let el = comp2Step(step);
+	el.setAttribute("data", JSON.stringify(step));
 	el.id = dest.id.replace('col_', 'step_');
 	el.id += dest.childNodes.length;
 	dest.appendChild(el);
@@ -139,12 +141,17 @@ function comp2Step(data) {
 	var ht = $('#stepTemplate1').html();
 	var el = $.parseHTML(ht)[0];
 	var i = document.createElement('span');
-	let icon = mapIcons[data.component]||"edit";
+	let icon = mapIcons[data.reference]||"edit";
 	$(i).addClass("icon glyphicon glyphicon-"+icon);
-	i.innerText = data.component;
+	i.innerText = data.reference.match(/([a-z]+).ps1/i)[1];
 	//if (data.type == "destination" || data.type == "transform") {i2 = document.createElement('span');$(i2).addClass("glyphicon-chevron-right");	el.appendChild(i2);	}
-	$(el).find('.stepHead').text(data.name||data.component);
+	$(el).find('.stepHead').text(data.id + ': ' + data.name||data.reference);
 	$(el).find('.stepBody').append(i);
+	i = document.createElement('div');
+	if (data.input) {
+		i.innerText="Input:" + data.input;
+		$(el).find('.stepBody').append(i);
+	}
 	//if (data.type == "source" || data.type == "transform") {i1 = document.createElement('span');$(i1).addClass("glyphicon-chevron-right");el.appendChild(i1);	}
 	$(el).removeClass('pw_comp')
 	$(el).addClass('pw_step')

@@ -19,9 +19,9 @@
   columns: Array of columns representing [A-I]
    column: Array of steps representing [1-9]
     step: {
-        id: "B1",                       // The id of the step 
-        reference: "file-csv-ps1",            // The path to the component
-        name : "Read Voters File",      // short readable name of the step
+        id: "B1",                       // The id of the step (*)
+        reference: "file-csv-ps1",            // The path to the component (*)
+        name : "Read Voters File",      // short readable name of the step (*)
         parameters: {
             "p1": "value",              // Parameter p1 and it's value
             "p2": "value",              // Parameter p2 and it's value
@@ -31,8 +31,8 @@
 
 */
 // @ts-check
-const pipeCols = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
 let pipelineManager = (function() {
+    const pipeCols = ["A", "B", "C", "D", "E", "F", "G", "H", "I"];
     const COLS = pipeCols.length;
     const ROWS = 9;
     let columns = [];
@@ -132,6 +132,35 @@ let pipelineManager = (function() {
             }
             return res;
         },
+        getRows: function() {
+            let res = [];
+            for (let r=1; r<=ROWS; r++) {
+                let row = [];
+                for (let c=1; c<=COLS; c++) {
+                    row.push(this.getStep(c, r));
+                }
+                res.push(row);
+            }
+            return res;
+        },
+        /**
+         * Return array of columns
+         * @returns {Array}
+         */ 
+        getColumns: function() {
+            return columns;
+        },
+        /**
+         * Set a step directly
+         * @param {Object} newStep 
+         */
+        setStep: function(newStep) {
+            let row = parseRow(newStep.id);
+            let col = parseCol(newStep.id);
+            columns[parseInt(col)-1][row-1] = newStep;
+            // TODO: Validation
+            return true;
+        },
         /**
          * Move a step from one position to another
          * @param {string} fromId 
@@ -167,6 +196,25 @@ let pipelineManager = (function() {
             return null;
         },
         /**
+         * Return all inputs available to a step
+         *  i.e. the outputs of all steps previous to it
+         * @param {string} id 
+         * @returns {string[]} Step IDs of available outputs
+         */
+        getAvailableInputs: function(id) {
+            let res = [];
+            let col = parseCol(id);
+            let row = parseRow(id);
+            for (let c=1; c<=COLS; c++)
+                for (let r=1; r<=ROWS; r++)
+                    if (c<col || c==col && r < row) {
+                        let step = this.getStep(c, r);
+                        // TODO: Check step as outputs!
+                        if (step.reference) res.push(step.id);
+                    }
+            return res;
+        },
+        /**
          * Return the definition for unit testing
          * @returns {Object} The in-memory pipeline which was loaded
          */
@@ -195,7 +243,8 @@ let pipelineManager = (function() {
          * @param {string} col The ID (A-Z or 1 to 10) of the column to return
          * @param {number} row The ID (1 to 9) of the step to return
          */
-        getStep: getStep
+        getStep: getStep,
+        pipeCols: pipeCols
     };
     /**
      * Takes "A22" and returns 22
@@ -250,6 +299,8 @@ let pipelineManager = (function() {
         return {
             id: id,
             reference: stepI.reference,
+            description: stepI.description,
+            synopsis: stepI.synopsis,
             name : stepI.name,
             parameters: stepI.parameters,
             input: stepI.input
@@ -265,6 +316,9 @@ let pipelineManager = (function() {
         return {
             id: id,
             reference: component.reference,
+            name: component.reference,
+            description: component.description,
+            synopsis: component.synopsis,
             parameters: component.parameters||[],
             input: component.input||null,
             output: component.output||null
@@ -280,6 +334,8 @@ let pipelineManager = (function() {
         return {
             id: id,
             reference: step.reference,
+            description: step.description,
+            synopsis: step.synopsis,
             name: step.name ,
             parameters: step.parameters,
             input: step.input,
@@ -302,6 +358,10 @@ if (typeof process !== "undefined") {
 (function pipelineManagerTest(verbose) {
     let tests = 0;
     let fails = 0;
+
+    let PM = pipelineManager;
+    let COLS = pipelineManager.pipeCols;
+
     function assert(cond, msg, exception) {
         if (verbose) console.log("\x1b[36m", "... " + msg);
         try {
@@ -351,54 +411,58 @@ if (typeof process !== "undefined") {
         console.clear();
 
         // Check a new pipeline
-        pipelineManager.reset();
-        assert(pipelineManager.columnCount()===pipeCols.length, "We have the right number of columns ("+pipeCols.length+")")
-        assert(pipelineManager.rowCount()===9, "We have the right number of rows (9)")
-        assert(pipelineManager.nextRow("A")===1, "Next empty row in column A is 1")
+        PM.reset();
+        assert(PM.columnCount()===COLS.length, "We have the right number of columns ("+COLS.length+")")
+        assert(PM.rowCount()===9, "We have the right number of rows (9)")
+        assert(PM.nextRow("A")===1, "Next empty row in column A is 1")
         
         // Getting and Adding Steps
-        assert('pipelineManager.getStep(1, 1).reference === null', "Step A1 is initialized")
-        assert(()=>pipelineManager.addComponent(1, 1, {reference: "foo"}).reference === "foo", "Step A1 is set to foo")
-        assert(pipelineManager.nextRow("A")===2, "Next empty row in column A is 2")
-        assert('pipelineManager.addComponent("B", null, {reference: "bar"}).reference === "bar"', "Step B1 is set to bar")
-        assert('pipelineManager.addComponent("C3", null, testComponent).reference=="CSV2JSON.ps1"', "Add component to wrong row", true)
-        assert('pipelineManager.addComponent("C1", null, testComponent).reference=="CSV2JSON.ps1"', "Add C1 component")
-        assert('pipelineManager.addComponent("C", null, testComponent).reference=="CSV2JSON.ps1"', "Add C component")
-        assert('pipelineManager.addComponent("C", null, testComponent).reference=="CSV2JSON.ps1"', "Add another C component")
-        assert('pipelineManager.getStep("C", 3).reference !== null', "Step C3 is set")
-        let step = pipelineManager.getStep("C3");
+        assert('PM.getStep(1, 1).reference === null', "Step A1 is initialized")
+        assert(()=>PM.addComponent("1", 1, {reference: "foo"}).reference === "foo", "Step A1 is set to foo")
+        assert(PM.nextRow("A")===2, "Next empty row in column A is 2")
+        assert('PM.addComponent("B", null, {reference: "bar"}).reference === "bar"', "Step B1 is set to bar")
+        assert('PM.addComponent("C3", null, testComponent).reference=="CSV2JSON.ps1"', "Add component to wrong row", true)
+        assert('PM.addComponent("C1", null, testComponent).reference=="CSV2JSON.ps1"', "Add C1 component")
+        assert('PM.addComponent("C", null, testComponent).reference=="CSV2JSON.ps1"', "Add C component")
+        assert('PM.addComponent("C", null, testComponent).reference=="CSV2JSON.ps1"', "Add another C component")
+        assert('PM.getStep("C", 3).reference !== null', "Step C3 is set")
+        let step = PM.getStep("C3");
+        assert(()=>PM.setStep(step), "Set step works");
         assert(()=>step.parameters.length===3, "CSV2JSON should have 3 parameters");
 
+        // Available inputs
+        assert(()=>PM.getAvailableInputs("C3").length==4, "Step 3 has 2 available inputs");
+
         // Moving steps
-        assert(()=>pipelineManager.moveStep("C3", "A1"), "Step can't be moved over existing step", true);
-        assert(()=>pipelineManager.getStep("D4").reference===null, "Step D4 should be empty");
-        assert(()=>pipelineManager.getStep("A1").reference!==null, "Step A1 should not be empty");
-        assert(()=>pipelineManager.getStep("C3").reference!==null, "Step C3 should not be empty"); 
-        pipelineManager.moveStep("C3", "D4")
-        let c3 = pipelineManager.getStep("C3");
-        let d4 = pipelineManager.getStep("D4");
+        assert(()=>PM.moveStep("C3", "A1"), "Step can't be moved over existing step", true);
+        assert(()=>PM.getStep("D4").reference===null, "Step D4 should be empty");
+        assert(()=>PM.getStep("A1").reference!==null, "Step A1 should not be empty");
+        assert(()=>PM.getStep("C3").reference!==null, "Step C3 should not be empty"); 
+        PM.moveStep("C3", "D4")
+        let c3 = PM.getStep("C3");
+        let d4 = PM.getStep("D4");
         assert(()=>d4.reference=="CSV2JSON.ps1" && c3.reference === null, "Step C3 moved to D4");
 
         // Removing steps
-        pipelineManager.removeStep("D4");
-        assert(()=>pipelineManager.getStep("D4").reference === null, "Step D4 is removed")
+        PM.removeStep("D4");
+        assert(()=>PM.getStep("D4").reference === null, "Step D4 is removed")
 
         // Import
-        assert(()=>pipelineManager.import(testPipeline), "Pipeline import");
-        assert(()=>pipelineManager.getStep("A1").reference.match(/File/), "Test pipeline step B1 is File")
-        assert(()=>pipelineManager.getStep("B1").reference.match(/CSV2JSON/), "Test pipeline step B1 is CSV2JSON")
-        assert(()=>pipelineManager.getStep("C1").reference.match(/SelectFields/), "Test pipeline step C1 is SelectFields")
-        assert(()=>typeof pipelineManager.getStep("A1").parameters.Path === "string", "Step A1 of imported pipeline has a 'Path' parameter")
+        assert(()=>PM.import(testPipeline), "Pipeline import");
+        assert(()=>PM.getStep("A1").reference.match(/File/), "Test pipeline step B1 is File")
+        assert(()=>PM.getStep("B1").reference.match(/CSV2JSON/), "Test pipeline step B1 is CSV2JSON")
+        assert(()=>PM.getStep("C1").reference.match(/SelectFields/), "Test pipeline step C1 is SelectFields")
+        assert(()=>typeof PM.getStep("A1").parameters.Path === "string", "Step A1 of imported pipeline has a 'Path' parameter")
         
         // Export
-        let myPipeline = pipelineManager.export();
+        let myPipeline = PM.export();
         assert(()=>myPipeline.steps.length===3, "Pipeline export has 3 steps")
-        let pipelineDef = pipelineManager.getDefinition();
+        let pipelineDef = PM.getDefinition();
         assert(()=>myPipeline.id===pipelineDef.id, "Export has same id")
         let pipelineStr = JSON.stringify(myPipeline);
         //fs.writeFileSync("C:\\temp\\pipeline.json", pipelineStr, "utf-8");
 
-        //console.log(pipelineManager.getStep("C1"))
+        //console.log(PM.getStep("C1"))
         //columnsToString();
 
     } catch(e) {

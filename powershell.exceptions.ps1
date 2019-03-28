@@ -17,7 +17,7 @@ function main() {
     $PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
     
     try {
-        $ErrorActionPreference = "SilentlyContinue"
+        $ErrorActionPreference = "SilentlyContinue" # TODO: Set this to Stop to throw
         Generate-NonTerminatingErrors
     } catch {
         $ErrMsg = "ERROR in $($_.InvocationInfo.ScriptName):$($_.InvocationInfo.ScriptLineNumber): $($_.Exception.Message)"

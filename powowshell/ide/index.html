@@ -11,14 +11,16 @@
 <v-app id="root">
 
     <v-toolbar color="blue darken-3" app dark clipped-left>
-        <v-toolbar-title data-app>PowowShell Designer</v-toolbar-title>
+        <v-toolbar-title data-app>PowDesigner</v-toolbar-title>
         <v-menu offset-y>
             <v-btn slot="activator" color="primary">Pipeline</v-btn>
             <v-list>
+                <v-list-tile @click="pipelineNew"><v-list-tile-title>New</v-list-tile-title></v-list-tile>
                 <v-list-tile @click="pipelineOpen"><v-list-tile-title>Open...</v-list-tile-title></v-list-tile>
                 <v-list-tile @click="pipelineSave"><v-list-tile-title>Save</v-list-tile-title></v-list-tile>
             </v-list>
         </v-menu>
+        {{pipeline.name}} ({{pipeline.id}})
         <v-spacer></v-spacer>
         <v-btn color="red" @click="run">Run</v-btn>
         <v-menu offset-y>
@@ -29,23 +31,26 @@
         </v-menu>
     </v-toolbar>
 
-    <v-navigation-drawer app clipped permanent width=200>
+    <v-navigation-drawer app clipped permanent width="250">
         <v-expansion-panel expand v-model="panels">
             <v-expansion-panel-content>
-                <div slot="header">Pipelines</div>
+                <div slot="header" class="body-2">Pipelines</div>
                 <v-list>
-                    <v-list-tile @click="pipelineLoad('pipeline1')">pipeline1</v-list-tile>        
-                    <v-list-tile @click="pipelineLoad('pipeline3')">pipeline3</v-list-tile>        
+                    <v-list-tile @click="pipelineLoad('pipeline1')">Example 1</v-list-tile>
+                    <v-list-tile @click="pipelineLoad('pipeline2')">Example 2</v-list-tile>
+                    <v-list-tile @click="pipelineLoad('procmon1')">Streamed Data</v-list-tile>
                 </v-list>
             </v-expansion-panel-content>
+            <cmdlet-list ref="cmdletList"></cmdlet-list>
             <component-list ref="componentList"></component-list>
         </v-expansion-panel>
     </v-navigation-drawer>
 
     <v-content>
         <step-grid ref="stepGrid"></step-grid>
+        <loading ref="loading"></loading>
     </v-content>
-
+    <v-snackbar v-model="message.show" timeout="3000" multi-line top :color="message.color">{{ message.text }} </v-snackbar>
 </v-app>
 <script src="./js/vue.min.js"></script>
 <script src="./js/vuetify.js"></script>
@@ -59,8 +64,11 @@ if (typeof process === "undefined") {
 }
 </script>
 <script src="./js/component-list.js"></script>
+<script src="./js/cmdlet-list.js"></script>
 <script src="./js/step-grid.js"></script>
 <script src="./js/step-form.js"></script>
-<script src="./main.js"></script>
+<script src="./js/data-table.js"></script>
+<script src="./js/loading.js"></script>
+<script src="./ide.js"></script>
 </body>
 </html>

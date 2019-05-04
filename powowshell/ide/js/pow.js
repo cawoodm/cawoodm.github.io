@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const pow = (function () {
-    //import {PShell} from "./pshell";
+    const fs = require("fs");
+    const path = require("path");
     const pshell = require("./pshell").PShell();
     let workspace = ".";
-    let execOptions = {};
+    let execOptions = { debug: false };
     /**
      * Initialize a workspace
      * @param {string} workspacePath: The path to the workspace root
@@ -12,9 +13,9 @@ const pow = (function () {
      */
     async function init(workspacePath) {
         return new Promise(function (resolve, reject) {
-            _POWPromise(`pow workspace ${workspacePath}`, true).then((result) => {
+            _POWPromise(`pow workspace ${workspacePath} | ConvertTo-Json`, true, true).then((result) => {
                 if (result.success) {
-                    workspace = workspacePath;
+                    workspace = result.object;
                     resolve(result);
                 }
                 else
@@ -74,15 +75,44 @@ const pow = (function () {
         return execStrictJSON(`pow pipeline "${path}" export`);
     }
     /**
-     * Savea pipeline definition to pipeline.json)
-     * @param {string} path Path to the pipeline (e.g. "!pipeline1" for default workspace)
+     * Save a pipeline definition to pipeline.json
      * @param {POWPipelineDef} pipeline Path to the pipeline (e.g. "!pipeline1" for default workspace)
+     * @param {string} pipelineId Pipeline ID (ie.)
      * @returns {Promise} Promise with a POWResult
      */
-    async function save(path) {
-        if (!path.match(/^!/) && !path.match(/[\\/]/))
-            path = "!" + path;
-        return execStrictJSON(`pow pipeline "${path}" export`);
+    async function save(pipeline, pipelineId) {
+        pipelineId = pipelineId || pipeline.id;
+        pipeline.id = pipelineId;
+        let data = JSON.stringify(pipeline, null, 2);
+        return new Promise(function (resolve, reject) {
+            if (!pipelineId)
+                return reject(new POWError("No pipeline id specified!", []));
+            let directory = path.resolve(workspace, pipelineId);
+            if (!fs.existsSync(directory))
+                fs.mkdirSync(directory);
+            fs.writeFile(path.resolve(directory, "pipeline.json"), data, (err) => {
+                if (!err)
+                    resolve(new POWResult(true, "Pipeline saved!", [], {}));
+                else
+                    reject(new POWError(err, []));
+            });
+        });
+    }
+    /**
+     * Load a pipeline definition from a pipeline.json
+     * @param {string} path Path to the pipeline (e.g. "!pipeline1" for default workspace)
+     * @returns {Promise} Promise with a POWPipelineDef
+     */
+    async function load(pipeline) {
+        return new Promise(function (resolve, reject) {
+            fs.readFile(pipeline, "utf8", (err, data) => {
+                data = data.replace(/^\uFEFF/, ''); // Drop BOM
+                if (!err)
+                    resolve(new POWResult(true, "Pipeline loaded!", [], JSON.parse(data)));
+                else
+                    reject(new POWError(err, []));
+            });
+        });
     }
     /**
      * Builds a pipeline from it's definition
@@ -109,20 +139,53 @@ const pow = (function () {
         return execStrictJSON(`pow run "${path}"`);
     }
     /**
+     * Preview a step
+     * @param {StepDef} step Step definition
+     * @param {Object} component Component definition
+     * @returns {Promise} Promise with a POWResult containing an object (step result)
+     */
+    async function preview(step, component) {
+        let path = component.executable;
+        //if (component.type=="component") path = "!"+path;
+        let params = JSON.stringify(step.parameters).replace(/"/g, '`"');
+        //console.log(`pow preview "${path}" "${params}"`)
+        if (component.output.match(/text\/json/))
+            // JSON Component returns an object
+            return execStrictJSON(`pow preview "${path}" "${params}"`);
+        else
+            // Normal component returns a string
+            return execStrict(`pow preview "${path}" "${params}"`);
+    }
+    /**
      * Inspect a component
      * @param {string} path Path to component (or "!componentReference" for default workspace)
-     * @returns {Promise} Promise with a POWResult containing an object (component definition)
+     * @returns {Promise} Promise with a POWResult (.object=component definition)
      */
     async function inspect(path) {
         return execStrictJSON(`pow inspect "${path}" | ConvertTo-JSON -Depth 4`);
     }
     /**
-     * Run a built pipeline
+     * Return array of components
      * @param {string} path Path to the components ("!" for default workspace)
-     * @returns {Promise} Promise with a POWResult
+     * @returns {Promise} Promise with a POWResult (.object=Array of component definitions)
      */
     async function components(path = "!") {
         return execStrictJSON(`pow components "${path}" export`);
+    }
+    /**
+     * Return array of cmdlets
+     * @returns {Promise} Promise with a POWResult (.object=Array of cmdlet definitions)
+     */
+    async function cmdlets(filter = "") {
+        return execStrictJSON(`pow cmdlets export "${filter}"`);
+    }
+    /**
+     * Return an example of a component's usage
+     * @param {string} path Path to the component ("!" for default workspace)
+     * @returns {Promise} Promise with a POWResult(.object=Array of examples)
+     */
+    async function examples(path) {
+        return execStrictJSON(`pow examples "${path}" export`);
     }
     /**
      * Intercept a promise and parse the result as a POWResult
@@ -133,10 +196,12 @@ const pow = (function () {
     function _POWPromise(command, strict = false, json = false) {
         return new Promise(function (resolve, reject) {
             if (execOptions.debug)
-                console.debug("EXEC", command);
+                console.log("EXEC", command);
             pshell.exec(command, execOptions)
                 .then((out) => {
                 try {
+                    if (execOptions.debug)
+                        console.log("STDOUT", out.stdout.substring(0, 200));
                     let result = _processResult(out, json);
                     if (strict && !result.success)
                         reject(new POWError(`Failure of '${command}'!`, result.messages));
@@ -167,13 +232,9 @@ const pow = (function () {
             success = false;
             messages.push(new POWMessage("ERROR", out.stderr));
         }
-        // Get stdout as a series of INFO messages
-        let outlines = out.stdout.split(/\r?\n/);
-        for (let o = 0; o < outlines.length; o++)
-            messages.push(new POWMessage("INFO", outlines[o]));
         let obj = null;
         // Process JSON output
-        if (json)
+        if (json) {
             try {
                 obj = JSON.parse(out.stdout);
             }
@@ -181,6 +242,14 @@ const pow = (function () {
                 messages.unshift(new POWMessage("ERROR", e.message));
                 throw new POWError(`Invalid JSON Object: ${e.message}`, messages);
             }
+        }
+        else {
+            // Get stdout as a series of INFO messages
+            let outlines = out.stdout.split(/\r?\n/);
+            for (let o = 0; o < outlines.length && o < 25; o++) {
+                messages.push(new POWMessage("INFO", outlines[o]));
+            }
+        }
         return new POWResult(success, out.stdout, messages, obj);
     }
     return {
@@ -190,9 +259,14 @@ const pow = (function () {
         build: build,
         verify: verify,
         run: run,
+        preview: preview,
         inspect: inspect,
         components: components,
+        cmdlets: cmdlets,
+        examples: examples,
         pipeline: pipeline,
+        save: save,
+        load: load,
         exec: exec,
         execStrict: execStrict,
         getWorkspace: () => workspace

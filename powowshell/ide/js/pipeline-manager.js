@@ -6,16 +6,18 @@ let pipelineManager = (function () {
     const COLS = pipeCols.length;
     const ROWS = 9;
     let columns = [];
-    const pipelineDefNull = { id: null, name: null, description: null, parameters: [], globals: {}, steps: [], input: {}, output: {} };
-    let pipelineDef = pipelineDefNull;
+    let dirty = false;
+    const pipelineDefNull = function () { return { id: null, name: null, description: null, parameters: {}, globals: {}, steps: [], input: {}, output: {} }; };
+    let pipelineDef = pipelineDefNull();
     // Public members
     return {
         /**
          * Initialize a new, empty pipeline
          */
         reset: function () {
+            dirty = false;
             columns = [];
-            pipelineDef = pipelineDefNull;
+            pipelineDef = pipelineDefNull();
             for (let c = 0; c < pipeCols.length; c++) {
                 let column = [];
                 for (let r = 0; r < ROWS; r++) {
@@ -45,6 +47,7 @@ let pipelineManager = (function () {
             if (step.reference != null)
                 throw new Error("Step " + col + row + " is not empty!");
             step = component2Step(step.id, component);
+            dirty = true;
             columns[parseInt(col) - 1][row - 1] = step;
             return step;
         },
@@ -64,7 +67,7 @@ let pipelineManager = (function () {
                 let step = pipelineStepToStep(stepI.id, stepI);
                 importStep(step);
             }
-            this.pipelineDef = def;
+            pipelineDef = def;
             return true;
         },
         /**
@@ -72,9 +75,9 @@ let pipelineManager = (function () {
          * @returns {Object}
          */
         export: function () {
-            let res = pipelineDefNull;
+            let res = pipelineDefNull();
             // Export all properties in pipelineDef
-            Object.assign(res, this.pipelineDef);
+            Object.assign(res, pipelineDef);
             // Overwriting all non-empty steps
             res.steps.length = 0;
             for (let r = 1; r <= ROWS; r++) {
@@ -127,6 +130,7 @@ let pipelineManager = (function () {
          * @param {Object} newStep
          */
         setStep: function (newStep) {
+            dirty = true;
             let row = parseRow(newStep.id);
             let col = parseCol(newStep.id);
             columns[parseInt(col) - 1][row - 1] = newStep;
@@ -139,6 +143,7 @@ let pipelineManager = (function () {
          * @param {string} toId
          */
         moveStep: function (fromId, toId) {
+            dirty = true;
             if (getStep(toId).reference !== null)
                 throw new Error("Step " + toId + " is not empty!");
             let step = getStep(fromId);
@@ -155,6 +160,7 @@ let pipelineManager = (function () {
         removeStep: function (id) {
             let row = parseRow(id);
             let col = parseCol(id);
+            dirty = true;
             columns[col - 1][row - 1] = emptyStep(id);
         },
         /**
@@ -194,7 +200,7 @@ let pipelineManager = (function () {
          * @returns {Object} The in-memory pipeline which was loaded
          */
         getDefinition: function () {
-            return this.pipelineDef;
+            return pipelineDef;
         },
         /**
          * @returns {number} The number of columns
@@ -207,6 +213,18 @@ let pipelineManager = (function () {
          */
         rowCount: function () {
             return columns[0].length;
+        },
+        /**
+         * @returns {boolean} True if pipeline was modified
+         */
+        isDirty: function () {
+            return dirty;
+        },
+        /**
+         * Clears the dirty flag (after e.g. a save)
+         */
+        setClean: function () {
+            dirty = false;
         },
         /**
          * Return a column indexed from 1 to 10 (A-K)
@@ -253,7 +271,7 @@ let pipelineManager = (function () {
             throw ("Invalid column number " + col + " in getColumn!");
     }
     function getStep(col, row) {
-        // @ts-ignore We may be called as (1,1) or ("A", 1) or ("A1") 
+        // @ts-ignore We may be called as (1,1) or ("A", 1) or ("A1")
         if (!row) {
             row = parseRow(col);
             col = parseCol(col);
@@ -286,9 +304,9 @@ let pipelineManager = (function () {
         return {
             id: id,
             reference: stepI.reference,
-            description: stepI.description,
-            synopsis: stepI.synopsis,
             name: stepI.name,
+            description: stepI.description,
+            stream: stepI.stream,
             parameters: stepI.parameters,
             input: stepI.input
         };
@@ -300,15 +318,19 @@ let pipelineManager = (function () {
      * @returns {Object} The new UI Step based on the component
      */
     function component2Step(id, component) {
+        let stepParams = {};
+        // We should not initialize cmdlet steps to their default because
+        //  their default may be a .NET type/enum which we can't use
+        component.parameters.forEach((p) => stepParams[p.name] = null);
         return {
             id: id,
             reference: component.reference,
-            name: component.reference,
-            description: component.description,
-            synopsis: component.synopsis,
-            parameters: component.parameters || [],
-            input: component.input || null,
-            output: component.output || null
+            name: component.name,
+            description: null,
+            stream: null,
+            parameters: stepParams,
+            input: null,
+            output: null
         };
     }
     /**
@@ -321,9 +343,9 @@ let pipelineManager = (function () {
         return {
             id: id,
             reference: step.reference,
-            description: step.description,
-            synopsis: step.synopsis,
             name: step.name,
+            description: step.description,
+            stream: step.stream,
             parameters: step.parameters,
             input: step.input,
             output: step.output

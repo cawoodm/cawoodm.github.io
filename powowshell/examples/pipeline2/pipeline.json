@@ -1,7 +1,8 @@
 {
   "id": "pipeline2",
-  "name": null,
-  "description": null,
+  "runtime": "ps5",
+  "name": "25 Windows DLLs",
+  "description": "List the 25 largest .dll files in the windows\\system32 folder.",
   "parameters": {},
   "globals": {},
   "steps": [
@@ -75,22 +76,6 @@
         "SkipIndex": null
       },
       "input": "B1"
-    },
-    {
-      "id": "D1",
-      "reference": "convertto-json",
-      "name": "ConvertTo-Json",
-      "description": null,
-      "stream": "end",
-      "parameters": {
-        "AsArray": null,
-        "Compress": null,
-        "Depth": null,
-        "EnumsAsStrings": null,
-        "EscapeHandling": null,
-        "InputObject": null
-      },
-      "input": "C1"
     }
   ],
   "input": {},

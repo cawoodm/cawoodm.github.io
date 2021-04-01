@@ -1,0 +1,161 @@
+<html>
+
+<head>
+  <title>NewTown</title>
+</head>
+
+<body bgcolor="">
+</body>
+<script>
+  let canvas = document.createElement("canvas");
+  document.body.appendChild(canvas);
+  canvas.width = 320;
+  canvas.height = 200;
+  let scale = 2;
+  canvas.width *= scale;
+  canvas.height *= scale;
+  let mainContext = canvas.getContext("2d");
+  mainContext.scale(scale, scale);
+
+  let water = new Image();
+  water.src = "test.png";
+  water.onload = begin;
+
+  let drawCanvas = document.createElement("canvas");
+  document.body.appendChild(drawCanvas);
+  let ctx = drawCanvas.getContext("2d");
+
+  let gradCanvas = drawCanvas.cloneNode();
+  let gradCtx = gradCanvas.getContext('2d');
+  document.body.appendChild(gradCanvas);
+
+  let xOffset = 0;
+  let yOffset = 0;
+
+  function begin() {
+
+    canvas.onmousemove = mouseMove;
+    canvas.onclick = mouseClick;
+
+    ctx.translate(xOffset, yOffset);
+
+    let frame = 0;
+    init();
+    render();
+  }
+  function init() {
+    rect(0, 0, 320, 200, '#333');
+    rect(150, 80, 100, 100, '#0C0');
+    rect(110, 10, 30, 30, '#C00');
+
+    //createLightGradient()
+  }
+
+  var windowOfSight = gradCtx.createRadialGradient(drawCanvas.width / 2, drawCanvas.height / 2, 0, drawCanvas.width / 2, drawCanvas.height / 2, drawCanvas.width / 4);
+  windowOfSight.addColorStop(0, 'transparent');
+  windowOfSight.addColorStop(1, 'black');
+
+
+  function render() {
+    //window.requestAnimationFrame(render);
+    window.setTimeout(render, 1000);
+    //console.log(frame++);
+
+    let x = Math.random();
+    ctx.drawImage(water, x, 0, 32, 32)
+
+    // Add window of sight
+    /*
+    let w1 = canvas.width
+    let h1 = canvas.height
+    ctx.fillStyle = windowOfSight;
+    ctx.filter = "blur(5px)";
+    ctx.fillRect(0, 0, w1, h1);
+    ctx.filter = "none";
+    */
+
+    let w = canvas.width
+    let h = canvas.height
+    mainContext.clearRect(0, 0, w, h);
+    mainContext.globalCompositeOperation = 'source-over';
+    mainContext.drawImage(drawCanvas, 0, 0);
+
+    mainContext.globalCompositeOperation = 'luminosity';
+    //mainContext.drawImage(gradCanvas, 10, 10);
+
+    //mainContext.globalCompositeOperation = 'lighten';
+    //mainContext.fillRect(0, 0, w, h, '#FFF');
+
+    console.log(1);
+    //postProcess(15, 15, 15, 15, lighten, [50])
+    //postProcess(20, 20, 15, 15, lighten, [-50])
+
+  }
+
+
+  function createLightGradient() {
+    let w = drawCanvas.width
+    let h = drawCanvas.height
+    //gradCtx.fillStyle = 'blue';gradCtx.fillRect(0, 0, w, h);
+    var grad = gradCtx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 4);
+    with (gradCtx.canvas.style) {
+      position = 'absolute';
+      top = '10px';
+      left = '-50px';
+      border = 'solid 1px blue'
+    }
+    grad.addColorStop(0, 'transparent');
+    grad.addColorStop(1, 'black');
+    gradCtx.fillStyle = grad;
+    gradCtx.filter = "blur(5px)";
+    gradCtx.fillRect(0, 0, w, h);
+  }
+
+  function rect(x, y, w, h, c) {ctx.fillStyle = c; ctx.fillRect(x, y, w, h)}
+
+  function lighten(area, p, per) {
+    area[p] += per;
+    area[p + 1] += per;
+    area[p + 2] += per;
+  }
+  function postProcess(x, y, w, h, fcn, args) {
+    console.log("x,y=", x, y);
+    var areaD = ctx.getImageData(x + xOffset, y + yOffset, w, h);
+    let area = areaD.data;
+    let red = 0, green = 1, blue = 2, alpha = 3;
+    for (let p = 0; p < area.length; p += 4) {
+      let pn = Math.floor(p / 4)
+      let px = pn % w;
+      let py = Math.floor(pn / w);
+      //let res = fcn({r: area[p], g: area[p+1], b: area[p+2], a: area[p+3]);
+      //area[p]
+      fcn(area, p, ...args)
+    }
+    ctx.putImageData(areaD, x + xOffset, y + yOffset)
+    delete areaD;
+  }
+
+  function mouseMove(e) {
+    gradCanvas.style
+    return;
+    var cvs = canvas.getBoundingClientRect();
+    let mouse = {x: Math.floor((e.clientX - cvs.left) / scale), y: Math.floor((e.clientY - cvs.top) / scale)};
+    let size = 10, ww = size * 2;
+    let box = {x: mouse.x - size, y: mouse.y - size, w: ww, h: ww}
+    //console.log("box:", box.x, box.y, "offset/scale:", (box.x - xOffset) / scale, (box.y - yOffset) / scale, box.w, box.h);
+    postProcess(box.x - xOffset, box.y - yOffset, box.w, box.h, lighten, [20]);
+    render();
+    //console.log(box.x, box.y, box.w, box.h);
+  }
+  function mouseClick(e) {
+    var cvs = canvas.getBoundingClientRect();
+    let mouse = {x: Math.floor((e.clientX - cvs.left) / scale), y: Math.floor((e.clientY - cvs.top) / scale)};
+    let size = 10, ww = size * 2;
+    let box = {x: mouse.x - size, y: mouse.y - size, w: ww, h: ww}
+    //rect(box.x, box.y, box.w, box.h, '#AAA');
+    //ctx.drawImage(water, mouse.x - Math.floor(water.width / 2) / scale, mouse.y - Math.floor(water.height / 2) / scale, 100, 100)
+    render();
+  }
+</script>
+
+</html>

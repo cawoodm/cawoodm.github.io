@@ -1,0 +1,13 @@
+var areaD = ctx.getImageData(this.box.x, this.box.y, this.box.w, this.box.h);
+  let area = areaD.data
+  for(let p=0; p<area.length; p += 4) {
+    let px = Math.floor(p / 4)
+    let x = px % this.box.w;
+    let y = Math.floor(px / this.box.w);
+    if (!once) console.log(px, x, y);
+    //console.log(x, y, '(', area[p], area[p+1], area[p+2], ")")
+    area[p]+=100;
+}
+  once = true;
+  ctx.putImageData(areaD, this.box.x, this.box.y)
+  //

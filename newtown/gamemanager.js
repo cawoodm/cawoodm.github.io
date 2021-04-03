@@ -1,7 +1,6 @@
 function GameManager(options) {
   this.static = true;
   this.flash = false;
-  this.level = 1;
   this.carrying=[];
   this.filter=0;
   g.sprites = {
@@ -14,6 +13,10 @@ GameManager.prototype.update = function(dt) {
   // Every 1/2 second
   if (g.ticker.ticks % 30 == 0) this.flash = !this.flash;
   //if (this.lost.length>5) return g.GameOver("Too many unhappy customers!");
+}
+GameManager.prototype.newLevel = function() {
+  this.filter = 0;
+  this.carrying = [];
 }
 GameManager.prototype.addGem = function(gem) {
   this.filter++;

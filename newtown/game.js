@@ -18,64 +18,78 @@ g.init = function() {
 	
 	g.ctx.imageSmoothingEnabled=false; // Pixelated look
 
-	g.ImageLoader.add("level.01", "./level.01.png");
-	g.ImageLoader.add("level.02", "./level.02.png");
-	g.ImageLoader.add("level.03", "./level.03.png");
+	g.maxLevels = 3;
+  for (let l=1; l <= g.maxLevels; l++)
+    g.ImageLoader.add("level.0" + l, "./level.0" + l + ".png");
 	g.ImageLoader.add("mapper", "./mapper.png");
 	g.ImageLoader.add("sprites", "./spritemap.png");
 
 	return ()=>{g.ready()}
 }
 g.ready = function() {
-  g.restart(true)
+  g.restart(!location.href.match(/localhost/))
 };
 g.restart = function(title) {
 	// Cleanup
 	g.Halt();
-  g.scene = new g.Scene();
   g.loadMapper();
-  
-  g.level=2;
-  g.loadMap("level.0"+g.level);
-  g.drawMap();
+  g.manager = new GameManager()
 
   g.ui.sprites = {
     player: new Sprite({w: this.w, h: this.h, offX: 32*0, offY: 32*6, scale: 1})
   };
 
-  g.Start();
 	if (title) {
     g.state="title";
+    g.scene = new g.Scene();
 		g.title = g.scene.add(new GameTitle());
 	} else {
-    // New Game
-    g.camera = g.scene.add(new Camera({x: 0, w: g.ui.blocksInView*g.ui.bz, h: g.ui.blocksInView*g.ui.bz, box: 100}));
-    g.collider = g.scene.add(new Collider);
-		g.manager = g.scene.add(new GameManager());
-    g.porthole = g.scene.add(new Porthole(g.ctx));
-    //g.scene.add(new Grid(g.ctx));
-    
-    g.player = g.scene.add(new Player({x: g.startPoint.x , y: g.startPoint.y, velocity: 2}));
-    g.state="play";
+    g.StartLevel(1)
 	}
+  g.Start();
 	
 };
-g.GameOver = function(msg) {
+g.StartLevel = function(level) {
+  if (level > g.maxLevels) return g.GameOver(true);
+  g.level=level;
+  g.scene = new g.Scene();
+  g.manager.newLevel();
+  g.scene.add(g.manager);
+  g.loadMap("level.0"+g.level);
+  g.drawMap();
+  // New Game
+  g.camera = g.scene.add(new Camera({x: 0, w: g.ui.blocksInView*g.ui.bz, h: g.ui.blocksInView*g.ui.bz, box: 100}));
+  g.collider = g.scene.add(new Collider);
+
+  g.porthole = g.scene.add(new Porthole(g.ctx));
+  g.player = g.scene.add(new Player({x: g.startPoint.x , y: g.startPoint.y, velocity: 2}));
+  //g.scene.add(new Grid(g.ctx));
+  g.state="play";
+};
+g.GameOver = function(won) {
   g.scene.entities.length=0;
   this.state="gameover"
-  g.msg=msg;
+  g.gameOverWon = won;
+}
+g.preGameUpdate = function(ctx) {
+  
 }
 g.preGameRender = function(ctx) {
+  if (g.state==='play') {
+    if (g.manager.filter===0) g.ctx.filter = 'grayscale()';
+    else if (g.manager.filter===1) g.ctx.filter = 'sepia()';
+    else if (g.manager.filter===2) g.ctx.filter = 'invert()';
+    else {
+      g.ctx.filter = 'none';
+      g.state='changingLevel';
+      setTimeout(() => g.StartLevel(++g.level), 3000);
+    }
+  }
   if(!g.camera) return;
   // Sample 320x320 from the background canvas (c0) at the position of the 
   // camera and draw to the real canvas
-
-  if (g.manager.filter===0) g.ctx.filter = 'grayscale()';
-  else if (g.manager.filter===1) g.ctx.filter = 'sepia()';
-  else if (g.manager.filter===2) g.ctx.filter = 'invert()';
-  else g.ctx.filter = '';
-  //g.ctx.filter = 'contrast(1.4) hue-rotate(30deg)';
   g.ctx.drawImage(g.c0, g.camera.x, g.camera.y, g.ui.width, g.ui.height, 0, 0, g.ui.width, g.ui.height)
+  g.ctx.filter = 'none';
 };
 g.postGameRender = function(ctx) {
   if (this.state=="gameover") {
@@ -83,9 +97,9 @@ g.postGameRender = function(ctx) {
     g.rect(0, 0, g.ui.width, g.ui.height, '#333')
     g.ctx.fillStyle='#EEE';
     g.ctx.font='20pt Consolas';
-    g.ctx.fillText("GAME OVER", 40, g.ui.height/2-10);
+    g.ctx.fillText(g.gameOverWon ? 'You Won!' : "GAME OVER", 40, g.ui.height/2-10);
     g.ctx.font='12pt Consolas';
-    g.ctx.fillText(g.msg, 20, g.ui.height/2+20);
+    g.ctx.fillText(g.gameOverWon ? 'Congratulations' : 'Try again?', 20, g.ui.height/2+20);
     g.ctx.fillText("Press <SPACEBAR> to play again...", 20, g.ui.height/2+40);
     return
   }
@@ -187,7 +201,7 @@ g.drawMap = function() {
     for (let j=-1; j<=1; j++)
       for (let i=-1; i<=1; i++) {
         let X = x + i, Y = y + j;
-        //if(x==7 && y===7) console.log(x, y, i, j, X, Y)
+        //if(x==7 && y===7) dp(x, y, i, j, X, Y)
         if (!(x===X && y===Y))
           res.push((tileAtPos(X, Y) === name ? '1' : (tileAtPos(X, Y) === name2 ? '2' : '0')))
       }
@@ -218,7 +232,7 @@ g.drawMap = function() {
         ctx.globalAlpha=baseAlpha + rand*0.05;
         //if(x==8 && y===2) debugger;
         let nn = neighbours(x, y, 'sea', 'sand');
-        if(x==13 && y===2) console.log(nn);
+        //if(x==13 && y===2) dp(nn);
         if (nn.match(/^.1.12/)) sx=1;
         else if (nn.match(/^.1121/)) sx=3;
         else if (nn.match(/^.1./)) sx=2;
@@ -235,7 +249,7 @@ g.drawMap = function() {
       }
       else if (sName=='grass') { // Grass variations
         // Grass alpha variations
-        //console.log("grass", "sx", sx, "sy", sy)
+        //dp("grass", "sx", sx, "sy", sy)
         ctx.globalAlpha=baseAlpha + rand*0.05;
         if (rand<0.2) {
           // 20% of grass has a bush/tree variation
@@ -264,7 +278,7 @@ g.drawMap = function() {
       } else {
         continue;
       }
-      //if (x === 6 && y === 7){console.log(x, y, sx, sy, sName);}
+      //if (x === 6 && y === 7){dp(x, y, sx, sy, sName);}
       drawSprite(sx, sy, x, y);
     }
     function drawSprite(sx, sy, x, y) {

@@ -7,7 +7,7 @@ IF "%1"=="" SET STR=%date% %time%
 
 :: Commit local changes
 ::git add .
-::git commit -m %STR%
+::git commit -m "%STR%"
 ::git push origin master
 
 :: Copy to local cawoodm github site

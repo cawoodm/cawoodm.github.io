@@ -67,7 +67,10 @@ Ticker.prototype.loop = function() {
   this.actualFPS = 1000/drawDiff;
   let updateDiff = now - this.lastUpdate||0;
 	// 2s passed without drawing -> halt game
-	if (drawDiff>2000) g.Pause();//return this.state="stop";
+	if (drawDiff>20000) {
+    g.Pause();
+    dp("autopause")
+  }
 	this._updateCallBack(updateDiff/this._frameMillis);
 	this.lastUpdate = now;
 	// if enough time has elapsed, draw the next frame
@@ -195,7 +198,7 @@ g.Pause=function() {
 	if (g.state=="gameOver") {
 		g.restart();
 	} else if (g.ticker.state=="stop") {
-		g.state="play";
+		g.state="play";;dp("play")
 		g.ticker.start();
 	} else {
 		g.ticker.stop();

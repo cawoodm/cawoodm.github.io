@@ -12,7 +12,7 @@ function Player(options) {
   this.direction=0;
   this.frame = 0;
   this.lastFrameTime = Date.now();
-  g.collider.check(this, ["block", "sea"], (e1, e2)=>{g.player.stop()}) 
+  g.collider.check(this, ["block", "sea"], (e1, e2)=>{g.player.stop()}, 0) 
   g.collider.check(this, ["gem"], (e1, e2)=>{
     g.manager.addGem(e2);
   }, 10); 

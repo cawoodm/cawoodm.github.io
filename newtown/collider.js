@@ -49,4 +49,4 @@ Collider.collision = function(e1, e2, tol) {
   }
 	return collision;
 };
-//Collider.debug=["player", "gem"];
+//Collider.debug=["player", "sea"];

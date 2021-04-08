@@ -2,7 +2,7 @@ function Porthole(ctx) {
   this.w = ctx.canvas.width/2;
   this.h = ctx.canvas.height/2  ;
   let center = {x: this.w / 2, y: this.h / 2};
-  this.frame = ctx.createRadialGradient(center.x, center.y, 30, center.x, center.y, this.w / 3);
+  this.frame = ctx.createRadialGradient(center.x, center.y, 30, center.x, center.y, this.w/1.4);
   this.frame.addColorStop(0, 'transparent');
   this.frame.addColorStop(1, 'black');
   //this.frame.addColorStop(1, 'rgba(20, 20, 20, 0.95)');

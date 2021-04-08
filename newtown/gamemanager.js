@@ -19,8 +19,8 @@ GameManager.prototype.newLevel = function() {
   this.carrying = [];
 }
 GameManager.prototype.addGem = function(gem) {
-  this.filter++;
   this.carrying.push(gem);
+  g.addGem();
   g.scene.remove(gem);
 };
 //GameManager.prototype.renderer = function(ctx) {}

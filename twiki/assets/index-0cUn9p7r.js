@@ -1,19 +1,3 @@
-var __defProp = Object.defineProperty;
-var __getOwnPropSymbols = Object.getOwnPropertySymbols;
-var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __propIsEnum = Object.prototype.propertyIsEnumerable;
-var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
-var __spreadValues = (a, b) => {
-  for (var prop in b || (b = {}))
-    if (__hasOwnProp.call(b, prop))
-      __defNormalProp(a, prop, b[prop]);
-  if (__getOwnPropSymbols)
-    for (var prop of __getOwnPropSymbols(b)) {
-      if (__propIsEnum.call(b, prop))
-        __defNormalProp(a, prop, b[prop]);
-    }
-  return a;
-};
 (function polyfill() {
   const relList = document.createElement("link").relList;
   if (relList && relList.supports && relList.supports("modulepreload")) {
@@ -395,6 +379,7 @@ var store2 = { exports: {} };
 })(store2);
 var store2Exports = store2.exports;
 const store = /* @__PURE__ */ getDefaultExportFromCjs(store2Exports);
+const dp = console.log;
 const de = console.error;
 function $() {
   return document.getElementById(...arguments);
@@ -472,26 +457,6 @@ function formHotkeys(methods) {
     if (e.ctrlKey && (e.code === "Enter" || e.code === "NumpadEnter")) return methods.saveTiddler();
   };
 }
-const defaultTiddlers = [
-  {
-    "title": "Welcome",
-    "text": "Welcome to Twiki!\n\nThis is your first data tiddler!",
-    "type": "text/x-twiki",
-    "tags": ""
-  },
-  {
-    "title": "Code Tiddler",
-    "text": '// Check your F12 dev tools to see that this has run:\n\nconsole.log("Code Tiddler is Live!")',
-    "type": "script/js",
-    "tags": ""
-  },
-  {
-    "title": "Help",
-    "text": "* To search hidden tiddlers type `$` followed by your search query\n* To search by tag type `$tag:Styling`\n",
-    "type": "x-twiki",
-    "tags": ""
-  }
-];
 const decodeCache = {};
 function getDecodeCache(exclude) {
   let cache = decodeCache[exclude];
@@ -5696,6 +5661,27 @@ function simpleSearch(q) {
     };
   };
 }
+function button(title2, message, payload = "") {
+  return `<button onclick="tw.events.send('${message}', '${escapeHtml$1(JSON.stringify(payload))}')">${escapeHtml$1(title2)}</button>`;
+}
+function events(tw2) {
+  const handlers = [];
+  return {
+    send(event, payload) {
+      const msg = JSON.parse(payload || "{}");
+      console.log("events.send", event, msg);
+      handlers.filter((h) => h.event === event).forEach((h) => {
+        return h.handler(msg);
+      });
+    },
+    subscribe(event, handler) {
+      handlers.push({ event, handler });
+    },
+    handlers() {
+      return handlers;
+    }
+  };
+}
 let blockregex = /\{\{(([@!]?)(.+?))\}\}(([\s\S]+?)(\{\{:\1\}\}([\s\S]+?))?)\{\{\/\1\}\}/g;
 let valregex = /\{\{([=%])(.+?)\}\}/g;
 function Templater(template) {
@@ -9082,6 +9068,26 @@ HighlightJS.registerLanguage("css", css);
 HighlightJS.registerLanguage("html", xml);
 HighlightJS.registerLanguage("json", json);
 const highlightElement = HighlightJS.highlightElement.bind(HighlightJS);
+const defaultTiddlers = [
+  {
+    "title": "Welcome",
+    "text": "Welcome to Twiki!\n\nThis is your first data tiddler!",
+    "type": "text/x-twiki",
+    "tags": ""
+  },
+  {
+    "title": "Code Tiddler",
+    "text": '// Check your F12 dev tools to see that this has run:\n\nconsole.log("Code Tiddler is Live!")',
+    "type": "script/js",
+    "tags": ""
+  },
+  {
+    "title": "Help",
+    "text": "* To search hidden tiddlers type `$` followed by your search query\n* To search by tag type `$tag:Styling`\n",
+    "type": "x-twiki",
+    "tags": ""
+  }
+];
 const shadowTiddlers = [
   {
     "title": "$Theme",
@@ -9132,15 +9138,22 @@ $("new-btn").addEventListener("click", newTiddler);
 $("new-cancel").addEventListener("click", () => $("new-dialog").close());
 $("search").addEventListener("keyup", searchNow);
 const tw = {
+  store,
   tiddlers: {
     trashed: []
   },
   shadowTiddlers,
-  dom: {},
+  dom: {
+    $,
+    $$,
+    divVisibleTiddlers: $("visible-tiddlers"),
+    divAllTiddlers: $("all-tiddlers")
+  },
   plugins: {},
   macros: {
     std: {
-      showTiddlerList
+      showTiddlerList,
+      disabled: (...rest) => "This macro is disabled!" + JSON.stringify(rest)
     }
   },
   run: {
@@ -9148,18 +9161,28 @@ const tw = {
     saveVisible,
     getTiddler,
     getTiddlerTextRaw,
+    getJSONObject,
     showTiddlerList,
     showTiddler,
+    showAllTiddlers,
+    closeAllTiddlers,
     closeTiddler,
     hideTiddler,
     newTiddler,
     renderAllTiddlers,
     reloadAllData
   },
+  ui: {
+    button
+  },
   util: { tagMatch, titleMatch, titleIs },
   lib: { markdown: markdown1 }
 };
+tw.events = events();
+tw.events.subscribe("ui.openAll", (...rest) => tw.run.showAllTiddlers(...rest));
+tw.events.subscribe("ui.closeAll", tw.run.closeAllTiddlers);
 window.tw = tw;
+window.dp = dp;
 tw.tiddlers.all = storeLoadTiddlers("tiddlers");
 if (!tw.tiddlers.all.length) {
   console.log("loading default tiddlers");
@@ -9172,8 +9195,6 @@ tw.tiddlers.visible = tw.tiddlers.visible.filter((title2) => tiddlerExists(title
 shadowTiddlers.forEach((t) => {
   if (!tiddlerExists(t.title, false)) tw.tiddlers.all.push(t);
 });
-tw.dom.divVisibleTiddlers = $("visible-tiddlers");
-tw.dom.divAllTiddlers = $("all-tiddlers");
 const mainStylesheet = document.styleSheets[0];
 let stylesheets = {
   styles: new CSSStyleSheet(),
@@ -9242,11 +9263,12 @@ function createTiddlerElement(tiddler) {
   let { title: title2 } = tiddler;
   let template = getTiddlerTextRaw("$TiddlerDisplay") || tw.templates.TiddlerDisplay;
   let modified = tiddler.updated ? new Date(tiddler.updated).toDateString() + " " + new Date(tiddler.updated).toLocaleTimeString() : "";
-  let html = new Templater(template).render(__spreadValues({
+  let html = new Templater(template).render({
     id: hash(title2),
     fullText: makeTiddlerText(tiddler),
-    modified
-  }, tiddler));
+    modified,
+    ...tiddler
+  });
   let newElement = htmlToNode(html);
   attachTiddlerEvents(newElement, title2);
   return newElement;
@@ -9287,6 +9309,10 @@ function renderTwiki(text, title) {
       let macroParams = m[2] ? '"' + m[2].split(";").join('", "') + '"' : "";
       macroParams = macroParams.replace(/("\{)|(\}")/ig, "");
       let code = `tw.macros.${macroName}(${macroParams})`;
+      if (macroName.match(/close/i)) {
+        dp({ macroName, macroParams });
+        dp(code);
+      }
       let newText = executeText(code, `MACRO: ${macroName}`, title);
       result = result.replace(m[0], newText);
     });
@@ -9390,6 +9416,17 @@ function editTiddler(title2) {
   const tiddler = getTiddler(title2);
   tiddlerForm(tiddler);
 }
+function showAllTiddlers({ tag = "", title: title2 = "" }) {
+  if (!title2) title2 = "!^\\$";
+  if (!tag) tag = "!Shadow";
+  tw.tiddlers.all.filter(titleMatch(title2)).filter(tagMatch(tag)).map((t) => t.title).forEach(showTiddler);
+  renderAllTiddlers();
+}
+function closeAllTiddlers({ tag = "", title: title2 = "" }) {
+  if (!title2) title2 = "!^\\$";
+  if (!tag) tag = "!Shadow";
+  tw.tiddlers.all.filter(titleMatch(title2)).filter(tagMatch(tag)).map((t) => t.title).forEach(hideTiddler);
+}
 function languageFromTiddlerType(type) {
   switch (type) {
     case "script/js":
@@ -9474,9 +9511,9 @@ function tiddlerSpanInclude(el) {
   let tiddler = getTiddler(title2);
   el.innerHTML = makeTiddlerText(tiddler);
 }
-tw.run.getJSONObject = (title2) => {
+function getJSONObject(title2) {
   return JSON.parse(getTiddlerTextRaw(title2));
-};
+}
 const notify = (msg, type = "I") => {
   if (tw.run.notifyId) clearTimeout(tw.run.notifyId);
   const n = $("notification");
@@ -9495,7 +9532,7 @@ function tagMatch(tag) {
   return (t) => tag.match(/^!/) ? !t.tags.split(" ").find((tag2) => tag2.match(re)) : t.tags.split(" ").find((tag2) => tag2.match(re));
 }
 function titleMatch(title2) {
-  if (!title2) return () => true;
+  if (!title2 || title2 === "*") return () => true;
   let re = new RegExp(title2.match(/^!/) ? title2.substr(1) : title2);
   return (t) => title2.match(/^!/) ? !t.title.match(re) : t.title.match(re);
 }

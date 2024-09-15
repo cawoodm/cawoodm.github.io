@@ -380,6 +380,7 @@ var store2 = { exports: {} };
 var store2Exports = store2.exports;
 const store = /* @__PURE__ */ getDefaultExportFromCjs(store2Exports);
 const dp = console.log;
+const dw = console.warn;
 const de = console.error;
 function $() {
   return document.getElementById(...arguments);
@@ -2757,9 +2758,9 @@ function fence(state, startLine, endLine, silent) {
     return false;
   }
   const markup = state.src.slice(mem, pos);
-  const params = state.src.slice(pos, max);
+  const params2 = state.src.slice(pos, max);
   if (marker === 96) {
-    if (params.indexOf(String.fromCharCode(marker)) >= 0) {
+    if (params2.indexOf(String.fromCharCode(marker)) >= 0) {
       return false;
     }
   }
@@ -2798,7 +2799,7 @@ function fence(state, startLine, endLine, silent) {
   len = state.sCount[startLine];
   state.line = nextLine + (haveEndMarker ? 1 : 0);
   const token = state.push("fence", "code", 0);
-  token.info = params;
+  token.info = params2;
   token.content = state.getLines(startLine + 1, nextLine, len, true);
   token.markup = markup;
   token.map = [startLine, state.line];
@@ -5100,11 +5101,11 @@ function map(array, callback) {
   return result2;
 }
 function mapDomain(domain, callback) {
-  const parts = domain.split("@");
+  const parts2 = domain.split("@");
   let result2 = "";
-  if (parts.length > 1) {
-    result2 = parts[0] + "@";
-    domain = parts[1];
+  if (parts2.length > 1) {
+    result2 = parts2[0] + "@";
+    domain = parts2[1];
   }
   domain = domain.replace(regexSeparators, ".");
   const labels = domain.split(".");
@@ -5664,14 +5665,14 @@ function simpleSearch(q) {
 function button(title2, message, payload = "") {
   return `<button onclick="tw.events.send('${message}', '${escapeHtml$1(JSON.stringify(payload))}')">${escapeHtml$1(title2)}</button>`;
 }
-function events(tw2) {
+function events() {
   const handlers = [];
   return {
     send(event, payload) {
-      const msg = JSON.parse(payload || "{}");
-      console.log("events.send", event, msg);
+      const msg2 = JSON.parse(payload || "{}");
+      console.log("events.send", event, msg2);
       handlers.filter((h) => h.event === event).forEach((h) => {
-        return h.handler(msg);
+        return h.handler(msg2);
       });
     },
     subscribe(event, handler) {
@@ -5691,10 +5692,10 @@ function scrub(val) {
   return new Option(val).innerHTML.replace(/"/g, "&quot;");
 }
 function get_value(vars, key) {
-  let parts = key.split(".");
-  while (parts.length) {
-    if (!(parts[0] in vars)) return false;
-    vars = vars[parts.shift()];
+  let parts2 = key.split(".");
+  while (parts2.length) {
+    if (!(parts2[0] in vars)) return false;
+    vars = vars[parts2.shift()];
   }
   return vars;
 }
@@ -9090,6 +9091,12 @@ const defaultTiddlers = [
 ];
 const shadowTiddlers = [
   {
+    "title": "$AutoImport",
+    "text": "",
+    "type": "list",
+    "tags": "Shadow"
+  },
+  {
     "title": "$Theme",
     "text": "$StyleSheet",
     "type": "css",
@@ -9115,28 +9122,15 @@ const shadowTiddlers = [
   },
   {
     "title": "$TiddlerTypes",
-    "text": "* x-twiki: TWiki Data\n* plain: Plain Text\n* html: HTML\n* html/template: HTML Template\n* css: StyleSheet\n* script/js: JavaScript\n* markdown: Markdown\n* macro: Macro\n* json: JSON Data1\n",
+    "text": "* x-twiki: TWiki Data\n* plain: Plain Text\n* html: HTML\n* html/template: HTML Template\n* css: StyleSheet\n* script/js: JavaScript\n* markdown: Markdown\n* macro: Macro\n* list: List\n* keyval: Key Values\n* table: Tabular Data\n* json: JSON Data\n",
     "type": "x-twiki",
     "tags": "Shadow"
   }
 ];
 addEventListener("load", () => {
-  reloadAllData();
+  uiWireEvents();
+  rebootSoft();
 });
-window.addEventListener("hashchange", function() {
-  var _a2;
-  let title2 = (_a2 = document.location.hash) == null ? void 0 : _a2.replace(/^#/, "");
-  if (!title2) return;
-  showTiddler(title2);
-  document.location.hash = "";
-});
-const frm = $("new-form");
-frm.addEventListener("submit", (evt) => evt.preventDefault());
-frm.addEventListener("keypress", formHotkeys({ saveTiddler }));
-$("new-save").addEventListener("click", saveTiddler);
-$("new-btn").addEventListener("click", newTiddler);
-$("new-cancel").addEventListener("click", () => $("new-dialog").close());
-$("search").addEventListener("keyup", searchNow);
 const tw = {
   store,
   tiddlers: {
@@ -9162,6 +9156,8 @@ const tw = {
     getTiddler,
     getTiddlerTextRaw,
     getJSONObject,
+    getKeyValuesArray,
+    getKeyValuesObject,
     showTiddlerList,
     showTiddler,
     showAllTiddlers,
@@ -9170,7 +9166,9 @@ const tw = {
     hideTiddler,
     newTiddler,
     renderAllTiddlers,
-    reloadAllData
+    rebootSoft,
+    repaint,
+    notify
   },
   ui: {
     button
@@ -9181,31 +9179,28 @@ const tw = {
 tw.events = events();
 tw.events.subscribe("ui.openAll", (...rest) => tw.run.showAllTiddlers(...rest));
 tw.events.subscribe("ui.closeAll", tw.run.closeAllTiddlers);
+tw.events.subscribe("reboot.soft", rebootSoft);
+tw.events.subscribe("search", searchQuery);
+tw.events.subscribe("package.load", loadPackage);
+tw.events.subscribe("package.load.full", reloadPackage);
 window.tw = tw;
 window.dp = dp;
-tw.tiddlers.all = storeLoadTiddlers("tiddlers");
-if (!tw.tiddlers.all.length) {
-  console.log("loading default tiddlers");
-  tw.tiddlers.all = defaultTiddlers;
-  store.set("tiddlers", tw.tiddlers.all);
-  store.set("tiddlers-visible", [defaultTiddlers[0].title]);
-}
-tw.tiddlers.visible = store.get("tiddlers-visible") || ["Welcome"];
-tw.tiddlers.visible = tw.tiddlers.visible.filter((title2) => tiddlerExists(title2));
-shadowTiddlers.forEach((t) => {
-  if (!tiddlerExists(t.title, false)) tw.tiddlers.all.push(t);
-});
+loadStore(store);
 const mainStylesheet = document.styleSheets[0];
-let stylesheets = {
+tw.stylesheets = {
   styles: new CSSStyleSheet(),
   custom: new CSSStyleSheet()
 };
 const mainCSS = Array.from(mainStylesheet.cssRules).map((r) => r.cssText).join(" ");
-stylesheets.styles.replaceSync(mainCSS);
-document.adoptedStyleSheets.push(stylesheets.custom);
-tw.tiddlers.trashed = storeLoadTiddlers("tiddlers-trashed");
-function reloadAllData() {
+tw.stylesheets.styles.replaceSync(mainCSS);
+document.adoptedStyleSheets.push(tw.stylesheets.custom);
+async function rebootSoft() {
+  await loadAutoImport();
+  repaint();
+}
+function repaint() {
   var _a2;
+  tw.tiddlers.visible = tw.tiddlers.visible.filter((title2) => tiddlerExists(title2));
   loadTemplates();
   runTiddlers();
   (_a2 = $$(".tiddler-include")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
@@ -9217,6 +9212,41 @@ function loadTemplates() {
     TiddlerDisplay: $("DisplayTiddler").innerHTML
   };
 }
+async function loadAutoImport() {
+  await Promise.all(getTiddlerTextList("$AutoImport").map((p) => loadPackage({ url: p, name: "unknown" })));
+}
+async function reloadPackage(pck) {
+  await loadPackage(pck);
+  repaint();
+}
+async function loadPackage(pck) {
+  let res = await fetch(pck.url);
+  if (!res.ok) return notify(`loadPackage: Failed (${pck.name}) with HTTP Status '${res.status}' from ${pck.url}`, "E");
+  try {
+    let obj = await res.json();
+    if (!Array.isArray(obj.tiddlers)) return notify("loadPackage: No tiddlers array returned!", "E");
+    if (obj.tiddlers["$AutoImport"]) dw("Tiddler $AutoImport cannot be loaded via package!");
+    obj.tiddlers.forEach((t) => {
+      if (!tiddlerIsValid(t)) return;
+      if (tiddlerExists(t.title)) dw("loadPackage: Tiddler exists and is overwritten:", t.title);
+      t.doNotSave = true;
+      upsertInArray(tw.tiddlers.all, titleIs(t.title), t);
+    });
+  } catch (e) {
+    de(e.message);
+    notify(`loadPackage: Failed (${pck.name}) with invalid JSON from ${pck.url}`, "E");
+  }
+}
+function tiddlerIsValid(t) {
+  const msg2 = [];
+  if (!t.title) msg2.push("No title!");
+  if (!t.text && t.text !== "") msg2.push("No text!");
+  if (!t.tags && t.tags !== "") msg2.push("No tags!");
+  if (!t.created) msg2.push("No created date!");
+  if (!t.updated) msg2.push("No updated date!");
+  if (msg2.length) de(msg2.join("; "));
+  return msg2.length === 0;
+}
 function runTiddlers() {
   tw.tiddlers.all.filter(isCodeTiddler).forEach((t) => executeText(t.text, t.title));
 }
@@ -9225,9 +9255,9 @@ function executeText(text2, title2, context) {
   try {
     result2 = (1, eval)(`with(tw){${text2}}`);
   } catch (e) {
-    let msg = `executeText "${title2}" ${context ? " (" + context + ")" : ""}`;
-    notify(msg, "E");
-    de(`${msg}: ${e.message}`, e.stack);
+    let msg2 = `executeText "${title2}" ${context ? " (" + context + ")" : ""}`;
+    notify(msg2, "E");
+    de(`${msg2}: ${e.message}`, e.stack);
   }
   return result2;
 }
@@ -9235,6 +9265,10 @@ function renderAllTiddlers() {
   tw.dom.divVisibleTiddlers.innerHTML = "";
   tw.tiddlers.visible.forEach(showTiddler);
   renderTiddlerList();
+}
+function searchQuery(q) {
+  $("search").value = q;
+  searchNow();
 }
 function searchNow() {
   renderTiddlerList(search($("search").value, tw.tiddlers.all));
@@ -9280,22 +9314,16 @@ function attachTiddlerEvents(newElement, title2) {
   newElement.querySelector("button.edit").addEventListener("click", () => editTiddler(title2));
 }
 function makeTiddlerText({ title: title2, text: text2, type }) {
+  const markdownTypes = ["markdown", "keyval", "list", "table"];
+  const codeTypes = ["macro", "script/js", "css", "json", "html/template"];
   if (type === "x-twiki") {
     return markdown1(renderTwiki(text2, title2));
-  } else if (type === "markdown") {
+  } else if (markdownTypes.includes(type)) {
     return markdown1(text2);
-  } else if (type === "macro") {
-    return `<pre><code>${escapeHtml$1(text2)}</code></pre>`;
-  } else if (type === "script/js") {
-    return `<pre><code>${escapeHtml$1(text2)}</code></pre>`;
-  } else if (type === "css") {
+  } else if (codeTypes.includes(type)) {
     return `<pre><code>${escapeHtml$1(text2)}</code></pre>`;
   } else if (type === "html") {
     return text2;
-  } else if (type === "html/template") {
-    return `<pre><code>${escapeHtml$1(text2)}</code></pre>`;
-  } else if (type === "json") {
-    return `<pre><code>${escapeHtml$1(text2)}</code></pre>`;
   } else {
     return `<pre>${escapeHtml$1(text2)}</pre>`;
   }
@@ -9309,12 +9337,14 @@ function renderTwiki(text, title) {
       let macroParams = m[2] ? '"' + m[2].split(";").join('", "') + '"' : "";
       macroParams = macroParams.replace(/("\{)|(\}")/ig, "");
       let code = `tw.macros.${macroName}(${macroParams})`;
-      if (macroName.match(/close/i)) {
-        dp({ macroName, macroParams });
-        dp(code);
-      }
       let newText = executeText(code, `MACRO: ${macroName}`, title);
       result = result.replace(m[0], newText);
+    });
+    getLinks(result).forEach((m2) => {
+      let linkName = m2[1];
+      let linkURL = m2[1];
+      let wikiLink = `[${linkName}](#${linkURL})`;
+      result = result.replace(m2[0], wikiLink);
     });
   } catch (e) {
     de(`renderTwiki "${title}" Failed: ${e.message}`, e.stack);
@@ -9325,39 +9355,39 @@ function getMacros(text2) {
   const macros = /<<([a-z_][a-z_0-9\.]+)\s?([^>]+)?>>/gi;
   return text2.matchAll(macros);
 }
+function getLinks(text2) {
+  return text2.matchAll(/\[\[([\-\$a-z_0-9\.]+)]]/gi);
+}
 function tiddlerForm(tiddler = {}) {
-  frm.elements["old-title"].value = tiddler.title || "";
-  frm.elements["new-title"].value = tiddler.title || "";
-  frm.elements["new-body"].value = tiddler.text || "";
-  frm.elements["new-tags"].value = tiddler.tags || "";
-  frm.elements["new-type"].value = tiddler.type || "x-twiki";
+  tw.dom.frm.elements["old-title"].value = tiddler.title || "";
+  tw.dom.frm.elements["new-title"].value = tiddler.title || "";
+  tw.dom.frm.elements["new-body"].value = tiddler.text || "";
+  tw.dom.frm.elements["new-tags"].value = tiddler.tags || "";
+  tw.dom.frm.elements["new-type"].value = tiddler.type || "x-twiki";
   $("new-dialog").showModal();
-  $("new-types").innerHTML = getTiddlerTextList("$TiddlerTypes").map((t) => {
-    let s = t.indexOf(":");
-    if (s < 0) return;
-    let value = t.substring(0, s).trim();
-    let text2 = t.substring(s + 1).trim();
-    return `<option value="${value}">${text2}</option>`;
+  $("new-types").innerHTML = getKeyValuesArray("$TiddlerTypes").map((t) => {
+    return `<option value="${t.key}">${t.value}</option>`;
   }).filter(notEmpty).join("\n");
 }
 function newTiddler() {
   tiddlerForm({ title: "", text: "", type: "x-twiki" });
 }
 function saveTiddler() {
-  let oldTitle = frm.elements["old-title"].value;
+  let oldTitle = tw.dom.frm.elements["old-title"].value;
   let oldTiddler = null;
   if (oldTitle) oldTiddler = getTiddler(oldTitle);
+  delete oldTiddler.doNotSave;
   const newTiddler2 = {
-    title: frm.elements["new-title"].value,
-    text: frm.elements["new-body"].value,
-    type: frm.elements["new-type"].value,
-    tags: frm.elements["new-tags"].value,
+    title: tw.dom.frm.elements["new-title"].value,
+    text: tw.dom.frm.elements["new-body"].value,
+    type: tw.dom.frm.elements["new-type"].value,
+    tags: tw.dom.frm.elements["new-tags"].value,
     updated: /* @__PURE__ */ new Date()
   };
   if (!newTiddler2.title) return $("new-dialog").close();
   if (!newTiddler2.created) newTiddler2.created = /* @__PURE__ */ new Date();
   if (oldTiddler) {
-    replaceInArray(tw.tiddlers.visible, (t) => t === oldTiddler.title, newTiddler2.title);
+    replaceInArray(tw.tiddlers.visible, titleIs(oldTiddler.title), newTiddler2.title);
     oldTiddler = Object.assign(oldTiddler, newTiddler2);
     tiddlerUpdated(newTiddler2);
     renderAllTiddlers();
@@ -9384,7 +9414,7 @@ function tiddlerUpdated({ title: title2, text: text2, type }) {
 }
 function updateTheme() {
   let css2 = getTiddlerTextList("$Theme").map(getTiddlerTextRaw).join("\n");
-  stylesheets.custom.replaceSync(css2);
+  tw.stylesheets.custom.replaceSync(css2);
 }
 function tiddlerIsThemeStyleSheet(title2) {
   return getTiddlerTextList("$Theme").includes(title2);
@@ -9446,26 +9476,16 @@ function getTiddlerElement(title2) {
   return tw.dom.divVisibleTiddlers.querySelector(`*[data-tiddler-id="${id}"]`);
 }
 function getTiddler(title2, includeShadow = true) {
-  return tw.tiddlers.all.find((t) => t.title === title2) || (includeShadow ? tw.shadowTiddlers[title2] : void 0);
+  return tw.tiddlers.all.find(titleIs(title2)) || (includeShadow ? tw.shadowTiddlers.find(titleIs(title2)) : void 0);
 }
 function tiddlerExists(title2, includeShadow) {
   return !!getTiddler(title2, includeShadow);
-}
-function getTiddlerTextRaw(title2) {
-  var _a2;
-  return (_a2 = getTiddler(title2)) == null ? void 0 : _a2.text;
-}
-function getTiddlerTextLines(title2) {
-  return getTiddlerTextRaw(title2).split("\n");
-}
-function getTiddlerTextList(title2) {
-  return getTiddlerTextLines(title2).map((l) => l.replace(/^[-*] /, ""));
 }
 function hideTiddler(title2) {
   let visibleTiddlerElement = getTiddlerElement(title2);
   if (visibleTiddlerElement) visibleTiddlerElement.outerHTML = "";
   tw.tiddlers.visible = tw.tiddlers.visible.filter((t) => t !== title2);
-  store.set("tiddlers-visible", tw.tiddlers.visible);
+  saveVisible();
 }
 function deleteTiddler(title2, skipConfirm) {
   var _a2;
@@ -9476,16 +9496,12 @@ function deleteTiddler(title2, skipConfirm) {
   saveAll();
   renderTiddlerList();
 }
-function titleIs(title2) {
-  return (t) => t.title === title2;
-}
 function closeTiddler(title2) {
   hideTiddler(title2);
   renderAllTiddlers();
-  saveVisible();
 }
 function saveAll() {
-  store.set("tiddlers", tw.tiddlers.all.filter(exceptUnmodifiedShadowTiddler));
+  store.set("tiddlers", tw.tiddlers.all.filter(tiddlersToSave));
   store.set("tiddlers-trashed", tw.tiddlers.trashed);
   saveVisible();
   notify("Saved!");
@@ -9493,8 +9509,11 @@ function saveAll() {
 function saveVisible() {
   store.set("tiddlers-visible", tw.tiddlers.visible);
 }
-function exceptUnmodifiedShadowTiddler(t) {
-  return !t.tags.includes("Shadow") || t.updated;
+function tiddlersToSave(t) {
+  return t.doNotSave !== true;
+}
+function titleIs(title2) {
+  return (t) => t.title === title2;
 }
 function isCodeTiddler(t) {
   return ["script/js"].includes(t.type);
@@ -9511,20 +9530,46 @@ function tiddlerSpanInclude(el) {
   let tiddler = getTiddler(title2);
   el.innerHTML = makeTiddlerText(tiddler);
 }
+function getTiddlerTextRaw(title2) {
+  var _a2;
+  return ((_a2 = getTiddler(title2)) == null ? void 0 : _a2.text) || "";
+}
+function getTiddlerTextLines(title2) {
+  return getTiddlerTextRaw(title2).split("\n");
+}
+function getTiddlerTextList(title2) {
+  return getTiddlerTextLines(title2).map((l) => l.replace(/^[-*] /, "")).filter(notEmpty);
+}
+function getKeyValuesArray(title2) {
+  return getTiddlerTextList(title2).map((t) => {
+    let s = t.indexOf(":");
+    if (s < 0) return;
+    let key = t.substring(0, s).trim();
+    let value = t.substring(s + 1).trim();
+    return { key, value };
+  }).filter(notEmpty);
+}
+function getKeyValuesObject(title2) {
+  let result2 = {};
+  getKeyValuesArray(title2).forEach((i) => {
+    result2[i.key] = i.value;
+  });
+  return result2;
+}
 function getJSONObject(title2) {
   return JSON.parse(getTiddlerTextRaw(title2));
 }
-const notify = (msg, type = "I") => {
+function notify(msg2, type = "I") {
   if (tw.run.notifyId) clearTimeout(tw.run.notifyId);
   const n = $("notification");
   const types = { S: "📗Success", E: "📕 Error", W: "📙 Warning", D: "📓 Debug", I: "📘 Info" };
-  n.innerHTML = types[type] + ": " + msg;
+  n.innerHTML = types[type] + ": " + msg2;
   n.className = n.className.replace("notificationHidden", "notificationShow");
   tw.run.notifyId = setTimeout(() => {
     $("notification").className = n.className.replace("notificationShow", "notificationHidden");
     delete tw.run.notifyId;
-  }, 3e3);
-};
+  }, 4e3);
+}
 tw.run.notify = notify;
 function tagMatch(tag) {
   if (!tag || tag === "*") return () => true;
@@ -9536,16 +9581,59 @@ function titleMatch(title2) {
   let re = new RegExp(title2.match(/^!/) ? title2.substr(1) : title2);
   return (t) => title2.match(/^!/) ? !t.title.match(re) : t.title.match(re);
 }
-function storeLoadTiddlers(key) {
-  let result2 = store.get(key) || [];
-  result2.forEach((t) => {
-    t.text = t.text || "";
-    t.tags = t.tags || "";
-    t.created = new Date(t.created || /* @__PURE__ */ new Date());
-    t.updated = new Date(t.updated || /* @__PURE__ */ new Date());
-  });
-  return result2.filter((t) => !!t.title);
-}
 function showTiddlerList(list2) {
   return tw.lib.markdown(list2.map((t) => `* ${t.title}`).join("\n"));
+}
+function loadStore(store3) {
+  tw.tiddlers.all = storeLoadTiddlers("tiddlers");
+  if (!tw.tiddlers.all.length) {
+    console.log("loading default tiddlers");
+    tw.tiddlers.all = defaultTiddlers;
+    store3.set("tiddlers", tw.tiddlers.all);
+    store3.set("tiddlers-visible", [defaultTiddlers[0].title]);
+  }
+  tw.tiddlers.visible = store3.get("tiddlers-visible") || ["Welcome"];
+  shadowTiddlers.forEach((t) => {
+    t.doNotSave = true;
+    if (!tiddlerExists(t.title, false)) tw.tiddlers.all.push(t);
+  });
+  tw.tiddlers.trashed = storeLoadTiddlers("tiddlers-trashed");
+  function storeLoadTiddlers(key) {
+    let result2 = store3.get(key) || [];
+    result2.forEach((t) => {
+      if (!tiddlerIsValid(t)) return;
+      t.created = new Date(t.created || /* @__PURE__ */ new Date());
+      t.updated = new Date(t.updated || /* @__PURE__ */ new Date());
+    });
+    return result2.filter((t) => !!t.title);
+  }
+}
+function uiWireEvents() {
+  window.addEventListener("hashchange", function() {
+    var _a2;
+    let title = (_a2 = document.location.hash) == null ? void 0 : _a2.replace(/^#/, "");
+    if (!title) return;
+    title = decodeURI(title);
+    try {
+      if (title.match(/^msg:/)) {
+        let parts = title.split(":").splice(1);
+        let msg = parts[0];
+        let params = parts.splice(1).join(":");
+        if (params[0] === "{" || params[0] === "[") params = JSON.stringify(eval(`(${params})`));
+        else params = `"${params}"`;
+        tw.events.send(msg, params);
+      } else {
+        showTiddler(title);
+      }
+    } finally {
+      document.location.hash = "";
+    }
+  });
+  tw.dom.frm = $("new-form");
+  tw.dom.frm.addEventListener("submit", (evt) => evt.preventDefault());
+  tw.dom.frm.addEventListener("keypress", formHotkeys({ saveTiddler }));
+  $("new-save").addEventListener("click", saveTiddler);
+  $("new-btn").addEventListener("click", newTiddler);
+  $("new-cancel").addEventListener("click", () => $("new-dialog").close());
+  $("search").addEventListener("keyup", searchNow);
 }

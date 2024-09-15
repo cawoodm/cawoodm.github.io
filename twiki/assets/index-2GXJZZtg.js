@@ -9091,6 +9091,12 @@ const defaultTiddlers = [
 ];
 const shadowTiddlers = [
   {
+    "title": "$TWIKIVersion",
+    "text": "v0.0.1",
+    "type": "text",
+    "tags": "Shadow"
+  },
+  {
     "title": "$AutoImport",
     "text": "",
     "type": "list",
@@ -9228,7 +9234,7 @@ async function loadPackage(pck) {
     if (obj.tiddlers["$AutoImport"]) dw("Tiddler $AutoImport cannot be loaded via package!");
     obj.tiddlers.forEach((t) => {
       if (!tiddlerIsValid(t)) return;
-      if (tiddlerExists(t.title)) dw("loadPackage: Tiddler exists and is overwritten:", t.title);
+      if (tiddlerExists(t.title)) return dw("loadPackage: Tiddler exists and would be overwritten:", t.title);
       t.doNotSave = true;
       upsertInArray(tw.tiddlers.all, titleIs(t.title), t);
     });
@@ -9328,6 +9334,20 @@ function makeTiddlerText({ title: title2, text: text2, type }) {
     return `<pre>${escapeHtml$1(text2)}</pre>`;
   }
 }
+function languageFromTiddlerType(type) {
+  switch (type) {
+    case "script/js":
+      return "javascript";
+    case "css":
+      return "css";
+    case "html/template":
+      return "xml";
+    case "json":
+      return "json";
+    default:
+      return "";
+  }
+}
 function renderTwiki(text, title) {
   let result = text;
   try {
@@ -9376,7 +9396,6 @@ function saveTiddler() {
   let oldTitle = tw.dom.frm.elements["old-title"].value;
   let oldTiddler = null;
   if (oldTitle) oldTiddler = getTiddler(oldTitle);
-  delete oldTiddler.doNotSave;
   const newTiddler2 = {
     title: tw.dom.frm.elements["new-title"].value,
     text: tw.dom.frm.elements["new-body"].value,
@@ -9387,6 +9406,7 @@ function saveTiddler() {
   if (!newTiddler2.title) return $("new-dialog").close();
   if (!newTiddler2.created) newTiddler2.created = /* @__PURE__ */ new Date();
   if (oldTiddler) {
+    delete oldTiddler.doNotSave;
     replaceInArray(tw.tiddlers.visible, titleIs(oldTiddler.title), newTiddler2.title);
     oldTiddler = Object.assign(oldTiddler, newTiddler2);
     tiddlerUpdated(newTiddler2);
@@ -9456,20 +9476,6 @@ function closeAllTiddlers({ tag = "", title: title2 = "" }) {
   if (!title2) title2 = "!^\\$";
   if (!tag) tag = "!Shadow";
   tw.tiddlers.all.filter(titleMatch(title2)).filter(tagMatch(tag)).map((t) => t.title).forEach(hideTiddler);
-}
-function languageFromTiddlerType(type) {
-  switch (type) {
-    case "script/js":
-      return "javascript";
-    case "css":
-      return "css";
-    case "html/template":
-      return "xml";
-    case "json":
-      return "json";
-    default:
-      return "";
-  }
 }
 function getTiddlerElement(title2) {
   let id = hash(title2);

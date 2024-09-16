@@ -5662,15 +5662,15 @@ function simpleSearch(q) {
     };
   };
 }
-function button(title2, message, payload = "") {
-  return `<button onclick="tw.events.send('${message}', '${escapeHtml$1(JSON.stringify(payload))}')">${escapeHtml$1(title2)}</button>`;
+function button(title2, message, payload = "", id) {
+  return `<button id="${id}" onclick="tw.events.send('${message}', '${escapeHtml$1(JSON.stringify(payload))}')">${escapeHtml$1(title2)}</button>`;
 }
 function events() {
   const handlers = [];
   return {
-    send(event, payload) {
-      const msg2 = JSON.parse(payload || "{}");
-      console.log("events.send", event, msg2);
+    send(event, params2) {
+      let msg2 = params2;
+      if (params2[0] === "{" || params2[0] === "[") msg2 = JSON.parse(params2);
       handlers.filter((h) => h.event === event).forEach((h) => {
         return h.handler(msg2);
       });
@@ -9069,36 +9069,17 @@ HighlightJS.registerLanguage("css", css);
 HighlightJS.registerLanguage("html", xml);
 HighlightJS.registerLanguage("json", json);
 const highlightElement = HighlightJS.highlightElement.bind(HighlightJS);
-const defaultTiddlers = [
-  {
-    "title": "Welcome",
-    "text": "Welcome to Twiki!\n\nThis is your first data tiddler!",
-    "type": "text/x-twiki",
-    "tags": ""
-  },
-  {
-    "title": "Code Tiddler",
-    "text": '// Check your F12 dev tools to see that this has run:\n\nconsole.log("Code Tiddler is Live!")',
-    "type": "script/js",
-    "tags": ""
-  },
-  {
-    "title": "Help",
-    "text": "* To search hidden tiddlers type `$` followed by your search query\n* To search by tag type `$tag:Styling`\n",
-    "type": "x-twiki",
-    "tags": ""
-  }
-];
+const defaultTiddlers = [];
 const shadowTiddlers = [
   {
     "title": "$TWIKIVersion",
-    "text": "v0.0.1",
+    "text": "v0.0.2",
     "type": "text",
     "tags": "Shadow"
   },
   {
     "title": "$AutoImport",
-    "text": "",
+    "text": "* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/core.json\n* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/website.json",
     "type": "list",
     "tags": "Shadow"
   },
@@ -9157,8 +9138,10 @@ const tw = {
     }
   },
   run: {
+    save,
     saveAll,
     saveVisible,
+    tiddlerExists,
     getTiddler,
     getTiddlerTextRaw,
     getJSONObject,
@@ -9166,6 +9149,7 @@ const tw = {
     getKeyValuesObject,
     showTiddlerList,
     showTiddler,
+    refreshVisibleTiddler,
     showAllTiddlers,
     closeAllTiddlers,
     closeTiddler,
@@ -9234,7 +9218,7 @@ async function loadPackage(pck) {
     if (obj.tiddlers["$AutoImport"]) dw("Tiddler $AutoImport cannot be loaded via package!");
     obj.tiddlers.forEach((t) => {
       if (!tiddlerIsValid(t)) return;
-      if (tiddlerExists(t.title)) return dw("loadPackage: Tiddler exists and would be overwritten:", t.title);
+      if (pck.force !== true && tiddlerExists(t.title, false)) return dw("loadPackage: Tiddler exists and would be overwritten:", t.title);
       t.doNotSave = true;
       upsertInArray(tw.tiddlers.all, titleIs(t.title), t);
     });
@@ -9250,7 +9234,8 @@ function tiddlerIsValid(t) {
   if (!t.tags && t.tags !== "") msg2.push("No tags!");
   if (!t.created) msg2.push("No created date!");
   if (!t.updated) msg2.push("No updated date!");
-  if (msg2.length) de(msg2.join("; "));
+  if (msg2.length)
+    de("tiddlerValidation", t.title, msg2.join("; "));
   return msg2.length === 0;
 }
 function runTiddlers() {
@@ -9407,7 +9392,7 @@ function saveTiddler() {
   if (!newTiddler2.created) newTiddler2.created = /* @__PURE__ */ new Date();
   if (oldTiddler) {
     delete oldTiddler.doNotSave;
-    replaceInArray(tw.tiddlers.visible, titleIs(oldTiddler.title), newTiddler2.title);
+    replaceInArray(tw.tiddlers.visible, (title2) => title2 === oldTiddler.title, newTiddler2.title);
     oldTiddler = Object.assign(oldTiddler, newTiddler2);
     tiddlerUpdated(newTiddler2);
     renderAllTiddlers();
@@ -9416,6 +9401,7 @@ function saveTiddler() {
     tiddlerUpdated(newTiddler2);
     showTiddler(newTiddler2.title);
   }
+  tw.events.send("tiddler.modified", newTiddler2.title);
   saveAll();
   renderTiddlerList();
   $("new-dialog").close();
@@ -9452,6 +9438,11 @@ function removeFromArray(array, test2) {
   let index = array.findIndex(test2);
   if (index >= 0) return array.splice(index, 1);
 }
+function refreshVisibleTiddler(title2) {
+  debugger;
+  if (!getTiddlerElement(title2)) return;
+  showTiddler(title2);
+}
 function showTiddler(title2) {
   if (getTiddlerElement(title2)) hideTiddler(title2);
   let tiddler = getTiddler(title2);
@@ -9482,7 +9473,9 @@ function getTiddlerElement(title2) {
   return tw.dom.divVisibleTiddlers.querySelector(`*[data-tiddler-id="${id}"]`);
 }
 function getTiddler(title2, includeShadow = true) {
-  return tw.tiddlers.all.find(titleIs(title2)) || (includeShadow ? tw.shadowTiddlers.find(titleIs(title2)) : void 0);
+  let result2 = tw.tiddlers.all.find(titleIs(title2));
+  if (includeShadow === false && (result2 == null ? void 0 : result2.tags.split(" ").includes("Shadow"))) return void 0;
+  return result2;
 }
 function tiddlerExists(title2, includeShadow) {
   return !!getTiddler(title2, includeShadow);
@@ -9498,7 +9491,8 @@ function deleteTiddler(title2, skipConfirm) {
   if (!confirm("Sure you wanna delete me?")) return;
   let tiddler = (_a2 = removeFromArray(tw.tiddlers.all, titleIs(title2))) == null ? void 0 : _a2[0];
   hideTiddler(title2);
-  upsertInArray(tw.tiddlers.trashed, titleIs(title2), tiddler);
+  tw.tiddlers.trashed.push(tiddler);
+  tw.events.send("tiddler.delete", title2);
   saveAll();
   renderTiddlerList();
 }
@@ -9506,7 +9500,11 @@ function closeTiddler(title2) {
   hideTiddler(title2);
   renderAllTiddlers();
 }
+function save() {
+  saveAll();
+}
 function saveAll() {
+  store.set("tiddlers-backup1", store.get("tiddlers"));
   store.set("tiddlers", tw.tiddlers.all.filter(tiddlersToSave));
   store.set("tiddlers-trashed", tw.tiddlers.trashed);
   saveVisible();
@@ -9593,10 +9591,12 @@ function showTiddlerList(list2) {
 function loadStore(store3) {
   tw.tiddlers.all = storeLoadTiddlers("tiddlers");
   if (!tw.tiddlers.all.length) {
-    console.log("loading default tiddlers");
-    tw.tiddlers.all = defaultTiddlers;
     store3.set("tiddlers", tw.tiddlers.all);
-    store3.set("tiddlers-visible", [defaultTiddlers[0].title]);
+    if (defaultTiddlers == null ? void 0 : defaultTiddlers.length) {
+      tw.tiddlers.all = defaultTiddlers;
+      console.log("loading default tiddlers");
+      store3.set("tiddlers-visible", [defaultTiddlers[0].title]);
+    } else tw.tiddlers.all = [];
   }
   tw.tiddlers.visible = store3.get("tiddlers-visible") || ["Welcome"];
   shadowTiddlers.forEach((t) => {
@@ -9625,8 +9625,7 @@ function uiWireEvents() {
         let parts = title.split(":").splice(1);
         let msg = parts[0];
         let params = parts.splice(1).join(":");
-        if (params[0] === "{" || params[0] === "[") params = JSON.stringify(eval(`(${params})`));
-        else params = `"${params}"`;
+        if (params[0] === "{" || params[0] === "[") params = eval(`(${params})`);
         tw.events.send(msg, params);
       } else {
         showTiddler(title);

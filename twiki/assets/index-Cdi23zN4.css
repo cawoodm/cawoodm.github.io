@@ -87,14 +87,14 @@ div#header {
   top: 0px;
   display: flex;
   align-items: flex-start;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
   border: 1px solid var(--col4);
   background-color: var(--col5);
   padding: 5px;
   border-radius: var(--rad1) var(--rad2);
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-evenly;
-  align-items: flex-start;
+  box-shadow: 1px 1px 5px var(--col0);
 }
 
 div#header * {
@@ -122,20 +122,22 @@ div#body {
   display: flex;
   flex-direction: row;
   align-items: stretch;
+  margin-top: 5px;
   padding: 5px;
-  height: 100%
+  height: 100%;
 }
 
 div#visible-tiddlers {
   width: 80%;
   display: flex;
   flex-direction: column;
-  padding: 10px;
   height: 100%;
+  margin: 5px;
 }
 
 div#sidebar {
   width: 20%;
+  margin: 5px;
   flex-grow: 1;
   padding: 5px;
   background-color: var(--col5);
@@ -183,6 +185,24 @@ ul li:before {
 
 li li {
   padding-left: 20px;
+}
+
+dialog#preview-dialog {
+  border: 0px;
+  overflow-y: hidden;
+  background-color: #00000000;
+  width: 90%;
+  height: 90%;
+  min-height: 500px;
+}
+
+dialog#preview-dialog div.tiddler {
+  height: 100%;
+}
+
+dialog#preview-dialog div.text {
+  height: 100%;
+  max-height: 1000px;
 }
 
 dialog#new-dialog {
@@ -249,7 +269,7 @@ button {
   margin-left: -125px;
   background-color: var(--col6);
   color: var(--col2);
-  text-align: center;
+  text-align: left;
   border: 2px solid var(--col0);
   border-radius: 2px;
   padding: 16px;
@@ -259,7 +279,7 @@ button {
   top: 10px;
   font-family: monospace;
   display: inline-flex;
-  line-height: 12px
+  line-height: 1.2rem;
 }
 
 div.notificationHidden {
@@ -304,6 +324,11 @@ div.tiddler pre {
 }
 
 code {
+  background-color: var(--col3);
+  font-family: Consolas, 'Courier New', Courier, monospace;
+}
+
+pre code {
   border: 1px solid var(--col0);
 }
 
@@ -351,7 +376,7 @@ div.tiddler div.text {
   overflow-y: auto;
   scrollbar-color: var(--col1) var(--col2);
   scrollbar-width: thin;
-  max-height: 400px;
+  max-height: 9000px;
 }
 
 div.tiddler div.tags {

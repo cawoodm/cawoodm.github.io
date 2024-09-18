@@ -520,7 +520,10 @@ function events() {
         params2 = decoder(params2);
       } catch {
       }
-      if (params2[0] === "{" || params2[0] === "[") msg2 = JSON.parse(params2);
+      try {
+        msg2 = JSON.parse(params2);
+      } catch {
+      }
       handlers.filter((h) => h.event === event).forEach((h) => {
         return h.handler(msg2);
       });

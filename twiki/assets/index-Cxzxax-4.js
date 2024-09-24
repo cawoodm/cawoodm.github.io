@@ -551,33 +551,33 @@ function Packages(tw2) {
     loadPackageFromJSONBin,
     reloadPackageFromJSONBin
   };
-  async function loadPackageFromURL2({ url, name = "", filter = "", force = true, auto = false }) {
+  async function loadPackageFromURL2({ url, name = "", filter = "", overWrite = false, doNotSave = false }) {
     dp("Loading package", name, url);
     try {
       let obj = await httpGetJSON(url, name, {});
-      return loadList(obj.tiddlers, { name, force, filter, auto });
+      return loadList(obj.tiddlers, { name, overWrite, filter, doNotSave });
     } catch (e) {
       console.error(e.message);
       tw2.ui.notify(`Failed to load package '${name}' from ${url} (see log)`, "E");
       return 0;
     }
   }
-  async function loadPackageFromJSONBin({ url, name = "", filter = "", force = true }) {
+  async function loadPackageFromJSONBin({ url, name = "", filter = "", overWrite = false, doNotSave = false }) {
     var _a2;
-    dp("Loading package from JSONBin", name, url, force);
+    dp("Loading package from JSONBin", name, url, overWrite);
     let settings = getJSONObject("$GeneralSettings");
     if (!settings || !((_a2 = settings.JSONBin) == null ? void 0 : _a2.accessKey)) return tw2.ui.notify("No JSONBin accessKey found in $GeneralSettings!", "W");
     try {
       let obj = await httpGetJSON(url, name, { "X-Access-Key": settings.JSONBin.accessKey });
       if (obj.record.all) throw new Error("You are trying to load a backup! This is for packages!");
-      return loadList(obj.record.tiddlers, { name, filter, force });
+      return loadList(obj.record.tiddlers, { name, filter, overWrite, doNotSave });
     } catch (e) {
       console.error(e.message);
       tw2.ui.notify(`Failed to load package '${name}' from JSONBin ${url} (see log)`, "E");
       return 0;
     }
   }
-  function loadList(list2, { name, filter, auto } = {}) {
+  function loadList(list2, { name, filter, overWrite = false, doNotSave = false } = {}) {
     let count = 0;
     if (!Array.isArray(list2)) return tw2.ui.notify(`packages.loadList(${name}): No tiddlers array returned!`, "E");
     filter = filter && filter !== "*" ? new RegExp(filter, "i") : null;
@@ -585,7 +585,11 @@ function Packages(tw2) {
       let issues = tw2.util.tiddlerValidation(t);
       if (issues.length) return tw2.ui.notify(`Tiddler '${t.title}' is invalid: ` + issues.join("<br>"));
       if (filter && !filter.test(t.title)) return console.debug("Skipping import of tiddler", t.title);
-      if (auto) t.doNotSave = true;
+      if (overWrite !== true && tw2.util.tiddlerExists(t.title, false)) {
+        if (!confirm(`Package '${name}' will overwrite tiddler '${t.title}'! OK to proceed?`)) return;
+        console.debug(`packages.loadList(${name}): Tiddler '${t.title}' exists and is being be overwritten...`);
+      }
+      if (doNotSave) t.doNotSave = true;
       const existingTiddler = tw2.run.getTiddler(t.title);
       if (existingTiddler == null ? void 0 : existingTiddler.readOnly) return tw2.ui.notify(`Not importing read-only tiddler '${t.title}'!`, "E");
       tw2.run.addTiddler(t);
@@ -9200,7 +9204,7 @@ const shadowTiddlers = [
   },
   {
     title: "$Settings",
-    text: "* [[$Theme]]\n* [[$GeneralSettings]]",
+    text: "* [[$GeneralSettings]]\n* [[$Theme]]\n* [[$AutoImport]]",
     type: "x-twiki",
     tags: ["Shadow"]
   },
@@ -9212,7 +9216,7 @@ const shadowTiddlers = [
   },
   {
     title: "$TitleBar",
-    text: "## TWIKI",
+    text: "<h2>TWIKI <<include $TWIKIVersion>> </h2>\r\n\r\n<<ShowAllTiddlersButton>>  <<CloseAllTiddlersButton>> <<backup.restoreButton>> <<backup.backupButton>> <<Save>>\r\n\r\n[🏷️Tags](#Tags) | [⭐Favs](#msg:ui.openAll:{tag:'Favorite'}) | <<TrashCanIcon>> | [⚙️](#$Settings) | [❔Help](#Help)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
     type: "x-twiki",
     tags: ["Shadow"]
   },
@@ -9623,7 +9627,6 @@ const tw = {
     saveVisible,
     updateTiddler,
     updateTiddlerText,
-    tiddlerExists,
     addTiddler,
     deleteTiddler,
     getTiddler,
@@ -9651,7 +9654,7 @@ const tw = {
     formNewTiddler,
     formEditShow
   },
-  util: { tagMatch, titleMatch, titleIs, tiddlerValidation },
+  util: { tagMatch, titleMatch, titleIs, tiddlerValidation, tiddlerExists },
   lib: { markdown: markdown1 },
   tmp: {}
 };
@@ -9701,7 +9704,7 @@ async function loadAutoImport() {
   let autoImport = tw.run.getTiddlerTextList("$AutoImport");
   for (let p of autoImport) {
     let name = (_a2 = p.match(/([^.\/]+)\.json$/)) == null ? void 0 : _a2[1];
-    let count = await loadPackageFromURL({ url: p, name, force: false, auto: true });
+    let count = await loadPackageFromURL({ url: p, name, overWrite: false, doNotSave: true });
     notify(`${count} tiddlers imported from package ${name}`, "D");
   }
 }

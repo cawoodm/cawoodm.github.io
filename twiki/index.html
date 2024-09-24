@@ -4,12 +4,12 @@
     <title>TWiki</title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" crossorigin src="/twiki/assets/index-Cxzxax-4.js"></script>
-    <link rel="stylesheet" crossorigin href="/twiki/assets/index-6z0Q8heB.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script type="module" crossorigin src="/twiki/assets/index-0cfSvj4J.js"></script>
+    <link rel="stylesheet" crossorigin href="/twiki/assets/index-Da5oqioh.css">
   </head>
   <body>
-    <div id="header"><span class="tiddler-include" tiddler="$TitleBar"></span><button id="new-btn">New</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="search" type=search placeholder="search"/></div>
+    <div id="header"><span class="tiddler-include" tiddler="$TitleBar"></span><button id="new-btn">New</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="search" type="search" placeholder="search"/></div>
     <div id="body">
       <div id="visible-tiddlers">
       </div>
@@ -35,29 +35,6 @@
         <div><button id="new-save">Save</button><button id="new-cancel">Cancel</button></div>
       </form>
     </dialog>
-    <template id="tiddler-display">
-      <style>
-        p, pre, div {
-          margin: 0;
-        }
-      </style>
-      <div class="tiddler" part="tiddler">
-        <div class="title" part="title"><slot name="title"></slot><button class="close" title="close">ⓧ</button><button class="delete" title="delete">🗑</button></div>
-        <div class="text" part="text"><slot name="text"></slot></div>
-      </div>
-    </template>
-    <template id="DisplayTiddler">
-      <div class="tiddler" data-tiddler-id="{{=id}}">
-        <div class="title" title="{{=type}}">{{=title}}<button class="close" title="close">ⓧ</button>
-          <button class="edit" title="edit">✎</button>
-          <button class="delete" title="delete">🗑</button>
-          <!-- 🗕	🗖	🗗 🗘  ↺ … ☰  -->
-        </div>
-        <div class="text">{{=fullText}}</div>
-      </div>
-    </template>
-    <div id="notify" class="notifyHidden">
-      ⚠️ <span>The notification message...</span>
-    </div>
+    <div id="notify" class="notifyHidden"></div>
   </body>
 </html>

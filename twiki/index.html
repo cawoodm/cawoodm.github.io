@@ -4,13 +4,24 @@
     <title>TWiki</title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script type="module" crossorigin src="/twiki/assets/index-0cfSvj4J.js"></script>
-    <link rel="stylesheet" crossorigin href="/twiki/assets/index-Da5oqioh.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script type="module" crossorigin src="/twiki/assets/index-Cv8U39Zk.js"></script>
+    <link rel="stylesheet" crossorigin href="/twiki/assets/index-BHClzmi1.css">
   </head>
   <body>
-    <div id="header"><span class="tiddler-include" tiddler="$TitleBar"></span><button id="new-btn">New</button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="search" type="search" placeholder="search"/></div>
-    <div id="body">
+    <div id="header" class="flex">
+      <div id="header-col1" class="flex col1">
+        <div id="site-title" class="tiddler-include" tiddler="$SiteTitle"><h1>TWIKI</h1></div>
+        <div id="site-title" class="tiddler-include" tiddler="$SiteSubTitle">...</h1></div>
+    </div>
+    <div id="header-col2" class="flex col2 tiddler-include" tiddler="$TitleBar">
+    </div>
+    <div id="header-col3" class="flex col3">
+        <input id="search" type="search" placeholder="search" />
+      </div>
+    </div>
+    <div id="body" class="flex">
       <div id="visible-tiddlers">
       </div>
       <div id="sidebar">
@@ -24,17 +35,17 @@
     </dialog>
     <dialog id="new-dialog">
       <form id="new-form">
-        <input id="old-title" type="hidden"/>
-        <div class="title"><input id="new-title" placeholder="Title" size=""/></div>
+        <input id="old-title" type="hidden" />
+        <div class="title"><input id="new-title" placeholder="Title" size /></div>
         <div class="text"><textarea id="new-body" placeholder="Text"></textarea></div>
-        <div><input id="new-type" list="new-types" onfocus="this.value=null;" onchange="this.blur();"/>
+        <div><input id="new-type" list="new-types" onfocus="this.value=null;" onchange="this.blur();" />
           <datalist id="new-types">
           </datalist>
         </div>
-        <div><input id="new-tags" placeholder="Tags" size=""/></div>
+        <div><input id="new-tags" placeholder="Tags" size /></div>
         <div><button id="new-save">Save</button><button id="new-cancel">Cancel</button></div>
       </form>
     </dialog>
-    <div id="notify" class="notifyHidden"></div>
+    <div id="notify" class="notifyHidden"></div>
   </body>
 </html>

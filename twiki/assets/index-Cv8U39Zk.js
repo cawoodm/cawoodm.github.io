@@ -379,7 +379,6 @@ var store2 = { exports: {} };
 })(store2);
 var store2Exports = store2.exports;
 const store = /* @__PURE__ */ getDefaultExportFromCjs(store2Exports);
-const dp$1 = console.log;
 const dw = console.warn;
 const de = console.error;
 function $() {
@@ -468,6 +467,28 @@ function decoder(encoded) {
   }
   return String.fromCharCode(...new Uint16Array(bytes.buffer));
 }
+RegExp.any = function() {
+  var components = [];
+  var arg;
+  for (var i = 0; i < arguments.length; i++) {
+    arg = arguments[i];
+    if (arg instanceof RegExp) {
+      components = components.concat(arg._components || arg.source);
+    }
+  }
+  var combined = new RegExp("(?:" + components.join(")|(?:") + ")");
+  combined._components = components;
+  return combined;
+};
+RegExp.compose = function(re, params2) {
+  let str = re.source;
+  Object.keys(params2).forEach((k) => str = str.replace(k, params2[k].source));
+  return new RegExp(str, re.flags);
+};
+RegExp.prototype.or = function() {
+  var args = Array.prototype.slice.call(arguments);
+  return RegExp.any.apply(null, [this].concat(args));
+};
 function formHotkeys(methods) {
   return function(e) {
     if (e.ctrlKey && (e.code === "Enter" || e.code === "NumpadEnter")) return methods.formSaveTiddler();
@@ -549,31 +570,31 @@ function Packages(tw2) {
     loadPackageFromJSONBin,
     reloadPackageFromJSONBin: reloadPackageFromJSONBin2
   };
-  async function loadPackageFromURL2({ url, name = "", filter = "", overWrite = false, doNotSave = false }) {
-    dp("Loading package", name, url);
+  async function loadPackageFromURL2({ url, name = "", filter = "", overWrite = false, doNotSave = false, skipOverWrite = false }) {
+    dd("Loading package", name, url);
     try {
       let obj = await httpGetJSON(url, name, {});
-      return loadList(obj.tiddlers, { name, overWrite, filter, doNotSave });
+      return loadList(obj.tiddlers, { name, overWrite, filter, doNotSave, skipOverWrite });
     } catch (e) {
       tw2.ui.notify(`Failed to load package '${name}' from ${url} (see log)`, "E", e.stack);
       return 0;
     }
   }
-  async function loadPackageFromJSONBin({ url, name = "", filter = "", overWrite = false, doNotSave = false }) {
+  async function loadPackageFromJSONBin({ url, name = "", filter = "", overWrite = false, doNotSave = false, skipOverWrite = false }) {
     var _a2;
-    dp("Loading package from JSONBin", name, url, overWrite);
+    dd("Loading package from JSONBin", name, url, overWrite);
     let settings = tw2.run.getJSONObject("$GeneralSettings");
-    if (!settings || !((_a2 = settings.JSONBin) == null ? void 0 : _a2.accessKey)) return tw2.ui.notify("No JSONBin accessKey found in $GeneralSettings!", "W");
+    if (!((_a2 = settings == null ? void 0 : settings.JSONBin) == null ? void 0 : _a2.accessKey)) return tw2.ui.notify("No JSONBin accessKey found in $GeneralSettings!", "W");
     try {
       let obj = await httpGetJSON(url, name, { "X-Access-Key": settings.JSONBin.accessKey });
       if (obj.record.all) throw new Error("You are trying to load a backup! This is for packages!");
-      return loadList(obj.record.tiddlers, { name, filter, overWrite, doNotSave });
+      return loadList(obj.record.tiddlers, { name, filter, overWrite, doNotSave, skipOverWrite });
     } catch (e) {
       tw2.ui.notify(`Failed to load package '${name}' from JSONBin ${url} (see log)`, "E", e.stack);
       return 0;
     }
   }
-  function loadList(list2, { name, filter, overWrite = false, doNotSave = false } = {}) {
+  function loadList(list2, { name, filter, overWrite = false, doNotSave = false, skipOverWrite = false } = {}) {
     let count = 0;
     if (!Array.isArray(list2)) return tw2.ui.notify(`packages.loadList(${name}): No tiddlers array returned!`, "E");
     filter = filter && filter !== "*" ? new RegExp(filter, "i") : null;
@@ -583,6 +604,7 @@ function Packages(tw2) {
       if (issues.length) return tw2.ui.notify(`Tiddler '${t.title}' is invalid: ` + issues.join("<br>"));
       if (filter && !filter.test(t.title)) return console.debug("Skipping import of tiddler", t.title);
       const existingTiddler = tw2.run.getTiddler(t.title, false);
+      if (skipOverWrite && existingTiddler) return;
       if (overWrite !== true && existingTiddler) {
         if (!existingTiddler.isRawShadow && tiddlerDiff(existingTiddler, t)) {
           if (!confirm(`Package '${name}' will overwrite tiddler '${t.title}'! OK to proceed?`)) return;
@@ -9192,7 +9214,7 @@ const defaultTiddlers = [];
 const shadowTiddlers = [
   {
     title: "$TWIKIVersion",
-    text: "v0.0.5",
+    text: "0.0.6",
     type: "text",
     readOnly: true,
     tags: ["Shadow"]
@@ -9212,7 +9234,7 @@ const shadowTiddlers = [
   },
   {
     title: "$Settings",
-    text: "* [[$GeneralSettings]]\n* [[$Theme]]\n  * [[$TiddlerDisplay]]\n* [[$AutoImport]]",
+    text: "* [[$GeneralSettings]]\n* [[$TitleBar]]\n  * [[$SiteTitle]]\n  * [[$SiteSubTitle]]\n* [[$Theme]]\n  * [[$TiddlerDisplay]]\n* [[$AutoImport]]",
     type: "x-twiki",
     tags: ["Shadow"]
   },
@@ -9223,14 +9245,26 @@ const shadowTiddlers = [
     tags: ["Shadow"]
   },
   {
+    title: "$SiteTitle",
+    text: "# TWIKI v{{$TWIKIVersion}}",
+    type: "x-twiki",
+    tags: ["Shadow"]
+  },
+  {
+    title: "$SiteSubTitle",
+    text: "Inspired by [TiddlyWiki](https://tiddlwiki.com) ✨",
+    type: "x-twiki",
+    tags: ["Shadow"]
+  },
+  {
     title: "$TitleBar",
-    text: "<h2>TWIKI <<include $TWIKIVersion>> </h2>\r\n\r\n<<ShowAllTiddlersButton>>  <<CloseAllTiddlersButton>> <<backup.restoreButton>> <<backup.backupButton>> <<Save>>\r\n\r\n[🏷️Tags](#Tags) | [⭐Favs](#msg:ui.openAll:{tag:'Favorite'}) | <<TrashCanIcon>> | [⚙️](#$Settings) | [❔Help](#Help)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;",
+    text: "<<ShowAllTiddlersButton>>  <<CloseAllTiddlersButton>> <<backup.restoreButton>> <<backup.backupButton>> <<Save>> <<New>>\n\n[🏷️Tags](#Tags) | [⭐Favs](#msg:ui.openAll:{tag:'Favorite'}) | <<TrashCanIcon>> | [⚙️](#$Settings) | [❔Help](#Help)",
     type: "x-twiki",
     tags: ["Shadow"]
   },
   {
     title: "$ThemeLayout",
-    text: `/* https://coolors.co/image-picker */
+    "text": `/* https://coolors.co/image-picker */
 
 
 * {
@@ -9273,22 +9307,6 @@ div#header {
   box-shadow: 1px 1px 5px var(--col0);
 }
 
-div#header * {
-  font-size: medium;
-}
-
-div#header h2 {
-  font-size: larger;
-}
-
-div#header span {
-  width: 80%;
-}
-
-div#header span p {
-  float: right;
-}
-
 input#search {
   width: 30%;
   background-color: var(--col2);
@@ -9301,25 +9319,6 @@ div#body {
   margin-top: 5px;
   padding: 5px;
   height: 100%;
-}
-
-div#visible-tiddlers {
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  margin: 5px;
-}
-
-div#sidebar {
-  width: 20%;
-  margin: 5px;
-  flex-grow: 1;
-  padding: 5px;
-  background-color: var(--col5);
-  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);
-  outline: 1px solid var(--col1);
-  box-shadow: 1px 1px 5px var(--col0);
 }
 
 dialog::backdrop {
@@ -9353,7 +9352,7 @@ td {
 }
 
 
-ul li:before {
+ul li:marker {
   font-family: FontAwesome;
   content: "🗲 ";
   color: var(--col0);
@@ -9519,7 +9518,17 @@ div.tiddler-nosave {
 }
 
 div.tiddler-readonly {
-  outline: 4px dotted gray;
+  border-left: 5px solid gray;
+  outline: 2px dotted gray;
+}
+
+div.shadowtrue div.title {
+  font-style: italic;
+}
+
+div.shadowtrue {
+  border-left: 5px solid var(--col3);
+  outline: 2px dashed gray;
 }
 
 
@@ -9573,7 +9582,7 @@ span.error {
   },
   {
     title: "$ThemeProperties",
-    text: ":root {\r\n  --col0: #323232;\r\n  --col1: #6e6e6e;\r\n  --col2: #efefef;\r\n  --col3: #8fbfdf;\r\n  --col4: #8d8d8d;\r\n  --col5: #dfdfdf;\r\n  --col6: #6db193;\r\n  --notify-rgba: 210, 180, 90;\r\n  --rad1: 0.3rem;\r\n  --rad2: 0.3rem;\r\n  --rad3: 0.3rem;\r\n  --rad4: 0.3rem;\r\n}",
+    text: ":root {\n  --col0: #323232;\n  --col1: #6e6e6e;\n  --col2: #efefef;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col5: #dfdfdf;\n  --col6: #6db193;\n  --notify-rgba: 210, 180, 90;\n  --rad1: 0.3rem;\n  --rad2: 0.3rem;\n  --rad3: 0.3rem;\n  --rad4: 0.3rem;\n}",
     type: "css",
     tags: ["Shadow"]
   },
@@ -9585,10 +9594,17 @@ span.error {
   },
   {
     title: "$TiddlerDisplay",
-    text: '<div class="tiddler" data-tiddler-id="{{=id}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="close" title="close">{{$IconCancel}}</button>\n    <button class="edit" title="edit">{{$IconEdit}}</button>\n    <button class="delete" title="delete">{{$IconDelete}}</button>\n  </div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
+    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="close" title="close">{{$IconCancel}}</button>\n    <button class="edit" title="edit">{{$IconEdit}}</button>\n    <button class="delete" title="delete">{{$IconDelete}}</button>\n  </div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
     type: "html/template",
     tags: ["Shadow"]
   },
+  {
+    title: "$TiddlerSearchResult",
+    text: "* {{title}}",
+    type: "html/template",
+    tags: ["Shadow"]
+  },
+  // https://graphemica.com/search?q=disk
   {
     title: "$IconCancel",
     text: "ⓧ"
@@ -9606,12 +9622,23 @@ span.error {
     text: "🗑"
   },
   {
+    title: "$IconSave",
+    text: "🖫"
+  },
+  {
+    title: "$IconNew",
+    text: "New"
+  },
+  {
     title: "$TiddlerTypes",
     text: "* x-twiki: TWiki Data\n* plain: Plain Text\n* html: HTML\n* html/template: HTML Template\n* css: StyleSheet\n* script/js: JavaScript\n* markdown: Markdown\n* macro: Macro\n* list: List\n* keyval: Key Values\n* table: Tabular Data\n* json: JSON Data\n",
     type: "x-twiki",
     tags: ["Shadow"]
   }
 ];
+const reTiddlerTitle = /[a-z0-9_\-\.\s\$]+/gi;
+const reTiddlerTitleComplete = RegExp.compose(/^reTiddlerTitle$/gi, { reTiddlerTitle });
+const reInclusion = RegExp.compose(/\{\{(reTiddlerTitle)\|?([^\}]+)?}}/gi, { reTiddlerTitle });
 const tw = {
   store,
   templates: {},
@@ -9662,6 +9689,7 @@ const tw = {
     reload
   },
   ui: {
+    isDirty: false,
     notify,
     button,
     formNewTiddler,
@@ -9672,13 +9700,21 @@ const tw = {
   tmp: {}
 };
 window.tw = tw;
-window.dp = console.log;
-const dd = console.debug;
+const logFilter = store.get("logfilter") ? new RegExp(store.get("logfilter")) : /./;
+const dp = window.dp = function() {
+  if (!logFilter.test([...arguments].join(" "))) return;
+  console.log(...arguments);
+};
+const dd$1 = window.dd = function() {
+  if (!logFilter.test([...arguments].join(" "))) return;
+  console.debug(...arguments);
+};
 tw.events = events();
 tw.events.subscribe("ui.openAll", (...rest) => tw.run.showAllTiddlers(...rest));
 tw.events.subscribe("ui.closeAll", tw.run.closeAllTiddlers);
 tw.events.subscribe("save", save);
 tw.events.subscribe("save.all", saveAll);
+tw.events.subscribe("form.new", formNewTiddler);
 tw.events.subscribe("reboot.soft", rebootSoft);
 tw.events.subscribe("search", searchQuery);
 tw.events.subscribe("ui.reload", reload);
@@ -9707,15 +9743,15 @@ async function rebootSoft() {
 function reload() {
   var _a2;
   tw.tiddlers.visible = tw.tiddlers.visible.filter((title2) => tiddlerExists(title2));
+  loadTemplates();
   runTiddlers();
   (_a2 = $$(".tiddler-include")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
   updateTheme();
-  loadTemplates();
   renderAllTiddlers();
 }
 function loadTemplates() {
-  let txt = getTiddlerTextRaw("$TiddlerDisplay");
-  tw.templates.TiddlerDisplay = renderTwiki(txt, "$TiddlerDisplay");
+  tw.templates.TiddlerDisplay = renderTiddler("$TiddlerDisplay");
+  tw.templates.TiddlerSearchResult = renderTiddler("$TiddlerSearchResult");
 }
 async function loadAutoImport() {
   var _a2;
@@ -9725,15 +9761,17 @@ async function loadAutoImport() {
     let url = params2[0];
     let name = (_a2 = url.match(/([^.\/]+)\.json$/)) == null ? void 0 : _a2[1];
     let overWrite = false;
+    let skipOverWrite = false;
     let doNotSave = true;
     if (p.length > 1) {
       params2.splice(0, 1);
       let opt = params2.join("");
       let options = opt.split(",").map((o) => o.trim().toLowerCase());
       overWrite = options.includes("force");
+      skipOverWrite = options.includes("skip");
       doNotSave = !options.includes("save");
     }
-    let count = await loadPackageFromURL({ url, name, overWrite, doNotSave });
+    let count = await loadPackageFromURL({ url, name, overWrite, skipOverWrite, doNotSave });
     notify(`${count} tiddlers imported from package ${name}`, "D");
   }
   save();
@@ -9747,6 +9785,7 @@ function tiddlerIsValid(t) {
 function tiddlerValidation(t) {
   const msg2 = [];
   if (!t.title) msg2.push("No title!");
+  if (!t.title.match(reTiddlerTitleComplete)) msg2.push("Invalid title!");
   if (!t.type) msg2.push("No type!");
   t.tags = t.tags || [];
   t.tags = typeof t.tags === "string" ? t.tags.length ? t.tags.split(" ") : [] : t.tags;
@@ -9830,7 +9869,7 @@ function makeTiddlerText({ title: title2, text: text2, type }) {
   const markdownTypes = ["markdown", "keyval", "list", "table"];
   const codeTypes = ["macro", "script/js", "css", "json", "html/template"];
   if (type === "x-twiki") {
-    return markdown1(renderTwiki(text2, title2));
+    return markdown1(renderTwiki({ text: text2, title: title2 }));
   } else if (markdownTypes.includes(type)) {
     return markdown1(text2);
   } else if (codeTypes.includes(type)) {
@@ -9860,7 +9899,10 @@ function languageFromTiddlerType(type) {
       return "";
   }
 }
-function renderTwiki(text, title) {
+function renderTiddler(title2) {
+  return renderTwiki({ text: getTiddlerTextRaw(title2), title: title2 });
+}
+function renderTwiki({ text, title }) {
   let result = text;
   try {
     getMacros(text).forEach((m) => {
@@ -9897,7 +9939,7 @@ function renderTwiki(text, title) {
       result = result.replace(m2[0], text2);
     });
   } catch (e) {
-    dd(`renderTwiki "${title}" Failed: ${e.message}`, e.stack);
+    dd$1(`renderTwiki "${title}" Failed: ${e.message}`, e.stack);
     return `<span class="error">ERROR: "${title}" Failed: ${e.message}</span>`;
   }
   return result;
@@ -9910,7 +9952,7 @@ function getTiddlerLinks(text2) {
   return text2.matchAll(/\[\[([\-\$a-z_0-9\.]+)]]/gi);
 }
 function getInclusions(text2) {
-  return text2.matchAll(/\{\{([\-\$a-z_0-9\.]+)\|?([^\}]+)?}}/gi);
+  return text2.matchAll(reInclusion);
 }
 function getTypedParams(str) {
   return (str == null ? void 0 : str.split(";").map((p) => {
@@ -10000,7 +10042,21 @@ function formSaveTiddler() {
   $("new-dialog").close();
   renderAllTiddlers();
   tw.events.send("tiddler.updated", t.title);
+  setDirty(true);
   save();
+}
+function setDirty(dirty) {
+  if (dirty) {
+    tw.ui.isDirty = true;
+    window.addEventListener("beforeunload", preventBrowserClose);
+  } else {
+    tw.ui.isDirty = false;
+    window.removeEventListener("beforeunload", preventBrowserClose);
+  }
+}
+function preventBrowserClose(event) {
+  event.preventDefault();
+  event.returnValue = "Tiddlers were not yet saved!";
 }
 function addTiddler(newTiddler, userEdit) {
   if (userEdit) {
@@ -10061,11 +10117,14 @@ function nonExistentTiddler(title2) {
   return t;
 }
 function tiddlerUpdated(title2) {
+  var _a2;
   let t = getTiddler(title2);
   if (isCodeTiddler(t))
     return executeText(t.text, title2);
   if (isThemeTiddler(t.title))
     return updateTheme();
+  if (["$SiteTitle", "$SiteSubTitle", "$TitleBar"].includes(title2))
+    (_a2 = $$(".tiddler-include")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
 }
 function updateTheme() {
   let css2 = getTiddlerList("$Theme").map(getTiddlerTextRaw).join("\n");
@@ -10139,7 +10198,7 @@ function closeTiddler(title2) {
   hideTiddler(title2);
   renderAllTiddlers();
 }
-const autoSave = true;
+const autoSave = store.get("autosave") !== false;
 function save() {
   if (!autoSave) return;
   saveAll();
@@ -10151,6 +10210,7 @@ function saveAll() {
   store.set("tiddlers-trashed", tw.tiddlers.trashed);
   saveVisible();
   notify("Saved!");
+  setDirty(false);
 }
 function saveVisible() {
   store.set("tiddlers-visible", tw.tiddlers.visible);
@@ -10174,7 +10234,9 @@ function htmlToNode(html) {
 function tiddlerSpanInclude(el) {
   let title2 = el.getAttribute("tiddler");
   let tiddler = getTiddler(title2);
-  el.innerHTML = makeTiddlerText(tiddler);
+  el.innerHTML = makeTiddlerText(tiddler).replace(/<(\/)?p>/g, "<$1div>");
+  if (el.firstElementChild.tagName === "P")
+    el.innerHTML = el.firstElementChild.innerHTML;
 }
 function getTiddlerTextRaw(title2) {
   var _a2;
@@ -10209,7 +10271,7 @@ function getJSONObject(title2) {
   return JSON.parse(getTiddlerTextRaw(title2));
 }
 function notify(msg2, type = "I", stack) {
-  if (type === "D" && !store.get("debug")) return;
+  if (!logFilter.test(msg2)) return;
   const n = tw.dom.notify;
   let preserveMsg = "";
   if (tw.tmp.notifyId) {
@@ -10273,6 +10335,7 @@ function loadStore(store3) {
     if (!t.type) t.type = "x-twiki";
     t.doNotSave = true;
     t.isRawShadow = true;
+    if (t.title === "$AutoImport" && document.location.host === "localhost:3000") t.text = t.text.replaceAll("https://raw.githubusercontent.com/cawoodm/twiki/main/src", ".");
     if (!tiddlerExists(t.title))
       addTiddler({ ...t });
   });
@@ -10296,9 +10359,10 @@ function attachTiddlerEvents(newElement, title2) {
   (_d = newElement.querySelector("button.edit")) == null ? void 0 : _d.addEventListener("click", () => formEditTiddler(title2));
 }
 function uiWireEvents() {
+  var _a2, _b, _c, _d;
   window.addEventListener("hashchange", function() {
-    var _a2;
-    let title = (_a2 = document.location.hash) == null ? void 0 : _a2.replace(/^#/, "");
+    var _a3;
+    let title = (_a3 = document.location.hash) == null ? void 0 : _a3.replace(/^#/, "");
     if (!title) return;
     title = decodeURI(title);
     try {
@@ -10318,10 +10382,10 @@ function uiWireEvents() {
   tw.dom.frm = $("new-form");
   tw.dom.frm.addEventListener("submit", (evt) => evt.preventDefault());
   tw.dom.frm.addEventListener("keypress", formHotkeys({ formSaveTiddler }));
-  $("new-save").addEventListener("click", formSaveTiddler);
-  $("new-btn").addEventListener("click", formNewTiddler);
-  $("new-cancel").addEventListener("click", formCancel);
-  $("search").addEventListener("keyup", searchNow);
+  (_a2 = $("new-btn")) == null ? void 0 : _a2.addEventListener("click", formNewTiddler);
+  (_b = $("new-save")) == null ? void 0 : _b.addEventListener("click", formSaveTiddler);
+  (_c = $("new-cancel")) == null ? void 0 : _c.addEventListener("click", formCancel);
+  (_d = $("search")) == null ? void 0 : _d.addEventListener("keyup", searchNow);
   $("notify").addEventListener("mouseover", notifyMouseOver);
   $("notify").addEventListener("mouseout", notifyMouseOut);
   $("notify").addEventListener("click", notifyClick);

@@ -61,24 +61,8 @@ h1 {
   font-size: 1.7rem;
 }
 
-/* XS from 0 */
-/* SM from 768px */
-
-/* MD from 600px (>phone) */
-
-/* MD */
-@media (min-width: 992px) and (max-width: 1199px) {}
-
-/* MD, LG */
-@media (min-width: 992px) {}
-
-/* LG */
-@media (min-width: 1200px) {}
-
 /* Fix FROW */
-button {
-  display: inline-block
-}
+/* button {display: inline-block }*/
 
 /* TWIKI */
 :root {
@@ -103,6 +87,7 @@ button:hover svg {
 /* Responsive */
 .flex {
   display: flex;
+  align-content: flex-start;
 }
 
 #header.flex {
@@ -123,26 +108,24 @@ button:hover svg {
 
 #body.flex {
   display: flex;
-  flex-wrap: wrap;
+  align-items: flex-start;
   width: 100%;
 }
 
 div#visible-tiddlers {
   display: flex;
   flex-direction: column;
-  flex-grow: 4;
   height: 100%;
-  margin: 5px;
+  margin: 0.3rem;
 }
 
 div#sidebar {
-  margin: 5px;
-  flex-grow: 1;
-  padding: 5px;
+  margin: 0.3rem;
+  padding: 0.5rem;
   background-color: var(--col5);
   border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);
   outline: 1px solid var(--col1);
-  box-shadow: 1px 1px 5px var(--col0);
+  box-shadow: 1px 1px 0.5rem var(--col0);
 }
 
 #header .col1 {
@@ -159,6 +142,9 @@ div#sidebar {
 }
 
 @media (min-width: 0px) {
+  html {
+    font-size: 10px;
+  }
 
   #header .col1,
   #header .col2,
@@ -177,8 +163,16 @@ div#sidebar {
     padding: 2px;
   }
 
+  #body.flex {
+    flex-wrap: wrap;
+  }
+
   #sidebar {
-    display: none
+    flex-grow: 1;
+  }
+
+  div#visible-tiddlers {
+    flex-grow: 1;
   }
 
   h1 {
@@ -187,6 +181,10 @@ div#sidebar {
 }
 
 @media (min-width: 600px) {
+  html {
+    font-size: 16px;
+  }
+
   #header .col1 {
     width: 20%;
   }
@@ -199,8 +197,17 @@ div#sidebar {
     width: 20%;
   }
 
+  #body.flex {
+    flex-wrap: nowrap;
+    flex-direction: row;
+  }
+
   #sidebar {
-    display: flex
+    flex-grow: 1;
+  }
+
+  div#visible-tiddlers {
+    flex-grow: 4;
   }
 
   h1 {

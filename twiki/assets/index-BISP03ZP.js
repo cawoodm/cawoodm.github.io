@@ -35,350 +35,6 @@
     fetch(link2.href, fetchOpts);
   }
 })();
-var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
-function getDefaultExportFromCjs(x) {
-  return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
-}
-var store2 = { exports: {} };
-/*! store2 - v2.14.3 - 2024-02-14
-* Copyright (c) 2024 Nathan Bubna; Licensed MIT */
-(function(module) {
-  (function(window2, define) {
-    var _ = {
-      version: "2.14.3",
-      areas: {},
-      apis: {},
-      nsdelim: ".",
-      // utilities
-      inherit: function(api, o) {
-        for (var p in api) {
-          if (!o.hasOwnProperty(p)) {
-            Object.defineProperty(o, p, Object.getOwnPropertyDescriptor(api, p));
-          }
-        }
-        return o;
-      },
-      stringify: function(d, fn) {
-        return d === void 0 || typeof d === "function" ? d + "" : JSON.stringify(d, fn || _.replace);
-      },
-      parse: function(s, fn) {
-        try {
-          return JSON.parse(s, fn || _.revive);
-        } catch (e) {
-          return s;
-        }
-      },
-      // extension hooks
-      fn: function(name, fn) {
-        _.storeAPI[name] = fn;
-        for (var api in _.apis) {
-          _.apis[api][name] = fn;
-        }
-      },
-      get: function(area, key) {
-        return area.getItem(key);
-      },
-      set: function(area, key, string) {
-        area.setItem(key, string);
-      },
-      remove: function(area, key) {
-        area.removeItem(key);
-      },
-      key: function(area, i) {
-        return area.key(i);
-      },
-      length: function(area) {
-        return area.length;
-      },
-      clear: function(area) {
-        area.clear();
-      },
-      // core functions
-      Store: function(id, area, namespace) {
-        var store4 = _.inherit(_.storeAPI, function(key, data, overwrite) {
-          if (arguments.length === 0) {
-            return store4.getAll();
-          }
-          if (typeof data === "function") {
-            return store4.transact(key, data, overwrite);
-          }
-          if (data !== void 0) {
-            return store4.set(key, data, overwrite);
-          }
-          if (typeof key === "string" || typeof key === "number") {
-            return store4.get(key);
-          }
-          if (typeof key === "function") {
-            return store4.each(key);
-          }
-          if (!key) {
-            return store4.clear();
-          }
-          return store4.setAll(key, data);
-        });
-        store4._id = id;
-        try {
-          var testKey = "__store2_test";
-          area.setItem(testKey, "ok");
-          store4._area = area;
-          area.removeItem(testKey);
-        } catch (e) {
-          store4._area = _.storage("fake");
-        }
-        store4._ns = namespace || "";
-        if (!_.areas[id]) {
-          _.areas[id] = store4._area;
-        }
-        if (!_.apis[store4._ns + store4._id]) {
-          _.apis[store4._ns + store4._id] = store4;
-        }
-        return store4;
-      },
-      storeAPI: {
-        // admin functions
-        area: function(id, area) {
-          var store4 = this[id];
-          if (!store4 || !store4.area) {
-            store4 = _.Store(id, area, this._ns);
-            if (!this[id]) {
-              this[id] = store4;
-            }
-          }
-          return store4;
-        },
-        namespace: function(namespace, singleArea, delim) {
-          delim = delim || this._delim || _.nsdelim;
-          if (!namespace) {
-            return this._ns ? this._ns.substring(0, this._ns.length - delim.length) : "";
-          }
-          var ns = namespace, store4 = this[ns];
-          if (!store4 || !store4.namespace) {
-            store4 = _.Store(this._id, this._area, this._ns + ns + delim);
-            store4._delim = delim;
-            if (!this[ns]) {
-              this[ns] = store4;
-            }
-            if (!singleArea) {
-              for (var name in _.areas) {
-                store4.area(name, _.areas[name]);
-              }
-            }
-          }
-          return store4;
-        },
-        isFake: function(force) {
-          if (force) {
-            this._real = this._area;
-            this._area = _.storage("fake");
-          } else if (force === false) {
-            this._area = this._real || this._area;
-          }
-          return this._area.name === "fake";
-        },
-        toString: function() {
-          return "store" + (this._ns ? "." + this.namespace() : "") + "[" + this._id + "]";
-        },
-        // storage functions
-        has: function(key) {
-          if (this._area.has) {
-            return this._area.has(this._in(key));
-          }
-          return !!(this._in(key) in this._area);
-        },
-        size: function() {
-          return this.keys().length;
-        },
-        each: function(fn, fill) {
-          for (var i = 0, m2 = _.length(this._area); i < m2; i++) {
-            var key = this._out(_.key(this._area, i));
-            if (key !== void 0) {
-              if (fn.call(this, key, this.get(key), fill) === false) {
-                break;
-              }
-            }
-            if (m2 > _.length(this._area)) {
-              m2--;
-              i--;
-            }
-          }
-          return fill || this;
-        },
-        keys: function(fillList) {
-          return this.each(function(k, v, list2) {
-            list2.push(k);
-          }, fillList || []);
-        },
-        get: function(key, alt) {
-          var s = _.get(this._area, this._in(key)), fn;
-          if (typeof alt === "function") {
-            fn = alt;
-            alt = null;
-          }
-          return s !== null ? _.parse(s, fn) : alt != null ? alt : s;
-        },
-        getAll: function(fillObj) {
-          return this.each(function(k, v, all) {
-            all[k] = v;
-          }, fillObj || {});
-        },
-        transact: function(key, fn, alt) {
-          var val = this.get(key, alt), ret = fn(val);
-          this.set(key, ret === void 0 ? val : ret);
-          return this;
-        },
-        set: function(key, data, overwrite) {
-          var d = this.get(key), replacer;
-          if (d != null && overwrite === false) {
-            return data;
-          }
-          if (typeof overwrite === "function") {
-            replacer = overwrite;
-            overwrite = void 0;
-          }
-          return _.set(this._area, this._in(key), _.stringify(data, replacer), overwrite) || d;
-        },
-        setAll: function(data, overwrite) {
-          var changed, val;
-          for (var key in data) {
-            val = data[key];
-            if (this.set(key, val, overwrite) !== val) {
-              changed = true;
-            }
-          }
-          return changed;
-        },
-        add: function(key, data, replacer) {
-          var d = this.get(key);
-          if (d instanceof Array) {
-            data = d.concat(data);
-          } else if (d !== null) {
-            var type = typeof d;
-            if (type === typeof data && type === "object") {
-              for (var k in data) {
-                d[k] = data[k];
-              }
-              data = d;
-            } else {
-              data = d + data;
-            }
-          }
-          _.set(this._area, this._in(key), _.stringify(data, replacer));
-          return data;
-        },
-        remove: function(key, alt) {
-          var d = this.get(key, alt);
-          _.remove(this._area, this._in(key));
-          return d;
-        },
-        clear: function() {
-          if (!this._ns) {
-            _.clear(this._area);
-          } else {
-            this.each(function(k) {
-              _.remove(this._area, this._in(k));
-            }, 1);
-          }
-          return this;
-        },
-        clearAll: function() {
-          var area = this._area;
-          for (var id in _.areas) {
-            if (_.areas.hasOwnProperty(id)) {
-              this._area = _.areas[id];
-              this.clear();
-            }
-          }
-          this._area = area;
-          return this;
-        },
-        // internal use functions
-        _in: function(k) {
-          if (typeof k !== "string") {
-            k = _.stringify(k);
-          }
-          return this._ns ? this._ns + k : k;
-        },
-        _out: function(k) {
-          return this._ns ? k && k.indexOf(this._ns) === 0 ? k.substring(this._ns.length) : void 0 : (
-            // so each() knows to skip it
-            k
-          );
-        }
-      },
-      // end _.storeAPI
-      storage: function(name) {
-        return _.inherit(_.storageAPI, { items: {}, name });
-      },
-      storageAPI: {
-        length: 0,
-        has: function(k) {
-          return this.items.hasOwnProperty(k);
-        },
-        key: function(i) {
-          var c = 0;
-          for (var k in this.items) {
-            if (this.has(k) && i === c++) {
-              return k;
-            }
-          }
-        },
-        setItem: function(k, v) {
-          if (!this.has(k)) {
-            this.length++;
-          }
-          this.items[k] = v;
-        },
-        removeItem: function(k) {
-          if (this.has(k)) {
-            delete this.items[k];
-            this.length--;
-          }
-        },
-        getItem: function(k) {
-          return this.has(k) ? this.items[k] : null;
-        },
-        clear: function() {
-          for (var k in this.items) {
-            this.removeItem(k);
-          }
-        }
-      }
-      // end _.storageAPI
-    };
-    var store3 = (
-      // safely set this up (throws error in IE10/32bit mode for local files)
-      _.Store("local", function() {
-        try {
-          return localStorage;
-        } catch (e) {
-        }
-      }())
-    );
-    store3.local = store3;
-    store3._ = _;
-    store3.area("session", function() {
-      try {
-        return sessionStorage;
-      } catch (e) {
-      }
-    }());
-    store3.area("page", _.storage("page"));
-    if (typeof define === "function" && define.amd !== void 0) {
-      define("store2", [], function() {
-        return store3;
-      });
-    } else if (module.exports) {
-      module.exports = store3;
-    } else {
-      if (window2.store) {
-        _.conflict = window2.store;
-      }
-      window2.store = store3;
-    }
-  })(commonjsGlobal, commonjsGlobal && commonjsGlobal.define);
-})(store2);
-var store2Exports = store2.exports;
-const store = /* @__PURE__ */ getDefaultExportFromCjs(store2Exports);
 const dw = console.warn;
 const de = console.error;
 function $() {
@@ -514,6 +170,8 @@ function simpleSearch(q) {
   if (searchAll) q = q.substring(1);
   let searchTag = q.substr(0, 4) === "tag:" ? q.substr(4).trim().toLowerCase() : false;
   if (searchTag) q = q.substr(4);
+  let searchPackage = q.substr(0, 4) === "pck:" ? q.substr(4).trim().toLowerCase() : false;
+  if (searchPackage) q = q.substr(4);
   return (t) => {
     if (!searchAll && t.title[0] === "$") return;
     let mainText = (t.title + t.tags).toLowerCase();
@@ -522,6 +180,7 @@ function simpleSearch(q) {
     fullText = fullText.toLowerCase();
     let rank = mainText.indexOf(q) >= 0 ? TITLE_MATCH : fullText.indexOf(q) >= 0 ? TEXT_MATCH : 0;
     if (searchTag) rank = t.tags.find((t2) => t2.toLowerCase() === searchTag) ? TAG_MATCH : 0;
+    if (searchPackage) rank = searchPackage === t.package ? TAG_MATCH : 0;
     return {
       rank,
       tiddler: t
@@ -546,9 +205,11 @@ function events() {
         msg2 = JSON.parse(params2);
       } catch {
       }
+      let result2 = [];
       handlers.filter((h) => h.event === event).forEach((h) => {
-        return h.handler(msg2);
+        result2.push(h.handler(msg2));
       });
+      return result2;
     },
     subscribe(event, handler) {
       if (handlers.find((h) => h.event === event && h.handler.name === handler.name)) return;
@@ -559,7 +220,8 @@ function events() {
     }
   };
 }
-function Packages(tw2) {
+function Packages$1(tw2) {
+  if (!tw2.storage.get("namespaces")) tw2.storage.set("namespaces", []);
   tw2.run.loadPackageFromURL = loadPackageFromURL2;
   tw2.run.reloadPackageFromUrl = reloadPackageFromUrl2;
   tw2.run.reloadPackageFromUrl = reloadPackageFromUrl2;
@@ -5874,6 +5536,10 @@ const md = MarkdownIt({
   typographer: true
 });
 const markdown1 = md.render.bind(md);
+var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
+function getDefaultExportFromCjs(x) {
+  return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
+}
 function deepFreeze(obj) {
   if (obj instanceof Map) {
     obj.clear = obj.delete = obj.set = function() {
@@ -9214,14 +8880,14 @@ const defaultTiddlers = [];
 const shadowTiddlers = [
   {
     title: "$TWIKIVersion",
-    text: "0.0.6",
+    text: "0.0.7",
     type: "text",
     readOnly: true,
     tags: ["Shadow"]
   },
   {
     title: "$AutoImport",
-    text: "* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/core.json\n* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/icons.json\n* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/website.json",
+    text: "* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/core.json save,force\n* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/icons.json save\n* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/website.json skip",
     type: "list",
     tags: ["Shadow"]
   },
@@ -9234,7 +8900,7 @@ const shadowTiddlers = [
   },
   {
     title: "$Settings",
-    text: "* [[$GeneralSettings]]\n* [[$TitleBar]]\n  * [[$SiteTitle]]\n  * [[$SiteSubTitle]]\n* [[$Theme]]\n  * [[$TiddlerDisplay]]\n* [[$AutoImport]]",
+    text: "* [[$Namespaces]]\n* [[$GeneralSettings]]\n* [[$TitleBar]]\n  * [[$SiteTitle]]\n  * [[$SiteSubTitle]]\n* [[$Theme]]\n  * [[$TiddlerDisplay]]\n* [[$AutoImport]]",
     type: "x-twiki",
     tags: ["Shadow"]
   },
@@ -9247,6 +8913,12 @@ const shadowTiddlers = [
   {
     title: "$SiteTitle",
     text: "# TWIKI v{{$TWIKIVersion}}",
+    type: "x-twiki",
+    tags: ["Shadow"]
+  },
+  {
+    title: "$Namespaces",
+    text: "<<NamespaceSelect>>",
     type: "x-twiki",
     tags: ["Shadow"]
   },
@@ -9264,7 +8936,7 @@ const shadowTiddlers = [
   },
   {
     title: "$ThemeLayout",
-    "text": `/* https://coolors.co/image-picker */
+    text: `/* https://coolors.co/image-picker */
 
 
 * {
@@ -9313,10 +8985,6 @@ input#search {
 }
 
 div#body {
-  display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  margin-top: 5px;
   padding: 5px;
   height: 100%;
 }
@@ -9444,7 +9112,7 @@ button {
   z-index: 1;
   left: 50%;
   transform: translate(-50%);
-  top: 0px;
+  bottom: 0px;
   min-width: 250px;
   background-color: rgba(var(--notify-rgba), 0.9);
   color: var(--col1);
@@ -9505,7 +9173,6 @@ pre code {
 div.tiddler {
   margin-bottom: 20px;
   padding: 2rem;
-  width: auto;
   background-color: var(--col2);
   outline: 1px solid var(--col1);
   box-shadow: 1px 1px 5px var(--col0);
@@ -9634,13 +9301,410 @@ span.error {
     text: "* x-twiki: TWiki Data\n* plain: Plain Text\n* html: HTML\n* html/template: HTML Template\n* css: StyleSheet\n* script/js: JavaScript\n* markdown: Markdown\n* macro: Macro\n* list: List\n* keyval: Key Values\n* table: Tabular Data\n* json: JSON Data\n",
     type: "x-twiki",
     tags: ["Shadow"]
+  },
+  {
+    title: "Welcome",
+    text: "Welcome to your new TWiki!",
+    type: "x-twiki",
+    tags: ["Shadow"]
   }
 ];
+var store2 = { exports: {} };
+/*! store2 - v2.14.3 - 2024-02-14
+* Copyright (c) 2024 Nathan Bubna; Licensed MIT */
+(function(module) {
+  (function(window2, define) {
+    var _ = {
+      version: "2.14.3",
+      areas: {},
+      apis: {},
+      nsdelim: ".",
+      // utilities
+      inherit: function(api, o) {
+        for (var p in api) {
+          if (!o.hasOwnProperty(p)) {
+            Object.defineProperty(o, p, Object.getOwnPropertyDescriptor(api, p));
+          }
+        }
+        return o;
+      },
+      stringify: function(d, fn) {
+        return d === void 0 || typeof d === "function" ? d + "" : JSON.stringify(d, fn || _.replace);
+      },
+      parse: function(s, fn) {
+        try {
+          return JSON.parse(s, fn || _.revive);
+        } catch (e) {
+          return s;
+        }
+      },
+      // extension hooks
+      fn: function(name, fn) {
+        _.storeAPI[name] = fn;
+        for (var api in _.apis) {
+          _.apis[api][name] = fn;
+        }
+      },
+      get: function(area, key) {
+        return area.getItem(key);
+      },
+      set: function(area, key, string) {
+        area.setItem(key, string);
+      },
+      remove: function(area, key) {
+        area.removeItem(key);
+      },
+      key: function(area, i) {
+        return area.key(i);
+      },
+      length: function(area) {
+        return area.length;
+      },
+      clear: function(area) {
+        area.clear();
+      },
+      // core functions
+      Store: function(id, area, namespace) {
+        var store3 = _.inherit(_.storeAPI, function(key, data, overwrite) {
+          if (arguments.length === 0) {
+            return store3.getAll();
+          }
+          if (typeof data === "function") {
+            return store3.transact(key, data, overwrite);
+          }
+          if (data !== void 0) {
+            return store3.set(key, data, overwrite);
+          }
+          if (typeof key === "string" || typeof key === "number") {
+            return store3.get(key);
+          }
+          if (typeof key === "function") {
+            return store3.each(key);
+          }
+          if (!key) {
+            return store3.clear();
+          }
+          return store3.setAll(key, data);
+        });
+        store3._id = id;
+        try {
+          var testKey = "__store2_test";
+          area.setItem(testKey, "ok");
+          store3._area = area;
+          area.removeItem(testKey);
+        } catch (e) {
+          store3._area = _.storage("fake");
+        }
+        store3._ns = namespace || "";
+        if (!_.areas[id]) {
+          _.areas[id] = store3._area;
+        }
+        if (!_.apis[store3._ns + store3._id]) {
+          _.apis[store3._ns + store3._id] = store3;
+        }
+        return store3;
+      },
+      storeAPI: {
+        // admin functions
+        area: function(id, area) {
+          var store3 = this[id];
+          if (!store3 || !store3.area) {
+            store3 = _.Store(id, area, this._ns);
+            if (!this[id]) {
+              this[id] = store3;
+            }
+          }
+          return store3;
+        },
+        namespace: function(namespace, singleArea, delim) {
+          delim = delim || this._delim || _.nsdelim;
+          if (!namespace) {
+            return this._ns ? this._ns.substring(0, this._ns.length - delim.length) : "";
+          }
+          var ns = namespace, store3 = this[ns];
+          if (!store3 || !store3.namespace) {
+            store3 = _.Store(this._id, this._area, this._ns + ns + delim);
+            store3._delim = delim;
+            if (!this[ns]) {
+              this[ns] = store3;
+            }
+            if (!singleArea) {
+              for (var name in _.areas) {
+                store3.area(name, _.areas[name]);
+              }
+            }
+          }
+          return store3;
+        },
+        isFake: function(force) {
+          if (force) {
+            this._real = this._area;
+            this._area = _.storage("fake");
+          } else if (force === false) {
+            this._area = this._real || this._area;
+          }
+          return this._area.name === "fake";
+        },
+        toString: function() {
+          return "store" + (this._ns ? "." + this.namespace() : "") + "[" + this._id + "]";
+        },
+        // storage functions
+        has: function(key) {
+          if (this._area.has) {
+            return this._area.has(this._in(key));
+          }
+          return !!(this._in(key) in this._area);
+        },
+        size: function() {
+          return this.keys().length;
+        },
+        each: function(fn, fill) {
+          for (var i = 0, m2 = _.length(this._area); i < m2; i++) {
+            var key = this._out(_.key(this._area, i));
+            if (key !== void 0) {
+              if (fn.call(this, key, this.get(key), fill) === false) {
+                break;
+              }
+            }
+            if (m2 > _.length(this._area)) {
+              m2--;
+              i--;
+            }
+          }
+          return fill || this;
+        },
+        keys: function(fillList) {
+          return this.each(function(k, v, list2) {
+            list2.push(k);
+          }, fillList || []);
+        },
+        get: function(key, alt) {
+          var s = _.get(this._area, this._in(key)), fn;
+          if (typeof alt === "function") {
+            fn = alt;
+            alt = null;
+          }
+          return s !== null ? _.parse(s, fn) : alt != null ? alt : s;
+        },
+        getAll: function(fillObj) {
+          return this.each(function(k, v, all) {
+            all[k] = v;
+          }, fillObj || {});
+        },
+        transact: function(key, fn, alt) {
+          var val = this.get(key, alt), ret = fn(val);
+          this.set(key, ret === void 0 ? val : ret);
+          return this;
+        },
+        set: function(key, data, overwrite) {
+          var d = this.get(key), replacer;
+          if (d != null && overwrite === false) {
+            return data;
+          }
+          if (typeof overwrite === "function") {
+            replacer = overwrite;
+            overwrite = void 0;
+          }
+          return _.set(this._area, this._in(key), _.stringify(data, replacer), overwrite) || d;
+        },
+        setAll: function(data, overwrite) {
+          var changed, val;
+          for (var key in data) {
+            val = data[key];
+            if (this.set(key, val, overwrite) !== val) {
+              changed = true;
+            }
+          }
+          return changed;
+        },
+        add: function(key, data, replacer) {
+          var d = this.get(key);
+          if (d instanceof Array) {
+            data = d.concat(data);
+          } else if (d !== null) {
+            var type = typeof d;
+            if (type === typeof data && type === "object") {
+              for (var k in data) {
+                d[k] = data[k];
+              }
+              data = d;
+            } else {
+              data = d + data;
+            }
+          }
+          _.set(this._area, this._in(key), _.stringify(data, replacer));
+          return data;
+        },
+        remove: function(key, alt) {
+          var d = this.get(key, alt);
+          _.remove(this._area, this._in(key));
+          return d;
+        },
+        clear: function() {
+          if (!this._ns) {
+            _.clear(this._area);
+          } else {
+            this.each(function(k) {
+              _.remove(this._area, this._in(k));
+            }, 1);
+          }
+          return this;
+        },
+        clearAll: function() {
+          var area = this._area;
+          for (var id in _.areas) {
+            if (_.areas.hasOwnProperty(id)) {
+              this._area = _.areas[id];
+              this.clear();
+            }
+          }
+          this._area = area;
+          return this;
+        },
+        // internal use functions
+        _in: function(k) {
+          if (typeof k !== "string") {
+            k = _.stringify(k);
+          }
+          return this._ns ? this._ns + k : k;
+        },
+        _out: function(k) {
+          return this._ns ? k && k.indexOf(this._ns) === 0 ? k.substring(this._ns.length) : void 0 : (
+            // so each() knows to skip it
+            k
+          );
+        }
+      },
+      // end _.storeAPI
+      storage: function(name) {
+        return _.inherit(_.storageAPI, { items: {}, name });
+      },
+      storageAPI: {
+        length: 0,
+        has: function(k) {
+          return this.items.hasOwnProperty(k);
+        },
+        key: function(i) {
+          var c = 0;
+          for (var k in this.items) {
+            if (this.has(k) && i === c++) {
+              return k;
+            }
+          }
+        },
+        setItem: function(k, v) {
+          if (!this.has(k)) {
+            this.length++;
+          }
+          this.items[k] = v;
+        },
+        removeItem: function(k) {
+          if (this.has(k)) {
+            delete this.items[k];
+            this.length--;
+          }
+        },
+        getItem: function(k) {
+          return this.has(k) ? this.items[k] : null;
+        },
+        clear: function() {
+          for (var k in this.items) {
+            this.removeItem(k);
+          }
+        }
+      }
+      // end _.storageAPI
+    };
+    var store = (
+      // safely set this up (throws error in IE10/32bit mode for local files)
+      _.Store("local", function() {
+        try {
+          return localStorage;
+        } catch (e) {
+        }
+      }())
+    );
+    store.local = store;
+    store._ = _;
+    store.area("session", function() {
+      try {
+        return sessionStorage;
+      } catch (e) {
+      }
+    }());
+    store.area("page", _.storage("page"));
+    if (typeof define === "function" && define.amd !== void 0) {
+      define("store2", [], function() {
+        return store;
+      });
+    } else if (module.exports) {
+      module.exports = store;
+    } else {
+      if (window2.store) {
+        _.conflict = window2.store;
+      }
+      window2.store = store;
+    }
+  })(commonjsGlobal, commonjsGlobal && commonjsGlobal.define);
+})(store2);
+var store2Exports = store2.exports;
+const storage = /* @__PURE__ */ getDefaultExportFromCjs(store2Exports);
+function Packages(tw2) {
+  if (!tw2.storage.get("namespaces")) tw2.storage.set("namespaces", []);
+  if (!tw2.storage.get("namespace")) tw2.storage.set("namespace", "");
+  return {
+    namespaceCreate: namespaceCreate2,
+    namespaceDelete: namespaceDelete2,
+    namespaceSwitch: namespaceSwitch2,
+    namespaceLoad: namespaceLoad2
+  };
+  function namespaceCreate2(name, clone) {
+    let currentNamespace = tw2.storage.get("namespace");
+    let namespaces = tw2.storage.get("namespaces");
+    let index = namespaces.indexOf(name);
+    if (index >= 0) throw new Error(`namespaceCreate Failed: Namespace '${name}' already exists!`);
+    namespaces.push(name);
+    tw2.storage.set("namespaces", namespaces);
+    if (clone) {
+      namespaceMigrate(currentNamespace, name, {
+        tiddlers: tw2.storage.get("tiddlers"),
+        "tiddlers-visible": tw2.storage.get("tiddlers-visible"),
+        "tiddlers-trashed": tw2.storage.get("tiddlers-trashed")
+      });
+    }
+  }
+  function namespaceSwitch2(name) {
+    let namespaces = tw2.storage.get("namespaces");
+    let index = namespaces.indexOf(name);
+    if (index < 0) throw new Error(`namespaceDelete Failed: Namespace '${name}' not found!`);
+    tw2.store = tw2.storage.namespace(name);
+    tw2.storage.set("namespace", name);
+    tw2.namespace = name;
+  }
+  function namespaceLoad2(name) {
+    namespaceSwitch2(name);
+    tw2.events.send("reboot.hard");
+  }
+  function namespaceDelete2(name) {
+    let namespaces = tw2.storage.get("namespaces");
+    let index = namespaces.indexOf(name);
+    if (index < 0) throw new Error(`namespaceDelete Failed: Namespace '${name}' not found!`);
+    namespaces.splice(index, 1);
+    tw2.storage.set("namespaces", namespaces);
+  }
+  function namespaceMigrate(current, name, source2) {
+    namespaceSwitch2(name);
+    Object.keys(source2).forEach((k) => {
+      tw2.store.set(k, source2[k]);
+    });
+    if (current) namespaceSwitch2(current);
+  }
+}
 const reTiddlerTitle = /[a-z0-9_\-\.\s\$]+/gi;
 const reTiddlerTitleComplete = RegExp.compose(/^reTiddlerTitle$/gi, { reTiddlerTitle });
 const reInclusion = RegExp.compose(/\{\{(reTiddlerTitle)\|?([^\}]+)?}}/gi, { reTiddlerTitle });
 const tw = {
-  store,
+  storage,
   templates: {},
   tiddlers: {
     trashed: []
@@ -9699,31 +9763,45 @@ const tw = {
   lib: { markdown: markdown1 },
   tmp: {}
 };
+tw.events = events();
+const { namespaceCreate, namespaceSwitch, namespaceLoad, namespaceDelete } = Packages(tw);
+if (!tw.storage.get("namespace")) {
+  namespaceCreate("default", true);
+}
+tw.namespace = tw.storage.get("namespace");
+namespaceSwitch(tw.namespace);
+tw.events.subscribe("namespace.switch", namespaceSwitch);
+tw.events.subscribe("namespace.load", namespaceLoad);
+tw.events.subscribe("namespace.create", namespaceCreate);
+tw.events.subscribe("namespace.clone", (name) => namespaceCreate(name, true));
+tw.events.subscribe("namespace.delete", namespaceDelete);
 window.tw = tw;
-const logFilter = store.get("logfilter") ? new RegExp(store.get("logfilter")) : /./;
+const logFilter = tw.storage.get("logfilter") ? new RegExp(tw.storage.get("logfilter")) : /./;
 const dp = window.dp = function() {
   if (!logFilter.test([...arguments].join(" "))) return;
   console.log(...arguments);
 };
-const dd$1 = window.dd = function() {
+window.dd = function() {
   if (!logFilter.test([...arguments].join(" "))) return;
   console.debug(...arguments);
 };
-tw.events = events();
 tw.events.subscribe("ui.openAll", (...rest) => tw.run.showAllTiddlers(...rest));
 tw.events.subscribe("ui.closeAll", tw.run.closeAllTiddlers);
 tw.events.subscribe("save", save);
 tw.events.subscribe("save.all", saveAll);
 tw.events.subscribe("form.new", formNewTiddler);
 tw.events.subscribe("reboot.soft", rebootSoft);
+tw.events.subscribe("reboot.hard", rebootHard);
 tw.events.subscribe("search", searchQuery);
 tw.events.subscribe("ui.reload", reload);
 tw.events.subscribe("tiddler.preview", tw.run.previewTiddler);
 tw.events.subscribe("tiddler.deleted", tw.run.reload);
+tw.events.subscribe("tiddler.refresh", rerenderTiddler);
 tw.events.subscribe("tiddler.edited", rerenderTiddler);
 tw.events.subscribe("tiddler.created", renderNewTiddler);
 tw.events.subscribe("tiddler.updated", tiddlerUpdated);
-const { loadPackageFromURL, reloadPackageFromUrl, reloadPackageFromJSONBin } = Packages(tw);
+tw.events.subscribe("store.load", loadStore);
+const { loadPackageFromURL, reloadPackageFromUrl, reloadPackageFromJSONBin } = Packages$1(tw);
 tw.events.subscribe("package.load.url", loadPackageFromURL);
 tw.events.subscribe("package.reload.url", reloadPackageFromUrl);
 tw.events.subscribe("package.reload.bin", reloadPackageFromJSONBin);
@@ -9731,7 +9809,7 @@ addEventListener("load", () => {
   uiWireEvents();
   rebootSoft();
 });
-loadStore(store);
+loadStore();
 tw.stylesheets = {
   custom: new CSSStyleSheet()
 };
@@ -9740,12 +9818,15 @@ async function rebootSoft() {
   await loadAutoImport();
   reload();
 }
+function rebootHard() {
+  window.location.reload();
+}
 function reload() {
   var _a2;
   tw.tiddlers.visible = tw.tiddlers.visible.filter((title2) => tiddlerExists(title2));
   loadTemplates();
   runTiddlers();
-  (_a2 = $$(".tiddler-include")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
+  (_a2 = $$("*[tiddler-include]")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
   updateTheme();
   renderAllTiddlers();
 }
@@ -9939,8 +10020,8 @@ function renderTwiki({ text, title }) {
       result = result.replace(m2[0], text2);
     });
   } catch (e) {
-    dd$1(`renderTwiki "${title}" Failed: ${e.message}`, e.stack);
-    return `<span class="error">ERROR: "${title}" Failed: ${e.message}</span>`;
+    dw(`renderTwiki "${title}" Failed: ${e.message}`, e.stack);
+    return `<span class="error">ERROR: renderTwiki '${title}' Failed: ${e.message}</span>`;
   }
   return result;
 }
@@ -10028,8 +10109,9 @@ function formSaveTiddler() {
     notify("Empty tiddler not saved!", "W");
     return $("new-dialog").close();
   }
+  let existingTiddler = getTiddler(t.title, true);
   try {
-    if (oldTitle) {
+    if (oldTitle && existingTiddler) {
       updateTiddler(oldTitle, t, true);
       tw.events.send("tiddler.edited", t.title);
     } else {
@@ -10198,22 +10280,22 @@ function closeTiddler(title2) {
   hideTiddler(title2);
   renderAllTiddlers();
 }
-const autoSave = store.get("autosave") !== false;
+const autoSave = tw.storage.get("autosave") !== false;
 function save() {
   if (!autoSave) return;
   saveAll();
 }
 function saveAll() {
-  const oldTiddlers = store.get("tiddlers");
-  if (oldTiddlers.length) store.set("tiddlers-backup1", oldTiddlers);
-  store.set("tiddlers", tw.tiddlers.all.filter(tiddlersToSave));
-  store.set("tiddlers-trashed", tw.tiddlers.trashed);
+  const oldTiddlers = tw.store.get("tiddlers");
+  if (oldTiddlers.length) tw.store.set("tiddlers-backup1", oldTiddlers);
+  tw.store.set("tiddlers", tw.tiddlers.all.filter(tiddlersToSave));
+  tw.store.set("tiddlers-trashed", tw.tiddlers.trashed);
   saveVisible();
   notify("Saved!");
   setDirty(false);
 }
 function saveVisible() {
-  store.set("tiddlers-visible", tw.tiddlers.visible);
+  tw.store.set("tiddlers-visible", tw.tiddlers.visible);
 }
 function tiddlersToSave(t) {
   return t.doNotSave !== true;
@@ -10232,11 +10314,17 @@ function htmlToNode(html) {
   return template.content.firstElementChild;
 }
 function tiddlerSpanInclude(el) {
-  let title2 = el.getAttribute("tiddler");
-  let tiddler = getTiddler(title2);
-  el.innerHTML = makeTiddlerText(tiddler).replace(/<(\/)?p>/g, "<$1div>");
-  if (el.firstElementChild.tagName === "P")
-    el.innerHTML = el.firstElementChild.innerHTML;
+  let title2 = el.getAttribute("tiddler-include");
+  try {
+    let tiddler = getTiddler(title2);
+    if (!tiddler) throw new Error(`Unknown tiddler '${title2}' to include!`);
+    el.innerHTML = makeTiddlerText(tiddler).replace(/<(\/)?p>/g, "<$1div>");
+    if (el.firstElementChild.tagName === "P")
+      el.innerHTML = el.firstElementChild.innerHTML;
+  } catch (e) {
+    el.innerHTML = `<span class="error">ERROR: Include "${title2}" Failed: ${e.message}</span>`;
+    de(`tiddlerSpanInclude "${title2}" Failed: ${e.message}`, e.stack);
+  }
 }
 function getTiddlerTextRaw(title2) {
   var _a2;
@@ -10318,31 +10406,33 @@ function titleMatch(title2) {
 function showTiddlerList(list2) {
   return tw.lib.markdown(list2.map((t) => `* ${t.title}`).join("\n"));
 }
-function loadStore(store3) {
+function loadStore(store) {
+  var _a2;
+  if (!store) store = tw.store;
   tw.tiddlers.all = storeLoadTiddlers("tiddlers");
   if (!tw.tiddlers.all.length) {
     tw.tiddlers.all = [];
-    store3.set("tiddlers", []);
+    store.set("tiddlers", []);
     if (defaultTiddlers == null ? void 0 : defaultTiddlers.length) {
       tw.tiddlers.all = defaultTiddlers;
       console.log("loading default tiddlers");
-      store3.set("tiddlers-visible", [defaultTiddlers[0].title]);
+      store.set("tiddlers-visible", [defaultTiddlers[0].title]);
     } else tw.tiddlers.all = [];
   }
-  tw.tiddlers.visible = store3.get("tiddlers-visible") || ["Welcome"];
+  tw.tiddlers.visible = ((_a2 = store.get("tiddlers-visible")) == null ? void 0 : _a2.length) ? store.get("tiddlers-visible") : ["Welcome"];
   shadowTiddlers.forEach((t) => {
     if (!t.tags) t.tags = [];
     if (!t.type) t.type = "x-twiki";
     t.doNotSave = true;
     t.isRawShadow = true;
-    if (t.title === "$AutoImport" && document.location.host === "localhost:3000") t.text = t.text.replaceAll("https://raw.githubusercontent.com/cawoodm/twiki/main/src", ".");
+    if (t.title === "$AutoImport" && document.location.host.match(/^localhost/)) t.text = t.text.replaceAll("https://raw.githubusercontent.com/cawoodm/twiki/main/src", "http://localhost:3000");
     if (!tiddlerExists(t.title))
       addTiddler({ ...t });
   });
   shadowTiddlers.forEach(Object.freeze);
   tw.tiddlers.trashed = storeLoadTiddlers("tiddlers-trashed", false);
   function storeLoadTiddlers(key, validate = true) {
-    let result2 = store3.get(key) || [];
+    let result2 = store.get(key) || [];
     result2.forEach((t) => {
       if (validate && !tiddlerIsValid(t)) return;
       t.created = new Date(t.created || /* @__PURE__ */ new Date());

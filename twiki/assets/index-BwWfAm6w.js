@@ -35,287 +35,6 @@
     fetch(link2.href, fetchOpts);
   }
 })();
-const dw = console.warn;
-const de = console.error;
-function $() {
-  return document.getElementById(...arguments);
-}
-function $$() {
-  return document.querySelectorAll(...arguments);
-}
-function simpleSort(a, b) {
-  let A = a.title.toLowerCase();
-  let B = b.title.toLowerCase();
-  if (A < B) return -1;
-  else return 1;
-}
-function escapeHtml$1(unsafe) {
-  return unsafe.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
-}
-let MD5 = function(d) {
-  var r = M(V(Y(X(d), 8 * d.length)));
-  return r.toLowerCase();
-};
-function M(d) {
-  for (var _, m2 = "0123456789ABCDEF", f = "", r = 0; r < d.length; r++) _ = d.charCodeAt(r), f += m2.charAt(_ >>> 4 & 15) + m2.charAt(15 & _);
-  return f;
-}
-function X(d) {
-  for (var _ = Array(d.length >> 2), m2 = 0; m2 < _.length; m2++) _[m2] = 0;
-  for (m2 = 0; m2 < 8 * d.length; m2 += 8) _[m2 >> 5] |= (255 & d.charCodeAt(m2 / 8)) << m2 % 32;
-  return _;
-}
-function V(d) {
-  for (var _ = "", m2 = 0; m2 < 32 * d.length; m2 += 8) _ += String.fromCharCode(d[m2 >> 5] >>> m2 % 32 & 255);
-  return _;
-}
-function Y(d, _) {
-  d[_ >> 5] |= 128 << _ % 32, d[14 + (_ + 64 >>> 9 << 4)] = _;
-  for (var m2 = 1732584193, f = -271733879, r = -1732584194, i = 271733878, n = 0; n < d.length; n += 16) {
-    var h = m2;
-    var t = f;
-    var g = r;
-    var e = i;
-    f = md5_ii(f = md5_ii(f = md5_ii(f = md5_ii(f = md5_hh(f = md5_hh(f = md5_hh(f = md5_hh(f = md5_gg(f = md5_gg(f = md5_gg(f = md5_gg(f = md5_ff(f = md5_ff(f = md5_ff(f = md5_ff(f, r = md5_ff(r, i = md5_ff(i, m2 = md5_ff(m2, f, r, i, d[n + 0], 7, -680876936), f, r, d[n + 1], 12, -389564586), m2, f, d[n + 2], 17, 606105819), i, m2, d[n + 3], 22, -1044525330), r = md5_ff(r, i = md5_ff(i, m2 = md5_ff(m2, f, r, i, d[n + 4], 7, -176418897), f, r, d[n + 5], 12, 1200080426), m2, f, d[n + 6], 17, -1473231341), i, m2, d[n + 7], 22, -45705983), r = md5_ff(r, i = md5_ff(i, m2 = md5_ff(m2, f, r, i, d[n + 8], 7, 1770035416), f, r, d[n + 9], 12, -1958414417), m2, f, d[n + 10], 17, -42063), i, m2, d[n + 11], 22, -1990404162), r = md5_ff(r, i = md5_ff(i, m2 = md5_ff(m2, f, r, i, d[n + 12], 7, 1804603682), f, r, d[n + 13], 12, -40341101), m2, f, d[n + 14], 17, -1502002290), i, m2, d[n + 15], 22, 1236535329), r = md5_gg(r, i = md5_gg(i, m2 = md5_gg(m2, f, r, i, d[n + 1], 5, -165796510), f, r, d[n + 6], 9, -1069501632), m2, f, d[n + 11], 14, 643717713), i, m2, d[n + 0], 20, -373897302), r = md5_gg(r, i = md5_gg(i, m2 = md5_gg(m2, f, r, i, d[n + 5], 5, -701558691), f, r, d[n + 10], 9, 38016083), m2, f, d[n + 15], 14, -660478335), i, m2, d[n + 4], 20, -405537848), r = md5_gg(r, i = md5_gg(i, m2 = md5_gg(m2, f, r, i, d[n + 9], 5, 568446438), f, r, d[n + 14], 9, -1019803690), m2, f, d[n + 3], 14, -187363961), i, m2, d[n + 8], 20, 1163531501), r = md5_gg(r, i = md5_gg(i, m2 = md5_gg(m2, f, r, i, d[n + 13], 5, -1444681467), f, r, d[n + 2], 9, -51403784), m2, f, d[n + 7], 14, 1735328473), i, m2, d[n + 12], 20, -1926607734), r = md5_hh(r, i = md5_hh(i, m2 = md5_hh(m2, f, r, i, d[n + 5], 4, -378558), f, r, d[n + 8], 11, -2022574463), m2, f, d[n + 11], 16, 1839030562), i, m2, d[n + 14], 23, -35309556), r = md5_hh(r, i = md5_hh(i, m2 = md5_hh(m2, f, r, i, d[n + 1], 4, -1530992060), f, r, d[n + 4], 11, 1272893353), m2, f, d[n + 7], 16, -155497632), i, m2, d[n + 10], 23, -1094730640), r = md5_hh(r, i = md5_hh(i, m2 = md5_hh(m2, f, r, i, d[n + 13], 4, 681279174), f, r, d[n + 0], 11, -358537222), m2, f, d[n + 3], 16, -722521979), i, m2, d[n + 6], 23, 76029189), r = md5_hh(r, i = md5_hh(i, m2 = md5_hh(m2, f, r, i, d[n + 9], 4, -640364487), f, r, d[n + 12], 11, -421815835), m2, f, d[n + 15], 16, 530742520), i, m2, d[n + 2], 23, -995338651), r = md5_ii(r, i = md5_ii(i, m2 = md5_ii(m2, f, r, i, d[n + 0], 6, -198630844), f, r, d[n + 7], 10, 1126891415), m2, f, d[n + 14], 15, -1416354905), i, m2, d[n + 5], 21, -57434055), r = md5_ii(r, i = md5_ii(i, m2 = md5_ii(m2, f, r, i, d[n + 12], 6, 1700485571), f, r, d[n + 3], 10, -1894986606), m2, f, d[n + 10], 15, -1051523), i, m2, d[n + 1], 21, -2054922799), r = md5_ii(r, i = md5_ii(i, m2 = md5_ii(m2, f, r, i, d[n + 8], 6, 1873313359), f, r, d[n + 15], 10, -30611744), m2, f, d[n + 6], 15, -1560198380), i, m2, d[n + 13], 21, 1309151649), r = md5_ii(r, i = md5_ii(i, m2 = md5_ii(m2, f, r, i, d[n + 4], 6, -145523070), f, r, d[n + 11], 10, -1120210379), m2, f, d[n + 2], 15, 718787259), i, m2, d[n + 9], 21, -343485551), m2 = safe_add(m2, h), f = safe_add(f, t), r = safe_add(r, g), i = safe_add(i, e);
-  }
-  return Array(m2, f, r, i);
-}
-function md5_cmn(d, _, m2, f, r, i) {
-  return safe_add(bit_rol(safe_add(safe_add(_, d), safe_add(f, i)), r), m2);
-}
-function md5_ff(d, _, m2, f, r, i, n) {
-  return md5_cmn(_ & m2 | ~_ & f, d, _, r, i, n);
-}
-function md5_gg(d, _, m2, f, r, i, n) {
-  return md5_cmn(_ & f | m2 & ~f, d, _, r, i, n);
-}
-function md5_hh(d, _, m2, f, r, i, n) {
-  return md5_cmn(_ ^ m2 ^ f, d, _, r, i, n);
-}
-function md5_ii(d, _, m2, f, r, i, n) {
-  return md5_cmn(m2 ^ (_ | ~f), d, _, r, i, n);
-}
-function safe_add(d, _) {
-  var m2 = (65535 & d) + (65535 & _);
-  return (d >> 16) + (_ >> 16) + (m2 >> 16) << 16 | 65535 & m2;
-}
-function bit_rol(d, _) {
-  return d << _ | d >>> 32 - _;
-}
-function hash(val = "") {
-  return MD5(val);
-}
-function notEmpty(v) {
-  return !!v;
-}
-function encoder(string) {
-  const codeUnits = new Uint16Array(string.length);
-  for (let i = 0; i < codeUnits.length; i++) {
-    codeUnits[i] = string.charCodeAt(i);
-  }
-  return btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer)));
-}
-function decoder(encoded) {
-  const binary = atob(encoded);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < bytes.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  return String.fromCharCode(...new Uint16Array(bytes.buffer));
-}
-RegExp.any = function() {
-  var components = [];
-  var arg;
-  for (var i = 0; i < arguments.length; i++) {
-    arg = arguments[i];
-    if (arg instanceof RegExp) {
-      components = components.concat(arg._components || arg.source);
-    }
-  }
-  var combined = new RegExp("(?:" + components.join(")|(?:") + ")");
-  combined._components = components;
-  return combined;
-};
-RegExp.compose = function(re, params2) {
-  let str = re.source;
-  Object.keys(params2).forEach((k) => str = str.replace(k, params2[k].source));
-  return new RegExp(str, re.flags);
-};
-RegExp.prototype.or = function() {
-  var args = Array.prototype.slice.call(arguments);
-  return RegExp.any.apply(null, [this].concat(args));
-};
-function formHotkeys(methods) {
-  return function(e) {
-    if (e.ctrlKey && (e.code === "Enter" || e.code === "NumpadEnter")) return methods.formSaveTiddler();
-  };
-}
-const TITLE_MATCH = 3;
-const TAG_MATCH = 2;
-const TEXT_MATCH = 1;
-function search(q, list2) {
-  q = q.trim();
-  let results = list2.sort(simpleSort).map(simpleSearch(q.toLowerCase())).filter(notEmpty);
-  let sortedResults = [
-    ...results.filter((r) => r.rank === TITLE_MATCH),
-    ...results.filter((r) => r.rank === TAG_MATCH),
-    ...results.filter((r) => r.rank === TEXT_MATCH)
-  ];
-  let title2 = "No results!";
-  if (!q.match(/^\$/)) title2 += ` Type '$${q}' to search hidden tiddlers!`;
-  return sortedResults.length ? sortedResults.map((t) => t.tiddler) : [{ title: title2 }];
-}
-function simpleSearch(q) {
-  let searchAll = q[0] === "$";
-  if (searchAll) q = q.substring(1);
-  let searchTag = q.substr(0, 4) === "tag:" ? q.substr(4).trim().toLowerCase() : false;
-  if (searchTag) q = q.substr(4);
-  let searchPackage = q.substr(0, 4) === "pck:" ? q.substr(4).trim().toLowerCase() : false;
-  if (searchPackage) q = q.substr(4);
-  return (t) => {
-    if (!searchAll && t.title[0] === "$") return;
-    let mainText = (t.title + t.tags).toLowerCase();
-    let fullText = mainText + t.text;
-    if (searchAll) fullText += t.type;
-    fullText = fullText.toLowerCase();
-    let rank = mainText.indexOf(q) >= 0 ? TITLE_MATCH : fullText.indexOf(q) >= 0 ? TEXT_MATCH : 0;
-    if (searchTag) rank = t.tags.find((t2) => t2.toLowerCase() === searchTag) ? TAG_MATCH : 0;
-    if (searchPackage) rank = searchPackage === t.package ? TAG_MATCH : 0;
-    return {
-      rank,
-      tiddler: t
-    };
-  };
-}
-function button(title2, message, payload, id = "") {
-  if (typeof payload === "undefined") payload = "";
-  let params2 = typeof payload === "object" ? JSON.stringify(payload) : payload;
-  return `<button${id ? ' id="' + id + '"' : ""} onclick="tw.events.send('${message}', '${encoder(params2)}')">${escapeHtml$1(title2)}</button>`;
-}
-function events() {
-  const handlers = [];
-  return {
-    send(event, params2) {
-      let msg2 = params2;
-      try {
-        params2 = decoder(params2);
-      } catch {
-      }
-      try {
-        msg2 = JSON.parse(params2);
-      } catch {
-      }
-      let result2 = [];
-      handlers.filter((h) => h.event === event).forEach((h) => {
-        result2.push(h.handler(msg2));
-      });
-      return result2;
-    },
-    subscribe(event, handler) {
-      if (handlers.find((h) => h.event === event && h.handler.name === handler.name)) return;
-      handlers.push({ event, handler });
-    },
-    handlers() {
-      return handlers;
-    }
-  };
-}
-function Packages$1(tw2) {
-  if (!tw2.storage.get("namespaces")) tw2.storage.set("namespaces", []);
-  tw2.run.loadPackageFromURL = loadPackageFromURL2;
-  tw2.run.reloadPackageFromUrl = reloadPackageFromUrl2;
-  tw2.run.reloadPackageFromUrl = reloadPackageFromUrl2;
-  tw2.run.reloadPackageFromJSONBin = reloadPackageFromJSONBin2;
-  return {
-    loadPackageFromURL: loadPackageFromURL2,
-    reloadPackageFromUrl: reloadPackageFromUrl2,
-    loadPackageFromJSONBin,
-    reloadPackageFromJSONBin: reloadPackageFromJSONBin2
-  };
-  async function loadPackageFromURL2({ url, name = "", filter = "", overWrite = false, doNotSave = false, skipOverWrite = false }) {
-    dd("Loading package", name, url);
-    try {
-      let obj = await httpGetJSON(url, name, {});
-      return loadList(obj.tiddlers, { name, overWrite, filter, doNotSave, skipOverWrite });
-    } catch (e) {
-      tw2.ui.notify(`Failed to load package '${name}' from ${url} (see log)`, "E", e.stack);
-      return 0;
-    }
-  }
-  async function loadPackageFromJSONBin({ url, name = "", filter = "", overWrite = false, doNotSave = false, skipOverWrite = false }) {
-    var _a2;
-    dd("Loading package from JSONBin", name, url, overWrite);
-    let settings = tw2.run.getJSONObject("$GeneralSettings");
-    if (!((_a2 = settings == null ? void 0 : settings.JSONBin) == null ? void 0 : _a2.accessKey)) return tw2.ui.notify("No JSONBin accessKey found in $GeneralSettings!", "W");
-    try {
-      let obj = await httpGetJSON(url, name, { "X-Access-Key": settings.JSONBin.accessKey });
-      if (obj.record.all) throw new Error("You are trying to load a backup! This is for packages!");
-      return loadList(obj.record.tiddlers, { name, filter, overWrite, doNotSave, skipOverWrite });
-    } catch (e) {
-      tw2.ui.notify(`Failed to load package '${name}' from JSONBin ${url} (see log)`, "E", e.stack);
-      return 0;
-    }
-  }
-  function loadList(list2, { name, filter, overWrite = false, doNotSave = false, skipOverWrite = false } = {}) {
-    let count = 0;
-    if (!Array.isArray(list2)) return tw2.ui.notify(`packages.loadList(${name}): No tiddlers array returned!`, "E");
-    filter = filter && filter !== "*" ? new RegExp(filter, "i") : null;
-    tw2.tiddlers.all.filter((t) => t.package === name).map((t) => t.title).forEach((title2) => tw2.run.deleteTiddler(title2, true));
-    list2.forEach((t) => {
-      let issues = tw2.util.tiddlerValidation(t);
-      if (issues.length) return tw2.ui.notify(`Tiddler '${t.title}' is invalid: ` + issues.join("<br>"));
-      if (filter && !filter.test(t.title)) return console.debug("Skipping import of tiddler", t.title);
-      const existingTiddler = tw2.run.getTiddler(t.title, false);
-      if (skipOverWrite && existingTiddler) return;
-      if (overWrite !== true && existingTiddler) {
-        if (!existingTiddler.isRawShadow && tiddlerDiff(existingTiddler, t)) {
-          if (!confirm(`Package '${name}' will overwrite tiddler '${t.title}'! OK to proceed?`)) return;
-        }
-      }
-      if (doNotSave) t.doNotSave = true;
-      if (existingTiddler == null ? void 0 : existingTiddler.readOnly) return tw2.ui.notify(`Not importing read-only tiddler '${t.title}'!`, "E");
-      t.package = name;
-      if (existingTiddler)
-        tw2.run.updateTiddler(t.title, t);
-      else
-        tw2.run.addTiddler(t);
-      count++;
-    });
-    return count;
-  }
-  function tiddlerDiff(t1, t2) {
-    if (t1.title !== t2.title) return "title";
-    if (t1.text !== t2.text) return "text";
-    if (t1.tags.join(" ") !== t2.tags.join(" ")) return "tags";
-    return false;
-  }
-  async function reloadPackageFromUrl2(pck) {
-    let count = await loadPackageFromURL2(pck);
-    tw2.events.send("ui.reload");
-    tw2.ui.notify(`${count} tiddlers imported from package ${pck.name || pck.url}`, "D");
-  }
-  async function reloadPackageFromJSONBin2(pck) {
-    let count = await loadPackageFromJSONBin(pck);
-    tw2.events.send("ui.reload");
-    tw2.ui.notify(`${count} tiddlers imported from package ${pck.name || pck.url}`, "D");
-  }
-  async function httpGetJSON(url, name, headers = {}) {
-    let res;
-    try {
-      res = await fetch(url, { headers });
-    } catch (e) {
-      throw new Error(`Failed to load package '${name}' with network error from ${url}: ${e.message}`);
-    }
-    if (!res.ok) throw new Error(`Failed to load package '${name}' with HTTP Status '${res.status}' from ${url}`);
-    let obj;
-    try {
-      obj = await res.json();
-      return obj;
-    } catch (e) {
-      throw new Error(`Failed to load package '${name}' with invalid JSON (see log) from ${url}: ${e.message}`);
-    }
-  }
-}
 let blockregex = /\{\{(([@!]?)(.+?))\}\}(([\s\S]+?)(\{\{:\1\}\}([\s\S]+?))?)\{\{\/\1\}\}/g;
 let valregex = /\{\{([=%])(.+?)\}\}/g;
 function Templater(template) {
@@ -1258,7 +977,7 @@ const HTML_REPLACEMENTS = {
 function replaceUnsafeChar(ch) {
   return HTML_REPLACEMENTS[ch];
 }
-function escapeHtml(str) {
+function escapeHtml$1(str) {
   if (HTML_ESCAPE_TEST_RE.test(str)) {
     return str.replace(HTML_ESCAPE_REPLACE_RE, replaceUnsafeChar);
   }
@@ -1350,7 +1069,7 @@ const utils = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePropert
   __proto__: null,
   arrayReplaceAt,
   assign: assign$1,
-  escapeHtml,
+  escapeHtml: escapeHtml$1,
   escapeRE: escapeRE$1,
   fromCodePoint,
   has,
@@ -1531,11 +1250,11 @@ const helpers = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.definePrope
 const default_rules = {};
 default_rules.code_inline = function(tokens, idx, options, env, slf) {
   const token = tokens[idx];
-  return "<code" + slf.renderAttrs(token) + ">" + escapeHtml(token.content) + "</code>";
+  return "<code" + slf.renderAttrs(token) + ">" + escapeHtml$1(token.content) + "</code>";
 };
 default_rules.code_block = function(tokens, idx, options, env, slf) {
   const token = tokens[idx];
-  return "<pre" + slf.renderAttrs(token) + "><code>" + escapeHtml(tokens[idx].content) + "</code></pre>\n";
+  return "<pre" + slf.renderAttrs(token) + "><code>" + escapeHtml$1(tokens[idx].content) + "</code></pre>\n";
 };
 default_rules.fence = function(tokens, idx, options, env, slf) {
   const token = tokens[idx];
@@ -1549,9 +1268,9 @@ default_rules.fence = function(tokens, idx, options, env, slf) {
   }
   let highlighted;
   if (options.highlight) {
-    highlighted = options.highlight(token.content, langName, langAttrs) || escapeHtml(token.content);
+    highlighted = options.highlight(token.content, langName, langAttrs) || escapeHtml$1(token.content);
   } else {
-    highlighted = escapeHtml(token.content);
+    highlighted = escapeHtml$1(token.content);
   }
   if (highlighted.indexOf("<pre") === 0) {
     return highlighted + "\n";
@@ -1586,7 +1305,7 @@ default_rules.softbreak = function(tokens, idx, options) {
   return options.breaks ? options.xhtmlOut ? "<br />\n" : "<br>\n" : "\n";
 };
 default_rules.text = function(tokens, idx) {
-  return escapeHtml(tokens[idx].content);
+  return escapeHtml$1(tokens[idx].content);
 };
 default_rules.html_block = function(tokens, idx) {
   return tokens[idx].content;
@@ -1604,7 +1323,7 @@ Renderer.prototype.renderAttrs = function renderAttrs(token) {
   }
   result2 = "";
   for (i = 0, l = token.attrs.length; i < l; i++) {
-    result2 += " " + escapeHtml(token.attrs[i][0]) + '="' + escapeHtml(token.attrs[i][1]) + '"';
+    result2 += " " + escapeHtml$1(token.attrs[i][0]) + '="' + escapeHtml$1(token.attrs[i][1]) + '"';
   }
   return result2;
 };
@@ -8876,439 +8595,6 @@ HighlightJS.registerLanguage("css", css);
 HighlightJS.registerLanguage("html", xml);
 HighlightJS.registerLanguage("json", json);
 const highlightElement = HighlightJS.highlightElement.bind(HighlightJS);
-const defaultTiddlers = [];
-const shadowTiddlers = [
-  {
-    title: "$TWIKIVersion",
-    text: "0.0.7",
-    type: "text",
-    readOnly: true,
-    tags: ["Shadow"]
-  },
-  {
-    title: "$AutoImport",
-    text: "* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/core.json save,force\n* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/icons.json save\n* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/website.json skip",
-    type: "list",
-    tags: ["Shadow"]
-  },
-  {
-    title: "$Theme",
-    text: "* [[$StyleSheetCore]]\n* [[$ThemeProperties]]\n* [[$ThemeLayout]]\n* [[$StyleSheetUser]]",
-    type: "x-twiki",
-    readOnly: false,
-    tags: ["Shadow"]
-  },
-  {
-    title: "$Settings",
-    text: "* [[$Namespaces]]\n* [[$GeneralSettings]]\n* [[$TitleBar]]\n  * [[$SiteTitle]]\n  * [[$SiteSubTitle]]\n* [[$Theme]]\n  * [[$TiddlerDisplay]]\n* [[$AutoImport]]",
-    type: "x-twiki",
-    tags: ["Shadow"]
-  },
-  {
-    title: "$GeneralSettings",
-    text: "{}",
-    type: "json",
-    tags: ["Shadow"]
-  },
-  {
-    title: "$SiteTitle",
-    text: "# TWIKI v{{$TWIKIVersion}}",
-    type: "x-twiki",
-    tags: ["Shadow"]
-  },
-  {
-    title: "$Namespaces",
-    text: "<<NamespaceSelect>>",
-    type: "x-twiki",
-    tags: ["Shadow"]
-  },
-  {
-    title: "$SiteSubTitle",
-    text: "Inspired by [TiddlyWiki](https://tiddlwiki.com) ✨",
-    type: "x-twiki",
-    tags: ["Shadow"]
-  },
-  {
-    title: "$TitleBar",
-    text: "<<ShowAllTiddlersButton>>  <<CloseAllTiddlersButton>> <<backup.restoreButton>> <<backup.backupButton>> <<Save>> <<New>>\n\n[🏷️Tags](#Tags) | [⭐Favs](#msg:ui.openAll:{tag:'Favorite'}) | <<TrashCanIcon>> | [⚙️](#$Settings) | [❔Help](#Help)",
-    type: "x-twiki",
-    tags: ["Shadow"]
-  },
-  {
-    title: "$ThemeLayout",
-    text: `/* https://coolors.co/image-picker */
-
-
-* {
-  font-family:
-    system-ui,
-    'Segoe UI',
-    Roboto,
-    Helvetica,
-    Arial,
-    sans-serif;
-
-}
-
-html,
-body {
-  height: 100%;
-}
-
-body {
-  padding: 0px;
-  color: var(--col0)
-}
-
-.line-clamp {
-  white-space: nowrap
-}
-
-div#header {
-  position: sticky;
-  top: 0px;
-  display: flex;
-  align-items: flex-start;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-evenly;
-  border: 1px solid var(--col4);
-  background-color: var(--col5);
-  padding: 5px;
-  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);
-  box-shadow: 1px 1px 5px var(--col0);
-}
-
-input#search {
-  width: 30%;
-  background-color: var(--col2);
-}
-
-div#body {
-  padding: 5px;
-  height: 100%;
-}
-
-dialog::backdrop {
-  background-image: linear-gradient(45deg, #000, #888);
-  opacity: 0.85;
-}
-
-ul {
-  margin-left: 0px;
-  padding: auto;
-}
-
-ul {
-  margin-left: 10px;
-}
-
-table {
-  border-collapse: collapse;
-  border-spacing: 1;
-}
-
-th {
-  font-weight: bold;
-  background-color: var(--col3);
-}
-
-th,
-td {
-  padding: 5px;
-  border: 1px solid black;
-}
-
-
-ul li:marker {
-  font-family: FontAwesome;
-  content: "🗲 ";
-  color: var(--col0);
-}
-
-li li {
-  padding-left: 20px;
-}
-
-dialog#preview-dialog {
-  border: 0px;
-  overflow-y: hidden;
-  background-color: #00000000;
-  width: 90%;
-  height: 90%;
-  min-height: 500px;
-}
-
-dialog#preview-dialog div.tiddler {
-  height: 100%;
-}
-
-dialog#preview-dialog div.text {
-  height: 100%;
-  max-height: 1000px;
-}
-
-dialog#new-dialog {
-  background-color: var(--col2);
-  width: 50%;
-  height: 50%;
-  min-height: 500px;
-}
-
-dialog#new-dialog form {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-dialog#new-dialog div input {
-  font-size: large;
-  font-weight: bold;
-  border-radius: var(--rad1) var(--rad2);
-  border: 1px;
-}
-
-dialog#new-dialog form div {
-  margin-bottom: 4px;
-}
-
-dialog#new-dialog form div.text {
-  flex-grow: 1;
-  min-height: 300px;
-}
-
-dialog#new-dialog form input,
-dialog#new-dialog form textarea {
-  font-family: Consolas, 'Courier New', Courier, monospace;
-  font-size: 1rem;
-  padding: 4px;
-  width: 100%;
-  height: 100%;
-  border-radius: var(--rad1) var(--rad2);
-  background-color: var(--col5);
-  scrollbar-color: var(--col1) var(--col2);
-}
-
-dialog#new-dialog form button {
-  width: 50%;
-}
-
-blockquote {
-  background-color: var(--col4);
-  border-left: 10px solid var(--col3);
-  margin: 1.5em 10px;
-  padding: 0.5em 10px;
-  quotes: "\\201C" "\\201D" "\\2018" "\\2019";
-}
-
-button {
-  border: 1px solid var(--col4);
-  background-color: var(--col3);
-}
-
-#notify {
-  position: fixed;
-  z-index: 1;
-  left: 50%;
-  transform: translate(-50%);
-  bottom: 0px;
-  min-width: 250px;
-  background-color: rgba(var(--notify-rgba), 0.9);
-  color: var(--col1);
-  text-align: left;
-  border: 1px solid var(--col0);
-  box-shadow: 1px 1px 5px var(--col0);
-  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);
-  padding: 16px;
-  line-height: 1.2rem;
-}
-
-div.notifyHidden {
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0.3s linear, opacity 0.3s linear;
-}
-
-div.notifyShow {
-  transition: visibility 0.3s linear, opacity 0.3s linear;
-  visibility: show;
-  opacity: 1;
-}
-
-h1 {
-  font-size: 1.8rem;
-  padding: 5px;
-}
-
-h2 {
-  font-size: 1.4rem;
-  padding: 4px;
-}
-
-h3 {
-  font-size: 1.4rem;
-  padding: 3px;
-}
-
-h4 {
-  font-size: 1.2rem;
-  padding: 2px;
-}
-
-div.tiddler pre {
-  white-space: pre-wrap;
-}
-
-code {
-  background-color: var(--col3);
-  font-family: Consolas, 'Courier New', Courier, monospace;
-}
-
-pre code {
-  border: 1px solid var(--col0);
-}
-
-/* $StyleForTiddlers */
-div.tiddler {
-  margin-bottom: 20px;
-  padding: 2rem;
-  background-color: var(--col2);
-  outline: 1px solid var(--col1);
-  box-shadow: 1px 1px 5px var(--col0);
-  background-color: var(--col2);
-  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);
-}
-
-div.tiddler-nosave {
-  outline: 4px dotted green;
-}
-
-div.tiddler-readonly {
-  border-left: 5px solid gray;
-  outline: 2px dotted gray;
-}
-
-div.shadowtrue div.title {
-  font-style: italic;
-}
-
-div.shadowtrue {
-  border-left: 5px solid var(--col3);
-  outline: 2px dashed gray;
-}
-
-
-div.tiddler div.title {
-  padding: 5px;
-  font-size: 2rem;
-  line-height: 1.2;
-  font-weight: bold;
-  background-color: var(--col2);
-}
-
-div.tiddler div.title button {
-  background-color: var(--col2);
-  float: right;
-  height: 30px;
-  border: none;
-  cursor: pointer;
-}
-
-div.tiddler div.meta {
-  text-align: right;
-  font-size: small;
-  color: var(--col3);
-}
-
-div.tiddler div.text {
-  margin: 2px;
-  padding: 2px;
-  overflow-y: auto;
-  scrollbar-color: var(--col1) var(--col2);
-  scrollbar-width: thin;
-  max-height: 9000px;
-}
-
-div.tiddler div.tags {
-  font-size: small;
-  color: gray;
-  float: right
-}
-
-div.tiddler p {
-  margin: 16px 0px;
-}
-
-span.error {
-  color: white;
-  background-color: red;
-}`,
-    type: "css",
-    tags: ["Shadow"]
-  },
-  {
-    title: "$ThemeProperties",
-    text: ":root {\n  --col0: #323232;\n  --col1: #6e6e6e;\n  --col2: #efefef;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col5: #dfdfdf;\n  --col6: #6db193;\n  --notify-rgba: 210, 180, 90;\n  --rad1: 0.3rem;\n  --rad2: 0.3rem;\n  --rad3: 0.3rem;\n  --rad4: 0.3rem;\n}",
-    type: "css",
-    tags: ["Shadow"]
-  },
-  {
-    title: "$ThemeColors",
-    text: "",
-    type: "css",
-    tags: ["Shadow"]
-  },
-  {
-    title: "$TiddlerDisplay",
-    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="close" title="close">{{$IconCancel}}</button>\n    <button class="edit" title="edit">{{$IconEdit}}</button>\n    <button class="delete" title="delete">{{$IconDelete}}</button>\n  </div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
-    type: "html/template",
-    tags: ["Shadow"]
-  },
-  {
-    title: "$TiddlerSearchResult",
-    text: "* {{title}}",
-    type: "html/template",
-    tags: ["Shadow"]
-  },
-  // https://graphemica.com/search?q=disk
-  {
-    title: "$IconCancel",
-    text: "ⓧ"
-  },
-  {
-    title: "$IconDone",
-    text: "✓"
-  },
-  {
-    title: "$IconEdit",
-    text: "✎"
-  },
-  {
-    title: "$IconDelete",
-    text: "🗑"
-  },
-  {
-    title: "$IconSave",
-    text: "🖫"
-  },
-  {
-    title: "$IconNew",
-    text: "New"
-  },
-  {
-    title: "$TiddlerTypes",
-    text: "* x-twiki: TWiki Data\n* plain: Plain Text\n* html: HTML\n* html/template: HTML Template\n* css: StyleSheet\n* script/js: JavaScript\n* markdown: Markdown\n* macro: Macro\n* list: List\n* keyval: Key Values\n* table: Tabular Data\n* json: JSON Data\n",
-    type: "x-twiki",
-    tags: ["Shadow"]
-  },
-  {
-    title: "Welcome",
-    text: "Welcome to your new TWiki!",
-    type: "x-twiki",
-    tags: ["Shadow"]
-  }
-];
 var store2 = { exports: {} };
 /*! store2 - v2.14.3 - 2024-02-14
 * Copyright (c) 2024 Nathan Bubna; Licensed MIT */
@@ -9649,7 +8935,197 @@ var store2 = { exports: {} };
 })(store2);
 var store2Exports = store2.exports;
 const storage = /* @__PURE__ */ getDefaultExportFromCjs(store2Exports);
-function Packages(tw2) {
+function $() {
+  return document.getElementById(...arguments);
+}
+function $$() {
+  return document.querySelectorAll(...arguments);
+}
+function simpleSort(a, b) {
+  let A = a.title.toLowerCase();
+  let B = b.title.toLowerCase();
+  if (A < B) return -1;
+  else return 1;
+}
+function escapeHtml(unsafe) {
+  return unsafe.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#039;");
+}
+let MD5 = function(d) {
+  var r = M(V(Y(X(d), 8 * d.length)));
+  return r.toLowerCase();
+};
+function M(d) {
+  for (var _, m2 = "0123456789ABCDEF", f = "", r = 0; r < d.length; r++) _ = d.charCodeAt(r), f += m2.charAt(_ >>> 4 & 15) + m2.charAt(15 & _);
+  return f;
+}
+function X(d) {
+  for (var _ = Array(d.length >> 2), m2 = 0; m2 < _.length; m2++) _[m2] = 0;
+  for (m2 = 0; m2 < 8 * d.length; m2 += 8) _[m2 >> 5] |= (255 & d.charCodeAt(m2 / 8)) << m2 % 32;
+  return _;
+}
+function V(d) {
+  for (var _ = "", m2 = 0; m2 < 32 * d.length; m2 += 8) _ += String.fromCharCode(d[m2 >> 5] >>> m2 % 32 & 255);
+  return _;
+}
+function Y(d, _) {
+  d[_ >> 5] |= 128 << _ % 32, d[14 + (_ + 64 >>> 9 << 4)] = _;
+  for (var m2 = 1732584193, f = -271733879, r = -1732584194, i = 271733878, n = 0; n < d.length; n += 16) {
+    var h = m2;
+    var t = f;
+    var g = r;
+    var e = i;
+    f = md5_ii(f = md5_ii(f = md5_ii(f = md5_ii(f = md5_hh(f = md5_hh(f = md5_hh(f = md5_hh(f = md5_gg(f = md5_gg(f = md5_gg(f = md5_gg(f = md5_ff(f = md5_ff(f = md5_ff(f = md5_ff(f, r = md5_ff(r, i = md5_ff(i, m2 = md5_ff(m2, f, r, i, d[n + 0], 7, -680876936), f, r, d[n + 1], 12, -389564586), m2, f, d[n + 2], 17, 606105819), i, m2, d[n + 3], 22, -1044525330), r = md5_ff(r, i = md5_ff(i, m2 = md5_ff(m2, f, r, i, d[n + 4], 7, -176418897), f, r, d[n + 5], 12, 1200080426), m2, f, d[n + 6], 17, -1473231341), i, m2, d[n + 7], 22, -45705983), r = md5_ff(r, i = md5_ff(i, m2 = md5_ff(m2, f, r, i, d[n + 8], 7, 1770035416), f, r, d[n + 9], 12, -1958414417), m2, f, d[n + 10], 17, -42063), i, m2, d[n + 11], 22, -1990404162), r = md5_ff(r, i = md5_ff(i, m2 = md5_ff(m2, f, r, i, d[n + 12], 7, 1804603682), f, r, d[n + 13], 12, -40341101), m2, f, d[n + 14], 17, -1502002290), i, m2, d[n + 15], 22, 1236535329), r = md5_gg(r, i = md5_gg(i, m2 = md5_gg(m2, f, r, i, d[n + 1], 5, -165796510), f, r, d[n + 6], 9, -1069501632), m2, f, d[n + 11], 14, 643717713), i, m2, d[n + 0], 20, -373897302), r = md5_gg(r, i = md5_gg(i, m2 = md5_gg(m2, f, r, i, d[n + 5], 5, -701558691), f, r, d[n + 10], 9, 38016083), m2, f, d[n + 15], 14, -660478335), i, m2, d[n + 4], 20, -405537848), r = md5_gg(r, i = md5_gg(i, m2 = md5_gg(m2, f, r, i, d[n + 9], 5, 568446438), f, r, d[n + 14], 9, -1019803690), m2, f, d[n + 3], 14, -187363961), i, m2, d[n + 8], 20, 1163531501), r = md5_gg(r, i = md5_gg(i, m2 = md5_gg(m2, f, r, i, d[n + 13], 5, -1444681467), f, r, d[n + 2], 9, -51403784), m2, f, d[n + 7], 14, 1735328473), i, m2, d[n + 12], 20, -1926607734), r = md5_hh(r, i = md5_hh(i, m2 = md5_hh(m2, f, r, i, d[n + 5], 4, -378558), f, r, d[n + 8], 11, -2022574463), m2, f, d[n + 11], 16, 1839030562), i, m2, d[n + 14], 23, -35309556), r = md5_hh(r, i = md5_hh(i, m2 = md5_hh(m2, f, r, i, d[n + 1], 4, -1530992060), f, r, d[n + 4], 11, 1272893353), m2, f, d[n + 7], 16, -155497632), i, m2, d[n + 10], 23, -1094730640), r = md5_hh(r, i = md5_hh(i, m2 = md5_hh(m2, f, r, i, d[n + 13], 4, 681279174), f, r, d[n + 0], 11, -358537222), m2, f, d[n + 3], 16, -722521979), i, m2, d[n + 6], 23, 76029189), r = md5_hh(r, i = md5_hh(i, m2 = md5_hh(m2, f, r, i, d[n + 9], 4, -640364487), f, r, d[n + 12], 11, -421815835), m2, f, d[n + 15], 16, 530742520), i, m2, d[n + 2], 23, -995338651), r = md5_ii(r, i = md5_ii(i, m2 = md5_ii(m2, f, r, i, d[n + 0], 6, -198630844), f, r, d[n + 7], 10, 1126891415), m2, f, d[n + 14], 15, -1416354905), i, m2, d[n + 5], 21, -57434055), r = md5_ii(r, i = md5_ii(i, m2 = md5_ii(m2, f, r, i, d[n + 12], 6, 1700485571), f, r, d[n + 3], 10, -1894986606), m2, f, d[n + 10], 15, -1051523), i, m2, d[n + 1], 21, -2054922799), r = md5_ii(r, i = md5_ii(i, m2 = md5_ii(m2, f, r, i, d[n + 8], 6, 1873313359), f, r, d[n + 15], 10, -30611744), m2, f, d[n + 6], 15, -1560198380), i, m2, d[n + 13], 21, 1309151649), r = md5_ii(r, i = md5_ii(i, m2 = md5_ii(m2, f, r, i, d[n + 4], 6, -145523070), f, r, d[n + 11], 10, -1120210379), m2, f, d[n + 2], 15, 718787259), i, m2, d[n + 9], 21, -343485551), m2 = safe_add(m2, h), f = safe_add(f, t), r = safe_add(r, g), i = safe_add(i, e);
+  }
+  return Array(m2, f, r, i);
+}
+function md5_cmn(d, _, m2, f, r, i) {
+  return safe_add(bit_rol(safe_add(safe_add(_, d), safe_add(f, i)), r), m2);
+}
+function md5_ff(d, _, m2, f, r, i, n) {
+  return md5_cmn(_ & m2 | ~_ & f, d, _, r, i, n);
+}
+function md5_gg(d, _, m2, f, r, i, n) {
+  return md5_cmn(_ & f | m2 & ~f, d, _, r, i, n);
+}
+function md5_hh(d, _, m2, f, r, i, n) {
+  return md5_cmn(_ ^ m2 ^ f, d, _, r, i, n);
+}
+function md5_ii(d, _, m2, f, r, i, n) {
+  return md5_cmn(m2 ^ (_ | ~f), d, _, r, i, n);
+}
+function safe_add(d, _) {
+  var m2 = (65535 & d) + (65535 & _);
+  return (d >> 16) + (_ >> 16) + (m2 >> 16) << 16 | 65535 & m2;
+}
+function bit_rol(d, _) {
+  return d << _ | d >>> 32 - _;
+}
+function hash(val = "") {
+  return MD5(val);
+}
+function notEmpty(v) {
+  return !!v;
+}
+function encoder(string) {
+  const codeUnits = new Uint16Array(string.length);
+  for (let i = 0; i < codeUnits.length; i++) {
+    codeUnits[i] = string.charCodeAt(i);
+  }
+  return btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer)));
+}
+function decoder(encoded) {
+  const binary = atob(encoded);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < bytes.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return String.fromCharCode(...new Uint16Array(bytes.buffer));
+}
+RegExp.any = function() {
+  var components = [];
+  var arg;
+  for (var i = 0; i < arguments.length; i++) {
+    arg = arguments[i];
+    if (arg instanceof RegExp) {
+      components = components.concat(arg._components || arg.source);
+    }
+  }
+  var combined = new RegExp("(?:" + components.join(")|(?:") + ")");
+  combined._components = components;
+  return combined;
+};
+RegExp.compose = function(re, params2) {
+  let str = re.source;
+  Object.keys(params2).forEach((k) => str = str.replace(k, params2[k].source));
+  return new RegExp(str, re.flags);
+};
+RegExp.prototype.or = function() {
+  var args = Array.prototype.slice.call(arguments);
+  return RegExp.any.apply(null, [this].concat(args));
+};
+function Logging(logFilter2) {
+  window.dp = dp2;
+  window.dd = dd2;
+  window.dw = dw2;
+  window.de = de2;
+  return {
+    logFilter: logFilter2,
+    dp: dp2,
+    dd: dd2,
+    dw: dw2,
+    de: de2
+  };
+  function dp2() {
+    if (!logFilter2.test([...arguments].join(" "))) return;
+    console.log(...arguments);
+  }
+  function dd2() {
+    if (!logFilter2.test([...arguments].join(" "))) return;
+    console.debug(...arguments);
+  }
+  function dw2() {
+    if (!logFilter2.test([...arguments].join(" "))) return;
+    console.warn(...arguments);
+  }
+  function de2() {
+    if (!logFilter2.test([...arguments].join(" "))) return;
+    console.error(...arguments);
+  }
+}
+function Notifications(tw2) {
+  tw2.dom.notify = tw2.dom.$("notify");
+  if (!tw2.dom.notify) {
+    dw("No #notify element detected, notifications are silenced");
+    return silentNotify;
+  }
+  tw2.dom.notify.addEventListener("mouseover", notifyMouseOver);
+  tw2.dom.notify.addEventListener("mouseout", notifyMouseOut);
+  tw2.dom.notify.addEventListener("click", notifyClick);
+  return notify;
+  function notify(msg2, type = "I", stack) {
+    if (!tw2.logging.logFilter.test(msg2)) return;
+    const n = tw2.dom.notify;
+    let preserveMsg = "";
+    if (tw2.tmp.notifyId) {
+      clearTimeout(tw2.tmp.notifyId);
+      preserveMsg = n.innerHTML ? n.innerHTML + "\n" : "";
+    }
+    const types = { S: "📗 Success", E: '<b title="Error">📕</b>', W: '<b title="Warning">📙</b>', D: '<b title="Debug">📓</b>', I: '<b title="Info">📘</b>' };
+    if (type === "E")
+      de(preserveMsg + types[type] + ": " + msg2, stack || "");
+    n.innerHTML = (preserveMsg + types[type] + " " + escapeHtml(msg2)).replace(/\n/g, "<br>");
+    notifyShow();
+  }
+  function notifyShow() {
+    tw2.dom.notify.className = tw2.dom.notify.className.replace("notifyHidden", "notifyShow");
+    tw2.tmp.notifyId = setTimeout(notifyHide, 4e3);
+  }
+  function notifyHide() {
+    tw2.dom.notify.className = tw2.dom.notify.className.replace("notifyShow", "notifyHidden");
+    delete tw2.tmp.notifyId;
+  }
+  function notifyMouseOver() {
+    if (tw2.tmp.notifyMouseOverPause) return;
+    clearTimeout(tw2.tmp.notifyId);
+  }
+  function notifyMouseOut() {
+    if (tw2.tmp.notifyMouseOverPause) return;
+    notifyShow();
+  }
+  function notifyClick() {
+    notifyHide();
+    tw2.tmp.notifyMouseOverPause = true;
+    window.setTimeout(() => delete tw2.tmp.notifyMouseOverPause, 500);
+  }
+  function silentNotify(msg2, type, stack) {
+    if (type === "E") console.error(msg2);
+    else if (type === "W") console.warn(msg2);
+    else if (type === "D") console.debug(msg2);
+    else console.log(msg2);
+    if (stack) console.error(stack);
+  }
+}
+function Namespaces(tw2) {
   if (!tw2.storage.get("namespaces")) tw2.storage.set("namespaces", []);
   if (!tw2.storage.get("namespace")) tw2.storage.set("namespace", "");
   return {
@@ -9700,9 +9176,700 @@ function Packages(tw2) {
     if (current) namespaceSwitch2(current);
   }
 }
-const reTiddlerTitle = /[a-z0-9_\-\.\s\$]+/gi;
+function Events() {
+  const handlers = [];
+  return {
+    send(event, params2) {
+      let msg2 = params2;
+      try {
+        params2 = decoder(params2);
+      } catch {
+      }
+      try {
+        msg2 = JSON.parse(params2);
+      } catch {
+      }
+      let result2 = [];
+      handlers.filter((h) => h.event === event).forEach((h) => {
+        result2.push(h.handler(msg2));
+      });
+      return result2;
+    },
+    subscribe(event, handler) {
+      if (handlers.find((h) => h.event === event && h.handler.name === handler.name)) return;
+      handlers.push({ event, handler });
+    },
+    handlers() {
+      return handlers;
+    }
+  };
+}
+function Packages(tw2) {
+  if (!tw2.storage.get("namespaces")) tw2.storage.set("namespaces", []);
+  return {
+    loadPackageFromURL,
+    reloadPackageFromUrl,
+    loadPackageFromJSONBin,
+    reloadPackageFromJSONBin
+  };
+  async function loadPackageFromURL({ url, name = "", filter = "", overWrite = false, doNotSave = false, noOverWrite = false }) {
+    dd("Loading package", name, url);
+    try {
+      let obj = await httpGetJSON(url, name, {});
+      return loadList(obj.tiddlers, { name, overWrite, filter, doNotSave, noOverWrite });
+    } catch (e) {
+      tw2.ui.notify(`Failed to load package '${name}' from ${url} (see log)`, "E", e.stack);
+      return 0;
+    }
+  }
+  async function loadPackageFromJSONBin({ url, name = "", filter = "", overWrite = false, doNotSave = false, noOverWrite = false }) {
+    var _a2;
+    dd("Loading package from JSONBin", name, url, overWrite);
+    let settings = tw2.run.getJSONObject("$GeneralSettings");
+    if (!((_a2 = settings == null ? void 0 : settings.JSONBin) == null ? void 0 : _a2.accessKey)) return tw2.ui.notify("No JSONBin accessKey found in $GeneralSettings!", "W");
+    try {
+      let obj = await httpGetJSON(url, name, { "X-Access-Key": settings.JSONBin.accessKey });
+      if (obj.record.all) throw new Error("You are trying to load a backup! This is for packages!");
+      return loadList(obj.record.tiddlers, { name, filter, overWrite, doNotSave, noOverWrite });
+    } catch (e) {
+      tw2.ui.notify(`Failed to load package '${name}' from JSONBin ${url} (see log)`, "E", e.stack);
+      return 0;
+    }
+  }
+  function loadList(list2, { name, filter, overWrite = false, doNotSave = false, noOverWrite = false } = {}) {
+    let count = 0;
+    if (!Array.isArray(list2)) return tw2.ui.notify(`packages.loadList(${name}): No tiddlers array returned!`, "E");
+    filter = filter && filter !== "*" ? new RegExp(filter, "i") : null;
+    tw2.tiddlers.all.filter((t) => t.package === name).map((t) => t.title).filter((title2) => !list2.find((t) => t.title === title2)).forEach((title2) => tw2.run.deleteTiddler(title2, true));
+    list2.forEach((t) => {
+      t.updated = new Date(t.updated);
+      t.created = new Date(t.created);
+      let issues = tw2.util.tiddlerValidation(t);
+      if (issues.length) return tw2.ui.notify(`Tiddler '${t.title}' is invalid: ` + issues.join("<br>"));
+      if (filter && !filter.test(t.title)) return console.debug("Skipping import of tiddler", t.title);
+      const existingTiddler = tw2.run.getTiddler(t.title, false);
+      if (noOverWrite && existingTiddler) return;
+      if (overWrite !== true && existingTiddler) {
+        if (!existingTiddler.isRawShadow && tiddlerDiff(existingTiddler, t)) {
+          if (!confirm(`Package '${name}' will overwrite tiddler '${t.title}'! OK to proceed?`)) return;
+        }
+      }
+      if (doNotSave) t.doNotSave = true;
+      if (existingTiddler == null ? void 0 : existingTiddler.readOnly) return tw2.ui.notify(`Not importing read-only tiddler '${t.title}'!`, "E");
+      t.package = name;
+      if (existingTiddler)
+        tw2.run.updateTiddler(t.title, t);
+      else
+        tw2.run.addTiddler(t);
+      count++;
+    });
+    return count;
+  }
+  function tiddlerDiff(t1, t2) {
+    if (t1.title !== t2.title) return "title";
+    if (t1.text !== t2.text) return "text";
+    if (t1.tags.join(" ") !== t2.tags.join(" ")) return "tags";
+    return false;
+  }
+  async function reloadPackageFromUrl(pck) {
+    let count = await loadPackageFromURL(pck);
+    tw2.events.send("ui.reload");
+    tw2.ui.notify(`${count} tiddlers imported from package ${pck.name || pck.url}`, "D");
+  }
+  async function reloadPackageFromJSONBin(pck) {
+    let count = await loadPackageFromJSONBin(pck);
+    tw2.events.send("ui.reload");
+    tw2.ui.notify(`${count} tiddlers imported from package ${pck.name || pck.url}`, "D");
+  }
+  async function httpGetJSON(url, name, headers = {}) {
+    let res;
+    try {
+      res = await fetch(url, { headers });
+    } catch (e) {
+      throw new Error(`Failed to load package '${name}' with network error from ${url}: ${e.message}`);
+    }
+    if (!res.ok) throw new Error(`Failed to load package '${name}' with HTTP Status '${res.status}' from ${url}`);
+    let obj;
+    try {
+      obj = await res.json();
+      return obj;
+    } catch (e) {
+      throw new Error(`Failed to load package '${name}' with invalid JSON (see log) from ${url}: ${e.message}`);
+    }
+  }
+}
+function formHotkeys(methods) {
+  return function(e) {
+    if (e.ctrlKey && (e.code === "Enter" || e.code === "NumpadEnter")) return methods.formSaveTiddler();
+  };
+}
+const TITLE_MATCH = 3;
+const TAG_MATCH = 2;
+const TEXT_MATCH = 1;
+function search(q, list2) {
+  q = q.trim();
+  let results = list2.sort(simpleSort).map(simpleSearch(q.toLowerCase())).filter(notEmpty);
+  let sortedResults = [
+    ...results.filter((r) => r.rank === TITLE_MATCH),
+    ...results.filter((r) => r.rank === TAG_MATCH),
+    ...results.filter((r) => r.rank === TEXT_MATCH)
+  ];
+  let title2 = "No results!";
+  if (!q.match(/^\$/)) title2 += ` Type '$${q}' to search hidden tiddlers!`;
+  return sortedResults.length ? sortedResults.map((t) => t.tiddler) : [{ title: title2 }];
+}
+function simpleSearch(q) {
+  let searchAll = q[0] === "$";
+  if (searchAll) q = q.substring(1);
+  let searchTag = q.substr(0, 4) === "tag:" ? q.substr(4).trim().toLowerCase() : false;
+  if (searchTag) q = q.substr(4);
+  let searchPackage = q.substr(0, 4) === "pck:" ? q.substr(4).trim().toLowerCase() : false;
+  if (searchPackage) q = q.substr(4);
+  return (t) => {
+    if (!searchAll && t.title[0] === "$") return;
+    let mainText = (t.title + t.tags).toLowerCase();
+    let fullText = mainText + t.text;
+    if (searchAll) fullText += t.type;
+    fullText = fullText.toLowerCase();
+    let rank = mainText.indexOf(q) >= 0 ? TITLE_MATCH : fullText.indexOf(q) >= 0 ? TEXT_MATCH : 0;
+    if (searchTag) rank = t.tags.find((t2) => t2.toLowerCase() === searchTag) ? TAG_MATCH : 0;
+    if (searchPackage) rank = searchPackage === t.package ? TAG_MATCH : 0;
+    return {
+      rank,
+      tiddler: t
+    };
+  };
+}
+function button(title2, message, payload, id = "") {
+  if (typeof payload === "undefined") payload = "";
+  let params2 = typeof payload === "object" ? JSON.stringify(payload) : payload;
+  return `<button${id ? ' id="' + id + '"' : ""} onclick="tw.events.send('${message}', '${encoder(params2)}')">${escapeHtml(title2)}</button>`;
+}
+const shadowTiddlers = [
+  {
+    "title": "$AutoImport",
+    "text": "* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/core.json save,force\n* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/icons.json save\n* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/website.json nooverwrite",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "list",
+    "created": "2024-09-30T19:10:09.6854497Z",
+    "updated": "2024-09-30T20:07:53.3508460Z"
+  },
+  {
+    "title": "$GeneralSettings",
+    "text": "{}",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "json",
+    "created": "2024-09-30T19:41:39.1145031Z",
+    "updated": "2024-09-30T19:41:42.8972028Z"
+  },
+  {
+    "title": "$IconCancel",
+    "text": "ⓧ",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T20:32:39.5001190Z",
+    "updated": "2024-09-30T20:32:44.6014776Z"
+  },
+  {
+    "title": "$IconDelete",
+    "text": "🗑",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T20:32:59.7007159Z",
+    "updated": "2024-09-30T20:33:00.0671160Z"
+  },
+  {
+    "title": "$IconDone",
+    "text": "✓",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T20:33:14.6368852Z",
+    "updated": "2024-09-30T20:33:14.9168053Z"
+  },
+  {
+    "title": "$IconEdit",
+    "text": "✎",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T20:33:22.9400487Z",
+    "updated": "2024-09-30T20:33:23.2500257Z"
+  },
+  {
+    "title": "$IconNew",
+    "text": "New",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T20:33:36.1884581Z",
+    "updated": "2024-09-30T20:33:36.4338047Z"
+  },
+  {
+    "title": "$IconSave",
+    "text": "🖫",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T20:33:51.0369571Z",
+    "updated": "2024-09-30T20:33:51.3001090Z"
+  },
+  {
+    "title": "$Namespaces",
+    "text": "<<NamespaceSelect>>",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T20:08:30.8540958Z",
+    "updated": "2024-09-30T20:08:32.4204332Z"
+  },
+  {
+    "title": "$Settings",
+    "text": "* [[$GeneralSettings]]\n* [[$TitleBar]]\n  * [[$SiteTitle]]\n  * [[$SiteSubTitle]]\n* [[$Theme]]\n  * [[$TiddlerDisplay]]\n* [[$AutoImport]]",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T19:11:19.9257345Z",
+    "updated": "2024-09-30T19:36:07.2730432Z"
+  },
+  {
+    "title": "$SiteSubTitle",
+    "text": "Inspired by [TiddlyWiki](https://tiddlwiki.com) ✨",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T19:14:50.6928053Z",
+    "updated": "2024-09-30T19:36:07.2720384Z"
+  },
+  {
+    "title": "$SiteTitle",
+    "text": "# TWIKI v{{$TWIKIVersion}}",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T19:15:22.0609324Z",
+    "updated": "2024-09-30T19:36:07.2703141Z"
+  },
+  {
+    "title": "$StyleSheetCore",
+    "text": "/* Essential CSS without which we are unusable */",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "css",
+    "created": "2024-09-15T18:05:13.7041528Z",
+    "updated": "2024-09-19T19:50:58.1719668Z"
+  },
+  {
+    "title": "$Theme",
+    "text": "* [[$StyleSheetCore]]\n* [[$ThemeProperties]]\n* [[$ThemeLayout]]\n* [[$StyleSheetUser]]",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T19:10:52.5206095Z",
+    "updated": "2024-09-30T19:10:56.6334194Z"
+  },
+  {
+    "title": "$ThemeLayout",
+    "text": `/* https://coolors.co/image-picker */
+
+
+* {
+  font-family:
+    system-ui,
+    'Segoe UI',
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  padding: 0px;
+  color: var(--col0)
+}
+
+.line-clamp {
+  white-space: nowrap
+}
+
+div#header {
+  position: sticky;
+  top: 0px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-evenly;
+  border: 1px solid var(--col4);
+  background-color: var(--col5);
+  padding: 5px;
+  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);
+  box-shadow: 1px 1px 5px var(--col0);
+}
+
+input#search {
+  width: 30%;
+  background-color: var(--col2);
+}
+
+div#body {
+  padding: 5px;
+  height: 100%;
+}
+
+dialog::backdrop {
+  background-image: linear-gradient(45deg, #000, #888);
+  opacity: 0.85;
+}
+
+ul {
+  margin-left: 0px;
+  padding: auto;
+}
+
+ul {
+  margin-left: 10px;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 1;
+}
+
+th {
+  font-weight: bold;
+  background-color: var(--col3);
+}
+
+th,
+td {
+  padding: 5px;
+  border: 1px solid black;
+}
+
+
+ul li:marker {
+  font-family: FontAwesome;
+  content: "🗲 ";
+  color: var(--col0);
+}
+
+li li {
+  padding-left: 20px;
+}
+
+dialog#preview-dialog {
+  border: 0px;
+  overflow-y: hidden;
+  background-color: #00000000;
+  width: 90%;
+  height: 90%;
+  min-height: 500px;
+}
+
+dialog#preview-dialog div.tiddler {
+  height: 100%;
+}
+
+dialog#preview-dialog div.text {
+  height: 100%;
+  max-height: 1000px;
+}
+
+dialog#new-dialog {
+  background-color: var(--col2);
+  width: 50%;
+  height: 50%;
+  min-height: 500px;
+}
+
+dialog#new-dialog form {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+dialog#new-dialog div input {
+  font-size: large;
+  font-weight: bold;
+  border-radius: var(--rad1) var(--rad2);
+  border: 1px;
+}
+
+dialog#new-dialog form div {
+  margin-bottom: 4px;
+}
+
+dialog#new-dialog form div.text {
+  flex-grow: 1;
+  min-height: 300px;
+}
+
+dialog#new-dialog form input,
+dialog#new-dialog form textarea {
+  font-family: Consolas, 'Courier New', Courier, monospace;
+  font-size: 1rem;
+  padding: 4px;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--rad1) var(--rad2);
+  background-color: var(--col5);
+  scrollbar-color: var(--col1) var(--col2);
+}
+
+dialog#new-dialog form button {
+  width: 50%;
+}
+
+blockquote {
+  background-color: var(--col4);
+  border-left: 10px solid var(--col3);
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+  quotes: "\\201C" "\\201D" "\\2018" "\\2019";
+}
+
+button {
+  border: 1px solid var(--col4);
+  background-color: var(--col3);
+}
+
+#notify {
+  position: fixed;
+  z-index: 1;
+  left: 50%;
+  transform: translate(-50%);
+  bottom: 10px;
+  min-width: 250px;
+  background-color: rgba(var(--notify-rgba), 0.9);
+  color: var(--col1);
+  text-align: left;
+  border: 1px solid var(--col0);
+  box-shadow: 1px 1px 5px var(--col0);
+  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);
+  padding: 16px;
+  line-height: 1.2rem;
+}
+
+div.notifyHidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s linear, opacity 0.3s linear;
+}
+
+div.notifyShow {
+  transition: visibility 0.3s linear, opacity 0.3s linear;
+  visibility: show;
+  opacity: 1;
+}
+
+h1 {
+  font-size: 1.8rem;
+  padding: 5px;
+}
+
+h2 {
+  font-size: 1.4rem;
+  padding: 4px;
+}
+
+h3 {
+  font-size: 1.4rem;
+  padding: 3px;
+}
+
+h4 {
+  font-size: 1.2rem;
+  padding: 2px;
+}
+
+div.tiddler pre {
+  white-space: pre-wrap;
+}
+
+code {
+  background-color: var(--col3);
+  font-family: Consolas, 'Courier New', Courier, monospace;
+}
+
+pre code {
+  border: 1px solid var(--col0);
+}
+
+/* $StyleForTiddlers */
+div.tiddler {
+  margin-bottom: 20px;
+  padding: 2rem;
+  background-color: var(--col2);
+  outline: 1px solid var(--col1);
+  box-shadow: 1px 1px 5px var(--col0);
+  background-color: var(--col2);
+  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);
+}
+
+div.tiddler-nosave {
+  outline: 4px dotted green;
+}
+
+div.tiddler-readonly {
+  border-left: 5px solid gray;
+  outline: 2px dotted gray;
+}
+
+div.shadowtrue div.title {
+  font-style: italic;
+}
+
+div.shadowtrue {
+  border-left: 5px solid var(--col3);
+  outline: 2px dashed gray;
+}
+
+
+div.tiddler div.title {
+  padding: 5px;
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: bold;
+  background-color: var(--col2);
+}
+
+div.tiddler div.title button {
+  background-color: var(--col2);
+  float: right;
+  height: 30px;
+  border: none;
+  cursor: pointer;
+}
+
+div.tiddler div.meta {
+  text-align: right;
+  font-size: small;
+  color: var(--col3);
+}
+
+div.tiddler div.text {
+  margin: 2px;
+  padding: 2px;
+  overflow-y: auto;
+  scrollbar-color: var(--col1) var(--col2);
+  scrollbar-width: thin;
+  max-height: 9000px;
+}
+
+div.tiddler div.tags {
+  font-size: small;
+  color: gray;
+  float: right
+}
+
+div.tiddler p {
+  margin: 16px 0px;
+}
+
+span.error {
+  color: white;
+  background-color: red;
+}`,
+    "tags": [
+      "Shadow"
+    ],
+    "type": "css",
+    "created": "2024-09-19T19:11:20.9459506Z",
+    "updated": "2024-09-29T21:17:49.8876909Z"
+  },
+  {
+    "title": "$ThemeProperties",
+    "text": ":root {\n  --col0: #323232;\n  --col1: #6e6e6e;\n  --col2: #efefef;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col5: #dfdfdf;\n  --col6: #6db193;\n  --notify-rgba: 210, 180, 90;\n  --rad1: 0.3rem;\n  --rad2: 0.3rem;\n  --rad3: 0.3rem;\n  --rad4: 0.3rem;\n}",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "css",
+    "created": "2024-09-19T19:08:23.2859747Z",
+    "updated": "2024-09-30T19:12:50.2920990Z"
+  },
+  {
+    "title": "$TiddlerDisplay",
+    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="close" title="close">{{$IconCancel}}</button>\n    <button class="edit" title="edit" {{=editDisabled}}>{{$IconEdit}}</button>\n    <button class="delete" title="delete"{{=editDisabled}}>{{$IconDelete}}</button>\n  </div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
+    "tags": [
+      "Shadow"
+    ],
+    "type": "html/template",
+    "created": "2024-09-24T21:11:44.9031631Z",
+    "updated": "2024-09-30T20:27:29.2210082Z"
+  },
+  {
+    "title": "$TiddlerTypes",
+    "text": "* x-twiki: TWiki Data\n* plain: Plain Text\n* html: HTML\n* html/template: HTML Template\n* css: StyleSheet\n* script/js: JavaScript\n* markdown: Markdown\n* macro: Macro\n* list: List\n* keyval: Key Values\n* table: Tabular Data\n* json: JSON Data\n",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T19:13:44.7413158Z",
+    "updated": "2024-09-30T19:13:56.9822194Z"
+  },
+  {
+    "title": "$TitleBar",
+    "text": "<<ShowAllTiddlersButton>>  <<CloseAllTiddlersButton>> <<backup.restoreButton>> <<backup.backupButton>> <<Save>> <<New>>\n\n[🏷️Tags](#Tags) | [⭐Favs](#msg:ui.openAll:{tag:\\'Favorite\\'}) | <<TrashCanIcon>> | [⚙️](#$Settings) | [❔Help](#Help)",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T19:12:28.0561020Z",
+    "updated": "2024-09-30T19:12:34.0290378Z"
+  },
+  {
+    "title": "$TWIKIVersion",
+    "text": "0.0.8",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "text",
+    "created": "2024-09-30T19:08:17.8012713Z",
+    "updated": "2024-09-30T20:46:14.4828311Z",
+    "readOnly": true
+  },
+  {
+    "title": "Welcome",
+    "text": "Welcome to your new TWiki!",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-09-30T19:14:16.5969955Z",
+    "updated": "2024-09-30T19:14:16.8757492Z"
+  }
+];
+const reTiddlerTitle = /[a-z0-9_\-\.:\s\$]+/gi;
 const reTiddlerTitleComplete = RegExp.compose(/^reTiddlerTitle$/gi, { reTiddlerTitle });
 const reInclusion = RegExp.compose(/\{\{(reTiddlerTitle)\|?([^\}]+)?}}/gi, { reTiddlerTitle });
+const reLinks = RegExp.compose(/\[\[(reTiddlerTitle)]]/gi, { reTiddlerTitle });
+const logFilter = storage.get("logfilter") ? new RegExp(storage.get("logfilter")) : /./;
 const tw = {
   storage,
   templates: {},
@@ -9715,8 +9882,7 @@ const tw = {
     $$,
     divVisibleTiddlers: $("visible-tiddlers"),
     divAllTiddlers: $("all-tiddlers"),
-    preview: $("preview-dialog"),
-    notify: $("notify")
+    preview: $("preview-dialog")
   },
   plugins: {},
   macros: {
@@ -9725,6 +9891,17 @@ const tw = {
       disabled: (...rest) => "This macro is disabled!" + JSON.stringify(rest)
     }
   },
+  ui: {
+    isDirty: false,
+    button,
+    formNewTiddler,
+    formEditShow
+  },
+  util: { tagMatch, titleMatch, titleIs, tiddlerValidation, tiddlerExists },
+  lib: { markdown: markdown1 },
+  tmp: {},
+  logging: Logging(logFilter),
+  events: Events(),
   run: {
     save,
     saveAll,
@@ -9751,40 +9928,20 @@ const tw = {
     renderAllTiddlers,
     rebootSoft,
     reload
-  },
-  ui: {
-    isDirty: false,
-    notify,
-    button,
-    formNewTiddler,
-    formEditShow
-  },
-  util: { tagMatch, titleMatch, titleIs, tiddlerValidation, tiddlerExists },
-  lib: { markdown: markdown1 },
-  tmp: {}
+  }
 };
-tw.events = events();
-const { namespaceCreate, namespaceSwitch, namespaceLoad, namespaceDelete } = Packages(tw);
-if (!tw.storage.get("namespace")) {
-  namespaceCreate("default", true);
-}
+const { namespaceCreate, namespaceSwitch, namespaceLoad, namespaceDelete } = Namespaces(tw);
+if (!tw.storage.get("namespace")) namespaceCreate("default", true);
 tw.namespace = tw.storage.get("namespace");
 namespaceSwitch(tw.namespace);
+Object.assign(tw.run, Packages(tw));
+tw.ui.notify = Notifications(tw);
 tw.events.subscribe("namespace.switch", namespaceSwitch);
 tw.events.subscribe("namespace.load", namespaceLoad);
 tw.events.subscribe("namespace.create", namespaceCreate);
 tw.events.subscribe("namespace.clone", (name) => namespaceCreate(name, true));
 tw.events.subscribe("namespace.delete", namespaceDelete);
 window.tw = tw;
-const logFilter = tw.storage.get("logfilter") ? new RegExp(tw.storage.get("logfilter")) : /./;
-const dp = window.dp = function() {
-  if (!logFilter.test([...arguments].join(" "))) return;
-  console.log(...arguments);
-};
-window.dd = function() {
-  if (!logFilter.test([...arguments].join(" "))) return;
-  console.debug(...arguments);
-};
 tw.events.subscribe("ui.openAll", (...rest) => tw.run.showAllTiddlers(...rest));
 tw.events.subscribe("ui.closeAll", tw.run.closeAllTiddlers);
 tw.events.subscribe("save", save);
@@ -9795,16 +9952,16 @@ tw.events.subscribe("reboot.hard", rebootHard);
 tw.events.subscribe("search", searchQuery);
 tw.events.subscribe("ui.reload", reload);
 tw.events.subscribe("tiddler.preview", tw.run.previewTiddler);
+tw.events.subscribe("tiddler.delete", deleteTiddler);
 tw.events.subscribe("tiddler.deleted", tw.run.reload);
 tw.events.subscribe("tiddler.refresh", rerenderTiddler);
 tw.events.subscribe("tiddler.edited", rerenderTiddler);
 tw.events.subscribe("tiddler.created", renderNewTiddler);
 tw.events.subscribe("tiddler.updated", tiddlerUpdated);
 tw.events.subscribe("store.load", loadStore);
-const { loadPackageFromURL, reloadPackageFromUrl, reloadPackageFromJSONBin } = Packages$1(tw);
-tw.events.subscribe("package.load.url", loadPackageFromURL);
-tw.events.subscribe("package.reload.url", reloadPackageFromUrl);
-tw.events.subscribe("package.reload.bin", reloadPackageFromJSONBin);
+tw.events.subscribe("package.load.url", tw.run.loadPackageFromURL);
+tw.events.subscribe("package.reload.url", tw.run.reloadPackageFromUrl);
+tw.events.subscribe("package.reload.bin", tw.run.reloadPackageFromJSONBin);
 addEventListener("load", () => {
   uiWireEvents();
   rebootSoft();
@@ -9842,18 +9999,18 @@ async function loadAutoImport() {
     let url = params2[0];
     let name = (_a2 = url.match(/([^.\/]+)\.json$/)) == null ? void 0 : _a2[1];
     let overWrite = false;
-    let skipOverWrite = false;
+    let noOverWrite = false;
     let doNotSave = true;
     if (p.length > 1) {
       params2.splice(0, 1);
       let opt = params2.join("");
       let options = opt.split(",").map((o) => o.trim().toLowerCase());
       overWrite = options.includes("force");
-      skipOverWrite = options.includes("skip");
+      noOverWrite = options.includes("nooverwrite");
       doNotSave = !options.includes("save");
     }
-    let count = await loadPackageFromURL({ url, name, overWrite, skipOverWrite, doNotSave });
-    notify(`${count} tiddlers imported from package ${name}`, "D");
+    let count = await tw.run.loadPackageFromURL({ url, name, overWrite, noOverWrite, doNotSave });
+    tw.ui.notify(`${count} tiddlers imported from package ${name}`, "D");
   }
   save();
 }
@@ -9882,7 +10039,7 @@ function runTiddlers() {
       executeText(t.text, t.title);
     } catch (e) {
       fails++;
-      notify(e.message, "E", e.stack);
+      tw.ui.notify(e.message, "E", e.stack);
     }
     if (fails > 10) throw new Error("Too many failures, launch safe mode!");
   });
@@ -9890,10 +10047,10 @@ function runTiddlers() {
 function executeText(text2, title2, context) {
   let result2;
   try {
-    result2 = (1, eval)(`with(tw){${text2}}`);
+    result2 = (1, eval)(text2);
   } catch (e) {
     let msg2 = `executeText "${title2}" ${context ? " (" + context + ")" : ""}`;
-    notify(msg2, "E");
+    tw.ui.notify(msg2, "E");
     de(`${msg2}: ${e.message}`, e.stack);
     throw e;
   }
@@ -9938,6 +10095,7 @@ function createTiddlerElement(tiddler) {
   let html = new Templater(template).render({
     id: hash(title2),
     fullText: makeTiddlerText(tiddler),
+    editDisabled: tiddler.readOnly ? "disabled" : "",
     tagLinks: makeTiddlerTagLinks(tiddler.tags),
     modified,
     ...tiddler
@@ -9954,11 +10112,11 @@ function makeTiddlerText({ title: title2, text: text2, type }) {
   } else if (markdownTypes.includes(type)) {
     return markdown1(text2);
   } else if (codeTypes.includes(type)) {
-    return `<pre><code>${escapeHtml$1(text2)}</code></pre>`;
+    return `<pre><code>${escapeHtml(text2)}</code></pre>`;
   } else if (type === "html") {
     return text2;
   } else {
-    return `<pre>${escapeHtml$1(text2)}</pre>`;
+    return `<pre>${escapeHtml(text2)}</pre>`;
   }
 }
 function makeTiddlerTagLinks(tags) {
@@ -10011,7 +10169,7 @@ function renderTwiki({ text, title }) {
     getTiddlerLinks(result).forEach((m2) => {
       let linkName = m2[1];
       let linkURL = m2[1];
-      let wikiLink = `[${linkName}](#${linkURL})`;
+      let wikiLink = `[${linkName}](#${linkURL.replace(/ /g, "%20")})`;
       result = result.replace(m2[0], wikiLink);
     });
     getInclusions(result).forEach((m2) => {
@@ -10030,7 +10188,7 @@ function getMacros(text2) {
   return text2.matchAll(macros);
 }
 function getTiddlerLinks(text2) {
-  return text2.matchAll(/\[\[([\-\$a-z_0-9\.]+)]]/gi);
+  return text2.matchAll(reLinks);
 }
 function getInclusions(text2) {
   return text2.matchAll(reInclusion);
@@ -10050,7 +10208,7 @@ function strIsNumber(str) {
   return !isNaN(str) && !isNaN(parseFloat(str));
 }
 function regEscape(r) {
-  return r.replace(/\\/g, "\\\\").replace(/\./g, "\\.").replace(/\(/g, "\\(").replace(/\$/g, "\\$").replace(/\*/g, "\\*").replace(/\)/g, "\\)");
+  return r.replace(/\\/g, "\\\\").replace(/\./g, "\\.").replace(/\^/g, "\\^").replace(/\(/g, "\\(").replace(/\$/g, "\\$").replace(/\*/g, "\\*").replace(/\)/g, "\\)");
 }
 function previewTiddler(t) {
   if (typeof t === "string") t = getTiddler(t);
@@ -10104,12 +10262,12 @@ function formSaveTiddler() {
   let oldTitle = tw.dom.frm.elements["old-title"].value;
   if (!t.created) t.created = t.updated;
   let issues = tiddlerValidation(t);
-  if (issues.length) return notify("Tiddler is invalid:" + issues.join("<br>"), "W");
+  if (issues.length) return tw.ui.notify("Tiddler is invalid:" + issues.join("<br>"), "W");
   if (!t.title) {
-    notify("Empty tiddler not saved!", "W");
+    tw.ui.notify("Empty tiddler not saved!", "W");
     return $("new-dialog").close();
   }
-  let existingTiddler = getTiddler(t.title, true);
+  let existingTiddler = getTiddler(oldTitle, true);
   try {
     if (oldTitle && existingTiddler) {
       updateTiddler(oldTitle, t, true);
@@ -10156,7 +10314,9 @@ function updateTiddler(currentTitle, newTiddler, userEdit) {
   if (newTiddler.title !== currentTitle && getTiddler(newTiddler.title)) throw new Error(`Cannot overwrite existing tiddler '${newTiddler.title}!`);
   if (userEdit && existingTiddler.readOnly) throw new Error(`Readonly tiddler '${currentTitle}' cannot be updated!`);
   if (userEdit) delete existingTiddler.doNotSave;
+  if (userEdit && newTiddler.type === "json") jsonValidator(newTiddler.text);
   delete newTiddler.isRawShadow;
+  if (userEdit) debugger;
   upsertInArray(tw.tiddlers.all, titleIs(currentTitle), newTiddler);
   if (userEdit) replaceInArray(tw.tiddlers.visible, (title2) => title2 === currentTitle, newTiddler.title);
   tw.events.send("tiddler.modified", newTiddler.title);
@@ -10173,6 +10333,14 @@ function rerenderTiddler(title2) {
   let newElement = createTiddlerElement(tiddler);
   el.outerHTML = newElement.outerHTML;
   newElement.querySelectorAll("pre code").forEach((el2) => highlightElement(el2, { language: languageFromTiddlerType(tiddler.type) }));
+}
+function jsonValidator(text2) {
+  try {
+    dp(JSON.parse(text2));
+    return true;
+  } catch (e) {
+    throw e;
+  }
 }
 function renderNewTiddler(title2) {
   showTiddler(title2);
@@ -10206,7 +10374,7 @@ function tiddlerUpdated(title2) {
   if (isThemeTiddler(t.title))
     return updateTheme();
   if (["$SiteTitle", "$SiteSubTitle", "$TitleBar"].includes(title2))
-    (_a2 = $$(".tiddler-include")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
+    (_a2 = $$("*[tiddler-include]")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
 }
 function updateTheme() {
   let css2 = getTiddlerList("$Theme").map(getTiddlerTextRaw).join("\n");
@@ -10267,6 +10435,7 @@ function deleteTiddler(title2, automation) {
   let tiddler = (_a2 = removeFromArray(tw.tiddlers.all, titleIs(title2))) == null ? void 0 : _a2[0];
   if (shadowTiddler) addTiddler({ ...shadowTiddler });
   hideTiddler(title2);
+  tiddler.updated = /* @__PURE__ */ new Date();
   tw.tiddlers.trashed.push(tiddler);
   if (automation) {
     tw.events.send("tiddler.removed", title2);
@@ -10291,7 +10460,7 @@ function saveAll() {
   tw.store.set("tiddlers", tw.tiddlers.all.filter(tiddlersToSave));
   tw.store.set("tiddlers-trashed", tw.tiddlers.trashed);
   saveVisible();
-  notify("Saved!");
+  tw.ui.notify("Saved!");
   setDirty(false);
 }
 function saveVisible() {
@@ -10358,41 +10527,6 @@ function getKeyValuesObject(title2) {
 function getJSONObject(title2) {
   return JSON.parse(getTiddlerTextRaw(title2));
 }
-function notify(msg2, type = "I", stack) {
-  if (!logFilter.test(msg2)) return;
-  const n = tw.dom.notify;
-  let preserveMsg = "";
-  if (tw.tmp.notifyId) {
-    clearTimeout(tw.tmp.notifyId);
-    preserveMsg = n.innerHTML ? n.innerHTML + "\n" : "";
-  }
-  const types = { S: "📗 Success", E: '<b title="Error">📕</b>', W: '<b title="Warning">📙</b>', D: '<b title="Debug">📓</b>', I: '<b title="Info">📘</b>' };
-  if (type === "E")
-    de(preserveMsg + types[type] + ": " + msg2, stack || "");
-  n.innerHTML = (preserveMsg + types[type] + " " + escapeHtml$1(msg2)).replace(/\n/g, "<br>");
-  notifyShow();
-}
-function notifyShow() {
-  tw.dom.notify.className = tw.dom.notify.className.replace("notifyHidden", "notifyShow");
-  tw.tmp.notifyId = setTimeout(notifyHide, 4e3);
-}
-function notifyHide() {
-  tw.dom.notify.className = tw.dom.notify.className.replace("notifyShow", "notifyHidden");
-  delete tw.tmp.notifyId;
-}
-function notifyMouseOver() {
-  if (tw.tmp.notifyMouseOverPause) return;
-  clearTimeout(tw.tmp.notifyId);
-}
-function notifyMouseOut() {
-  if (tw.tmp.notifyMouseOverPause) return;
-  notifyShow();
-}
-function notifyClick() {
-  notifyHide();
-  tw.tmp.notifyMouseOverPause = true;
-  window.setTimeout(() => delete tw.tmp.notifyMouseOverPause, 500);
-}
 function tagMatch(tag) {
   if (!tag || tag === "*") return () => true;
   let re = new RegExp(tag.match(/^!/) ? tag.substr(1) : tag);
@@ -10413,11 +10547,6 @@ function loadStore(store) {
   if (!tw.tiddlers.all.length) {
     tw.tiddlers.all = [];
     store.set("tiddlers", []);
-    if (defaultTiddlers == null ? void 0 : defaultTiddlers.length) {
-      tw.tiddlers.all = defaultTiddlers;
-      console.log("loading default tiddlers");
-      store.set("tiddlers-visible", [defaultTiddlers[0].title]);
-    } else tw.tiddlers.all = [];
   }
   tw.tiddlers.visible = ((_a2 = store.get("tiddlers-visible")) == null ? void 0 : _a2.length) ? store.get("tiddlers-visible") : ["Welcome"];
   shadowTiddlers.forEach((t) => {
@@ -10476,11 +10605,8 @@ function uiWireEvents() {
   (_b = $("new-save")) == null ? void 0 : _b.addEventListener("click", formSaveTiddler);
   (_c = $("new-cancel")) == null ? void 0 : _c.addEventListener("click", formCancel);
   (_d = $("search")) == null ? void 0 : _d.addEventListener("keyup", searchNow);
-  $("notify").addEventListener("mouseover", notifyMouseOver);
-  $("notify").addEventListener("mouseout", notifyMouseOut);
-  $("notify").addEventListener("click", notifyClick);
   window.addEventListener("error", (event) => {
-    notify("Unhandled: " + event.message, "E");
+    tw.ui.notify("Unhandled: " + event.message, "E");
     de("Unhandled:", event.message, event);
   });
 }

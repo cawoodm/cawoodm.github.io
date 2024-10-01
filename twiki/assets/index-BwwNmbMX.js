@@ -9355,13 +9355,13 @@ function button(title2, message, payload, id = "") {
 const shadowTiddlers = [
   {
     "title": "$AutoImport",
-    "text": "* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/core.json save,force\n* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/icons.json save\n* https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/website.json nooverwrite",
+    "text": "* https://cawoodm.github.io/twiki/core.json save,force\n* https://cawoodm.github.io/twiki/icons.json save\n* https://cawoodm.github.io/twiki/website.json nooverwrite",
     "tags": [
       "Shadow"
     ],
     "type": "list",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-10-01T11:08:47.4102054Z",
+    "updated": "2024-10-01T11:08:47.4102054Z"
   },
   {
     "title": "$GeneralSettings",

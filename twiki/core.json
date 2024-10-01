@@ -1,0 +1,108 @@
+{
+  "tiddlers": [
+    {
+      "title": "$BackupDataFunctions",
+      "text": "/**\n * ## Description\n * Backup your data to [JSONBIN.io](https://jsonbin.io)\n */\n/**\n * ## Data\n * ```json\n * {\n *   \"version\": 1.1.0\n * }\n * ```\n */\n// ## Code\n// ```javascript\ntw.macros.backup = {\n  restoreButton() {\n    return '<button onclick=\"tw.macros.backup.restore()\">Restore</button>';\n  },\n  backupButton() {\n    return '<button onclick=\"tw.macros.backup.backup()\">Backup</button>';\n  },\n  async restore() {\n    let settings = tw.run.getJSONObject('$GeneralSettings');\n    if (!settings || !settings.backup?.JSONBin?.accessKey || !settings.backup?.JSONBin?.binId) return tw.ui.notify('No JSONBin accessKey/binId found in $GeneralSettings!', 'W');\n    let res = await fetch('https://api.jsonbin.io/v3/b/' + settings.backup.JSONBin.binId, {\n      headers: {\n        'X-Access-Key': settings.backup.JSONBin.accessKey,\n      },\n    });\n    if (!res.ok) return tw.ui.notify(`Restore failed '${res.status}' (see log)`, 'E');\n    let result = await res.json();\n    Object.assign(tw.tiddlers, result.record);\n    tw.events.send('reboot.soft');\n    tw.ui.notify('Restore complete!', 'S'); // Should we save/remind to save?\n  },\n  async backup() {\n    let settings = tw.run.getJSONObject('$GeneralSettings');\n    if (!settings || !settings.backup?.JSONBin?.accessKey || !settings.backup?.JSONBin?.binId) return tw.ui.notify('No JSONBin accessKey/binId found in $GeneralSettings!', 'W');\n    let body = JSON.stringify({\n      all: tw.tiddlers.all,\n      visible: tw.tiddlers.visible,\n      // trashed: tw.tiddlers.trashed,\n    });\n    let res = await fetch('https://api.jsonbin.io/v3/b/' + settings.backup.JSONBin.binId, {\n      method: 'PUT',\n      headers: {\n        'Content-Type': 'application/json',\n        'X-Access-Key': settings.backup.JSONBin.accessKey,\n      // 'X-Bin-Versioning': true, // Not available in Free JSONBin :-(\n      },\n      body,\n    });\n    // doesn't get caught by notify!! throw new Error('Backup failed: ' + res.statusText);\n    if (!res.ok) return tw.ui.notify(`Backup failed '${res.status}' (see log)`, 'E');\n    // let result = await res.json();\n    tw.ui.notify(`Backup complete! (${body.length / 1000} KB)`, 'S');\n  },\n};\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-09-30T14:35:14.0323663Z",
+      "updated": "2024-09-30T14:35:14.0323663Z"
+    },
+    {
+      "title": "$ButtonsFunctions",
+      "text": "/**\n  * Buttons to Show/Hide Tiddlers:\n  * Examples:\n  *  - Show all tiddlers\n  *    <<button Click Me!;ui.openAll>>\n  */\ntw.macros.button = (title, msg, payload = '', id = '') => {\n  return tw.ui.button(title, msg, payload, id);\n};\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-09-24T07:24:50.0164458Z",
+      "updated": "2024-09-24T07:24:50.0164458Z"
+    },
+    {
+      "title": "$GeneralCoreMacros",
+      "text": "// Send any message\ntw.macros.std.SendMessage = (msg, payload = '') => {\n  return tw.ui.button(`Send: ${msg}:${payload}`, msg, payload);\n};\n// Reload UI\ntw.macros.std.Reload = () => {\n  return tw.ui.button('🔄️', 'ui.reload', null);\n};\ntw.macros.std.Save = () => {\n  return tw.ui.button('{{$IconSave}}', 'save.all', null);\n};\ntw.macros.std.New = () => {\n  return tw.ui.button('{{$IconNew}}', 'form.new', null);\n};\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-09-26T20:36:45.9545113Z",
+      "updated": "2024-09-26T20:36:45.9545113Z"
+    },
+    {
+      "title": "$ImportPackageMacros",
+      "text": "tw.macros.packages = {\n  // <<packages.import website;https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/website.json>>\n  import(name, url, filter, force = true) {\n    if (!name) return 'ERROR: No url supplied to packages.import macro!';\n    if (!url) return 'ERROR: No url supplied to packages.import macro!';\n    return tw.ui.button(`Import: ${name} ${filter ? ' (' + filter + ')' : ''}`, 'package.reload.url', {url, name, filter, force});\n  },\n  importBin(name, url, filter, force = true) {\n    if (!name) return 'ERROR: No url supplied to packages.importBin macro!';\n    if (!url) return 'ERROR: No url supplied to packages.importBin macro!';\n    return tw.ui.button(`Import: ${name} ${filter ? ' (' + filter + ')' : ''}`, 'package.reload.bin', {url, name, filter, force});\n  },\n};\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-09-24T07:24:50.0164458Z",
+      "updated": "2024-09-24T07:24:50.0164458Z"
+    },
+    {
+      "title": "$IncludeFunctions",
+      "text": "/* eslint-disable no-eval */\n// Include the contents of another tiddler\n// <<include $TWIKIVersion>>\ntw.macros.include = (title) => {\n  // dp('include', title);\n  return tw.run.getTiddlerTextRaw(title);\n};\ntw.macros.eval = (code) => {\n  return eval(code);\n};\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-09-24T07:24:50.0264458Z",
+      "updated": "2024-09-24T07:24:50.0264458Z"
+    },
+    {
+      "title": "$ListTiddlersCoreFunctions",
+      "text": "// This macro lists the different types used as a bulleted list:\ntw.macros.std.AllTypesMacro = () => {\n  return tw.lib.markdown('* ' + [...new Set(tw.tiddlers.all.map(t => t.type))].join('\\n* '));\n};\n\n// List all tiddlers as a bulleted list\ntw.macros.std.AllTiddlers = (tag = '', title = '') => {\n  if (!title) title = '!^\\\\$';\n  if (!tag) tag = '!Shadow';\n  return tw.run.showTiddlerList(\n    tw.tiddlers.all\n      .filter(tw.util.titleMatch(title))\n      .filter(tw.util.tagMatch(tag)),\n  );\n};\n// List all tiddlers on a single line with comma separation\ntw.macros.std.AllTiddlersSimple = (sep) => {\n  return tw.lib.markdown(tw.tiddlers.all.map(t => t.title).join(sep || ', '));\n};\n// List all tags\ntw.macros.std.AllTagsSimple = (sep) => {\n  if (!sep) sep = ', ';\n  let allTags = tw.macros.std.allTags();\n  return allTags.join(sep);\n};\ntw.macros.std.allTags = () => {\n  let tags = [];\n  tw.tiddlers.all.forEach(t => {\n    t.tags.filter(t => !!t).forEach(tag => {\n      tags.push(tag);\n    });\n  });\n  return [...new Set(tags)];\n};\ntw.macros.std.AllTagsLinked = (sep) => {\n  if (!sep) sep = ', ';\n  let allTags = tw.macros.std.allTags();\n  return tw.lib.markdown(\n    allTags.map(t => (`[${t}](#msg:ui.openAll:{tag:'${t}',title:'*'})`)).join(sep),\n  );\n};\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-09-24T07:24:50.0264458Z",
+      "updated": "2024-09-24T07:24:50.0264458Z"
+    },
+    {
+      "title": "$NamespacePlugin",
+      "text": "tw.macros.std.NamespaceSelect = () => {\n  let namespace = tw.storage.get('namespace');\n  return `<select id=\"namespace-select\" onchange=\"tw.events.send('namespace.load.prompt', this.value);\">\n    <option value=\"\"> - new namespace -</option>\n    ${tw.storage.get('namespaces').map(n => `<option value=\"${n}\"${n === namespace ? ' selected' : ''}>${n}</option>`).join('\\n')}\n  </select>`;\n};\ntw.macros.std.NamespaceCreate = () => {\n  return tw.ui.button('Create Namespace', 'namespace.create.prompt');\n};\ntw.events.subscribe('namespace.load.prompt', (namespace) => {\n  if (!namespace) namespace = tw.events.send('namespace.create.prompt')[0];\n  if (!namespace) return;\n  tw.events.send('namespace.load', namespace);\n});\ntw.events.subscribe('namespace.create.prompt', () => {\n  let namespace = prompt('Enter name for new namespace:');\n  if (!namespace) return;\n  if (confirm('Would you like to clone this namespace?'))\n    tw.events.send('namespace.clone', namespace);\n  else\n    tw.events.send('namespace.create', namespace);\n  tw.dom.$('namespace-select').innerHTML = tw.macros.std.NamespaceSelect();\n  // tw.events.subscribe('tiddler.refresh', '$Namespaces'); // TODO: Dynamically get currentTiddler above?\n  return namespace;\n});\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-09-30T13:24:54.1048236Z",
+      "updated": "2024-09-30T13:24:54.1048236Z"
+    },
+    {
+      "title": "$ShowTiddlersFunctions",
+      "text": "/**\n  * Buttons to Show/Hide Tiddlers:\n  * Examples:\n  *  - Show all tiddlers tagged with Foo\n  *    <<ShowAllTiddlersButton Foo>>\n  * -  Show all tiddlers not tagged with Shadow\n  *    <<ShowAllTiddlersButton !Shadow>>\n  * - Show all tiddlers not tagged with Shadow with title containing 'oo'\n  *    <<ShowAllTiddlersButton !Shadow;oo>>\n  * -  Show all tiddlers with title beginning with A\n  *   <<ShowAllTiddlersButton *;^A>>\n  */\ntw.macros.std.ShowAllTiddlersButton = (tag = '', title = '') => {\n  return tw.ui.button('Show All', 'ui.openAll', {tag, title});\n};\n\n// Show all tiddlers with text (but really all)\ntw.macros.std.CloseAllTiddlersButton = (tag = '*', title = '*') => {\n  return tw.ui.button('Close All', 'ui.closeAll', {tag, title});\n};\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-09-24T07:24:50.0164458Z",
+      "updated": "2024-09-24T07:24:50.0164458Z"
+    },
+    {
+      "title": "$SynchDataFunctions",
+      "text": "/**\n * ## Description\n * Synch your data with [JSONBIN.io](https://jsonbin.io)\n */\n/**\n * ## Data\n * ```json\n * {\n *   \"version\": 1.0.3\n * }\n * ```\n */\n// ## Code\n// ```javascript\ntw.macros.synch = (function(){\n  return {\n    // <<synch.full>>: Push/pull to/from remote\n    full() {\n      return '<button onclick=\"tw.macros.synch.doFull()\">Synch</button>';\n    },\n    async doFull() {\n      return await synch({pull: true, push: true});\n    },\n    // <<synch.pull>>: Only import from remote\n    pull() {\n      return '<button onclick=\"tw.macros.synch.doPull()\">Pull</button>';\n    },\n    async doPull() {\n      return await synch({pull: true, push: false});\n    },\n    // <<synch.push>>: Only write to remote\n    push() {\n      return '<button onclick=\"tw.macros.synch.doPush()\">Push</button>';\n    },\n    async doPush() {\n      return await synch({pull: false, push: true});\n    },\n    // TODO: Delete all remote and push (backup)\n    // TODO: Delete all local and pull (restore)\n  };\n\n  // eslint-disable-next-line complexity\n  async function synch({push = true, pull = true}) {\n\n    if (!push && !pull) throw new Error('SynchDataFunctions: Please supply push or pull parameters!');\n\n    let settings = tw.run.getJSONObject('$GeneralSettings');\n    if (!settings || !settings.synch.JSONBin?.accessKey || !settings.synch?.JSONBin?.binId) return tw.ui.notify('No JSONBin accessKey/binId found in $GeneralSettings!', 'W');\n    let headers = {'X-Access-Key': settings.synch.JSONBin.accessKey};\n\n    // Fetch remote\n    let res = await fetch('https://api.jsonbin.io/v3/b/' + settings.synch.JSONBin.binId, {headers});\n    if (!res.ok) return tw.ui.notify(`Restore failed '${res.status}' (see log)`, 'E');\n    let result = await res.json();\n    let remoteTiddlers = result.record.tiddlers;\n    let remoteTrashedTiddlers = result.record.trashed || [];\n\n    let log = [];\n    let remote = {create: [], update: [], delete: []};\n    let local = {create: [], update: [], delete: []};\n\n    let localTiddlers = tw.tiddlers.all\n      .filter(t => !t.doNotSave) // Don't synch unsaveable content\n      .filter(t => !t.isRawShadow); // Don't synch raw shadows\n\n    // eslint-disable-next-line complexity\n    remoteTiddlers.forEach(remoteTiddler => {\n      remoteTiddler.created = new Date(remoteTiddler.created);\n      remoteTiddler.updated = new Date(remoteTiddler.updated);\n      let localTiddler = localTiddlers.find(t => t.title === remoteTiddler.title);\n      // TODO: Should we care if a trashed local tiddler has doNotSave?\n      // if (remoteTiddler.title.match(/SynchLog/)) debugger;\n      let deletedLocalTiddler = tw.tiddlers.trashed.find(t => t.title === remoteTiddler.title);\n      let deletedLocally = !localTiddler && deletedLocalTiddler?.updated > remoteTiddler.updated;\n      let createdRemotely = !localTiddler && !deletedLocally;\n      let updatedLocally = localTiddler?.updated > remoteTiddler.updated;\n      let updatedRemotely = remoteTiddler.updated > localTiddler?.updated;\n      if (deletedLocally) {\n        // Delete Remote\n        if (push) remote.delete.push(deletedLocalTiddler.title);\n      } else if (createdRemotely) {\n        // Restore Local: Updated remotely after local delete\n        if (pull) {\n          tw.run.addTiddler(remoteTiddler);\n          local.create.push(remoteTiddler.title);\n          log.push(`Created local tiddler [[${remoteTiddler.title}]]`);\n        }\n      } else if (updatedLocally) {\n        // Local update is newer\n        if (push) remote.update.push(localTiddler.title); // 👈\n      } else if (updatedRemotely) {\n        // Remote update is newer\n        if (push) {\n          tw.run.updateTiddlerHard(remoteTiddler.title, remoteTiddler);\n          local.update.push(remoteTiddler.title);\n          log.push(`Updated local tiddler [[${localTiddler.title}]]`); // 👈\n        }\n      }\n    });\n\n    localTiddlers.forEach(localTiddler => {\n      let remoteTiddler = remoteTiddlers.find(t => t.title === localTiddler.title);\n      if (remoteTiddler) {\n        remoteTiddler.created = new Date(remoteTiddler.created);\n        remoteTiddler.updated = new Date(remoteTiddler.updated);\n      }\n      let deletedRemoteTiddler = remoteTrashedTiddlers.find(t => t.title === localTiddler.title);\n      let deletedRemotely = !remoteTiddler && deletedRemoteTiddler?.updated > localTiddler.updated;\n      let createdLocally = !remoteTiddler && !deletedRemotely;\n      if (deletedRemotely) {\n        // Delete Locally\n        if (pull) {\n          tw.run.deleteTiddler(localTiddler.title, true);\n          local.delete.push(remoteTiddler.title);\n          log.push(`Deleted local tiddler [[${localTiddler.title}]]`);\n        }\n      } else if (createdLocally) {\n        if (push) remote.create.push(localTiddler.title);\n      }\n      // Updated locally/remotely handled above ☝️\n    });\n\n    if (remote.create.length + remote.update.length + remote.delete.length +\n      local.create.length + local.update.length + local.delete.length === 0\n    ) return tw.ui.notify('No changes to synch', 'S');\n\n    if (push) {\n      // Perform remote updates\n      remote.create.forEach(title => {\n        log.push(`Created remote tiddler [[${title}]]`);\n      });\n      remote.update.forEach(title => {\n        log.push(`Updated remote tiddler [[${title}]]`);\n      });\n      remote.delete.forEach(title => {\n        log.push(`Deleted remote tiddler [[${title}]]`);\n      });\n    }\n\n    let logTiddler = {\n      title: `$SynchLog ${new Date().toISOString()}`,\n      text: logSummary(local, remote) + '\\n\\n## Log\\n' + log.join('  \\n') + '',\n      tags: ['$SynchLog'],\n    };\n\n    if (push) {\n      let body = JSON.stringify({\n        tiddlers: localTiddlers,\n        visible: tw.tiddlers.visible,\n        trashed: tw.tiddlers.trashed,\n      });\n      res = await fetch('https://api.jsonbin.io/v3/b/' + settings.synch.JSONBin.binId, {\n        method: 'PUT',\n        headers: {\n          'Content-Type': 'application/json',\n          'X-Access-Key': settings.synch.JSONBin.accessKey,\n        },\n        body,\n      });\n      // doesn't get caught by notify!! throw new Error('Backup failed: ' + res.statusText);\n      if (!res.ok) return tw.ui.notify(`Backup failed '${res.status}' (see log)`, 'E');\n    }\n\n    tw.events.send('reboot.softer');\n\n    if (push && pull) {\n      tw.ui.notify('Synch (full) complete!', 'S');\n    } else if (pull) {\n      tw.ui.notify('Synch (pull) complete!', 'S');\n    } else if (push) {\n      tw.ui.notify('Synch (push) complete!', 'S');\n    }\n\n    tw.ui.formEditShow(logTiddler);\n\n    function logSummary(local, remote) {\n      return `\n## Local\n* Created (${local.create.length}) ${local.create.length ? ':\\n  * [[' + local.create.join(']]\\n  * [[') + ']]\\n' : ''}\n* Updated (${local.update.length}) ${local.update.length ? ':\\n  * [[' + local.update.join(']]\\n  * [[') + ']]\\n' : ''}\n* Deleted (${local.delete.length}) ${local.delete.length ? ':\\n  * [[' + local.delete.join(']]\\n  * [[') + ']]\\n' : ''}\n## Remote\n* Created (${remote.create.length}) ${remote.create.length ? ':\\n  * [[' + remote.create.join(']]\\n  * [[') + ']]\\n' : ''}\n* Updated (${remote.update.length}) ${remote.update.length ? ':\\n  * [[' + remote.update.join(']]\\n  * [[') + ']]\\n' : ''}\n* Deleted (${remote.delete.length}) ${remote.delete.length ? ':\\n  * [[' + remote.delete.join(']]\\n  * [[') + ']]\\n' : ''}\n`.trim();\n    }\n  }\n\n})();\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-10-01T08:46:06.6158118Z",
+      "updated": "2024-10-01T08:46:06.6158118Z"
+    },
+    {
+      "title": "$ThemeFunctions",
+      "text": "tw.macros.themes = {\n  // <<themes.apply khaki>>\n  apply(filter = 'default', force = true) {\n    if (!filter) filter = 'default';\n    const url = 'https://raw.githubusercontent.com/cawoodm/twiki/main/src/tiddlers/themes.json';\n    return tw.ui.button(`Theme: ${filter}`, 'package.load.url', {url, name: 'themes', filter, force});\n  },\n};\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-09-24T07:24:50.0264458Z",
+      "updated": "2024-09-24T07:24:50.0264458Z"
+    },
+    {
+      "title": "$TiddlerSearchResult",
+      "text": "* {{!!title}} ",
+      "tags": [],
+      "type": "x-twiki",
+      "created": "2024-09-26T05:58:54.9414576Z",
+      "updated": "2024-09-26T05:58:54.9414576Z"
+    },
+    {
+      "title": "$TrashedTiddlersFunctions",
+      "text": "tw.macros.std.TrashCanIcon = () => {\n  let count = tw.tiddlers.trashed.length;\n  return `<a id=\"trashCanIcon\" href=\"#$TrashManager\">🗑️ (${count})</a>`;\n};\ntw.macros.std.TrashEmptyButton = () => {\n  return tw.ui.button('Empty Trash', 'tiddlers.trashed.empty', null, 'trashButton');\n};\ntw.macros.std.TrashCanStatus = () => {\n  return `<span id=\"trashStatus\">${tw.tiddlers.trashed.length} tiddlers in the [trash can](#$TrashedTiddlers)!`;\n};\ntw.run.emptyTrash = () => {\n  if (!confirm('Are you sure you want to permanently deleted your trashed tiddlers?')) return;\n  tw.tiddlers.trashed = [];\n  tw.run.trashCanRefresh();\n  tw.run.save();\n};\ntw.macros.std.TrashCanContents = () => {\n  const list = tw.tiddlers.trashed.map(t => (`<li><a href=\"#msg:tiddlers.trashed.preview:${t.title}\">${t.title}</a> <a title=\"Restore Tiddler\" href=\"#msg:tiddler.restore:${t.title}\">🚮</a></li>`)).join('\\n');\n  return `<ul id=\"trashContents\">${list}</ul>`;\n};\ntw.run.trashPreview = (title) => {\n  let tiddler = tw.tiddlers.trashed.find(t => t.title === title);\n  tw.run.previewTiddler(tiddler, false);\n  tw.dom.preview.querySelector('button.delete').addEventListener('click', tw.run.removeTiddlerFromTrash);\n};\ntw.run.removeTiddlerFromTrash = (title) => {\n  if (!confirm('Are you sure you want to permanently delete your trashed tiddler?')) return;\n  let tiddlerIndex = tw.tiddlers.trashed.findIndex(t => t.title === title);\n  tw.tiddlers.trashed.splice(tiddlerIndex, 1);\n  tw.run.trashCanRefresh();\n  tw.dom.preview.close();\n  tw.run.save();\n};\ntw.run.trashCanRefresh = () => {\n  if (tw.dom.$('trashContents')) tw.dom.$('trashContents').outerHTML = tw.lib.markdown(tw.macros.std.TrashCanContents());\n  if (tw.dom.$('trashCanIcon')) tw.dom.$('trashCanIcon').innerHTML = tw.macros.std.TrashCanIcon();\n  if (tw.dom.$('trashStatus')) tw.dom.$('trashStatus').outerHTML = tw.lib.markdown(tw.macros.std.TrashCanStatus());\n\n  tw.run.rerenderTiddler('$TrashedTiddlers');\n};\ntw.run.restoreTiddlerFromTrash = (title) => {\n  if (!confirm('Are you sure you want to restore your trashed tiddler? This may overwrite an existing tiddler!')) return;\n  let tiddler = tw.tiddlers.trashed.find(t => t.title === title);\n  tw.run.addTiddler(tiddler);\n  tw.run.reload();\n  // So styles, search list etc update\n  let tiddlerIndex = tw.tiddlers.trashed.findIndex(t => t.title === title);\n  tw.tiddlers.trashed.splice(tiddlerIndex, 1);\n  tw.run.trashCanRefresh();\n  tw.run.save();\n};\ntw.events.subscribe('tiddlers.trashed.empty', tw.run.emptyTrash);\ntw.events.subscribe('tiddler.deleted', tw.run.trashCanRefresh);\ntw.events.subscribe('tiddler.restore', tw.run.restoreTiddlerFromTrash);\ntw.events.subscribe('tiddlers.trashed.preview', tw.run.trashPreview);\n\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-09-24T07:24:50.0264458Z",
+      "updated": "2024-09-24T07:24:50.0264458Z"
+    },
+    {
+      "title": "$TrashManager",
+      "text": "<<TrashCanStatus>>\n<<TrashEmptyButton>>\n<<TrashCanContents>>",
+      "tags": [],
+      "type": "x-twiki",
+      "created": "2024-09-24T07:24:50.0264458Z",
+      "updated": "2024-09-24T07:24:50.0264458Z"
+    }
+  ]
+}

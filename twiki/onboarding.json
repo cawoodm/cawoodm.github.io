@@ -1,0 +1,28 @@
+{
+  "tiddlers": [
+    {
+      "title": "$OnboardingMacros",
+      "text": "tw.macros.welcome = {\n  Start() {\n    tw.dom.$('header').style.display = 'none';\n    tw.dom.$('sidebar').style.display = 'none';\n    tw.run.showTiddler('Welcome');\n  },\n  Step1() {\n    tw.run.showTiddler('Congratulations');\n    tw.run.closeTiddler('Welcome');\n  },\n  Step2() {\n    tw.dom.$('header').style.display = '';\n    tw.dom.$('sidebar').style.display = '';\n    tw.run.closeTiddler('Congratulations');\n    tw.run.showTiddler('Help');\n  },\n  Step2Button() {\n    return tw.ui.button('Click Me!', 'welcome.step2', 1);\n  },\n};\n\nif (!tw.store.get('welcomeShown')) {\n  // Only run once (localStorage)\n  tw.events.send('ui.closeAll');\n  tw.macros.welcome.Start();\n  tw.store.set('welcomeShown', 1);\n}\ntw.events.subscribe('welcome.step2', tw.macros.welcome.Step2);\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-09-30T13:24:54.1148235Z",
+      "updated": "2024-09-30T13:24:54.1148235Z"
+    },
+    {
+      "title": "Congratulations",
+      "text": "By clicking the \"Begin\" button you have created your first Tiddler!\n\nA Tiddler is just a block of text, like the one you are reading now.\n\nEach tiddler can however do more than just store text, it can run code!\n\nClick the following button to see how code can change your twiki:\n\n<<welcome.Step2Button>>\n",
+      "tags": [],
+      "type": "x-twiki",
+      "created": "2024-09-30T13:24:54.1148235Z",
+      "updated": "2024-09-30T13:24:54.1148235Z"
+    },
+    {
+      "title": "Onboarding",
+      "text": "Welcome to Twiki.\n\n<button onclick=\"tw.macros.welcome.Step1()\">Begin</button>",
+      "tags": [],
+      "type": "x-twiki",
+      "created": "2024-09-30T13:24:54.1148235Z",
+      "updated": "2024-09-30T13:24:54.1148235Z"
+    }
+  ]
+}

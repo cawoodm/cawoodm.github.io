@@ -9088,6 +9088,10 @@ function Notifications(tw2) {
     if (type === "D" && !tw2.logging.debugMode) return;
     if (!tw2.logging.logFilter.test(msg2)) return;
     const n = tw2.dom.notify;
+    if (window.getComputedStyle(tw2.dom.$("new-dialog"), null).getPropertyValue("display") === "block") {
+      delete tw2.tmp.notifyId;
+      return alert(msg2.replaceAll("<br>", "\n"));
+    }
     let preserveMsg = "";
     if (tw2.tmp.notifyId) {
       clearTimeout(tw2.tmp.notifyId);
@@ -9848,13 +9852,13 @@ span.error {
   },
   {
     "title": "$TWIKIVersion",
-    "text": "0.0.8",
+    "text": "0.0.9 RC1",
     "tags": [
       "Shadow"
     ],
     "type": "text",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z",
+    "created": "2024-10-01T08:47:29.6657788Z",
+    "updated": "2024-10-01T08:47:29.6657788Z",
     "readOnly": true
   },
   {
@@ -9868,7 +9872,7 @@ span.error {
     "updated": "2024-10-01T06:14:28.5687735Z"
   }
 ];
-const reTiddlerTitle = /[a-z0-9_\-\.:\s\$]+/gi;
+const reTiddlerTitle = /[a-z0-9_\-\.:\s\$\ud83c\ud000-\udfff\ud83d\ud000-\udfff\ud83e\ud000-\udfff]+/gi;
 const reTiddlerTitleComplete = RegExp.compose(/^reTiddlerTitle$/gi, { reTiddlerTitle });
 const reInclusion = RegExp.compose(/\{\{(reTiddlerTitle)\|?([^\}]+)?}}/gi, { reTiddlerTitle });
 const reLinks = RegExp.compose(/\[\[(reTiddlerTitle)]]/gi, { reTiddlerTitle });
@@ -9911,6 +9915,7 @@ const tw = {
     saveAll,
     saveVisible,
     updateTiddler,
+    updateTiddlerHard,
     updateTiddlerText,
     addTiddler,
     deleteTiddler,
@@ -9930,7 +9935,6 @@ const tw = {
     closeTiddler,
     hideTiddler,
     renderAllTiddlers,
-    rebootSoft,
     reload
   }
 };
@@ -9951,6 +9955,7 @@ tw.events.subscribe("ui.closeAll", tw.run.closeAllTiddlers);
 tw.events.subscribe("save", save);
 tw.events.subscribe("save.all", saveAll);
 tw.events.subscribe("form.new", formNewTiddler);
+tw.events.subscribe("reboot.softer", rebootSofter);
 tw.events.subscribe("reboot.soft", rebootSoft);
 tw.events.subscribe("reboot.hard", rebootHard);
 tw.events.subscribe("search", searchQuery);
@@ -9975,6 +9980,9 @@ tw.stylesheets = {
   custom: new CSSStyleSheet()
 };
 document.adoptedStyleSheets.push(tw.stylesheets.custom);
+function rebootSofter() {
+  reload();
+}
 async function rebootSoft() {
   await loadAutoImport();
   reload();
@@ -10266,7 +10274,7 @@ function formSaveTiddler() {
   let oldTitle = tw.dom.frm.elements["old-title"].value;
   if (!t.created) t.created = t.updated;
   let issues = tiddlerValidation(t);
-  if (issues.length) return tw.ui.notify("Tiddler is invalid:" + issues.join("<br>"), "W");
+  if (issues.length) return tw.ui.notify("Tiddler is invalid: " + issues.join("<br>"), "W");
   if (!t.title) {
     tw.ui.notify("Empty tiddler not saved!", "W");
     return $("new-dialog").close();
@@ -10320,9 +10328,12 @@ function updateTiddler(currentTitle, newTiddler, userEdit) {
   if (userEdit) delete existingTiddler.doNotSave;
   if (userEdit && newTiddler.type === "json") jsonValidator(newTiddler.text);
   delete newTiddler.isRawShadow;
-  upsertInArray(tw.tiddlers.all, titleIs(currentTitle), newTiddler);
+  updateTiddlerHard(currentTitle, newTiddler);
   if (userEdit) replaceInArray(tw.tiddlers.visible, (title2) => title2 === currentTitle, newTiddler.title);
   tw.events.send("tiddler.modified", newTiddler.title);
+}
+function updateTiddlerHard(currentTitle, newTiddler) {
+  upsertInArray(tw.tiddlers.all, titleIs(currentTitle), newTiddler);
 }
 function updateTiddlerText(title2, text2) {
   let t = getTiddler(title2);
@@ -10432,9 +10443,10 @@ function deleteTiddler(title2, automation) {
   var _a2;
   let t = getTiddler(title2);
   if (!automation && !confirm("Sure you wanna delete me?")) return;
-  if (t.readOnly && !automation && !confirm("This tiddler is marked as read-only. Deleting it may cause issues. Really delete?")) return;
   const shadowTiddler = tw.shadowTiddlers.find(titleIs(title2));
   if (shadowTiddler && !automation && !confirm("Deleting a shadow tiddler will simply restore the default content OK?")) return;
+  if (!t) return hideTiddler(title2);
+  if (t.readOnly && !automation && !confirm("This tiddler is marked as read-only. Deleting it may cause issues. Really delete?")) return;
   let tiddler = (_a2 = removeFromArray(tw.tiddlers.all, titleIs(title2))) == null ? void 0 : _a2[0];
   if (shadowTiddler) addTiddler({ ...shadowTiddler });
   hideTiddler(title2);

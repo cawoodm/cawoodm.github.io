@@ -9043,13 +9043,14 @@ RegExp.prototype.or = function() {
   var args = Array.prototype.slice.call(arguments);
   return RegExp.any.apply(null, [this].concat(args));
 };
-function Logging(logFilter2) {
+function Logging({ logFilter: logFilter2, debugMode: debugMode2 }) {
   window.dp = dp2;
   window.dd = dd2;
   window.dw = dw2;
   window.de = de2;
   return {
     logFilter: logFilter2,
+    debugMode: debugMode2,
     dp: dp2,
     dd: dd2,
     dw: dw2,
@@ -9060,6 +9061,7 @@ function Logging(logFilter2) {
     console.log(...arguments);
   }
   function dd2() {
+    if (!debugMode2) return;
     if (!logFilter2.test([...arguments].join(" "))) return;
     console.debug(...arguments);
   }
@@ -9083,6 +9085,7 @@ function Notifications(tw2) {
   tw2.dom.notify.addEventListener("click", notifyClick);
   return notify;
   function notify(msg2, type = "I", stack) {
+    if (type === "D" && !tw2.logging.debugMode) return;
     if (!tw2.logging.logFilter.test(msg2)) return;
     const n = tw2.dom.notify;
     let preserveMsg = "";
@@ -9353,8 +9356,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "list",
-    "created": "2024-09-30T19:10:09.6854497Z",
-    "updated": "2024-09-30T20:07:53.3508460Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$GeneralSettings",
@@ -9363,8 +9366,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "json",
-    "created": "2024-09-30T19:41:39.1145031Z",
-    "updated": "2024-09-30T19:41:42.8972028Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$IconCancel",
@@ -9373,8 +9376,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T20:32:39.5001190Z",
-    "updated": "2024-09-30T20:32:44.6014776Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$IconDelete",
@@ -9383,8 +9386,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T20:32:59.7007159Z",
-    "updated": "2024-09-30T20:33:00.0671160Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$IconDone",
@@ -9393,8 +9396,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T20:33:14.6368852Z",
-    "updated": "2024-09-30T20:33:14.9168053Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$IconEdit",
@@ -9403,8 +9406,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T20:33:22.9400487Z",
-    "updated": "2024-09-30T20:33:23.2500257Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$IconNew",
@@ -9413,8 +9416,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T20:33:36.1884581Z",
-    "updated": "2024-09-30T20:33:36.4338047Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$IconSave",
@@ -9423,8 +9426,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T20:33:51.0369571Z",
-    "updated": "2024-09-30T20:33:51.3001090Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$Namespaces",
@@ -9433,8 +9436,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T20:08:30.8540958Z",
-    "updated": "2024-09-30T20:08:32.4204332Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$Settings",
@@ -9443,8 +9446,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T19:11:19.9257345Z",
-    "updated": "2024-09-30T19:36:07.2730432Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$SiteSubTitle",
@@ -9453,8 +9456,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T19:14:50.6928053Z",
-    "updated": "2024-09-30T19:36:07.2720384Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$SiteTitle",
@@ -9463,8 +9466,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T19:15:22.0609324Z",
-    "updated": "2024-09-30T19:36:07.2703141Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$StyleSheetCore",
@@ -9473,8 +9476,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "css",
-    "created": "2024-09-15T18:05:13.7041528Z",
-    "updated": "2024-09-19T19:50:58.1719668Z"
+    "created": "2024-09-24T07:24:50.0264458Z",
+    "updated": "2024-09-24T07:24:50.0264458Z"
   },
   {
     "title": "$Theme",
@@ -9483,8 +9486,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T19:10:52.5206095Z",
-    "updated": "2024-09-30T19:10:56.6334194Z"
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z"
   },
   {
     "title": "$ThemeLayout",
@@ -9572,14 +9575,14 @@ td {
 }
 
 
-ul li:marker {
+ul li::marker {
   font-family: FontAwesome;
-  content: "🗲 ";
+  content: "🗲";
   color: var(--col0);
 }
 
 li li {
-  padding-left: 20px;
+  margin-left: 20px;
 }
 
 dialog#preview-dialog {
@@ -9800,8 +9803,8 @@ span.error {
       "Shadow"
     ],
     "type": "css",
-    "created": "2024-09-19T19:11:20.9459506Z",
-    "updated": "2024-09-29T21:17:49.8876909Z"
+    "created": "2024-10-01T06:40:05.5482689Z",
+    "updated": "2024-10-01T06:40:05.5482689Z"
   },
   {
     "title": "$ThemeProperties",
@@ -9810,8 +9813,8 @@ span.error {
       "Shadow"
     ],
     "type": "css",
-    "created": "2024-09-19T19:08:23.2859747Z",
-    "updated": "2024-09-30T19:12:50.2920990Z"
+    "created": "2024-09-24T07:24:50.0264458Z",
+    "updated": "2024-09-24T07:24:50.0264458Z"
   },
   {
     "title": "$TiddlerDisplay",
@@ -9820,8 +9823,8 @@ span.error {
       "Shadow"
     ],
     "type": "html/template",
-    "created": "2024-09-24T21:11:44.9031631Z",
-    "updated": "2024-09-30T20:27:29.2210082Z"
+    "created": "2024-10-01T06:14:28.5687735Z",
+    "updated": "2024-10-01T06:14:28.5687735Z"
   },
   {
     "title": "$TiddlerTypes",
@@ -9830,8 +9833,8 @@ span.error {
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T19:13:44.7413158Z",
-    "updated": "2024-09-30T19:13:56.9822194Z"
+    "created": "2024-10-01T06:14:28.5687735Z",
+    "updated": "2024-10-01T06:14:28.5687735Z"
   },
   {
     "title": "$TitleBar",
@@ -9840,8 +9843,8 @@ span.error {
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T19:12:28.0561020Z",
-    "updated": "2024-09-30T19:12:34.0290378Z"
+    "created": "2024-10-01T06:14:28.5687735Z",
+    "updated": "2024-10-01T06:14:28.5687735Z"
   },
   {
     "title": "$TWIKIVersion",
@@ -9850,8 +9853,8 @@ span.error {
       "Shadow"
     ],
     "type": "text",
-    "created": "2024-09-30T19:08:17.8012713Z",
-    "updated": "2024-09-30T20:46:14.4828311Z",
+    "created": "2024-10-01T06:14:28.5587735Z",
+    "updated": "2024-10-01T06:14:28.5587735Z",
     "readOnly": true
   },
   {
@@ -9861,8 +9864,8 @@ span.error {
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T19:14:16.5969955Z",
-    "updated": "2024-09-30T19:14:16.8757492Z"
+    "created": "2024-10-01T06:14:28.5687735Z",
+    "updated": "2024-10-01T06:14:28.5687735Z"
   }
 ];
 const reTiddlerTitle = /[a-z0-9_\-\.:\s\$]+/gi;
@@ -9870,6 +9873,7 @@ const reTiddlerTitleComplete = RegExp.compose(/^reTiddlerTitle$/gi, { reTiddlerT
 const reInclusion = RegExp.compose(/\{\{(reTiddlerTitle)\|?([^\}]+)?}}/gi, { reTiddlerTitle });
 const reLinks = RegExp.compose(/\[\[(reTiddlerTitle)]]/gi, { reTiddlerTitle });
 const logFilter = storage.get("logfilter") ? new RegExp(storage.get("logfilter")) : /./;
+const debugMode = storage.get("logfilter") === true;
 const tw = {
   storage,
   templates: {},
@@ -9900,7 +9904,7 @@ const tw = {
   util: { tagMatch, titleMatch, titleIs, tiddlerValidation, tiddlerExists },
   lib: { markdown: markdown1 },
   tmp: {},
-  logging: Logging(logFilter),
+  logging: Logging({ logFilter, debugMode }),
   events: Events(),
   run: {
     save,
@@ -10316,7 +10320,6 @@ function updateTiddler(currentTitle, newTiddler, userEdit) {
   if (userEdit) delete existingTiddler.doNotSave;
   if (userEdit && newTiddler.type === "json") jsonValidator(newTiddler.text);
   delete newTiddler.isRawShadow;
-  if (userEdit) debugger;
   upsertInArray(tw.tiddlers.all, titleIs(currentTitle), newTiddler);
   if (userEdit) replaceInArray(tw.tiddlers.visible, (title2) => title2 === currentTitle, newTiddler.title);
   tw.events.send("tiddler.modified", newTiddler.title);

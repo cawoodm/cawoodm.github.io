@@ -10061,7 +10061,7 @@ function executeText(text2, title2, context) {
   try {
     result2 = (1, eval)(text2);
   } catch (e) {
-    let msg2 = `executeText "${title2}" ${context ? " (" + context + ")" : ""}`;
+    let msg2 = `executeText "${title2}" ${context ? " in tiddler '" + context + "'" : ""}`;
     tw.ui.notify(msg2, "E");
     de(`${msg2}: ${e.message}`, e.stack);
     throw e;
@@ -10100,20 +10100,20 @@ function newTiddlerLink({ title: title2 }) {
   newElement.addEventListener("click", () => showTiddler(title2));
   return newElement;
 }
-function createTiddlerElement(tiddler) {
-  let { title: title2 } = tiddler;
+function createTiddlerElement(t) {
   let template = tw.templates.TiddlerDisplay;
-  let modified = tiddler.updated ? new Date(tiddler.updated).toDateString() + " " + new Date(tiddler.updated).toLocaleTimeString() : "";
+  let modified = t.updated ? new Date(t.updated).toDateString() + " " + new Date(t.updated).toLocaleTimeString() : "";
   let html = new Templater(template).render({
-    id: hash(title2),
-    fullText: makeTiddlerText(tiddler),
-    editDisabled: tiddler.readOnly ? "disabled" : "",
-    tagLinks: makeTiddlerTagLinks(tiddler.tags),
+    id: hash(t.title),
+    fullText: makeTiddlerText(t),
+    editDisabled: t.readOnly ? "disabled" : "",
+    tagLinks: makeTiddlerTagLinks(t.tags),
+    metaInfo: makeTiddlerMetaInfo(t),
     modified,
-    ...tiddler
+    ...t
   });
   let newElement = htmlToNode(html);
-  attachTiddlerEvents(newElement, title2);
+  attachTiddlerEvents(newElement, t.title);
   return newElement;
 }
 function makeTiddlerText({ title: title2, text: text2, type }) {
@@ -10136,6 +10136,14 @@ function makeTiddlerTagLinks(tags) {
     return markdown1(`[${t}](#msg:ui.openAll:{tag:'${t}',title:'*'})`);
   }).join(", ");
 }
+function makeTiddlerMetaInfo(t) {
+  return markdown1([
+    `${t.package ? "[" + t.package + "](#msg:search:pck:" + t.package + ")" : ""}`,
+    `${t.readOnly ? "readOnly ✅" : ""}`,
+    `${t.doNotSave ? "doNotSave ✅" : ""}`,
+    `${t.isRawShadow ? "isRawShadow ✅" : ""}`
+  ].join(" "));
+}
 function languageFromTiddlerType(type) {
   switch (type) {
     case "script/js":
@@ -10153,7 +10161,7 @@ function languageFromTiddlerType(type) {
 function renderTiddler(title2) {
   return renderTwiki({ text: getTiddlerTextRaw(title2), title: title2 });
 }
-function renderTwiki({ text, title }) {
+function renderTwiki({ text, title, validation }) {
   let result = text;
   try {
     getMacros(text).forEach((m) => {
@@ -10166,17 +10174,25 @@ function renderTwiki({ text, title }) {
       } catch (e) {
         dw("Unknown macro:", e.message);
         result = result.replace(macroCommand, `<span class="error">ERROR: Unknown macro '${macroName}'</span>`);
+        if (validation) throw e;
         return;
       }
       let macroParams = getTypedParams(m[2]).join(", ") || "";
       macroParams = macroParams.replace(/("\{)|(\}")/ig, "");
       let code = `tw.macros.${macroName}(${macroParams})`;
       if (dbg) ;
-      let newText = executeText(code, `MACRO: ${macroName}`, title);
-      if (dbg) ;
-      if (dbg) ;
-      result = result.replace(macroCommand, newText);
-      if (dbg) ;
+      try {
+        let newText = executeText(code, `MACRO: ${macroName}`, title);
+        if (dbg) ;
+        if (dbg) ;
+        result = result.replace(macroCommand, newText);
+        if (dbg) ;
+      } catch (e) {
+        dw("MacroExecution Failed:", e.message);
+        result = result.replace(macroCommand, `<span class="error">ERROR: MacroExecution Failed '${macroName}'</span>`);
+        if (validation) throw e;
+        return;
+      }
     });
     getTiddlerLinks(result).forEach((m2) => {
       let linkName = m2[1];
@@ -10191,6 +10207,7 @@ function renderTwiki({ text, title }) {
     });
   } catch (e) {
     dw(`renderTwiki "${title}" Failed: ${e.message}`, e.stack);
+    if (validation) throw e;
     return `<span class="error">ERROR: renderTwiki '${title}' Failed: ${e.message}</span>`;
   }
   return result;
@@ -10281,6 +10298,7 @@ function formSaveTiddler() {
   }
   let existingTiddler = getTiddler(oldTitle, true);
   try {
+    renderTwiki({ text: t.text, title: t.title, validation: true });
     if (oldTitle && existingTiddler) {
       updateTiddler(oldTitle, t, true);
       tw.events.send("tiddler.edited", t.title);
@@ -10288,8 +10306,11 @@ function formSaveTiddler() {
       addTiddler(t, true);
       tw.events.send("tiddler.created", t.title);
     }
-  } catch (e) {
-    return alert(e.message);
+  } catch {
+    if (confirm("Do you want to force save?")) ;
+    else {
+      return;
+    }
   }
   $("new-dialog").close();
   renderAllTiddlers();
@@ -10389,6 +10410,13 @@ function tiddlerUpdated(title2) {
     return updateTheme();
   if (["$SiteTitle", "$SiteSubTitle", "$TitleBar"].includes(title2))
     (_a2 = $$("*[tiddler-include]")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
+  switch (title2) {
+    case "$TiddlerDisplay":
+      break;
+    case "$AutoImport":
+      if (confirm("Would you like to refresh?")) tw.events.send("reboot.soft");
+      break;
+  }
 }
 function updateTheme() {
   let css2 = getTiddlerList("$Theme").map(getTiddlerTextRaw).join("\n");

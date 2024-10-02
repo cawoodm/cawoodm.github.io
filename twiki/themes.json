@@ -1,26 +1,48 @@
 {
   "tiddlers": [
     {
-      "title": "$StyleSheetDefault",
-      "text": ":root {\n  --col0: #323232;\n  --col1: #6e6e6e;\n  --col2: #efefef;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col5: #dfdfdf;\n  --col6: #6db193;\n  --rad1: 10px;\n  --rad2: 5px;\n}",
+      "title": "$KhakiStyleSheet",
+      "text": ":root {\n  --col0: #465f70;\n  --col1: #feffdf;\n  --colbg2: #d1d2d3;\n  --col3: #97cba9;\n  --col4: #668ba4;\n  --colbg3: #bdbe98;\n  --col6: #4d9e4d;\n}",
+      "tags": [
+        "$StyleSheet"
+      ],
+      "type": "css",
+      "created": "2024-10-02T19:45:08.2989793Z",
+      "updated": "2024-10-02T20:41:30.3722180Z"
+    },
+    {
+      "title": "$KhakiTheme",
+      "text": "* [[$StyleSheetCore]]\n* [[$KhakiStyleSheet]]\n* [[$ThemeBase]]\n* [[$StyleSheetUser]]",
+      "tags": [
+        "$Theme"
+      ],
+      "type": "x-twiki",
+      "created": "2024-10-02T20:10:20.1620291Z",
+      "updated": "2024-10-02T20:32:42.2928054Z"
+    },
+    {
+      "title": "DemoCode",
+      "text": "// This just kills any attempt to ever run tw.fcn('updateTiddlerText')('$Theme', 'DemoStyleSheet';\n// if (tw.lib.tiddlerExists('DemoTiddler')) tw.run.showTiddler('DemoTiddler');\n",
       "tags": [],
+      "type": "script/js",
+      "created": "2024-09-18T07:54:56.0000000Z",
+      "updated": "2024-10-02T19:48:45.8017258Z"
+    },
+    {
+      "title": "DemoStyleSheet",
+      "text": "* {\n  color: green\n}",
+      "tags": [
+        "$StyleSheet"
+      ],
       "type": "css",
       "created": "2024-09-18T07:54:56.0000000Z",
       "updated": "2024-09-18T07:54:56.0000000Z"
     },
     {
-      "title": "$StyleSheetKhaki",
-      "text": ":root {\n  --col0: #465f70;\n  --col1: #feffdf;\n  --col2: #d1d2d3;\n  --col3: #97cba9;\n  --col4: #668ba4;\n  --col5: #9fa17b;\n  --col6: #4d4dce;\n}",
+      "title": "DemoTiddler",
+      "text": "This demo will import a [[DemoStyleSheet]] and apply it to the [[$Theme]].\n\nA whole lotta text should now be green!",
       "tags": [],
-      "type": "css",
-      "created": "2024-09-18T07:54:56.0000000Z",
-      "updated": "2024-09-18T07:54:56.0000000Z"
-    },
-    {
-      "title": "$StyleSheetWhite",
-      "text": ":root {\n  --col0: #222;\n  --col1: #999999;\n  --col2: #ffffff;\n  --col3: #cbcbcb;\n  --col4: #bbbbbb;\n  --col5: #e8e8e8;\n  --col6: #4d4dae;\n}",
-      "tags": [],
-      "type": "css",
+      "type": "x-twiki",
       "created": "2024-09-18T07:54:56.0000000Z",
       "updated": "2024-09-18T07:54:56.0000000Z"
     }

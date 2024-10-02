@@ -1,28 +1,3 @@
 {
-  "tiddlers": [
-    {
-      "title": "DemoCode",
-      "text": "// This just kills any attempt to ever runtw.run.updateTiddlerText('$Theme', 'DemoStyleSheet';\n// if (tw.lib.tiddlerExists('DemoTiddler')) tw.run.showTiddler('DemoTiddler');\n",
-      "tags": [],
-      "type": "script/js",
-      "created": "2024-09-18T07:54:56.0000000Z",
-      "updated": "2024-09-24T12:50:34.0000000Z"
-    },
-    {
-      "title": "DemoStyleSheet",
-      "text": "* {\n  color: green\n}",
-      "tags": [],
-      "type": "css",
-      "created": "2024-09-18T07:54:56.0000000Z",
-      "updated": "2024-09-18T07:54:56.0000000Z"
-    },
-    {
-      "title": "DemoTiddler",
-      "text": "This demo will import a [[DemoStyleSheet]] and apply it to the [[$Theme]].\n\nA whole lotta text should now be green!",
-      "tags": [],
-      "type": "x-twiki",
-      "created": "2024-09-18T07:54:56.0000000Z",
-      "updated": "2024-09-18T07:54:56.0000000Z"
-    }
-  ]
+  "tiddlers": []
 }

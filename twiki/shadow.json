@@ -11,6 +11,29 @@
       "updated": "2024-10-01T11:13:16.0000000Z"
     },
     {
+      "title": "$CoreThemeDark",
+      "text": "* [[$StyleSheetCore]]\n* [[$StyleSheetCoreDark]]\n* [[$ThemeBase]]\n* [[$StyleSheetUser]]",
+      "tags": [
+        "Shadow",
+        "$Theme",
+        "$ThemeDark"
+      ],
+      "type": "x-twiki",
+      "created": "2024-10-02T20:25:08.6653844Z",
+      "updated": "2024-10-02T20:32:42.2928054Z"
+    },
+    {
+      "title": "$CoreThemeLight",
+      "text": "* [[$StyleSheetCore]]\n* [[$ThemeBase]]\n* [[$StyleSheetUser]]",
+      "tags": [
+        "Shadow",
+        "$Theme"
+      ],
+      "type": "x-twiki",
+      "created": "2024-10-02T19:13:18.2186300Z",
+      "updated": "2024-10-02T20:32:42.2928054Z"
+    },
+    {
       "title": "$GeneralSettings",
       "text": "{}",
       "tags": [
@@ -122,43 +145,56 @@
     },
     {
       "title": "$StyleSheetCore",
-      "text": "/* Essential CSS without which we are unusable */",
+      "text": "/* CSS Reset */\nhtml {\n  box-sizing: border-box;\n  font-size: 16px;\n}\n\n*,\n*:before,\n*:after {\n  box-sizing: inherit;\n}\n\nbody,\np,\nol,\nul {\n  margin: 0;\n  padding: 0;\n  font-weight: normal;\n}\n\nol,\nul {\n  list-style: none;\n}\n\nimg {\n  max-width: 100%;\n  height: auto;\n}\n\na {\n  text-decoration: none;\n}\n\na:hover {\n  text-decoration: underline;\n}\n\n/* Responsive */\n.flex {\n  display: flex;\n  align-content: flex-start;\n}\n\n#header.flex {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: flex-end;\n}\n\n#header .col1 div {\n  width: 100%;\n}\n\n#titlebar.flex {\n  display: flex;\n  flex-wrap: wrap;\n  width: 100%;\n}\n\n#body.flex {\n  display: flex;\n  align-items: flex-start;\n  width: 100%;\n}\n\ndiv#visible-tiddlers {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  margin: 0.3rem;\n}\n\ndiv#sidebar {\n  margin: 0.3rem;\n  padding: 0.5rem;\n  background-color: var(--colbg3);\n  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);\n  outline: 1px solid var(--col1);\n  box-shadow: 1px 1px 0.5rem var(--col0);\n}\n\n#header .col1 {\n  flex-wrap: wrap;\n}\n\n#header .col2 {\n  gap: 10px;\n}\n\n#header .col3 input {\n  width: 100%;\n  border: solid 1px var(--col1)\n}\n\n@media (min-width: 0px) {\n  html {\n    font-size: 10px;\n  }\n\n  #header .col1,\n  #header .col2,\n  #header .col3 {\n    width: 100%;\n  }\n\n  #site-title,\n  #site-subtitle {\n    text-align: center;\n  }\n\n  #site-title h1,\n  #site-subtitle div {\n    margin: 2px;\n    padding: 2px;\n  }\n\n  #body.flex {\n    flex-wrap: wrap;\n  }\n\n  #sidebar {\n    flex-grow: 1;\n  }\n\n  div#visible-tiddlers {\n    flex-grow: 1;\n  }\n\n  h1 {\n    font-size: 1rem;\n  }\n}\n\n@media (min-width: 600px) {\n  html {\n    font-size: 16px;\n  }\n\n  #header .col1 {\n    width: 20%;\n  }\n\n  #header .col2 {\n    width: 60%;\n  }\n\n  #header .col3 {\n    width: 20%;\n  }\n\n  #body.flex {\n    flex-wrap: nowrap;\n    flex-direction: row;\n  }\n\n  #sidebar {\n    flex-grow: 1;\n  }\n\n  div#visible-tiddlers {\n    flex-grow: 4;\n  }\n\n  h1 {\n    font-size: 1.7rem;\n  }\n}\n\n/* Fallback Colors in case Themes forget them */\n:root {\n  --colbg1: #fdeeee;\n  --colbg2: #efefef;\n  --colbg3: #dfdfdf;\n  --colbgi: #efefef;\n  --colfgi: #373737;\n  --colfg: #323232;\n  --col0: #323232;\n  --col1: #6e6e6e;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col6: #6db193;\n  --notify-rgba: 210, 180, 90;\n  --rad1: 0.3rem;\n  --rad2: 0.3rem;\n  --rad3: 0.3rem;\n  --rad4: 0.3rem;\n}",
       "tags": [
-        "Shadow"
+        "Shadow",
+        "$StyleSheet"
       ],
       "type": "css",
       "created": "2024-09-23T21:03:59.0000000Z",
-      "updated": "2024-09-23T21:03:59.0000000Z"
+      "updated": "2024-10-02T20:56:08.3001059Z"
+    },
+    {
+      "title": "$StyleSheetCoreDark",
+      "text": ":root {\n  --colbg1: #101f1f;\n  --colbg2: #101f1f;\n  --colbg3: #2a2a2a;\n  --colbgi: #3f3f3f;\n  --colfgi: #d7d7d7;\n  --colfg: rgb(205, 205, 205);\n  --col0: #cdcdcd;\n  --col1: #6e6e6e;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col6: #6db193;\n  --notify-rgba: 210, 180, 90;\n  --rad1: 0.3rem;\n  --rad2: 0.3rem;\n  --rad3: 0.3rem;\n  --rad4: 0.3rem;\n}",
+      "tags": [
+        "Shadow",
+        "$StyleSheet"
+      ],
+      "type": "css",
+      "created": "2024-10-02T20:25:51.1492132Z",
+      "updated": "2024-10-02T20:56:27.9051300Z"
     },
     {
       "title": "$Theme",
-      "text": "* [[$StyleSheetCore]]\n* [[$ThemeProperties]]\n* [[$ThemeLayout]]\n* [[$StyleSheetUser]]",
+      "text": "[[$CoreThemeLight]]",
       "tags": [
         "Shadow"
       ],
       "type": "x-twiki",
       "created": "2024-09-30T21:45:53.0000000Z",
-      "updated": "2024-09-30T21:45:53.0000000Z"
+      "updated": "2024-10-02T20:25:09.0686188Z"
     },
     {
-      "title": "$ThemeLayout",
-      "text": "/* https://coolors.co/image-picker */\n\n\n* {\n  font-family:\n    system-ui,\n    'Segoe UI',\n    Roboto,\n    Helvetica,\n    Arial,\n    sans-serif;\n\n}\n\nhtml,\nbody {\n  height: 100%;\n}\n\nbody {\n  padding: 0px;\n  color: var(--col0)\n}\n\n.line-clamp {\n  white-space: nowrap\n}\n\ndiv#header {\n  position: sticky;\n  top: 0px;\n  display: flex;\n  align-items: flex-start;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  justify-content: space-evenly;\n  border: 1px solid var(--col4);\n  background-color: var(--col5);\n  padding: 5px;\n  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);\n  box-shadow: 1px 1px 5px var(--col0);\n}\n\ninput#search {\n  width: 30%;\n  background-color: var(--col2);\n}\n\ndiv#body {\n  padding: 5px;\n  height: 100%;\n}\n\ndialog::backdrop {\n  background-image: linear-gradient(45deg, #000, #888);\n  opacity: 0.85;\n}\n\nul {\n  margin-left: 0px;\n  padding: auto;\n}\n\nul {\n  margin-left: 10px;\n}\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 1;\n}\n\nth {\n  font-weight: bold;\n  background-color: var(--col3);\n}\n\nth,\ntd {\n  padding: 5px;\n  border: 1px solid black;\n}\n\n\nul li::marker {\n  font-family: FontAwesome;\n  content: \"🗲\";\n  color: var(--col0);\n}\n\nli li {\n  margin-left: 20px;\n}\n\ndialog#preview-dialog {\n  border: 0px;\n  overflow-y: hidden;\n  background-color: #00000000;\n  width: 90%;\n  height: 90%;\n  min-height: 500px;\n}\n\ndialog#preview-dialog div.tiddler {\n  height: 100%;\n}\n\ndialog#preview-dialog div.text {\n  height: 100%;\n  max-height: 1000px;\n}\n\ndialog#new-dialog {\n  background-color: var(--col2);\n  width: 50%;\n  height: 50%;\n  min-height: 500px;\n}\n\ndialog#new-dialog form {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n\ndialog#new-dialog div input {\n  font-size: large;\n  font-weight: bold;\n  border-radius: var(--rad1) var(--rad2);\n  border: 1px;\n}\n\ndialog#new-dialog form div {\n  margin-bottom: 4px;\n}\n\ndialog#new-dialog form div.text {\n  flex-grow: 1;\n  min-height: 300px;\n}\n\ndialog#new-dialog form input,\ndialog#new-dialog form textarea {\n  font-family: Consolas, 'Courier New', Courier, monospace;\n  font-size: 1rem;\n  padding: 4px;\n  width: 100%;\n  height: 100%;\n  border-radius: var(--rad1) var(--rad2);\n  background-color: var(--col5);\n  scrollbar-color: var(--col1) var(--col2);\n}\n\ndialog#new-dialog form button {\n  width: 50%;\n}\n\nblockquote {\n  background-color: var(--col4);\n  border-left: 10px solid var(--col3);\n  margin: 1.5em 10px;\n  padding: 0.5em 10px;\n  quotes: \"\\201C\" \"\\201D\" \"\\2018\" \"\\2019\";\n}\n\nbutton {\n  border: 1px solid var(--col4);\n  background-color: var(--col3);\n}\n\n#notify {\n  position: fixed;\n  z-index: 1;\n  left: 50%;\n  transform: translate(-50%);\n  bottom: 10px;\n  min-width: 250px;\n  background-color: rgba(var(--notify-rgba), 0.9);\n  color: var(--col1);\n  text-align: left;\n  border: 1px solid var(--col0);\n  box-shadow: 1px 1px 5px var(--col0);\n  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);\n  padding: 16px;\n  line-height: 1.2rem;\n}\n\ndiv.notifyHidden {\n  visibility: hidden;\n  opacity: 0;\n  transition: visibility 0.3s linear, opacity 0.3s linear;\n}\n\ndiv.notifyShow {\n  transition: visibility 0.3s linear, opacity 0.3s linear;\n  visibility: show;\n  opacity: 1;\n}\n\nh1 {\n  font-size: 1.8rem;\n  padding: 5px;\n}\n\nh2 {\n  font-size: 1.4rem;\n  padding: 4px;\n}\n\nh3 {\n  font-size: 1.4rem;\n  padding: 3px;\n}\n\nh4 {\n  font-size: 1.2rem;\n  padding: 2px;\n}\n\ndiv.tiddler pre {\n  white-space: pre-wrap;\n}\n\ncode {\n  background-color: var(--col3);\n  font-family: Consolas, 'Courier New', Courier, monospace;\n}\n\npre code {\n  border: 1px solid var(--col0);\n}\n\n/* $StyleForTiddlers */\ndiv.tiddler {\n  margin-bottom: 20px;\n  padding: 2rem;\n  background-color: var(--col2);\n  outline: 1px solid var(--col1);\n  box-shadow: 1px 1px 5px var(--col0);\n  background-color: var(--col2);\n  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);\n}\n\ndiv.tiddler-nosave {\n  outline: 4px dotted green;\n}\n\ndiv.tiddler-readonly {\n  border-left: 5px solid gray;\n  outline: 2px dotted gray;\n}\n\ndiv.shadowtrue div.title {\n  font-style: italic;\n}\n\ndiv.shadowtrue {\n  border-left: 5px solid var(--col3);\n  outline: 2px dashed gray;\n}\n\n\ndiv.tiddler div.title {\n  padding: 5px;\n  font-size: 2rem;\n  line-height: 1.2;\n  font-weight: bold;\n  background-color: var(--col2);\n}\n\ndiv.tiddler div.title button {\n  background-color: var(--col2);\n  float: right;\n  height: 30px;\n  border: none;\n  cursor: pointer;\n}\n\ndiv.tiddler div.meta {\n  text-align: right;\n  font-size: small;\n  color: var(--col3);\n}\n\ndiv.tiddler div.text {\n  margin: 2px;\n  padding: 2px;\n  overflow-y: auto;\n  scrollbar-color: var(--col1) var(--col2);\n  scrollbar-width: thin;\n  max-height: 9000px;\n}\n\ndiv.tiddler div.tags {\n  font-size: small;\n  color: gray;\n  float: right\n}\n\ndiv.tiddler p {\n  margin: 16px 0px;\n}\n\nspan.error {\n  color: white;\n  background-color: red;\n}",
+      "title": "$ThemeBase",
+      "text": "/* https://coolors.co/image-picker */\n\n\n* {\n  font-family:\n    system-ui,\n    'Segoe UI',\n    Roboto,\n    Helvetica,\n    Arial,\n    sans-serif;\n\n}\n\nhtml,\nbody {\n  height: 100%;\n}\n\nbody {\n  padding: 0px;\n}\n\n.line-clamp {\n  white-space: nowrap\n}\n\na:not([class]) {\n  text-decoration-skip-ink: auto;\n  font-weight: bolder;\n  color: var(--col6);\n}\n\nbody {\n  background-color: var(--colbg1);\n  color: var(--colfg);\n}\n\ndiv#header {\n  position: sticky;\n  top: 0px;\n  display: flex;\n  align-items: flex-start;\n  flex-direction: row;\n  flex-wrap: nowrap;\n  justify-content: space-evenly;\n  border: 1px solid var(--col4);\n  background-color: var(--colbg3);\n  padding: 5px;\n  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);\n  box-shadow: 1px 1px 5px var(--col0);\n}\n\ninput#search {\n  width: 30%;\n  background-color: var(--colbg2);\n}\n\ndiv#body {\n  padding: 5px;\n  height: 100%;\n}\n\ndialog::backdrop {\n  background-image: linear-gradient(45deg, #000, #888);\n  opacity: 0.85;\n}\n\nul {\n  margin-left: 0px;\n  padding: auto;\n}\n\nul {\n  margin-left: 10px;\n}\n\ntable {\n  border-collapse: collapse;\n  border-spacing: 1;\n}\n\nth {\n  font-weight: bold;\n  background-color: var(--col3);\n}\n\nth,\ntd {\n  padding: 5px;\n  border: 1px solid black;\n}\n\n\nul li::marker {\n  font-family: FontAwesome;\n  content: \"🗲\";\n  color: var(--col0);\n}\n\nli li {\n  margin-left: 20px;\n}\n\ndialog#preview-dialog {\n  border: 0px;\n  overflow-y: hidden;\n  background-color: #00000000;\n  width: 90%;\n  height: 90%;\n  min-height: 500px;\n}\n\ndialog#preview-dialog div.tiddler {\n  height: 100%;\n}\n\ndialog#preview-dialog div.text {\n  height: 100%;\n  max-height: 1000px;\n}\n\ndialog#new-dialog {\n  background-color: var(--colbg2);\n  width: 50%;\n  height: 50%;\n  min-height: 500px;\n}\n\ndialog#new-dialog form {\n  width: 100%;\n  height: 100%;\n  display: flex;\n  flex-direction: column;\n}\n\ndialog#new-dialog div input {\n  font-size: large;\n  font-weight: bold;\n  border-radius: var(--rad1) var(--rad2);\n  border: 1px;\n}\n\ndialog#new-dialog form div {\n  margin-bottom: 4px;\n}\n\ndialog#new-dialog form div.text {\n  flex-grow: 1;\n  min-height: 300px;\n}\n\ndialog#new-dialog form input,\ndialog#new-dialog form textarea {\n  font-family: Consolas, 'Courier New', Courier, monospace;\n  font-size: 1rem;\n  padding: 4px;\n  width: 100%;\n  height: 100%;\n  border-radius: var(--rad1) var(--rad2);\n  background-color: var(--colbgi);\n  color: var(--colfgi);\n  scrollbar-color: var(--col1) var(--colbg2);\n}\n\ndialog#new-dialog form button {\n  width: 50%;\n}\n\nblockquote {\n  background-color: var(--col4);\n  border-left: 10px solid var(--col3);\n  margin: 1.5em 10px;\n  padding: 0.5em 10px;\n  quotes: \"\\201C\" \"\\201D\" \"\\2018\" \"\\2019\";\n}\n\n\nbutton {\n  fill: var(--col1);\n}\n\nbutton:hover svg {\n  fill: var(--col6);\n}\n\nbutton {\n  border: 1px solid var(--col4);\n  background-color: var(--col3);\n}\n\n#notify {\n  position: fixed;\n  z-index: 1;\n  left: 50%;\n  transform: translate(-50%);\n  bottom: 10px;\n  min-width: 250px;\n  background-color: rgba(var(--notify-rgba), 0.9);\n  color: var(--col1);\n  text-align: left;\n  border: 1px solid var(--col0);\n  box-shadow: 1px 1px 5px var(--col0);\n  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);\n  padding: 16px;\n  line-height: 1.2rem;\n}\n\ndiv.notifyHidden {\n  visibility: hidden;\n  opacity: 0;\n  transition: visibility 0.3s linear, opacity 0.3s linear;\n}\n\ndiv.notifyShow {\n  transition: visibility 0.3s linear, opacity 0.3s linear;\n  visibility: show;\n  opacity: 1;\n}\n\nh1 {\n  font-size: 1.8rem;\n  padding: 5px;\n}\n\nh2 {\n  font-size: 1.4rem;\n  padding: 4px;\n}\n\nh3 {\n  font-size: 1.4rem;\n  padding: 3px;\n}\n\nh4 {\n  font-size: 1.2rem;\n  padding: 2px;\n}\n\ndiv.tiddler pre {\n  white-space: pre-wrap;\n}\n\ncode {\n  background-color: var(--col3);\n  font-family: Consolas, 'Courier New', Courier, monospace;\n}\n\npre code {\n  border: 1px solid var(--col0);\n}\n\n/* Tiddlers */\ndiv.tiddler {\n  margin-bottom: 20px;\n  padding: 2rem;\n  background-color: var(--colbg2);\n  outline: 1px solid var(--col1);\n  box-shadow: 1px 1px 5px var(--col0);\n  background-color: var(--colbg2);\n  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);\n}\n\ndiv.tiddler-nosave {\n  outline: 4px dotted green;\n}\n\ndiv.tiddler-readonly {\n  border-left: 5px solid gray;\n  outline: 2px dotted gray;\n}\n\ndiv.shadowtrue div.title {\n  font-style: italic;\n}\n\ndiv.shadowtrue {\n  border-left: 5px solid var(--colbg3);\n  outline: 2px dashed gray;\n}\n\n\ndiv.tiddler div.title {\n  padding: 5px;\n  font-size: 2rem;\n  line-height: 1.2;\n  font-weight: bold;\n  background-color: var(--colbg2);\n}\n\ndiv.tiddler div.title button {\n  background-color: var(--colbg2);\n  float: right;\n  height: 30px;\n  border: none;\n  cursor: pointer;\n}\n\ndiv.tiddler div.meta {\n  text-align: right;\n  font-size: small;\n  color: var(--col3);\n}\n\ndiv.tiddler div.text {\n  margin: 2px;\n  padding: 2px;\n  overflow-y: auto;\n  scrollbar-color: var(--col1) var(--colbg2);\n  scrollbar-width: thin;\n  max-height: 9000px;\n}\n\ndiv.tiddler div.tags {\n  font-size: small;\n  color: gray;\n  float: right\n}\n\ndiv.tiddler p {\n  margin: 16px 0px;\n}\n\nspan.error {\n  color: white;\n  background-color: red;\n}",
       "tags": [
-        "Shadow"
+        "Shadow",
+        "$StyleSheet"
       ],
       "type": "css",
       "created": "2024-09-23T21:03:59.0000000Z",
-      "updated": "2024-10-01T08:47:44.0000000Z"
+      "updated": "2024-10-02T20:56:08.3001059Z"
     },
     {
-      "title": "$ThemeProperties",
-      "text": ":root {\n  --col0: #323232;\n  --col1: #6e6e6e;\n  --col2: #efefef;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col5: #dfdfdf;\n  --col6: #6db193;\n  --notify-rgba: 210, 180, 90;\n  --rad1: 0.3rem;\n  --rad2: 0.3rem;\n  --rad3: 0.3rem;\n  --rad4: 0.3rem;\n}",
+      "title": "$Themes",
+      "text": "<<ThemeSelector>>",
       "tags": [
         "Shadow"
       ],
-      "type": "css",
-      "created": "2024-09-23T21:03:59.0000000Z",
-      "updated": "2024-09-23T21:03:59.0000000Z"
+      "type": "x-twiki",
+      "created": "2024-10-02T19:25:32.8407730Z",
+      "updated": "2024-10-02T19:25:33.0496912Z"
     },
     {
       "title": "$TiddlerDisplay",
@@ -192,13 +228,13 @@
     },
     {
       "title": "$TWIKIVersion",
-      "text": "0.0.10 RC1",
+      "text": "0.0.10",
       "tags": [
         "Shadow"
       ],
       "type": "text",
       "created": "2024-09-30T21:45:53.0000000Z",
-      "updated": "2024-10-01T21:27:34.5322184Z",
+      "updated": "2024-10-02T21:32:50.8151564Z",
       "readOnly": true
     },
     {

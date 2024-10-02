@@ -18,11 +18,13 @@
     },
     {
       "title": "$ThemeProperties",
-      "text": ":root {\n  --col0: #222;\n  --col1: #999999;\n  --col2: #ffffff;\n  --col3: #cbcbcb;\n  --col4: #bbbbbb;\n  --col5: #e8e8e8;\n  --col6: #70adfd;\n}",
-      "tags": [],
+      "text": ":root {\n  --col0: #222;\n  --col1: #999999;\n  --colbg2: #ffffff;\n  --col3: #cbcbcb;\n  --col4: #bbbbbb;\n  --colbg3: #e8e8e8;\n  --col6: #70adfd;\n}",
+      "tags": [
+        "$StyleSheet"
+      ],
       "type": "css",
       "created": "2024-09-24T22:21:48.0000000Z",
-      "updated": "2024-09-24T22:21:48.0000000Z"
+      "updated": "2024-10-02T20:41:30.3722180Z"
     },
     {
       "title": "$TitleBar",
@@ -66,11 +68,11 @@
     },
     {
       "title": "Features",
-      "text": "* Saving works out of the box\n  * localStorage with Backup option via plugin\n  * backup to or synch with [JSONBin](https://jsonbin.io/)\n* Namespaces: Easily switch between different stores!\n* List all tiddlers\n  * [All Normal Tiddlers](#msg:ui.openAll)\n  * [Really All (*) Tiddlers](#msg:ui.openAll:{title:'*',tag:'*'})\n* Add, Edit, Close and Delete a tiddler\n  * Double-Click to edit\n  * Ctrl+Enter to save\n  * [[$TrashedTiddlers]] saved not really deleted\n* Rendering \n  * x-twiki and [CommonMark](#Markdown%20Test) markdown\n  * Code highlighting ([js](#Code%20Tiddler), [css](#StyleSheet) and [html](#HTML%20Example))\n* Open single or list of tiddlers via link\n  * [⭐Favorties](#msg:ui.openAll:{tag:'Favorite'})\n* Code/Plugin tiddlers\n  * Tiddlers of type `script/js` are just executed (eval) in global context\n  * Macros - e.g. to open/close all/selected tiddlers\n    * `<<ShowAllTiddlersButton>>` <<ShowAllTiddlersButton>>\n    * `<<CloseAllTiddlersButton>>` <<CloseAllTiddlersButton>>\n* Theming\n  * [[$Theme]] tiddler collects stylesheets\n  * Stylesheets can be in one or more tiddlers\n  * [[$DisplayTemplate]] tiddler determines display of tiddler\n  * [[$TitleBar]] to customize the titlebar\n  * `<<themes.apply khaki>>` <<themes.apply khaki>>\n* Structured Data\n  * Configurable lists or key-value pairs via `list` tiddlers\n    * e.g. Tiddler types from [[$TiddlerTypes]] tiddler\n  * Configuration objects via `json` tiddlers\n    * e.g. Backup settings for [[Backup2JSONBinPlugin]]\n* Packages\n  * Import tiddlers from a list of packages in [[$CorePackages]] ✅\n  * Import tiddlers from any URL\n\n## Other/Tech\n* Basic pub/sub events ✅\n* Vanilla JS, no complicated framework",
+      "text": "* Saving works out of the box\n  * localStorage with Backup option via plugin\n  * backup to or synch with [JSONBin](https://jsonbin.io/)\n* Namespaces: Easily switch between different stores!\n* List all tiddlers\n  * [All Normal Tiddlers](#msg:ui.openAll)\n  * [Really All (*) Tiddlers](#msg:ui.openAll:{title:'*',tag:'*'})\n* Add, Edit, Close and Delete a tiddler\n  * Double-Click to edit\n  * Ctrl+Enter to save\n  * [[$TrashedTiddlers]] saved not really deleted\n* Rendering \n  * x-twiki and [CommonMark](#Markdown%20Test) markdown\n  * Code highlighting ([js](#Code%20Tiddler), [css](#StyleSheet) and [html](#HTML%20Example))\n* Open single or list of tiddlers via link\n  * [⭐Favorties](#msg:ui.openAll:{tag:'Favorite'})\n* Code/Plugin tiddlers\n  * Tiddlers of type `script/js` are just executed (eval) in global context\n  * Macros - e.g. to open/close all/selected tiddlers\n    * `<<ShowAllTiddlersButton>>` <<ShowAllTiddlersButton>>\n    * `<<CloseAllTiddlersButton>>` <<CloseAllTiddlersButton>>\n* Theming\n  * [[$Theme]] stores name of [Themes](#msg:search:$tag:$Theme) e.g.:\n    * [[$CoreTheme]] which lists [StyleSheets](#msg:search:$tag:$StyleSheet)\n  * Stylesheets can be in one or more tiddlers\n  * [[$DisplayTemplate]] tiddler determines display of tiddler\n  * [[$TitleBar]] to customize the titlebar\n  * `<<ThemeSelector>>` <<ThemeSelector>>\n* Structured Data\n  * Configurable lists or key-value pairs via `list` tiddlers\n    * e.g. Tiddler types from [[$TiddlerTypes]] tiddler\n  * Configuration objects via `json` tiddlers\n    * e.g. Backup settings for [[Backup2JSONBinPlugin]]\n* Packages\n  * Import tiddlers from a list of packages in [[$CorePackages]] ✅\n  * Import tiddlers from any URL\n\n## Other/Tech\n* Basic pub/sub events ✅\n* Vanilla JS, no complicated framework",
       "tags": [],
       "type": "x-twiki",
       "created": "2024-09-16T10:30:27.0000000Z",
-      "updated": "2024-10-01T20:43:06.7029709Z"
+      "updated": "2024-10-02T21:03:16.9512828Z"
     },
     {
       "title": "Help",

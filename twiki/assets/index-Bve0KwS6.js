@@ -5223,8 +5223,8 @@ MarkdownIt.prototype.disable = function(list2, ignoreInvalid) {
   return this;
 };
 MarkdownIt.prototype.use = function(plugin) {
-  const args = [this].concat(Array.prototype.slice.call(arguments, 1));
-  plugin.apply(plugin, args);
+  const args2 = [this].concat(Array.prototype.slice.call(arguments, 1));
+  plugin.apply(plugin, args2);
   return this;
 };
 MarkdownIt.prototype.parse = function(src, env) {
@@ -5511,22 +5511,22 @@ function anyNumberOfTimes(re) {
 function optional(re) {
   return concat("(?:", re, ")?");
 }
-function concat(...args) {
-  const joined = args.map((x) => source(x)).join("");
+function concat(...args2) {
+  const joined = args2.map((x) => source(x)).join("");
   return joined;
 }
-function stripOptionsFromArgs(args) {
-  const opts = args[args.length - 1];
+function stripOptionsFromArgs(args2) {
+  const opts = args2[args2.length - 1];
   if (typeof opts === "object" && opts.constructor === Object) {
-    args.splice(args.length - 1, 1);
+    args2.splice(args2.length - 1, 1);
     return opts;
   } else {
     return {};
   }
 }
-function either(...args) {
-  const opts = stripOptionsFromArgs(args);
-  const joined = "(" + (opts.capture ? "" : "?:") + args.map((x) => source(x)).join("|") + ")";
+function either(...args2) {
+  const opts = stripOptionsFromArgs(args2);
+  const joined = "(" + (opts.capture ? "" : "?:") + args2.map((x) => source(x)).join("|") + ")";
   return joined;
 }
 function countMatchGroups(re) {
@@ -5877,8 +5877,8 @@ const seenDeprecations = {};
 const error = (message) => {
   console.error(message);
 };
-const warn = (message, ...args) => {
-  console.log(`WARN: ${message}`, ...args);
+const warn = (message, ...args2) => {
+  console.log(`WARN: ${message}`, ...args2);
 };
 const deprecated = (version2, message) => {
   if (seenDeprecations[`${version2}/${message}`]) return;
@@ -6730,11 +6730,11 @@ const HLJS = function(hljs) {
       plugins.splice(index, 1);
     }
   }
-  function fire(event, args) {
+  function fire(event, args2) {
     const cb = event;
     plugins.forEach(function(plugin) {
       if (plugin[cb]) {
-        plugin[cb](args);
+        plugin[cb](args2);
       }
     });
   }
@@ -9040,8 +9040,8 @@ RegExp.compose = function(re, params2) {
   return new RegExp(str, re.flags);
 };
 RegExp.prototype.or = function() {
-  var args = Array.prototype.slice.call(arguments);
-  return RegExp.any.apply(null, [this].concat(args));
+  var args2 = Array.prototype.slice.call(arguments);
+  return RegExp.any.apply(null, [this].concat(args2));
 };
 function Logging({ logFilter: logFilter2, debugMode: debugMode2 }) {
   window.dp = dp2;
@@ -9202,8 +9202,13 @@ function Events() {
       });
       return result2;
     },
-    subscribe(event, handler) {
-      if (handlers.find((h) => h.event === event && h.handler.name === handler.name)) return;
+    subscribe(event, handler, handlerName) {
+      handlerName = handler.name || handlerName;
+      if (handlers.find((h) => h.event === event && h.handler.name === handlerName)) debugger;
+      handlers.push({ event, handler });
+    },
+    override(event, handler) {
+      handlers.filter((h) => h.event === event).forEach((h) => delete h.event);
       handlers.push({ event, handler });
     },
     handlers() {
@@ -9364,6 +9369,29 @@ const shadowTiddlers = [
     "updated": "2024-10-01T11:13:16.0000000Z"
   },
   {
+    "title": "$CoreThemeDark",
+    "text": "* [[$StyleSheetCore]]\n* [[$StyleSheetCoreDark]]\n* [[$ThemeBase]]\n* [[$StyleSheetUser]]",
+    "tags": [
+      "Shadow",
+      "$Theme",
+      "$ThemeDark"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-02T20:25:08.6653844Z",
+    "updated": "2024-10-02T20:32:42.2928054Z"
+  },
+  {
+    "title": "$CoreThemeLight",
+    "text": "* [[$StyleSheetCore]]\n* [[$ThemeBase]]\n* [[$StyleSheetUser]]",
+    "tags": [
+      "Shadow",
+      "$Theme"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-02T19:13:18.2186300Z",
+    "updated": "2024-10-02T20:32:42.2928054Z"
+  },
+  {
     "title": "$GeneralSettings",
     "text": "{}",
     "tags": [
@@ -9475,26 +9503,38 @@ const shadowTiddlers = [
   },
   {
     "title": "$StyleSheetCore",
-    "text": "/* Essential CSS without which we are unusable */",
+    "text": "/* CSS Reset */\nhtml {\n  box-sizing: border-box;\n  font-size: 16px;\n}\n\n*,\n*:before,\n*:after {\n  box-sizing: inherit;\n}\n\nbody,\np,\nol,\nul {\n  margin: 0;\n  padding: 0;\n  font-weight: normal;\n}\n\nol,\nul {\n  list-style: none;\n}\n\nimg {\n  max-width: 100%;\n  height: auto;\n}\n\na {\n  text-decoration: none;\n}\n\na:hover {\n  text-decoration: underline;\n}\n\n/* Responsive */\n.flex {\n  display: flex;\n  align-content: flex-start;\n}\n\n#header.flex {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: flex-end;\n}\n\n#header .col1 div {\n  width: 100%;\n}\n\n#titlebar.flex {\n  display: flex;\n  flex-wrap: wrap;\n  width: 100%;\n}\n\n#body.flex {\n  display: flex;\n  align-items: flex-start;\n  width: 100%;\n}\n\ndiv#visible-tiddlers {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  margin: 0.3rem;\n}\n\ndiv#sidebar {\n  margin: 0.3rem;\n  padding: 0.5rem;\n  background-color: var(--colbg3);\n  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);\n  outline: 1px solid var(--col1);\n  box-shadow: 1px 1px 0.5rem var(--col0);\n}\n\n#header .col1 {\n  flex-wrap: wrap;\n}\n\n#header .col2 {\n  gap: 10px;\n}\n\n#header .col3 input {\n  width: 100%;\n  border: solid 1px var(--col1)\n}\n\n@media (min-width: 0px) {\n  html {\n    font-size: 10px;\n  }\n\n  #header .col1,\n  #header .col2,\n  #header .col3 {\n    width: 100%;\n  }\n\n  #site-title,\n  #site-subtitle {\n    text-align: center;\n  }\n\n  #site-title h1,\n  #site-subtitle div {\n    margin: 2px;\n    padding: 2px;\n  }\n\n  #body.flex {\n    flex-wrap: wrap;\n  }\n\n  #sidebar {\n    flex-grow: 1;\n  }\n\n  div#visible-tiddlers {\n    flex-grow: 1;\n  }\n\n  h1 {\n    font-size: 1rem;\n  }\n}\n\n@media (min-width: 600px) {\n  html {\n    font-size: 16px;\n  }\n\n  #header .col1 {\n    width: 20%;\n  }\n\n  #header .col2 {\n    width: 60%;\n  }\n\n  #header .col3 {\n    width: 20%;\n  }\n\n  #body.flex {\n    flex-wrap: nowrap;\n    flex-direction: row;\n  }\n\n  #sidebar {\n    flex-grow: 1;\n  }\n\n  div#visible-tiddlers {\n    flex-grow: 4;\n  }\n\n  h1 {\n    font-size: 1.7rem;\n  }\n}\n\n/* Fallback Colors in case Themes forget them */\n:root {\n  --colbg1: #fdeeee;\n  --colbg2: #efefef;\n  --colbg3: #dfdfdf;\n  --colbgi: #efefef;\n  --colfgi: #373737;\n  --colfg: #323232;\n  --col0: #323232;\n  --col1: #6e6e6e;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col6: #6db193;\n  --notify-rgba: 210, 180, 90;\n  --rad1: 0.3rem;\n  --rad2: 0.3rem;\n  --rad3: 0.3rem;\n  --rad4: 0.3rem;\n}",
     "tags": [
-      "Shadow"
+      "Shadow",
+      "$StyleSheet"
     ],
     "type": "css",
     "created": "2024-09-23T21:03:59.0000000Z",
-    "updated": "2024-09-23T21:03:59.0000000Z"
+    "updated": "2024-10-02T20:56:08.3001059Z"
+  },
+  {
+    "title": "$StyleSheetCoreDark",
+    "text": ":root {\n  --colbg1: #101f1f;\n  --colbg2: #101f1f;\n  --colbg3: #2a2a2a;\n  --colbgi: #3f3f3f;\n  --colfgi: #d7d7d7;\n  --colfg: rgb(205, 205, 205);\n  --col0: #cdcdcd;\n  --col1: #6e6e6e;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col6: #6db193;\n  --notify-rgba: 210, 180, 90;\n  --rad1: 0.3rem;\n  --rad2: 0.3rem;\n  --rad3: 0.3rem;\n  --rad4: 0.3rem;\n}",
+    "tags": [
+      "Shadow",
+      "$StyleSheet"
+    ],
+    "type": "css",
+    "created": "2024-10-02T20:25:51.1492132Z",
+    "updated": "2024-10-02T20:56:27.9051300Z"
   },
   {
     "title": "$Theme",
-    "text": "* [[$StyleSheetCore]]\n* [[$ThemeProperties]]\n* [[$ThemeLayout]]\n* [[$StyleSheetUser]]",
+    "text": "[[$CoreThemeLight]]",
     "tags": [
       "Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "updated": "2024-10-02T20:25:09.0686188Z"
   },
   {
-    "title": "$ThemeLayout",
+    "title": "$ThemeBase",
     "text": `/* https://coolors.co/image-picker */
 
 
@@ -9516,11 +9556,21 @@ body {
 
 body {
   padding: 0px;
-  color: var(--col0)
 }
 
 .line-clamp {
   white-space: nowrap
+}
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+  font-weight: bolder;
+  color: var(--col6);
+}
+
+body {
+  background-color: var(--colbg1);
+  color: var(--colfg);
 }
 
 div#header {
@@ -9532,7 +9582,7 @@ div#header {
   flex-wrap: nowrap;
   justify-content: space-evenly;
   border: 1px solid var(--col4);
-  background-color: var(--col5);
+  background-color: var(--colbg3);
   padding: 5px;
   border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);
   box-shadow: 1px 1px 5px var(--col0);
@@ -9540,7 +9590,7 @@ div#header {
 
 input#search {
   width: 30%;
-  background-color: var(--col2);
+  background-color: var(--colbg2);
 }
 
 div#body {
@@ -9608,7 +9658,7 @@ dialog#preview-dialog div.text {
 }
 
 dialog#new-dialog {
-  background-color: var(--col2);
+  background-color: var(--colbg2);
   width: 50%;
   height: 50%;
   min-height: 500px;
@@ -9645,8 +9695,9 @@ dialog#new-dialog form textarea {
   width: 100%;
   height: 100%;
   border-radius: var(--rad1) var(--rad2);
-  background-color: var(--col5);
-  scrollbar-color: var(--col1) var(--col2);
+  background-color: var(--colbgi);
+  color: var(--colfgi);
+  scrollbar-color: var(--col1) var(--colbg2);
 }
 
 dialog#new-dialog form button {
@@ -9659,6 +9710,15 @@ blockquote {
   margin: 1.5em 10px;
   padding: 0.5em 10px;
   quotes: "\\201C" "\\201D" "\\2018" "\\2019";
+}
+
+
+button {
+  fill: var(--col1);
+}
+
+button:hover svg {
+  fill: var(--col6);
 }
 
 button {
@@ -9728,14 +9788,14 @@ pre code {
   border: 1px solid var(--col0);
 }
 
-/* $StyleForTiddlers */
+/* Tiddlers */
 div.tiddler {
   margin-bottom: 20px;
   padding: 2rem;
-  background-color: var(--col2);
+  background-color: var(--colbg2);
   outline: 1px solid var(--col1);
   box-shadow: 1px 1px 5px var(--col0);
-  background-color: var(--col2);
+  background-color: var(--colbg2);
   border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);
 }
 
@@ -9753,7 +9813,7 @@ div.shadowtrue div.title {
 }
 
 div.shadowtrue {
-  border-left: 5px solid var(--col3);
+  border-left: 5px solid var(--colbg3);
   outline: 2px dashed gray;
 }
 
@@ -9763,11 +9823,11 @@ div.tiddler div.title {
   font-size: 2rem;
   line-height: 1.2;
   font-weight: bold;
-  background-color: var(--col2);
+  background-color: var(--colbg2);
 }
 
 div.tiddler div.title button {
-  background-color: var(--col2);
+  background-color: var(--colbg2);
   float: right;
   height: 30px;
   border: none;
@@ -9784,7 +9844,7 @@ div.tiddler div.text {
   margin: 2px;
   padding: 2px;
   overflow-y: auto;
-  scrollbar-color: var(--col1) var(--col2);
+  scrollbar-color: var(--col1) var(--colbg2);
   scrollbar-width: thin;
   max-height: 9000px;
 }
@@ -9804,21 +9864,22 @@ span.error {
   background-color: red;
 }`,
     "tags": [
-      "Shadow"
+      "Shadow",
+      "$StyleSheet"
     ],
     "type": "css",
     "created": "2024-09-23T21:03:59.0000000Z",
-    "updated": "2024-10-01T08:47:44.0000000Z"
+    "updated": "2024-10-02T20:56:08.3001059Z"
   },
   {
-    "title": "$ThemeProperties",
-    "text": ":root {\n  --col0: #323232;\n  --col1: #6e6e6e;\n  --col2: #efefef;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col5: #dfdfdf;\n  --col6: #6db193;\n  --notify-rgba: 210, 180, 90;\n  --rad1: 0.3rem;\n  --rad2: 0.3rem;\n  --rad3: 0.3rem;\n  --rad4: 0.3rem;\n}",
+    "title": "$Themes",
+    "text": "<<ThemeSelector>>",
     "tags": [
       "Shadow"
     ],
-    "type": "css",
-    "created": "2024-09-23T21:03:59.0000000Z",
-    "updated": "2024-09-23T21:03:59.0000000Z"
+    "type": "x-twiki",
+    "created": "2024-10-02T19:25:32.8407730Z",
+    "updated": "2024-10-02T19:25:33.0496912Z"
   },
   {
     "title": "$TiddlerDisplay",
@@ -9852,13 +9913,13 @@ span.error {
   },
   {
     "title": "$TWIKIVersion",
-    "text": "0.0.10 RC1",
+    "text": "0.0.10",
     "tags": [
       "Shadow"
     ],
     "type": "text",
     "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-10-01T21:27:34.5322184Z",
+    "updated": "2024-10-02T21:32:50.8151564Z",
     "readOnly": true
   },
   {
@@ -9916,7 +9977,6 @@ const tw = {
     saveVisible,
     updateTiddler,
     updateTiddlerHard,
-    updateTiddlerText,
     addTiddler,
     deleteTiddler,
     getTiddler,
@@ -9936,8 +9996,16 @@ const tw = {
     hideTiddler,
     renderAllTiddlers,
     reload
-  }
+  },
+  fcn,
+  call
 };
+function fcn(functionName) {
+  return eval(functionName);
+}
+function call(functionName, ...args) {
+  return eval(functionName)(...args);
+}
 const { namespaceCreate, namespaceSwitch, namespaceLoad, namespaceDelete } = Namespaces(tw);
 if (!tw.storage.get("namespace")) namespaceCreate("default", true);
 tw.namespace = tw.storage.get("namespace");
@@ -9960,6 +10028,8 @@ tw.events.subscribe("reboot.soft", rebootSoft);
 tw.events.subscribe("reboot.hard", rebootHard);
 tw.events.subscribe("search", searchQuery);
 tw.events.subscribe("ui.reload", reload);
+tw.events.subscribe("ui.theme.switch", themeSwitch);
+tw.events.subscribe("ui.theme.repaint", themeUpdate);
 tw.events.subscribe("tiddler.preview", tw.run.previewTiddler);
 tw.events.subscribe("tiddler.delete", deleteTiddler);
 tw.events.subscribe("tiddler.deleted", tw.run.reload);
@@ -9996,7 +10066,7 @@ function reload() {
   loadTemplates();
   runTiddlers();
   (_a2 = $$("*[tiddler-include]")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
-  updateTheme();
+  themeUpdate();
   renderAllTiddlers();
 }
 function loadTemplates() {
@@ -10048,13 +10118,20 @@ function runTiddlers() {
   let fails = 0;
   tw.tiddlers.all.filter(isCodeTiddler).forEach((t) => {
     try {
-      executeText(t.text, t.title);
-    } catch (e) {
+      executeCodeTiddler(t.text, t.title);
+    } catch {
       fails++;
-      tw.ui.notify(e.message, "E", e.stack);
     }
     if (fails > 10) throw new Error("Too many failures, launch safe mode!");
   });
+}
+function executeCodeTiddler(text2, title2) {
+  try {
+    return executeText(text2, title2);
+  } catch (e) {
+    tw.ui.notify(e.message, "E", e.stack);
+    throw e;
+  }
 }
 function executeText(text2, title2, context) {
   let result2;
@@ -10062,9 +10139,8 @@ function executeText(text2, title2, context) {
     result2 = (1, eval)(text2);
   } catch (e) {
     let msg2 = `executeText "${title2}" ${context ? " in tiddler '" + context + "'" : ""}`;
-    tw.ui.notify(msg2, "E");
     de(`${msg2}: ${e.message}`, e.stack);
-    throw e;
+    throw new Error(`${msg2}: ${e.message}`);
   }
   return result2;
 }
@@ -10132,13 +10208,13 @@ function makeTiddlerText({ title: title2, text: text2, type }) {
   }
 }
 function makeTiddlerTagLinks(tags) {
-  return tags.map((t) => {
-    return markdown1(`[${t}](#msg:ui.openAll:{tag:'${t}',title:'*'})`);
-  }).join(", ");
+  return markdown1(tags.map((t) => {
+    return `[${t}](#msg:ui.openAll:{tag:'${t}',title:'*'})`;
+  }).join(", "));
 }
 function makeTiddlerMetaInfo(t) {
   return markdown1([
-    `${t.package ? "[" + t.package + "](#msg:search:pck:" + t.package + ")" : ""}`,
+    `${t.package ? "[pck:" + t.package + "](#msg:search:pck:" + t.package + ")" : ""}`,
     `${t.readOnly ? "readOnly ✅" : ""}`,
     `${t.doNotSave ? "doNotSave ✅" : ""}`,
     `${t.isRawShadow ? "isRawShadow ✅" : ""}`
@@ -10359,7 +10435,7 @@ function updateTiddlerHard(currentTitle, newTiddler) {
 }
 function updateTiddlerText(title2, text2) {
   let t = getTiddler(title2);
-  updateTiddler({ ...t, text: text2 });
+  updateTiddler(title2, { ...t, text: text2 });
 }
 function rerenderTiddler(title2) {
   let el = getTiddlerElement(title2);
@@ -10406,9 +10482,11 @@ function tiddlerUpdated(title2) {
   var _a2;
   let t = getTiddler(title2);
   if (isCodeTiddler(t))
-    return executeText(t.text, title2);
-  if (isThemeTiddler(t.title))
-    return updateTheme();
+    return executeCodeTiddler(t.text, title2);
+  if (tiddlerIsThemeRelevant(t.title))
+    return themeUpdate();
+  if (tiddlerIsATheme(t.title))
+    return themesUpdate();
   if (["$SiteTitle", "$SiteSubTitle", "$TitleBar"].includes(title2))
     (_a2 = $$("*[tiddler-include]")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
   switch (title2) {
@@ -10419,12 +10497,39 @@ function tiddlerUpdated(title2) {
       break;
   }
 }
-function updateTheme() {
-  let css2 = getTiddlerList("$Theme").map(getTiddlerTextRaw).join("\n");
+function themeSwitch(theme) {
+  if (!theme) return;
+  if (!tw.fcn("tiddlerExists")(theme)) return tw.ui.notify(`Unknown theme tiddler '${theme}'!`, "E");
+  updateTiddlerText("$Theme", `[[${theme}]]`);
+  tw.events.send("tiddler.refresh", "$Theme");
+  tw.events.send("ui.theme.repaint", theme);
+  tw.events.send("save", theme);
+}
+function themeUpdate() {
+  let css2 = getThemeStyleSheets().map(getTiddlerTextRaw).join("\n");
   tw.stylesheets.custom.replaceSync(css2);
 }
-function isThemeTiddler(title2) {
-  return getTiddlerList("$Theme").includes(title2);
+function tiddlerIsATheme(title2) {
+  var _a2;
+  return (_a2 = getTiddler(title2)) == null ? void 0 : _a2.tags.includes("$Theme");
+}
+function themesUpdate() {
+  tw.events.send("tiddler.refresh", "$Themes");
+}
+function tiddlerIsThemeRelevant(title2) {
+  let themeName = getCurrentThemeName();
+  return title2 === "$Theme" || title2 === themeName || getThemeStyleSheets().includes(title2);
+}
+function getCurrentThemeName() {
+  return getTiddlerTextRaw("$Theme").replace(/[\[\]]/g, "");
+}
+function getThemeStyleSheets() {
+  let themeName = getCurrentThemeName();
+  if (!tiddlerExists(themeName)) {
+    tw.ui.notify("Unable to determine theme name from $Theme tiddler! Falling back on $CoreTheme", "W");
+    themeName = "$CoreTheme";
+  }
+  return getTiddlerList(themeName);
 }
 function replaceInArray(array, test2, newItem) {
   let index = array.findIndex(test2);
@@ -10538,6 +10643,11 @@ function tiddlerSpanInclude(el) {
     el.innerHTML = `<span class="error">ERROR: Include "${title2}" Failed: ${e.message}</span>`;
     de(`tiddlerSpanInclude "${title2}" Failed: ${e.message}`, e.stack);
   }
+  tw.events.subscribe("tiddler.refresh", (t) => {
+    if (t === title2) {
+      tiddlerSpanInclude(el);
+    }
+  }, "handle.tiddler.refresh." + title2);
 }
 function getTiddlerTextRaw(title2) {
   var _a2;
@@ -10598,7 +10708,7 @@ function loadStore(store) {
     if (!t.type) t.type = "x-twiki";
     t.doNotSave = true;
     t.isRawShadow = true;
-    if (t.title === "$CorePackages" && document.location.host.match(/^localhost/)) t.text = t.text.replaceAll("https://raw.githubusercontent.com/cawoodm/twiki/main/src", "http://localhost:3000");
+    if (t.title === "$CorePackages" && document.location.host.match(/^localhost/)) t.text = t.text.replaceAll("https://cawoodm.github.io/twiki", "http://localhost:3000/tiddlers");
     if (!tiddlerExists(t.title))
       addTiddler({ ...t });
   });

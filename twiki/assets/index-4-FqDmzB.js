@@ -9986,6 +9986,7 @@ const tw = {
     getJSONObject,
     getKeyValuesArray,
     getKeyValuesObject,
+    getThemeNames,
     showTiddlerList,
     showTiddler,
     previewTiddler,
@@ -10523,6 +10524,9 @@ function tiddlerIsThemeRelevant(title2) {
 function getCurrentThemeName() {
   return getTiddlerTextRaw("$Theme").replace(/[\[\]]/g, "");
 }
+function getThemeNames() {
+  return getTiddlersByTag("$Theme").map((t) => t.title);
+}
 function getThemeStyleSheets() {
   let themeName = getCurrentThemeName();
   if (!tiddlerExists(themeName)) {
@@ -10680,6 +10684,9 @@ function getKeyValuesObject(title2) {
 }
 function getJSONObject(title2) {
   return JSON.parse(getTiddlerTextRaw(title2));
+}
+function getTiddlersByTag(tag) {
+  return tw.tiddlers.all.filter((t) => t.tags.includes(tag));
 }
 function tagMatch(tag) {
   if (!tag || tag === "*") return () => true;

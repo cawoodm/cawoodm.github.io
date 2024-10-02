@@ -5,24 +5,24 @@
       "text": ":root {\n  --col0: #323232;\n  --col1: #6e6e6e;\n  --col2: #efefef;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col5: #dfdfdf;\n  --col6: #6db193;\n  --rad1: 10px;\n  --rad2: 5px;\n}",
       "tags": [],
       "type": "css",
-      "created": "2024-09-24T07:24:50.0264458Z",
-      "updated": "2024-09-24T07:24:50.0264458Z"
+      "created": "2024-09-18T07:54:56.0000000Z",
+      "updated": "2024-09-18T07:54:56.0000000Z"
     },
     {
       "title": "$StyleSheetKhaki",
       "text": ":root {\n  --col0: #465f70;\n  --col1: #feffdf;\n  --col2: #d1d2d3;\n  --col3: #97cba9;\n  --col4: #668ba4;\n  --col5: #9fa17b;\n  --col6: #4d4dce;\n}",
       "tags": [],
       "type": "css",
-      "created": "2024-09-24T07:24:50.0264458Z",
-      "updated": "2024-09-24T07:24:50.0264458Z"
+      "created": "2024-09-18T07:54:56.0000000Z",
+      "updated": "2024-09-18T07:54:56.0000000Z"
     },
     {
       "title": "$StyleSheetWhite",
       "text": ":root {\n  --col0: #222;\n  --col1: #999999;\n  --col2: #ffffff;\n  --col3: #cbcbcb;\n  --col4: #bbbbbb;\n  --col5: #e8e8e8;\n  --col6: #4d4dae;\n}",
       "tags": [],
       "type": "css",
-      "created": "2024-09-24T07:24:50.0264458Z",
-      "updated": "2024-09-24T07:24:50.0264458Z"
+      "created": "2024-09-18T07:54:56.0000000Z",
+      "updated": "2024-09-18T07:54:56.0000000Z"
     }
   ]
 }

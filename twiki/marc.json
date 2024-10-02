@@ -5,24 +5,24 @@
       "text": "// Friendly reminder to backup!\nlet secs = parseInt(tw.run.getJSONObject('$GeneralSettings')?.backup?.backupInSeconds || 1800, 10);\nconsole.log('Backup reminder every', secs, 'seconds');\nsetInterval(() => {\n  tw.ui.notify('Remember to backup', 'I');\n  clearTimeout(tw.tmp.notifyId); // User must click it away\n}, secs * 1000);\n\n// // Display immediately conflicts with startup notifications so we display in 10s\n// setTimeout(() => {\n//   tw.ui.notify('Remember to backup', 'I');\n//   clearTimeout(tw.tmp.notifyId); // User must click it away\n// }, 10 * 1000);\n",
       "tags": [],
       "type": "script/js",
-      "created": "2024-10-01T08:42:40.0858787Z",
-      "updated": "2024-10-01T08:42:40.0858787Z"
+      "created": "2024-09-15T20:45:09.0000000Z",
+      "updated": "2024-10-01T08:47:44.0000000Z"
     },
     {
       "title": "MarcHacks",
       "text": "tw.macros.marc = {\n  loadThemeButton(filter, force = true) {\n    if (!filter) filter = 'default';\n    return tw.ui.button(`Load Theme: ${filter}`, 'package.reload.url', {url: './tiddlers/themes.json', name: 'test', filter, force});\n  },\n  loadThemeFromBinButton(filter, force = true) {\n    if (!filter) filter = 'default';\n    return tw.ui.button(`Load Theme JSONBin: ${filter}`, 'package.reload.bin', {url: 'https://api.jsonbin.io/v3/b/66eb26c8ad19ca34f8a87ae9', name: 'test', filter, force});\n  },\n};\n",
       "tags": [],
       "type": "script/js",
-      "created": "2024-09-24T07:24:50.0264458Z",
-      "updated": "2024-09-24T07:24:50.0264458Z"
+      "created": "2024-09-15T20:45:09.0000000Z",
+      "updated": "2024-09-23T21:03:59.0000000Z"
     },
     {
       "title": "MarcSettings",
       "text": "{\n  \"name\": \"Marc Cawood\"\n}",
       "tags": [],
       "type": "json",
-      "created": "2024-09-24T07:24:50.0264458Z",
-      "updated": "2024-09-24T07:24:50.0264458Z"
+      "created": "2024-09-18T07:54:56.0000000Z",
+      "updated": "2024-09-18T07:54:56.0000000Z"
     }
   ]
 }

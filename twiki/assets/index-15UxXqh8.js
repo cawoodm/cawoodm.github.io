@@ -9354,14 +9354,14 @@ function button(title2, message, payload, id = "") {
 }
 const shadowTiddlers = [
   {
-    "title": "$AutoImport",
+    "title": "$CorePackages",
     "text": "* https://cawoodm.github.io/twiki/core.json save,force\n* https://cawoodm.github.io/twiki/icons.json save\n* https://cawoodm.github.io/twiki/website.json nooverwrite",
     "tags": [
       "Shadow"
     ],
     "type": "list",
-    "created": "2024-10-01T11:08:47.4102054Z",
-    "updated": "2024-10-01T11:08:47.4102054Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-10-01T11:13:16.0000000Z"
   },
   {
     "title": "$GeneralSettings",
@@ -9370,8 +9370,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "json",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   },
   {
     "title": "$IconCancel",
@@ -9380,8 +9380,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   },
   {
     "title": "$IconDelete",
@@ -9390,8 +9390,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   },
   {
     "title": "$IconDone",
@@ -9400,8 +9400,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   },
   {
     "title": "$IconEdit",
@@ -9410,8 +9410,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   },
   {
     "title": "$IconNew",
@@ -9420,8 +9420,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   },
   {
     "title": "$IconSave",
@@ -9430,8 +9430,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   },
   {
     "title": "$Namespaces",
@@ -9440,18 +9440,18 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   },
   {
     "title": "$Settings",
-    "text": "* [[$GeneralSettings]]\n* [[$TitleBar]]\n  * [[$SiteTitle]]\n  * [[$SiteSubTitle]]\n* [[$Theme]]\n  * [[$TiddlerDisplay]]\n* [[$AutoImport]]",
+    "text": "* [[$GeneralSettings]]\n* [[$TitleBar]]\n  * [[$SiteTitle]]\n  * [[$SiteSubTitle]]\n* [[$Theme]]\n  * [[$TiddlerDisplay]]\n* [[$CorePackages]]",
     "tags": [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-10-01T20:43:07.0555561Z"
   },
   {
     "title": "$SiteSubTitle",
@@ -9460,8 +9460,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   },
   {
     "title": "$SiteTitle",
@@ -9470,8 +9470,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   },
   {
     "title": "$StyleSheetCore",
@@ -9480,8 +9480,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "css",
-    "created": "2024-09-24T07:24:50.0264458Z",
-    "updated": "2024-09-24T07:24:50.0264458Z"
+    "created": "2024-09-23T21:03:59.0000000Z",
+    "updated": "2024-09-23T21:03:59.0000000Z"
   },
   {
     "title": "$Theme",
@@ -9490,8 +9490,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5587735Z",
-    "updated": "2024-10-01T06:14:28.5587735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   },
   {
     "title": "$ThemeLayout",
@@ -9807,8 +9807,8 @@ span.error {
       "Shadow"
     ],
     "type": "css",
-    "created": "2024-10-01T06:40:05.5482689Z",
-    "updated": "2024-10-01T06:40:05.5482689Z"
+    "created": "2024-09-23T21:03:59.0000000Z",
+    "updated": "2024-10-01T08:47:44.0000000Z"
   },
   {
     "title": "$ThemeProperties",
@@ -9817,18 +9817,18 @@ span.error {
       "Shadow"
     ],
     "type": "css",
-    "created": "2024-09-24T07:24:50.0264458Z",
-    "updated": "2024-09-24T07:24:50.0264458Z"
+    "created": "2024-09-23T21:03:59.0000000Z",
+    "updated": "2024-09-23T21:03:59.0000000Z"
   },
   {
     "title": "$TiddlerDisplay",
-    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="close" title="close">{{$IconCancel}}</button>\n    <button class="edit" title="edit" {{=editDisabled}}>{{$IconEdit}}</button>\n    <button class="delete" title="delete"{{=editDisabled}}>{{$IconDelete}}</button>\n  </div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
+    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="close" title="close">{{$IconCancel}}</button>\n    <button class="edit" title="edit" {{=editDisabled}}>{{$IconEdit}}</button>\n    <button class="delete" title="delete"{{=editDisabled}}>{{$IconDelete}}</button>\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
     "tags": [
       "Shadow"
     ],
     "type": "html/template",
-    "created": "2024-10-01T06:14:28.5687735Z",
-    "updated": "2024-10-01T06:14:28.5687735Z"
+    "created": "2024-09-24T22:21:48.0000000Z",
+    "updated": "2024-10-01T21:21:22.9662680Z"
   },
   {
     "title": "$TiddlerTypes",
@@ -9837,28 +9837,28 @@ span.error {
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5687735Z",
-    "updated": "2024-10-01T06:14:28.5687735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   },
   {
     "title": "$TitleBar",
-    "text": "<<ShowAllTiddlersButton>>  <<CloseAllTiddlersButton>> <<backup.restoreButton>> <<backup.backupButton>> <<Save>> <<New>>\n\n[🏷️Tags](#Tags) | [⭐Favs](#msg:ui.openAll:{tag:\\'Favorite\\'}) | <<TrashCanIcon>> | [⚙️](#$Settings) | [❔Help](#Help)",
+    "text": "<<ShowAllTiddlersButton>>  <<CloseAllTiddlersButton>> <<backup.restoreButton>> <<backup.backupButton>> <<synch.full>> <<Save>> <<New>>\n\n[🏷️Tags](#Tags) | [⭐Favs](#msg:ui.openAll:{tag:\\'Favorite\\'}) | <<TrashCanIcon>> | [⚙️](#$Settings) | [❔Help](#Help)",
     "tags": [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5687735Z",
-    "updated": "2024-10-01T06:14:28.5687735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-10-01T20:44:47.8072366Z"
   },
   {
     "title": "$TWIKIVersion",
-    "text": "0.0.9 RC1",
+    "text": "0.0.10 RC1",
     "tags": [
       "Shadow"
     ],
     "type": "text",
-    "created": "2024-10-01T08:47:29.6657788Z",
-    "updated": "2024-10-01T08:47:29.6657788Z",
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-10-01T21:27:34.5322184Z",
     "readOnly": true
   },
   {
@@ -9868,8 +9868,8 @@ span.error {
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-01T06:14:28.5687735Z",
-    "updated": "2024-10-01T06:14:28.5687735Z"
+    "created": "2024-09-30T21:45:53.0000000Z",
+    "updated": "2024-09-30T21:45:53.0000000Z"
   }
 ];
 const reTiddlerTitle = /[a-z0-9_\-\.:\s\$\ud83c\ud000-\udfff\ud83d\ud000-\udfff\ud83e\ud000-\udfff]+/gi;
@@ -9984,7 +9984,7 @@ function rebootSofter() {
   reload();
 }
 async function rebootSoft() {
-  await loadAutoImport();
+  await loadCorePackages();
   reload();
 }
 function rebootHard() {
@@ -10003,10 +10003,10 @@ function loadTemplates() {
   tw.templates.TiddlerDisplay = renderTiddler("$TiddlerDisplay");
   tw.templates.TiddlerSearchResult = renderTiddler("$TiddlerSearchResult");
 }
-async function loadAutoImport() {
+async function loadCorePackages() {
   var _a2;
-  let autoImport = tw.run.getTiddlerList("$AutoImport");
-  for (let p of autoImport) {
+  let corePackages = tw.run.getTiddlerList("$CorePackages");
+  for (let p of corePackages) {
     let params2 = p.split(" ");
     let url = params2[0];
     let name = (_a2 = url.match(/([^.\/]+)\.json$/)) == null ? void 0 : _a2[1];
@@ -10306,9 +10306,10 @@ function formSaveTiddler() {
       addTiddler(t, true);
       tw.events.send("tiddler.created", t.title);
     }
-  } catch {
-    if (confirm("Do you want to force save?")) ;
-    else {
+  } catch (e) {
+    if (confirm(e.message + "\nDo you want to force save?")) {
+      updateTiddlerHard(oldTitle, t);
+    } else {
       return;
     }
   }
@@ -10413,7 +10414,7 @@ function tiddlerUpdated(title2) {
   switch (title2) {
     case "$TiddlerDisplay":
       break;
-    case "$AutoImport":
+    case "$CorePackages":
       if (confirm("Would you like to refresh?")) tw.events.send("reboot.soft");
       break;
   }
@@ -10597,7 +10598,7 @@ function loadStore(store) {
     if (!t.type) t.type = "x-twiki";
     t.doNotSave = true;
     t.isRawShadow = true;
-    if (t.title === "$AutoImport" && document.location.host.match(/^localhost/)) t.text = t.text.replaceAll("https://raw.githubusercontent.com/cawoodm/twiki/main/src", "http://localhost:3000");
+    if (t.title === "$CorePackages" && document.location.host.match(/^localhost/)) t.text = t.text.replaceAll("https://raw.githubusercontent.com/cawoodm/twiki/main/src", "http://localhost:3000");
     if (!tiddlerExists(t.title))
       addTiddler({ ...t });
   });

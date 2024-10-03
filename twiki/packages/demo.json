@@ -1,0 +1,12 @@
+{
+  "tiddlers": [
+    {
+      "title": "$FavoritesPlugin",
+      "text": "/**\n * ## Description\n * Provide <<favorites.toggle>> widget\n *   Toggles tag 'Favorite' on current tiddler\n *   for use on $TiddlerDisplay template\n */\n/**\n * ## Data\n * ```json\n * {\n *   \"version\": 1.0.0\n * }\n * ```\n */\n\ntw.macros.favorites = {\n  toggle() {\n    return tw.ui.button('⭐', 'favorites.toggle', '{{ctx.currentTiddler}}', 'favoriteAdd');\n  },\n};\ntw.events.subscribe('favorites.toggle', (t) => {\n  if (t.readOnly) return tw.ui.notify('Tiddler is readonly!', 'E');\n  if (t.doNotSave) tw.ui.notify('Tiddler will not be saved!', 'W');\n  tw.call('tiddlerToggleTag', t.title, 'Favorite');\n  tw.events.send('save.silent');\n});\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-10-03T11:48:47.9412509Z",
+      "updated": "2024-10-03T13:02:23.6182193Z"
+    }
+  ]
+}

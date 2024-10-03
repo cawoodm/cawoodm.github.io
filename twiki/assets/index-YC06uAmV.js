@@ -9365,8 +9365,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "list",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-10-01T11:13:16.0000000Z"
+    "created": "2024-10-01T21:50:55.0000000Z",
+    "updated": "2024-10-01T21:50:55.0000000Z"
   },
   {
     "title": "$CoreThemeDark",
@@ -9377,8 +9377,8 @@ const shadowTiddlers = [
       "$ThemeDark"
     ],
     "type": "x-twiki",
-    "created": "2024-10-02T20:25:08.6653844Z",
-    "updated": "2024-10-02T20:32:42.2928054Z"
+    "created": "2024-10-02T21:55:55.0000000Z",
+    "updated": "2024-10-02T21:55:55.0000000Z"
   },
   {
     "title": "$CoreThemeLight",
@@ -9388,8 +9388,8 @@ const shadowTiddlers = [
       "$Theme"
     ],
     "type": "x-twiki",
-    "created": "2024-10-02T19:13:18.2186300Z",
-    "updated": "2024-10-02T20:32:42.2928054Z"
+    "created": "2024-10-02T21:55:55.0000000Z",
+    "updated": "2024-10-02T21:55:55.0000000Z"
   },
   {
     "title": "$GeneralSettings",
@@ -9478,8 +9478,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-10-01T20:43:07.0555561Z"
+    "created": "2024-10-01T21:50:55.0000000Z",
+    "updated": "2024-10-01T21:50:55.0000000Z"
   },
   {
     "title": "$SiteSubTitle",
@@ -9509,8 +9509,8 @@ const shadowTiddlers = [
       "$StyleSheet"
     ],
     "type": "css",
-    "created": "2024-09-23T21:03:59.0000000Z",
-    "updated": "2024-10-02T20:56:08.3001059Z"
+    "created": "2024-10-02T21:55:55.0000000Z",
+    "updated": "2024-10-02T21:55:55.0000000Z"
   },
   {
     "title": "$StyleSheetCoreDark",
@@ -9520,8 +9520,8 @@ const shadowTiddlers = [
       "$StyleSheet"
     ],
     "type": "css",
-    "created": "2024-10-02T20:25:51.1492132Z",
-    "updated": "2024-10-02T20:56:27.9051300Z"
+    "created": "2024-10-02T21:55:55.0000000Z",
+    "updated": "2024-10-02T21:55:55.0000000Z"
   },
   {
     "title": "$Theme",
@@ -9530,8 +9530,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-10-02T20:25:09.0686188Z"
+    "created": "2024-10-02T21:55:55.0000000Z",
+    "updated": "2024-10-02T21:55:55.0000000Z"
   },
   {
     "title": "$ThemeBase",
@@ -9868,8 +9868,8 @@ span.error {
       "$StyleSheet"
     ],
     "type": "css",
-    "created": "2024-09-23T21:03:59.0000000Z",
-    "updated": "2024-10-02T20:56:08.3001059Z"
+    "created": "2024-10-02T21:55:55.0000000Z",
+    "updated": "2024-10-02T21:55:55.0000000Z"
   },
   {
     "title": "$Themes",
@@ -9878,8 +9878,8 @@ span.error {
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-02T19:25:32.8407730Z",
-    "updated": "2024-10-02T19:25:33.0496912Z"
+    "created": "2024-10-02T21:55:55.0000000Z",
+    "updated": "2024-10-02T21:55:55.0000000Z"
   },
   {
     "title": "$TiddlerDisplay",
@@ -9888,8 +9888,8 @@ span.error {
       "Shadow"
     ],
     "type": "html/template",
-    "created": "2024-09-24T22:21:48.0000000Z",
-    "updated": "2024-10-01T21:21:22.9662680Z"
+    "created": "2024-10-01T21:50:55.0000000Z",
+    "updated": "2024-10-01T21:50:55.0000000Z"
   },
   {
     "title": "$TiddlerTypes",
@@ -9908,18 +9908,18 @@ span.error {
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-10-01T20:44:47.8072366Z"
+    "created": "2024-10-01T21:50:55.0000000Z",
+    "updated": "2024-10-01T21:50:55.0000000Z"
   },
   {
     "title": "$TWIKIVersion",
-    "text": "0.0.10",
+    "text": "0.0.11 RC1",
     "tags": [
       "Shadow"
     ],
     "type": "text",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-10-02T21:32:50.8151564Z",
+    "created": "2024-10-03T07:36:03.9175613Z",
+    "updated": "2024-10-03T07:36:03.9175613Z",
     "readOnly": true
   },
   {
@@ -10434,10 +10434,6 @@ function updateTiddler(currentTitle, newTiddler, userEdit) {
 function updateTiddlerHard(currentTitle, newTiddler) {
   upsertInArray(tw.tiddlers.all, titleIs(currentTitle), newTiddler);
 }
-function updateTiddlerText(title2, text2) {
-  let t = getTiddler(title2);
-  updateTiddler(title2, { ...t, text: text2 });
-}
 function rerenderTiddler(title2) {
   let el = getTiddlerElement(title2);
   if (!el) return;
@@ -10501,7 +10497,10 @@ function tiddlerUpdated(title2) {
 function themeSwitch(theme) {
   if (!theme) return;
   if (!tw.fcn("tiddlerExists")(theme)) return tw.ui.notify(`Unknown theme tiddler '${theme}'!`, "E");
-  updateTiddlerText("$Theme", `[[${theme}]]`);
+  let tiddler = getTiddler("$Theme");
+  tiddler.text = `[[${theme}]]`;
+  delete tiddler.doNotSave;
+  updateTiddlerHard("$Theme", tiddler);
   tw.events.send("tiddler.refresh", "$Theme");
   tw.events.send("ui.theme.repaint", theme);
   tw.events.send("save", theme);

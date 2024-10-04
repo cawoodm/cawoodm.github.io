@@ -9203,7 +9203,8 @@ function Events() {
     send,
     subscribe(event2, handler, handlerName) {
       handlerName = handler.name || handlerName;
-      if (handlers.find((h) => h.event === event2 && h.handler.name === handlerName)) debugger;
+      if (handlers.find((h) => h.event === event2 && h.handler.name === handlerName)) return dw("Ignoring duplicate event handler");
+      dp("subscribe", event2, handlerName);
       handlers.push({ event: event2, handler });
     },
     override(event2, handler) {
@@ -9227,12 +9228,25 @@ function Events() {
       } catch {
         de("events.send received invalid JSON payload: " + params);
       }
+      else if (params == null ? void 0 : params.match(/.+=.+/)) try {
+        let obj = {};
+        params.split(",").forEach((k) => {
+          Object.assign(obj, splitStr(k));
+          params = obj;
+        });
+      } catch (e) {
+        de(e);
+      }
     }
     let result = [];
     handlers.filter((h) => h.event === event).forEach((h) => {
       result.push(h.handler(params));
     });
     return result;
+  }
+  function splitStr(x) {
+    const y = x.split("=");
+    return { [y[0].trim()]: y[1].trim() };
   }
 }
 function Packages(tw2) {
@@ -9371,7 +9385,7 @@ function simpleSearch(q) {
     };
   };
 }
-function button(text2, message, payload, id = "") {
+function button(text2, message, payload, id = "", attr = "") {
   if (text2.match(/[<\{]/))
     text2 = tw.call("renderTwiki", { text: text2 });
   else
@@ -9380,7 +9394,7 @@ function button(text2, message, payload, id = "") {
   if (text2.match(/<svg/)) className = "icon";
   if (typeof payload === "undefined") payload = "";
   let params2 = typeof payload === "object" ? JSON.stringify(payload) : payload;
-  return `<button${id ? ' id="' + id + '"' : ""} class="${className}" onclick="tw.events.sendEncoded(this, '${message}', '${encoder(params2)}')">${text2}</button>`;
+  return `<button${id ? ' id="' + id + '"' : ""} class="${className}" onclick="tw.events.sendEncoded(this, '${message}', '${encoder(params2)}')" ${attr}>${text2}</button>`;
 }
 const shadowTiddlers = [
   {
@@ -9427,6 +9441,16 @@ const shadowTiddlers = [
     "updated": "2024-10-04T19:45:16.2089505Z"
   },
   {
+    "title": "$IconBackup",
+    "text": "Backup",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-04T20:30:49.2443122Z",
+    "updated": "2024-10-04T20:30:49.4911028Z"
+  },
+  {
     "title": "$IconCancel",
     "text": "ⓧ",
     "tags": [
@@ -9435,6 +9459,16 @@ const shadowTiddlers = [
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2089505Z",
     "updated": "2024-10-04T19:45:16.2099502Z"
+  },
+  {
+    "title": "$IconCloseAll",
+    "text": "Close All",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-04T20:27:07.7376234Z",
+    "updated": "2024-10-04T20:27:08.0374043Z"
   },
   {
     "title": "$IconDelete",
@@ -9497,6 +9531,36 @@ const shadowTiddlers = [
     "updated": "2024-10-04T19:45:16.2119516Z"
   },
   {
+    "title": "$IconOpenAll",
+    "text": "Open All",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-04T20:28:35.0916955Z",
+    "updated": "2024-10-04T20:28:35.3551841Z"
+  },
+  {
+    "title": "$IconRefresh",
+    "text": "🔃",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-04T20:21:19.0718810Z",
+    "updated": "2024-10-04T20:21:19.3672282Z"
+  },
+  {
+    "title": "$IconRestore",
+    "text": "Restore",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-04T20:35:27.2984752Z",
+    "updated": "2024-10-04T20:35:27.6136249Z"
+  },
+  {
     "title": "$IconSave",
     "text": "🖫",
     "tags": [
@@ -9515,6 +9579,16 @@ const shadowTiddlers = [
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2129525Z",
     "updated": "2024-10-04T19:45:16.2129525Z"
+  },
+  {
+    "title": "$IconSynch",
+    "text": "Synch",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-04T20:37:05.7541639Z",
+    "updated": "2024-10-04T20:37:06.0098287Z"
   },
   {
     "title": "$IconTag",
@@ -9959,14 +10033,25 @@ span.error {
   },
   {
     "title": "$TiddlerDisplay",
-    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.close:$currentTiddler.title">{{$IconCancel}}</button>\n    <button class="icon" title="edit" {{=editDisabled}} data-msg="tiddler.edit:{{=title}}">{{$IconEdit}}</button>\n    <button class="icon" title="delete"{{=editDisabled}} data-msg="tiddler.delete:{{=title}}">{{$IconDelete}}</button>\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
+    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.close:$currentTiddler.title">{{$IconCancel}}</button>\n    <button class="icon" title="edit" {{=editDisabled}} data-msg="tiddler.edit:{{=title}}">{{$IconEdit}}</button>\n    <button class="icon" title="delete"{{=editDisabled}} data-msg="tiddler.delete:{{=title}}">{{$IconDelete}}</button>\n    <button class="icon" title="favorite"{{=editDisabled}} data-msg="favorites.toggle:{{=title}}">{{$IconFavorite}}</button>\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
     "tags": [
       "Shadow",
       "$Template"
     ],
     "type": "html/template",
     "created": "2024-10-04T19:45:16.2159490Z",
-    "updated": "2024-10-04T19:45:16.2159490Z"
+    "updated": "2024-10-04T21:25:44.1337862Z"
+  },
+  {
+    "title": "$TiddlerPreview",
+    "text": '<div class="tiddler" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.preview.close:$currentTiddler.title">{{$IconCancel}}</button>\n    <!-- TODO: Save Button -->\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
+    "tags": [
+      "Shadow",
+      "$Template"
+    ],
+    "type": "html/template",
+    "created": "2024-10-04T20:11:48.2373631Z",
+    "updated": "2024-10-04T20:51:08.1240679Z"
   },
   {
     "title": "$TiddlerSearchResult",
@@ -9980,6 +10065,17 @@ span.error {
     "updated": "2024-10-04T19:45:16.2169485Z"
   },
   {
+    "title": "$TiddlerTrashed",
+    "text": '<div class="tiddler" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.preview.close:$currentTiddler.title">{{$IconCancel}}</button>\n    <button class="icon" title="delete" data-msg="tiddler.trashed.destroy:$currentTiddler.title">{{$IconDelete}}</button>\n    <button class="icon" title="restore" data-msg="tiddler.trashed.restore:$currentTiddler.title">{{$IconRefresh}}</button>\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
+    "tags": [
+      "Shadow",
+      "$Template"
+    ],
+    "type": "html/template",
+    "created": "2024-10-04T20:47:04.6086845Z",
+    "updated": "2024-10-04T20:47:04.8798731Z"
+  },
+  {
     "title": "$TiddlerTypes",
     "text": "* x-twiki: TWiki Data\n* plain: Plain Text\n* html: HTML\n* html/template: HTML Template\n* css: StyleSheet\n* script/js: JavaScript\n* markdown: Markdown\n* macro: Macro\n* list: List\n* keyval: Key Values\n* table: Tabular Data\n* json: JSON Data\n",
     "tags": [
@@ -9991,23 +10087,23 @@ span.error {
   },
   {
     "title": "$TitleBar",
-    "text": "<<ShowAllTiddlersButton>>  <<CloseAllTiddlersButton>> <<backup.restoreButton>> <<backup.backupButton>> <<synch.full>>  <<New>>\n\n<<Save>>\n[{{$IconFavorite}}](#msg:ui.open.all:{tag:\\'Favorite\\'})\n<<Settings>>\n<<TrashCanIcon>>\n[{{$IconTag}}](#Tags)\n\n [{{$IconHelp}}](#Help)",
+    "text": '<<ShowAllTiddlersButton>> \n<<CloseAllTiddlersButton>>\n\n<<backup.backupButton>> \n<<backup.restoreButton>> \n \n<<synch.full>> \n\n<<New>>\n\n<<Save>>\n[{{$IconFavorite}}](#msg:ui.open.all:{"tag":"Favorite"})\n<<Settings>>\n<<TrashCanIcon>>\n[{{$IconTag}}](#Tags)\n\n [{{$IconHelp}}](#Help)',
     "tags": [
       "Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2169485Z",
-    "updated": "2024-10-04T19:45:16.2169485Z"
+    "updated": "2024-10-04T21:12:04.0540720Z"
   },
   {
     "title": "$TWIKIVersion",
-    "text": "0.10.1",
+    "text": "0.11.0 RC1",
     "tags": [
       "Shadow"
     ],
     "type": "text",
     "created": "2024-10-04T19:45:16.2149484Z",
-    "updated": "2024-10-04T20:01:10.0707547Z",
+    "updated": "2024-10-04T21:39:49.9218148Z",
     "readOnly": true
   },
   {
@@ -10144,7 +10240,8 @@ tw$1.events.subscribe("ui.theme.repaint", themeUpdate);
 tw$1.events.subscribe("tiddler.edit", formEditTiddler);
 tw$1.events.subscribe("tiddler.show", tw$1.run.showTiddler);
 tw$1.events.subscribe("tiddler.close", closeTiddler);
-tw$1.events.subscribe("tiddler.preview", tw$1.run.previewTiddler);
+tw$1.events.subscribe("tiddler.preview", previewTiddler);
+tw$1.events.subscribe("tiddler.preview.close", closePreview);
 tw$1.events.subscribe("tiddler.delete", deleteTiddler);
 tw$1.events.subscribe("tiddler.deleted", tw$1.run.reload);
 tw$1.events.subscribe("tiddler.refresh", rerenderTiddler);
@@ -10158,7 +10255,6 @@ tw$1.events.subscribe("package.reload.bin", tw$1.run.reloadPackageFromJSONBin);
 addEventListener("load", () => {
   addStyleSheet("highlight-light", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css");
   addStyleSheet("highlight-dark", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css");
-  if (location.host.match(/localhost/)) console.clear();
   uiWireEvents();
   rebootSoft();
 });
@@ -10194,14 +10290,17 @@ function rebootHard() {
 function reload() {
   var _a2;
   tw$1.tiddlers.visible = tw$1.tiddlers.visible.filter((title2) => tiddlerExists(title2));
-  runTiddlers();
+  runCoreTiddlers();
   loadTemplates();
   (_a2 = $$("*[tiddler-include]")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
+  runExtensionTiddlers();
   themeUpdate();
   renderAllTiddlers();
 }
 function loadTemplates() {
   tw$1.templates.TiddlerDisplay = renderTiddler("$TiddlerDisplay");
+  tw$1.templates.TiddlerPreview = renderTiddler("$TiddlerPreview");
+  tw$1.templates.TiddlerTrashed = renderTiddler("$TiddlerTrashed");
   tw$1.templates.TiddlerSearchResult = renderTiddler("$TiddlerSearchResult");
 }
 async function loadCorePackages() {
@@ -10256,18 +10355,22 @@ function tiddlerValidation(t) {
   if (!t.updated) msg.push("No updated date!");
   return msg;
 }
-function runTiddlers() {
+function runCoreTiddlers() {
+  tw$1.tiddlers.all.filter(isCodeTiddler).filter(isCoreTiddler).forEach((t) => executeCodeTiddler(t.text, t.title));
+}
+function runExtensionTiddlers() {
   let fails = 0;
-  tw$1.tiddlers.all.filter(isCodeTiddler).forEach((t) => {
+  tw$1.tiddlers.all.filter(isCodeTiddler).filter((t) => !isCoreTiddler(t)).forEach((t) => {
     try {
       executeCodeTiddler(t.text, t.title);
     } catch {
       fails++;
     }
-    if (fails > 10) throw new Error("Too many failures, launch safe mode!");
+    if (fails > 1) throw new Error("Too many failures, launch safe mode!");
   });
 }
 function executeCodeTiddler(text2, title2) {
+  dp("**********executeCodeTiddler", title2);
   try {
     return executeText(text2, title2);
   } catch (e) {
@@ -10318,8 +10421,8 @@ function newTiddlerLink({ title: title2 }) {
   newElement.innerText = title2;
   return newElement;
 }
-function createTiddlerElement(t) {
-  let template = tw$1.templates.TiddlerDisplay;
+function createTiddlerElement(t, template) {
+  template = template || tw$1.templates.TiddlerDisplay;
   let modified = t.updated ? new Date(t.updated).toDateString() + " " + new Date(t.updated).toLocaleTimeString() : "";
   let id = hash(t.title);
   let html = new Templater(template).render({
@@ -10460,14 +10563,11 @@ function strIsNumber(str) {
 function regEscape(r) {
   return r.replace(/\\/g, "\\\\").replace(/\./g, "\\.").replace(/\^/g, "\\^").replace(/\(/g, "\\(").replace(/\$/g, "\\$").replace(/\*/g, "\\*").replace(/\)/g, "\\)");
 }
-function previewTiddler(t) {
+function previewTiddler(t, template) {
   if (typeof t === "string") t = getTiddler(t);
-  let newElement = createTiddlerElement(t);
+  let newElement = createTiddlerElement(t, template || tw$1.templates.TiddlerPreview);
   tw$1.dom.preview.innerHTML = "";
   tw$1.dom.preview.insertAdjacentElement("afterbegin", newElement);
-  let closeButton = tw$1.dom.preview.querySelector("button.close");
-  tw$1.dom.preview.querySelector("div.title").innerHTML = t.title + " " + closeButton.outerHTML;
-  tw$1.dom.preview.querySelector("button.close").addEventListener("click", closePreview);
   tw$1.dom.preview.showModal();
 }
 function closePreview() {
@@ -10784,6 +10884,9 @@ function titleIs(title2) {
 function isCodeTiddler(t) {
   return ["script/js"].includes(t.type) && !t.tags.includes("Disabled");
 }
+function isCoreTiddler(t) {
+  return t.package === "core";
+}
 function htmlToNode(html) {
   const template = document.createElement("template");
   template.innerHTML = html.trim();
@@ -10939,7 +11042,7 @@ function uiWireEvents() {
   }
   document.addEventListener("dblclick", (event2) => {
     let el = event2.target;
-    let t = findAttributeUp(el, "tiddler-tiddler-title", ".tiddler") || findAttributeUp(el, "tiddler-include", "[tiddler-include]");
+    let t = findAttributeUp(el, "data-tiddler-title", ".tiddler") || findAttributeUp(el, "tiddler-include", "[tiddler-include]");
     if (!t) return;
     formEditTiddler(t);
   });
@@ -10947,8 +11050,8 @@ function uiWireEvents() {
     return navigateTo(decodeURI(document.location.hash));
   });
   function findAttributeUp(el, attribute2, selector) {
-    var _a3;
-    return el.getAttribute(attribute2) || ((_a3 = el.parentElement.closest(selector)) == null ? void 0 : _a3.getAttribute(attribute2));
+    var _a3, _b2;
+    return el.getAttribute(attribute2) || ((_b2 = (_a3 = el.parentElement) == null ? void 0 : _a3.closest(selector)) == null ? void 0 : _b2.getAttribute(attribute2));
   }
   tw$1.dom.frm = $("new-form");
   tw$1.dom.frm.addEventListener("submit", (evt) => evt.preventDefault());

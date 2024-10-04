@@ -2,11 +2,11 @@
   "tiddlers": [
     {
       "title": "$OnboardingMacros",
-      "text": "tw.macros.welcome = {\n  Start() {\n    tw.dom.$('header').style.display = 'none';\n    tw.dom.$('sidebar').style.display = 'none';\n    tw.run.showTiddler('Welcome');\n  },\n  Step1() {\n    tw.run.showTiddler('Congratulations');\n    tw.run.closeTiddler('Welcome');\n  },\n  Step2() {\n    tw.dom.$('header').style.display = '';\n    tw.dom.$('sidebar').style.display = '';\n    tw.run.closeTiddler('Congratulations');\n    tw.run.showTiddler('Help');\n  },\n  Step2Button() {\n    return tw.ui.button('Click Me!', 'welcome.step2', 1);\n  },\n};\n\nif (!tw.store.get('welcomeShown')) {\n  // Only run once (localStorage)\n  tw.events.send('ui.close.all');\n  tw.macros.welcome.Start();\n  tw.store.set('welcomeShown', 1);\n}\ntw.events.subscribe('welcome.step2', tw.macros.welcome.Step2);\n",
+      "text": "tw.macros.welcome = {\n  Start() {\n    tw.dom.$('header').style.display = 'none';\n    tw.dom.$('sidebar').style.display = 'none';\n    tw.run.showTiddler('Welcome');\n  },\n  Step1() {\n    tw.run.showTiddler('Congratulations');\n    tw.run.closeTiddler('Welcome');\n  },\n  Step2() {\n    tw.dom.$('header').style.display = '';\n    tw.dom.$('sidebar').style.display = '';\n    tw.run.closeTiddler('Congratulations');\n    tw.run.showTiddler('Help');\n  },\n  Step2Button() {\n    return tw.ui.button('Click Me!', 'welcome.step2', 1);\n  },\n};\n\nif (!tw.store.get('welcomeShown')) {\n  // Only run once (localStorage)\n  tw.events.send('ui.close.all');\n  tw.macros.welcome.Start();\n  tw.store.set('welcomeShown', 1);\n}\nif (!tw.tmp.onboardingEvents) {\n  tw.events.subscribe('welcome.step2', tw.macros.welcome.Step2);\n}\n",
       "tags": [],
       "type": "script/js",
       "created": "2024-10-04T19:45:16.2059492Z",
-      "updated": "2024-10-04T19:45:16.2059492Z"
+      "updated": "2024-10-04T21:04:27.0948753Z"
     },
     {
       "title": "Congratulations",

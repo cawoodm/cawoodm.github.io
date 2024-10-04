@@ -7,8 +7,8 @@
         "$StyleSheet"
       ],
       "type": "css",
-      "created": "2024-10-02T19:45:08.2989793Z",
-      "updated": "2024-10-02T20:41:30.3722180Z"
+      "created": "2024-10-04T19:45:16.2179505Z",
+      "updated": "2024-10-04T19:45:16.2179505Z"
     },
     {
       "title": "$KhakiTheme",
@@ -17,16 +17,8 @@
         "$Theme"
       ],
       "type": "x-twiki",
-      "created": "2024-10-02T20:10:20.1620291Z",
-      "updated": "2024-10-02T20:32:42.2928054Z"
-    },
-    {
-      "title": "DemoCode",
-      "text": "// This just kills any attempt to ever run tw.fcn('updateTiddlerText')('$Theme', 'DemoStyleSheet';\n// if (tw.lib.tiddlerExists('DemoTiddler')) tw.run.showTiddler('DemoTiddler');\n",
-      "tags": [],
-      "type": "script/js",
-      "created": "2024-09-18T07:54:56.0000000Z",
-      "updated": "2024-10-02T19:48:45.8017258Z"
+      "created": "2024-10-04T19:45:16.2189510Z",
+      "updated": "2024-10-04T19:45:16.2189510Z"
     },
     {
       "title": "DemoStyleSheet",
@@ -35,16 +27,16 @@
         "$StyleSheet"
       ],
       "type": "css",
-      "created": "2024-09-18T07:54:56.0000000Z",
-      "updated": "2024-09-18T07:54:56.0000000Z"
+      "created": "2024-10-04T19:45:16.2189510Z",
+      "updated": "2024-10-04T19:45:16.2189510Z"
     },
     {
       "title": "DemoTiddler",
       "text": "This demo will import a [[DemoStyleSheet]] and apply it to the [[$Theme]].\n\nA whole lotta text should now be green!",
       "tags": [],
       "type": "x-twiki",
-      "created": "2024-09-18T07:54:56.0000000Z",
-      "updated": "2024-09-18T07:54:56.0000000Z"
+      "created": "2024-10-04T19:45:16.2189510Z",
+      "updated": "2024-10-04T19:45:16.2189510Z"
     }
   ]
 }

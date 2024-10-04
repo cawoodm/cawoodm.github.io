@@ -44,10 +44,10 @@ function scrub(val) {
   return new Option(val).innerHTML.replace(/"/g, "&quot;");
 }
 function get_value(vars, key) {
-  let parts2 = key.split(".");
-  while (parts2.length) {
-    if (!(parts2[0] in vars)) return false;
-    vars = vars[parts2.shift()];
+  let parts = key.split(".");
+  while (parts.length) {
+    if (!(parts[0] in vars)) return false;
+    vars = vars[parts.shift()];
   }
   return vars;
 }
@@ -4728,11 +4728,11 @@ function map(array, callback) {
   return result2;
 }
 function mapDomain(domain, callback) {
-  const parts2 = domain.split("@");
+  const parts = domain.split("@");
   let result2 = "";
-  if (parts2.length > 1) {
-    result2 = parts2[0] + "@";
-    domain = parts2[1];
+  if (parts.length > 1) {
+    result2 = parts[0] + "@";
+    domain = parts[1];
   }
   domain = domain.replace(regexSeparators, ".");
   const labels = domain.split(".");
@@ -9084,13 +9084,13 @@ function Notifications(tw2) {
   tw2.dom.notify.addEventListener("mouseout", notifyMouseOut);
   tw2.dom.notify.addEventListener("click", notifyClick);
   return notify;
-  function notify(msg2, type = "I", stack) {
+  function notify(msg, type = "I", stack) {
     if (type === "D" && !tw2.logging.debugMode) return;
-    if (!tw2.logging.logFilter.test(msg2)) return;
+    if (!tw2.logging.logFilter.test(msg)) return;
     const n = tw2.dom.notify;
     if (window.getComputedStyle(tw2.dom.$("new-dialog"), null).getPropertyValue("display") === "block") {
       delete tw2.tmp.notifyId;
-      return alert(msg2.replaceAll("<br>", "\n"));
+      return alert(msg.replaceAll("<br>", "\n"));
     }
     let preserveMsg = "";
     if (tw2.tmp.notifyId) {
@@ -9099,8 +9099,8 @@ function Notifications(tw2) {
     }
     const types = { S: "📗 Success", E: '<b title="Error">📕</b>', W: '<b title="Warning">📙</b>', D: '<b title="Debug">📓</b>', I: '<b title="Info">📘</b>' };
     if (type === "E")
-      de(preserveMsg + types[type] + ": " + msg2, stack || "");
-    n.innerHTML = (preserveMsg + types[type] + " " + escapeHtml(msg2)).replace(/\n/g, "<br>");
+      de(preserveMsg + types[type] + ": " + msg, stack || "");
+    n.innerHTML = (preserveMsg + types[type] + " " + escapeHtml(msg)).replace(/\n/g, "<br>");
     notifyShow();
   }
   function notifyShow() {
@@ -9124,11 +9124,11 @@ function Notifications(tw2) {
     tw2.tmp.notifyMouseOverPause = true;
     window.setTimeout(() => delete tw2.tmp.notifyMouseOverPause, 500);
   }
-  function silentNotify(msg2, type, stack) {
-    if (type === "E") console.error(msg2);
-    else if (type === "W") console.warn(msg2);
-    else if (type === "D") console.debug(msg2);
-    else console.log(msg2);
+  function silentNotify(msg, type, stack) {
+    if (type === "E") console.error(msg);
+    else if (type === "W") console.warn(msg);
+    else if (type === "D") console.debug(msg);
+    else console.log(msg);
     if (stack) console.error(stack);
   }
 }
@@ -9256,7 +9256,7 @@ function Packages(tw2) {
   async function loadPackageFromJSONBin({ url, name = "", filter = "", overWrite = false, doNotSave = false, noOverWrite = false }) {
     var _a2;
     dd("Loading package from JSONBin", name, url, overWrite);
-    let settings = tw2.run.getJSONObject("$GeneralSettings");
+    let settings = tw2.call("getJSONObject", "$GeneralSettings");
     if (!((_a2 = settings == null ? void 0 : settings.JSONBin) == null ? void 0 : _a2.accessKey)) return tw2.ui.notify("No JSONBin accessKey found in $GeneralSettings!", "W");
     try {
       let obj = await httpGetJSON(url, name, { "X-Access-Key": settings.JSONBin.accessKey });
@@ -9371,21 +9371,27 @@ function simpleSearch(q) {
     };
   };
 }
-function button(title2, message, payload, id = "") {
+function button(text2, message, payload, id = "") {
+  if (text2.match(/[<\{]/))
+    text2 = tw.call("renderTwiki", { text: text2 });
+  else
+    text2 = escapeHtml(text2);
+  let className = "";
+  if (text2.match(/<svg/)) className = "icon";
   if (typeof payload === "undefined") payload = "";
   let params2 = typeof payload === "object" ? JSON.stringify(payload) : payload;
-  return `<button${id ? ' id="' + id + '"' : ""} onclick="tw.events.sendEncoded(this, '${message}', '${encoder(params2)}')">${escapeHtml(title2)}</button>`;
+  return `<button${id ? ' id="' + id + '"' : ""} class="${className}" onclick="tw.events.sendEncoded(this, '${message}', '${encoder(params2)}')">${text2}</button>`;
 }
 const shadowTiddlers = [
   {
     "title": "$CorePackages",
-    "text": "* https://cawoodm.github.io/twiki/core.json save,force\n* https://cawoodm.github.io/twiki/icons.json save,force\n* https://cawoodm.github.io/twiki/demo.json save,force\n* https://cawoodm.github.io/twiki/website.json nooverwrite\n\nFor website/demo purposes we load more here than just core+icons",
+    "text": "* https://cawoodm.github.io/twiki/packages/core.json save,force\n* https://cawoodm.github.io/twiki/packages/icons.json save,force\n* https://cawoodm.github.io/twiki/packages/demo.json save,force\n* https://cawoodm.github.io/twiki/packages/website.json nooverwrite\n\nFor website/demo purposes we load more here than just core+icons",
     "tags": [
       "Shadow"
     ],
     "type": "list",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-10-03T12:55:21.6670502Z"
+    "created": "2024-10-04T19:45:16.2079534Z",
+    "updated": "2024-10-04T19:49:04.5504101Z"
   },
   {
     "title": "$CoreThemeDark",
@@ -9396,8 +9402,8 @@ const shadowTiddlers = [
       "$ThemeDark"
     ],
     "type": "x-twiki",
-    "created": "2024-10-02T20:25:08.6653844Z",
-    "updated": "2024-10-02T20:32:42.2928054Z"
+    "created": "2024-10-04T19:45:16.2079534Z",
+    "updated": "2024-10-04T19:45:16.2089505Z"
   },
   {
     "title": "$CoreThemeLight",
@@ -9407,8 +9413,8 @@ const shadowTiddlers = [
       "$Theme"
     ],
     "type": "x-twiki",
-    "created": "2024-10-02T19:13:18.2186300Z",
-    "updated": "2024-10-02T20:32:42.2928054Z"
+    "created": "2024-10-04T19:45:16.2089505Z",
+    "updated": "2024-10-04T19:45:16.2089505Z"
   },
   {
     "title": "$GeneralSettings",
@@ -9417,8 +9423,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "json",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "created": "2024-10-04T19:45:16.2089505Z",
+    "updated": "2024-10-04T19:45:16.2089505Z"
   },
   {
     "title": "$IconCancel",
@@ -9427,8 +9433,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "created": "2024-10-04T19:45:16.2089505Z",
+    "updated": "2024-10-04T19:45:16.2099502Z"
   },
   {
     "title": "$IconDelete",
@@ -9437,8 +9443,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "created": "2024-10-04T19:45:16.2099502Z",
+    "updated": "2024-10-04T19:45:16.2099502Z"
   },
   {
     "title": "$IconDone",
@@ -9447,8 +9453,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "created": "2024-10-04T19:45:16.2099502Z",
+    "updated": "2024-10-04T19:45:16.2099502Z"
   },
   {
     "title": "$IconEdit",
@@ -9457,8 +9463,28 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "created": "2024-10-04T19:45:16.2099502Z",
+    "updated": "2024-10-04T19:45:16.2109509Z"
+  },
+  {
+    "title": "$IconFavorite",
+    "text": "⭐",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-04T19:45:16.2109509Z",
+    "updated": "2024-10-04T19:45:16.2109509Z"
+  },
+  {
+    "title": "$IconHelp",
+    "text": "?",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-04T19:45:16.2119516Z",
+    "updated": "2024-10-04T19:45:16.2119516Z"
   },
   {
     "title": "$IconNew",
@@ -9467,8 +9493,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "created": "2024-10-04T19:45:16.2119516Z",
+    "updated": "2024-10-04T19:45:16.2119516Z"
   },
   {
     "title": "$IconSave",
@@ -9477,8 +9503,28 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "created": "2024-10-04T19:45:16.2129525Z",
+    "updated": "2024-10-04T19:45:16.2129525Z"
+  },
+  {
+    "title": "$IconSettings",
+    "text": "⚙️",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-04T19:45:16.2129525Z",
+    "updated": "2024-10-04T19:45:16.2129525Z"
+  },
+  {
+    "title": "$IconTag",
+    "text": "Tags",
+    "tags": [
+      "Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-04T19:45:16.2139486Z",
+    "updated": "2024-10-04T19:45:16.2139486Z"
   },
   {
     "title": "$Namespaces",
@@ -9487,8 +9533,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "created": "2024-10-04T19:45:16.2139486Z",
+    "updated": "2024-10-04T19:45:16.2139486Z"
   },
   {
     "title": "$Settings",
@@ -9497,8 +9543,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-10-01T20:43:07.0555561Z"
+    "created": "2024-10-04T19:45:16.2139486Z",
+    "updated": "2024-10-04T19:45:16.2139486Z"
   },
   {
     "title": "$SiteSubTitle",
@@ -9507,8 +9553,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "created": "2024-10-04T19:45:16.2139486Z",
+    "updated": "2024-10-04T19:45:16.2139486Z"
   },
   {
     "title": "$SiteTitle",
@@ -9517,8 +9563,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "created": "2024-10-04T19:45:16.2149484Z",
+    "updated": "2024-10-04T19:45:16.2149484Z"
   },
   {
     "title": "$StyleSheetCore",
@@ -9528,8 +9574,8 @@ const shadowTiddlers = [
       "$StyleSheet"
     ],
     "type": "css",
-    "created": "2024-09-23T21:03:59.0000000Z",
-    "updated": "2024-10-02T20:56:08.3001059Z"
+    "created": "2024-10-04T18:48:42.3733765Z",
+    "updated": "2024-10-04T19:45:16.2149484Z"
   },
   {
     "title": "$StyleSheetCoreDark",
@@ -9539,8 +9585,8 @@ const shadowTiddlers = [
       "$StyleSheet"
     ],
     "type": "css",
-    "created": "2024-10-02T20:25:51.1492132Z",
-    "updated": "2024-10-02T20:56:27.9051300Z"
+    "created": "2024-10-04T19:45:16.2149484Z",
+    "updated": "2024-10-04T19:45:16.2149484Z"
   },
   {
     "title": "$Theme",
@@ -9549,8 +9595,8 @@ const shadowTiddlers = [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-10-02T20:25:09.0686188Z"
+    "created": "2024-10-04T19:45:16.2159490Z",
+    "updated": "2024-10-04T19:45:16.2159490Z"
   },
   {
     "title": "$ThemeBase",
@@ -9739,20 +9785,6 @@ blockquote {
   quotes: "\\201C" "\\201D" "\\2018" "\\2019";
 }
 
-
-button {
-  fill: var(--col1);
-}
-
-button:hover svg {
-  fill: var(--col6);
-}
-
-button {
-  border: 1px solid var(--col4);
-  background-color: var(--col3);
-}
-
 #notify {
   position: fixed;
   z-index: 1;
@@ -9853,12 +9885,29 @@ div.tiddler div.title {
   background-color: var(--colbg2);
 }
 
-div.tiddler div.title button {
-  background-color: var(--colbg2);
-  float: right;
-  height: 30px;
+button:hover svg {
+  fill: var(--col6);
+}
+
+button.icon {
+  fill: var(--col1);
+  border: 1px solid var(--col4);
+  background-color: transparent;
   border: none;
   cursor: pointer;
+}
+
+button {
+  fill: var(--col1);
+  border: 1px solid var(--col4);
+  background-color: var(--col3);
+  cursor: pointer;
+}
+
+div.tiddler div.title button {
+  border: none;
+  background-color: transparent;
+  float: right;
 }
 
 div.tiddler div.meta {
@@ -9895,8 +9944,8 @@ span.error {
       "$StyleSheet"
     ],
     "type": "css",
-    "created": "2024-09-23T21:03:59.0000000Z",
-    "updated": "2024-10-03T12:51:53.1412072Z"
+    "created": "2024-10-04T19:45:16.2159490Z",
+    "updated": "2024-10-04T19:45:16.2159490Z"
   },
   {
     "title": "$Themes",
@@ -9905,19 +9954,19 @@ span.error {
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-10-02T19:25:32.8407730Z",
-    "updated": "2024-10-02T19:25:33.0496912Z"
+    "created": "2024-10-04T19:45:16.2159490Z",
+    "updated": "2024-10-04T19:45:16.2159490Z"
   },
   {
     "title": "$TiddlerDisplay",
-    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="close" title="close">{{$IconCancel}}</button>\n    <button class="edit" title="edit" {{=editDisabled}}>{{$IconEdit}}</button>\n    <button class="delete" title="delete"{{=editDisabled}}>{{$IconDelete}}</button>\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n<!-- </div> -->',
+    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.close:$currentTiddler.title">{{$IconCancel}}</button>\n    <button class="icon" title="edit" {{=editDisabled}} data-msg="tiddler.edit:{{=title}}">{{$IconEdit}}</button>\n    <button class="icon" title="delete"{{=editDisabled}} data-msg="tiddler.delete:{{=title}}">{{$IconDelete}}</button>\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
     "tags": [
       "Shadow",
       "$Template"
     ],
     "type": "html/template",
-    "created": "2024-09-24T22:21:48.0000000Z",
-    "updated": "2024-10-03T12:33:39.4045885Z"
+    "created": "2024-10-04T19:45:16.2159490Z",
+    "updated": "2024-10-04T19:45:16.2159490Z"
   },
   {
     "title": "$TiddlerSearchResult",
@@ -9927,8 +9976,8 @@ span.error {
       "$Template"
     ],
     "type": "html/template",
-    "created": "2024-10-03T12:34:09.2752283Z",
-    "updated": "2024-10-03T12:34:19.0752852Z"
+    "created": "2024-10-04T19:45:16.2169485Z",
+    "updated": "2024-10-04T19:45:16.2169485Z"
   },
   {
     "title": "$TiddlerTypes",
@@ -9937,28 +9986,28 @@ span.error {
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "created": "2024-10-04T19:45:16.2169485Z",
+    "updated": "2024-10-04T19:45:16.2169485Z"
   },
   {
     "title": "$TitleBar",
-    "text": "<<ShowAllTiddlersButton>>  <<CloseAllTiddlersButton>> <<backup.restoreButton>> <<backup.backupButton>> <<synch.full>> <<Save>> <<New>>\n\n[🏷️Tags](#Tags) | [⭐Favs](#msg:ui.openAll:{tag:\\'Favorite\\'}) | <<TrashCanIcon>> | [⚙️](#$Settings) | [❔Help](#Help)",
+    "text": "<<ShowAllTiddlersButton>>  <<CloseAllTiddlersButton>> <<backup.restoreButton>> <<backup.backupButton>> <<synch.full>>  <<New>>\n\n<<Save>>\n[{{$IconFavorite}}](#msg:ui.open.all:{tag:\\'Favorite\\'})\n<<Settings>>\n<<TrashCanIcon>>\n[{{$IconTag}}](#Tags)\n\n [{{$IconHelp}}](#Help)",
     "tags": [
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-10-01T20:44:47.8072366Z"
+    "created": "2024-10-04T19:45:16.2169485Z",
+    "updated": "2024-10-04T19:45:16.2169485Z"
   },
   {
     "title": "$TWIKIVersion",
-    "text": "0.0.11 RC1",
+    "text": "0.10.1",
     "tags": [
       "Shadow"
     ],
     "type": "text",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-10-03T09:14:11.6647905Z",
+    "created": "2024-10-04T19:45:16.2149484Z",
+    "updated": "2024-10-04T20:01:10.0707547Z",
     "readOnly": true
   },
   {
@@ -9968,14 +10017,16 @@ span.error {
       "Shadow"
     ],
     "type": "x-twiki",
-    "created": "2024-09-30T21:45:53.0000000Z",
-    "updated": "2024-09-30T21:45:53.0000000Z"
+    "created": "2024-10-04T19:45:16.2169485Z",
+    "updated": "2024-10-04T19:45:16.2169485Z"
   }
 ];
 const reTiddlerTitle = /[a-z0-9_\-\.:\s\$\ud83c\ud000-\udfff\ud83d\ud000-\udfff\ud83e\ud000-\udfff]+/gi;
 const reTiddlerTitleComplete = RegExp.compose(/^reTiddlerTitle$/gi, { reTiddlerTitle });
 const reInclusion = RegExp.compose(/\{\{(reTiddlerTitle)\|?([^\}]+)?}}/gi, { reTiddlerTitle });
 const reLinks = RegExp.compose(/\[\[(reTiddlerTitle)]]/gi, { reTiddlerTitle });
+const reEventName = /[a-z0-9\.]+/g;
+const reMessage = RegExp.compose(/(reEventName):?(.+)?/, { reEventName });
 const logFilter = storage.get("logfilter") ? new RegExp(storage.get("logfilter")) : /./;
 const debugMode = storage.get("debug") === true;
 const tw$1 = {
@@ -10036,7 +10087,11 @@ const tw$1 = {
     closeTiddler,
     hideTiddler,
     renderAllTiddlers,
-    reload
+    reload,
+    tiddler: {
+      getJSONObject,
+      updateText: updateTiddlerText
+    }
   },
   fcn,
   call
@@ -10072,12 +10127,13 @@ tw$1.events.subscribe("namespace.clone", (namespace) => {
   tw$1.ui.notify(`Namespace '${namespace} was cloned`, "S");
 });
 window.tw = tw$1;
-tw$1.events.subscribe("ui.openAll", (...rest) => tw$1.run.showAllTiddlers(...rest));
-tw$1.events.subscribe("ui.closeAll", tw$1.run.closeAllTiddlers);
+tw$1.events.subscribe("ui.open.all", (...rest) => tw$1.run.showAllTiddlers(...rest));
+tw$1.events.subscribe("ui.close.all", tw$1.run.closeAllTiddlers);
 tw$1.events.subscribe("save", save);
 tw$1.events.subscribe("save.silent", saveSilent);
 tw$1.events.subscribe("save.all", saveAll);
 tw$1.events.subscribe("form.new", formNewTiddler);
+tw$1.events.subscribe("form.edit", formEditTiddler);
 tw$1.events.subscribe("reboot.softer", rebootSofter);
 tw$1.events.subscribe("reboot.soft", rebootSoft);
 tw$1.events.subscribe("reboot.hard", rebootHard);
@@ -10085,7 +10141,9 @@ tw$1.events.subscribe("search", searchQuery);
 tw$1.events.subscribe("ui.reload", reload);
 tw$1.events.subscribe("ui.theme.switch", themeSwitch);
 tw$1.events.subscribe("ui.theme.repaint", themeUpdate);
+tw$1.events.subscribe("tiddler.edit", formEditTiddler);
 tw$1.events.subscribe("tiddler.show", tw$1.run.showTiddler);
+tw$1.events.subscribe("tiddler.close", closeTiddler);
 tw$1.events.subscribe("tiddler.preview", tw$1.run.previewTiddler);
 tw$1.events.subscribe("tiddler.delete", deleteTiddler);
 tw$1.events.subscribe("tiddler.deleted", tw$1.run.reload);
@@ -10098,9 +10156,26 @@ tw$1.events.subscribe("package.load.url", tw$1.run.loadPackageFromURL);
 tw$1.events.subscribe("package.reload.url", tw$1.run.reloadPackageFromUrl);
 tw$1.events.subscribe("package.reload.bin", tw$1.run.reloadPackageFromJSONBin);
 addEventListener("load", () => {
+  addStyleSheet("highlight-light", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css");
+  addStyleSheet("highlight-dark", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css");
+  if (location.host.match(/localhost/)) console.clear();
   uiWireEvents();
   rebootSoft();
 });
+const autoSave = tw$1.storage.get("autosave") !== false;
+function disableStyleSheet(title2) {
+  let el = document.querySelector(`link[title=${title2}]`);
+  if (!el) throw new Error(`Stylesheet with title '${title2}' not found!`);
+  el.disabled = true;
+}
+function addStyleSheet(title2, url) {
+  var link2 = document.createElement("link");
+  link2.type = "text/css";
+  link2.title = title2;
+  link2.rel = "stylesheet";
+  link2.href = url;
+  document.head.appendChild(link2);
+}
 loadStore();
 tw$1.stylesheets = {
   custom: new CSSStyleSheet()
@@ -10153,10 +10228,10 @@ async function loadCorePackages() {
   saveSilent();
 }
 function tiddlerIsValid(t) {
-  let msg2 = tiddlerValidation(t);
-  if (msg2.length)
-    dw("tiddlerValidation", t.title, msg2.join("; "));
-  return msg2.length === 0;
+  let msg = tiddlerValidation(t);
+  if (msg.length)
+    dw("tiddlerValidation", t.title, msg.join("; "));
+  return msg.length === 0;
 }
 function tiddlerToggleTag(title2, tag) {
   let t = getTiddler(title2);
@@ -10170,16 +10245,16 @@ function validateTiddlerText(t) {
   if (isCodeTiddler(t) && confirm("Would you like to validate your code?")) executeText(t.text);
 }
 function tiddlerValidation(t) {
-  const msg2 = [];
-  if (!t.title) msg2.push("No title!");
-  if (!t.title.match(reTiddlerTitleComplete)) msg2.push("Invalid title!");
-  if (!t.type) msg2.push("No type!");
-  if (!Array.isArray(t.tags)) msg2.push("Invalid tags!");
+  const msg = [];
+  if (!t.title) msg.push("No title!");
+  if (!t.title.match(reTiddlerTitleComplete)) msg.push("Invalid title!");
+  if (!t.type) msg.push("No type!");
+  if (!Array.isArray(t.tags)) msg.push("Invalid tags!");
   t.tags = typeof t.tags === "string" ? t.tags.length ? t.tags.split(" ") : [] : t.tags;
-  if (!Array.isArray(t.tags)) msg2.push("No tags array!");
-  if (!t.created) msg2.push("No created date!");
-  if (!t.updated) msg2.push("No updated date!");
-  return msg2;
+  if (!Array.isArray(t.tags)) msg.push("No tags array!");
+  if (!t.created) msg.push("No created date!");
+  if (!t.updated) msg.push("No updated date!");
+  return msg;
 }
 function runTiddlers() {
   let fails = 0;
@@ -10205,9 +10280,9 @@ function executeText(text2, title2, context) {
   try {
     result2 = (1, eval)(text2);
   } catch (e) {
-    let msg2 = `executeText "${title2}" ${context ? " in tiddler '" + context + "'" : ""}`;
-    de(`${msg2}: ${e.message}`, e.stack);
-    throw new Error(`${msg2}: ${e.message}`);
+    let msg = `executeText "${title2}" ${context ? " in tiddler '" + context + "'" : ""}`;
+    de(`${msg}: ${e.message}`, e.stack);
+    throw new Error(`${msg}: ${e.message}`);
   }
   return result2;
 }
@@ -10237,7 +10312,7 @@ function displayTiddlerLink({ title: title2, type }) {
 }
 function newTiddlerLink({ title: title2 }) {
   let newElement = document.createElement("a");
-  newElement.setAttribute("data-events-send", `tiddler.show:${title2}`);
+  newElement.setAttribute("data-msg", `tiddler.show:${title2}`);
   newElement.setAttribute("data-tiddler-backref", hash(title2));
   newElement.setAttribute("href", "javascript:false;");
   newElement.innerText = title2;
@@ -10246,8 +10321,9 @@ function newTiddlerLink({ title: title2 }) {
 function createTiddlerElement(t) {
   let template = tw$1.templates.TiddlerDisplay;
   let modified = t.updated ? new Date(t.updated).toDateString() + " " + new Date(t.updated).toLocaleTimeString() : "";
+  let id = hash(t.title);
   let html = new Templater(template).render({
-    id: hash(t.title),
+    id,
     fullText: makeTiddlerText(t),
     editDisabled: t.readOnly ? "disabled" : "",
     tagLinks: makeTiddlerTagLinks(t.tags),
@@ -10256,6 +10332,8 @@ function createTiddlerElement(t) {
     ...t
   });
   let newElement = htmlToNode(html);
+  newElement.setAttribute("data-tiddler-id", id);
+  newElement.setAttribute("data-tiddler-title", t.title);
   attachTiddlerEvents(newElement, t.title);
   return newElement;
 }
@@ -10276,7 +10354,7 @@ function makeTiddlerText({ title: title2, text: text2, type }) {
 }
 function makeTiddlerTagLinks(tags) {
   return markdown1(tags.map((t) => {
-    return `[${t}](#msg:ui.openAll:{tag:'${t}',title:'*'})`;
+    return `[${t}](#msg:ui.open.all:{tag:'${t}',title:'*'})`;
   }).join(", "));
 }
 function makeTiddlerMetaInfo(t) {
@@ -10357,13 +10435,13 @@ function renderTwiki({ text, title, validation }) {
 }
 function getMacros(text2) {
   const macros = new RegExp("(?<!`)<<([a-z_][a-z_0-9\\.]+)\\s?([^>]+)?>>", "gi");
-  return text2.matchAll(macros);
+  return Array.from(text2.matchAll(macros));
 }
 function getTiddlerLinks(text2) {
-  return text2.matchAll(reLinks);
+  return Array.from(text2.matchAll(reLinks));
 }
 function getInclusions(text2) {
-  return text2.matchAll(reInclusion);
+  return Array.from(text2.matchAll(reInclusion));
 }
 function getTypedParams(str) {
   return (str == null ? void 0 : str.split(";").map((p) => {
@@ -10501,6 +10579,10 @@ function updateTiddler(currentTitle, newTiddler, userEdit) {
 function updateTiddlerHard(currentTitle, newTiddler) {
   upsertInArray(tw$1.tiddlers.all, titleIs(currentTitle), newTiddler);
 }
+function updateTiddlerText(title2, text2) {
+  let t = getTiddler(title2);
+  updateTiddler(title2, { ...t, text: text2 });
+}
 function rerenderTiddler(title2) {
   let el = getTiddlerElement(title2);
   if (!el) return;
@@ -10571,6 +10653,8 @@ function themeSwitch(theme) {
   tiddler.text = `[[${theme}]]`;
   delete tiddler.doNotSave;
   updateTiddlerHard("$Theme", tiddler);
+  if (theme.match(/Dark/)) disableStyleSheet("highlight-light");
+  else disableStyleSheet("highlight-dark");
   tw$1.events.send("tiddler.refresh", "$Theme");
   tw$1.events.send("ui.theme.repaint", theme);
   tw$1.events.send("save.silent");
@@ -10671,7 +10755,6 @@ function closeTiddler(title2) {
   hideTiddler(title2);
   renderAllTiddlers();
 }
-const autoSave = tw$1.storage.get("autosave") !== false;
 function save() {
   if (!autoSave) return;
   saveAll({});
@@ -10788,7 +10871,7 @@ function loadStore(store) {
     if (!t.type) t.type = "x-twiki";
     t.doNotSave = true;
     t.isRawShadow = true;
-    if (t.title === "$CorePackages" && document.location.host.match(/^localhost/)) t.text = t.text.replaceAll("https://cawoodm.github.io/twiki", "http://localhost:3000/packages");
+    if (t.title === "$CorePackages" && document.location.host.match(/^(localhost)|(\d+\.\d+\.\d+\.\d+):\d+$/)) t.text = t.text.replaceAll("https://cawoodm.github.io/twiki", "http://" + document.location.host);
     if (!tiddlerExists(t.title))
       addTiddler({ ...t });
   });
@@ -10805,35 +10888,67 @@ function loadStore(store) {
   }
 }
 function attachTiddlerEvents(newElement, title2) {
-  var _a2, _b, _c, _d;
-  (_a2 = newElement.querySelector("div.text")) == null ? void 0 : _a2.addEventListener("dblclick", () => formEditTiddler(title2));
-  (_b = newElement.querySelector("button.close")) == null ? void 0 : _b.addEventListener("click", (e) => e.stopPropagation() || closeTiddler(title2));
-  (_c = newElement.querySelector("button.delete")) == null ? void 0 : _c.addEventListener("click", () => deleteTiddler(title2));
-  (_d = newElement.querySelector("button.edit")) == null ? void 0 : _d.addEventListener("click", () => formEditTiddler(title2));
   tw$1.events.send("tiddler.element.created", { title: title2, newElement });
 }
 function uiWireEvents() {
   var _a2, _b, _c, _d;
   document.addEventListener("click", (event2) => {
-    var _a3;
-    if (!event2.target.tagName === "A") return;
-    const link2 = (_a3 = event2.target.getAttribute("href")) == null ? void 0 : _a3.replace(/^#/, "");
-    const msg2 = event2.target.getAttribute("data-events-send");
-    if (!link2 && !msg2) return;
-    event2.preventDefault();
-    if (msg2) navigateTo("msg:" + msg2);
-    else navigateTo(link2);
-  });
-  function navigateTo(cmd) {
-    if (cmd.match(/^msg:/)) {
-      let parts = cmd.split(":").splice(1);
-      let msg = parts[0];
-      let params = parts.splice(1).join(":");
-      if (params[0] === "{" || params[0] === "[") params = eval(`(${params})`);
-      tw$1.events.send(msg, params);
-    } else {
-      showTiddler(cmd);
+    let el = event2.target;
+    let href = findAttributeUp(el, "href", "a[href]");
+    let link2 = decodeURI(href == null ? void 0 : href.replace(/^#/, ""));
+    if (isLocalLink(href)) {
+      event2.preventDefault();
+      return navigateTo(link2);
     }
+    let msg = findAttributeUp(el, "data-msg", "[data-msg]");
+    if (!msg && isMessage(link2)) msg = isMessage(link2);
+    if (!msg) return;
+    event2.preventDefault();
+    let currentTiddlerTitle = findAttributeUp(el, "data-tiddler-title", ".tiddler");
+    if (msg) {
+      msg = msg.replaceAll("$currentTiddler.title", currentTiddlerTitle);
+      return sendMessage(msg);
+    }
+  });
+  function isMessage(str) {
+    var _a3;
+    return (_a3 = str == null ? void 0 : str.match(/^#?msg:(.+)/)) == null ? void 0 : _a3[1];
+  }
+  function isLocalLink(str) {
+    if (!str) return false;
+    if (!str.match(/^#/)) return false;
+    if (isMessage(str)) return false;
+    return true;
+  }
+  function navigateTo(link2) {
+    if (!link2) return;
+    showTiddler(link2);
+    scrollToTiddler(link2);
+  }
+  function sendMessage(cmd) {
+    let cmds = cmd.match(reMessage);
+    if (!cmds) throw new Error(`Invalid command '${cmd}' does not match ${reMessage}/!`);
+    let msg = cmds[1];
+    let params2 = cmds.length > 2 ? cmds[2] : null;
+    tw$1.events.send(msg, params2);
+    if (msg === "tiddler.show") scrollToTiddler(params2);
+  }
+  function scrollToTiddler(title2) {
+    let topOfElement = getTiddlerElement(title2).offsetTop - $("header").offsetHeight;
+    window.scroll({ top: topOfElement, behavior: "smooth" });
+  }
+  document.addEventListener("dblclick", (event2) => {
+    let el = event2.target;
+    let t = findAttributeUp(el, "tiddler-tiddler-title", ".tiddler") || findAttributeUp(el, "tiddler-include", "[tiddler-include]");
+    if (!t) return;
+    formEditTiddler(t);
+  });
+  window.addEventListener("hashchange", function() {
+    return navigateTo(decodeURI(document.location.hash));
+  });
+  function findAttributeUp(el, attribute2, selector) {
+    var _a3;
+    return el.getAttribute(attribute2) || ((_a3 = el.parentElement.closest(selector)) == null ? void 0 : _a3.getAttribute(attribute2));
   }
   tw$1.dom.frm = $("new-form");
   tw$1.dom.frm.addEventListener("submit", (evt) => evt.preventDefault());
@@ -10843,7 +10958,7 @@ function uiWireEvents() {
   (_c = $("new-cancel")) == null ? void 0 : _c.addEventListener("click", formCancel);
   (_d = $("search")) == null ? void 0 : _d.addEventListener("keyup", searchNow);
   window.addEventListener("error", (event2) => {
-    tw$1.ui.notify("Unhandled: " + event2.message, "E");
+    tw$1.ui.notify("Unhandled: " + event2.message, "E", event2.error.stack);
     de("Unhandled:", event2.message, event2);
   });
 }

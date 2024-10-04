@@ -2,11 +2,11 @@
   "tiddlers": [
     {
       "title": "$BackupReminderPlugin",
-      "text": "// Friendly reminder to backup!\nlet secs = parseInt(tw.run.getJSONObject('$GeneralSettings')?.backup?.backupInSeconds || 1800, 10);\nconsole.log('Backup reminder every', secs, 'seconds');\nsetInterval(() => {\n  tw.ui.notify('Remember to backup', 'I');\n  clearTimeout(tw.tmp.notifyId); // User must click it away\n}, secs * 1000);\n\n// // Display immediately conflicts with startup notifications so we display in 10s\n// setTimeout(() => {\n//   tw.ui.notify('Remember to backup', 'I');\n//   clearTimeout(tw.tmp.notifyId); // User must click it away\n// }, 10 * 1000);\n",
+      "text": "// Friendly reminder to backup!\nlet secs = parseInt(tw.call('getJSONObject', '$GeneralSettings')?.backup?.backupInSeconds || 1800, 10);\nconsole.log('Backup reminder every', secs, 'seconds');\nsetInterval(() => {\n  tw.ui.notify('Remember to backup', 'I');\n  clearTimeout(tw.tmp.notifyId); // User must click it away\n}, secs * 1000);\n\n// // Display immediately conflicts with startup notifications so we display in 10s\n// setTimeout(() => {\n//   tw.ui.notify('Remember to backup', 'I');\n//   clearTimeout(tw.tmp.notifyId); // User must click it away\n// }, 10 * 1000);\n",
       "tags": [],
       "type": "script/js",
       "created": "2024-09-15T20:45:09.0000000Z",
-      "updated": "2024-10-01T08:47:44.0000000Z"
+      "updated": "2024-10-04T19:45:16.2049178Z"
     },
     {
       "title": "MarcHacks",
@@ -14,7 +14,7 @@
       "tags": [],
       "type": "script/js",
       "created": "2024-09-15T20:45:09.0000000Z",
-      "updated": "2024-10-03T11:00:29.4304997Z"
+      "updated": "2024-10-04T19:45:16.2049178Z"
     },
     {
       "title": "MarcSettings",

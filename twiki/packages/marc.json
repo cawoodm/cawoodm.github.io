@@ -9,6 +9,16 @@
       "updated": "2024-10-04T19:45:16.2049178Z"
     },
     {
+      "title": "Links",
+      "text": "* [To Do](#ToDo)\n* https://jsonbin.io/app/bins\n* [[$AutoImport]]\n* [😎Shadows](#msg:search:$tag:Shadow)\n* [✌️Styling](#msg:search:$tag:Styling)\n---\n### Themes\n* Themes\n  * Importing a Theme doesn't mean it persists because we `doNotSave` it:\n    *  <<packages.import name:themes, url:./packages/themes.json, filter:white>>\n    *  <<packages.import name:themes, url:./packages/themes.json, filter:khaki>>\n  * [$Theme](#$Theme)\n    * [[$StyleForTiddlers]]\n    * [[$StyleSheetWhite]]\n    * [[$StyleSheetMarc]]\n      * [[$StyleSheet]]\n* Layout\n  * [$TiddlerDisplay](#$TiddlerDisplay)\n  * [$TitleBar](#$TitleBar)\n",
+      "tags": [
+        "Favorite"
+      ],
+      "type": "x-twiki",
+      "created": "2024-10-11T19:02:03.7877813Z",
+      "updated": "2024-10-11T19:02:11.8347521Z"
+    },
+    {
       "title": "MarcHacks",
       "text": "tw.macros.marc = {\n  loadThemeButton(filter, force = true) {\n    if (!filter) filter = 'default';\n    return tw.ui.button(`Load Theme: ${filter}`, 'package.reload.url', {url: './packages/themes.json', name: 'test', filter, force});\n  },\n  loadThemeFromBinButton(filter, force = true) {\n    if (!filter) filter = 'default';\n    return tw.ui.button(`Load Theme JSONBin: ${filter}`, 'package.reload.bin', {url: 'https://api.jsonbin.io/v3/b/66eb26c8ad19ca34f8a87ae9', name: 'test', filter, force});\n  },\n};\n",
       "tags": [],

@@ -2,11 +2,11 @@
   "tiddlers": [
     {
       "title": "$FavoritesPlugin",
-      "text": "/**\n * ## Description\n * Provide <<favorites.toggle>> widget\n *   Toggles tag 'Favorite' on current tiddler\n *   for use on $TiddlerDisplay template\n */\n/**\n * ## Data\n * ```json\n * {\n *   \"version\": 1.0.0\n * }\n * ```\n */\n\ntw.macros.favorites = {\n  toggle() {\n    return tw.ui.button('{{$IconFavorite}}', 'favorites.toggle', '{{ctx.currentTiddler}}', 'favoriteAdd');\n  },\n};\nif (!tw.tmp.favoritesEvents) {\n  // HACK: To prevent duplicate handlers\n  tw.events.subscribe('favorites.toggle', (t) => {\n    if (typeof t === 'string') t = tw.call('getTiddler', t);\n    if (t.readOnly) return tw.ui.notify('Tiddler is readonly!', 'E');\n    if (t.doNotSave) tw.ui.notify('Tiddler will not be saved!', 'W');\n    tw.call('tiddlerToggleTag', t.title, 'Favorite');\n    // TODO: Update favorite icon to show it's a favorite\n    tw.events.send('save.silent');\n  });\n}\n",
+      "text": "/**\n * ## Description\n * Provide <<favorites.toggle>> widget\n *   Toggles tag 'Favorite' on current tiddler\n *   for use on $TiddlerDisplay template\n */\n/**\n * ## Data\n * ```json\n * {\n *   \"version\": 1.0.0\n * }\n * ```\n */\n(function(){\n  const moduleName = '$FavoritesPlugin';\n  tw.macros.favorites = {\n    toggle() {\n      return tw.ui.button('{{$IconFavorite}}', 'favorites.toggle', '{{ctx.currentTiddler}}', 'favoriteAdd');\n    },\n  };\n  tw.events.subscribe('favorites.toggle', (t) => {\n    if (typeof t === 'string') t = tw.call('getTiddler', t);\n    if (t.readOnly) return tw.ui.notify('Tiddler is readonly!', 'E');\n    if (t.doNotSave) tw.ui.notify('Tiddler will not be saved!', 'W');\n    tw.call('tiddlerToggleTag', t.title, 'Favorite');\n    // TODO: Update favorite icon to show it's a favorite\n    tw.events.send('save.silent');\n  }, moduleName);\n})();\n",
       "tags": [],
       "type": "script/js",
       "created": "2024-10-04T19:45:16.1936484Z",
-      "updated": "2024-10-04T21:40:02.7176411Z"
+      "updated": "2024-10-11T20:31:44.3019803Z"
     }
   ]
 }

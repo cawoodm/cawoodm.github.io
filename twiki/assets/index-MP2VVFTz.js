@@ -40,8 +40,8 @@ let valregex = /\{\{([=%])(.+?)\}\}/g;
 function Templater(template) {
   this.t = template;
 }
-function scrub(val) {
-  return new Option(val).innerHTML.replace(/"/g, "&quot;");
+function scrub(val2) {
+  return new Option(val2).innerHTML.replace(/"/g, "&quot;");
 }
 function get_value(vars, key) {
   let parts = key.split(".");
@@ -53,10 +53,9 @@ function get_value(vars, key) {
 }
 function render(fragment, vars) {
   return fragment.replace(blockregex, function(_, __, meta, key, inner, if_true, has_else, if_false) {
-    let val = get_value(vars, key);
+    let val2 = get_value(vars, key);
     let temp = "";
-    let i;
-    if (!val) {
+    if (!val2) {
       if (meta === "!") return render(inner, vars);
       if (has_else) return render(if_false, vars);
       return "";
@@ -65,10 +64,10 @@ function render(fragment, vars) {
     if (meta === "@") {
       _ = vars._key;
       __ = vars._val;
-      for (i in val) {
-        if (val.hasOwnProperty(i)) {
+      for (let i in val2) {
+        if (val2.hasOwnProperty(i)) {
           vars._key = i;
-          vars._val = val[i];
+          vars._val = val2[i];
           temp += render(inner, vars);
         }
       }
@@ -76,9 +75,10 @@ function render(fragment, vars) {
       vars._val = __;
       return temp;
     }
+    return "";
   }).replace(valregex, function(_, meta, key) {
-    let val = get_value(vars, key);
-    if (val || val === 0) return meta === "%" ? scrub(val) : val;
+    let val2 = get_value(vars, key);
+    if (val2 || val2 === 0) return meta === "%" ? scrub(val2) : val2;
     return "";
   });
 }
@@ -4481,38 +4481,38 @@ function compile(self2) {
   re.host_fuzzy_test = RegExp(untpl(re.tpl_host_fuzzy_test), "i");
   const aliases = [];
   self2.__compiled__ = {};
-  function schemaError(name, val) {
-    throw new Error('(LinkifyIt) Invalid schema "' + name + '": ' + val);
+  function schemaError(name, val2) {
+    throw new Error('(LinkifyIt) Invalid schema "' + name + '": ' + val2);
   }
   Object.keys(self2.__schemas__).forEach(function(name) {
-    const val = self2.__schemas__[name];
-    if (val === null) {
+    const val2 = self2.__schemas__[name];
+    if (val2 === null) {
       return;
     }
     const compiled = { validate: null, link: null };
     self2.__compiled__[name] = compiled;
-    if (isObject(val)) {
-      if (isRegExp(val.validate)) {
-        compiled.validate = createValidator(val.validate);
-      } else if (isFunction(val.validate)) {
-        compiled.validate = val.validate;
+    if (isObject(val2)) {
+      if (isRegExp(val2.validate)) {
+        compiled.validate = createValidator(val2.validate);
+      } else if (isFunction(val2.validate)) {
+        compiled.validate = val2.validate;
       } else {
-        schemaError(name, val);
+        schemaError(name, val2);
       }
-      if (isFunction(val.normalize)) {
-        compiled.normalize = val.normalize;
-      } else if (!val.normalize) {
+      if (isFunction(val2.normalize)) {
+        compiled.normalize = val2.normalize;
+      } else if (!val2.normalize) {
         compiled.normalize = createNormalizer();
       } else {
-        schemaError(name, val);
+        schemaError(name, val2);
       }
       return;
     }
-    if (isString(val)) {
+    if (isString(val2)) {
       aliases.push(name);
       return;
     }
-    schemaError(name, val);
+    schemaError(name, val2);
   });
   aliases.forEach(function(alias) {
     if (!self2.__compiled__[self2.__schemas__[alias]]) {
@@ -6437,10 +6437,10 @@ const HLJS = function(hljs) {
       if (lastMatch.type === "begin" && match2.type === "end" && lastMatch.index === match2.index && lexeme === "") {
         modeBuffer += codeToHighlight.slice(match2.index, match2.index + 1);
         if (!SAFE_MODE) {
-          const err = new Error(`0 width match regex (${languageName})`);
-          err.languageName = languageName;
-          err.badRule = lastMatch.rule;
-          throw err;
+          const err2 = new Error(`0 width match regex (${languageName})`);
+          err2.languageName = languageName;
+          err2.badRule = lastMatch.rule;
+          throw err2;
         }
         return 1;
       }
@@ -6448,9 +6448,9 @@ const HLJS = function(hljs) {
       if (match2.type === "begin") {
         return doBeginMatch(match2);
       } else if (match2.type === "illegal" && !ignoreIllegals) {
-        const err = new Error('Illegal lexeme "' + lexeme + '" for mode "' + (top.scope || "<unnamed>") + '"');
-        err.mode = top;
-        throw err;
+        const err2 = new Error('Illegal lexeme "' + lexeme + '" for mode "' + (top.scope || "<unnamed>") + '"');
+        err2.mode = top;
+        throw err2;
       } else if (match2.type === "end") {
         const processed = doEndMatch(match2);
         if (processed !== NO_MATCH) {
@@ -6461,8 +6461,8 @@ const HLJS = function(hljs) {
         return 1;
       }
       if (iterations > 1e5 && iterations > match2.index * 3) {
-        const err = new Error("potential infinite loop, way more iterations than matches");
-        throw err;
+        const err2 = new Error("potential infinite loop, way more iterations than matches");
+        throw err2;
       }
       modeBuffer += lexeme;
       return lexeme.length;
@@ -6514,18 +6514,18 @@ const HLJS = function(hljs) {
         _emitter: emitter,
         _top: top
       };
-    } catch (err) {
-      if (err.message && err.message.includes("Illegal")) {
+    } catch (err2) {
+      if (err2.message && err2.message.includes("Illegal")) {
         return {
           language: languageName,
           value: escape(codeToHighlight),
           illegal: true,
           relevance: 0,
           _illegalBy: {
-            message: err.message,
+            message: err2.message,
             index,
             context: codeToHighlight.slice(index - 100, index + 100),
-            mode: err.mode,
+            mode: err2.mode,
             resultSoFar: result2
           },
           _emitter: emitter
@@ -6536,12 +6536,12 @@ const HLJS = function(hljs) {
           value: escape(codeToHighlight),
           illegal: false,
           relevance: 0,
-          errorRaised: err,
+          errorRaised: err2,
           _emitter: emitter,
           _top: top
         };
       } else {
-        throw err;
+        throw err2;
       }
     }
   }
@@ -6604,11 +6604,11 @@ const HLJS = function(hljs) {
         console.warn(element);
       }
       if (options.throwUnescapedHTML) {
-        const err = new HTMLInjectionError(
+        const err2 = new HTMLInjectionError(
           "One of your code blocks includes unescaped HTML.",
           element.innerHTML
         );
-        throw err;
+        throw err2;
       }
     }
     node = element;
@@ -8778,8 +8778,8 @@ var store2 = { exports: {} };
           }, fillObj || {});
         },
         transact: function(key, fn, alt) {
-          var val = this.get(key, alt), ret = fn(val);
-          this.set(key, ret === void 0 ? val : ret);
+          var val2 = this.get(key, alt), ret = fn(val2);
+          this.set(key, ret === void 0 ? val2 : ret);
           return this;
         },
         set: function(key, data, overwrite) {
@@ -8794,10 +8794,10 @@ var store2 = { exports: {} };
           return _.set(this._area, this._in(key), _.stringify(data, replacer), overwrite) || d;
         },
         setAll: function(data, overwrite) {
-          var changed, val;
+          var changed, val2;
           for (var key in data) {
-            val = data[key];
-            if (this.set(key, val, overwrite) !== val) {
+            val2 = data[key];
+            if (this.set(key, val2, overwrite) !== val2) {
               changed = true;
             }
           }
@@ -9000,8 +9000,8 @@ function safe_add(d, _) {
 function bit_rol(d, _) {
   return d << _ | d >>> 32 - _;
 }
-function hash(val = "") {
-  return MD5(val);
+function hash(val2 = "") {
+  return MD5(val2);
 }
 function notEmpty(v) {
   return !!v;
@@ -9044,22 +9044,17 @@ RegExp.prototype.or = function() {
   return RegExp.any.apply(null, [this].concat(args2));
 };
 function Logging({ logFilter: logFilter2, debugMode: debugMode2 }) {
-  window.dp = dp2;
+  window.dp = console.log;
   window.dd = dd2;
   window.dw = dw2;
   window.de = de2;
   return {
     logFilter: logFilter2,
     debugMode: debugMode2,
-    dp: dp2,
     dd: dd2,
     dw: dw2,
     de: de2
   };
-  function dp2() {
-    if (!logFilter2.test([...arguments].join(" "))) return;
-    console.log(...arguments);
-  }
   function dd2() {
     if (!debugMode2) return;
     if (!logFilter2.test([...arguments].join(" "))) return;
@@ -9135,11 +9130,15 @@ function Notifications(tw2) {
 function Namespaces(tw2) {
   if (!tw2.storage.get("namespaces")) tw2.storage.set("namespaces", ["default"]);
   if (!tw2.storage.get("namespace")) tw2.storage.set("namespace", "default");
+  tw2.events.subscribe("namespace.switch", namespaceSwitch2);
+  tw2.events.subscribe("namespace.load", namespaceLoad);
+  tw2.events.subscribe("namespace.create", namespaceCreate2);
+  tw2.events.subscribe("namespace.delete", namespaceDelete2);
   return {
     namespaceCreate: namespaceCreate2,
     namespaceDelete: namespaceDelete2,
     namespaceSwitch: namespaceSwitch2,
-    namespaceLoad: namespaceLoad2
+    namespaceLoad
   };
   function namespaceCreate2(name, clone) {
     let currentNamespace = tw2.storage.get("namespace");
@@ -9165,7 +9164,7 @@ function Namespaces(tw2) {
     tw2.storage.set("namespace", name);
     tw2.namespace = name;
   }
-  function namespaceLoad2(name) {
+  function namespaceLoad(name) {
     namespaceSwitch2(name);
     tw2.events.send("reboot.hard");
   }
@@ -9201,15 +9200,24 @@ function Events() {
       return send(event2, decoder(params2), ctx2);
     },
     send,
-    subscribe(event2, handler, handlerName) {
-      handlerName = handler.name || handlerName;
-      if (handlers.find((h) => h.event === event2 && h.handler.name === handlerName)) return dw("Ignoring duplicate event handler");
-      dp("subscribe", event2, handlerName);
-      handlers.push({ event: event2, handler });
+    // TODO: Should have subscribe to listen and override to handle
+    // handlerName is used to ensure we don't call the same function twice for the same event
+    subscribe(event, handler, handlerName) {
+      if (!handlerName && typeof handler === "string") {
+        handlerName = handler;
+        handler = eval(handlerName);
+      }
+      if (!handlerName) handlerName = handler.name;
+      if (!handlerName) {
+        dw(`No handlerName provided in events.subscribe(${event})!`);
+        if (window.devMode) throw new Error(`No handlerName provided in events.subscribe(${event})!`);
+      }
+      if (handlers.find((h) => h.event === event && h.handler.name === handlerName)) return dw("Ignoring duplicate event handler");
+      handlers.push({ event, handler });
     },
-    override(event2, handler) {
+    override(event2, handler2) {
       handlers.filter((h) => h.event === event2).forEach((h) => delete h.event);
-      handlers.push({ event: event2, handler });
+      handlers.push({ event: event2, handler: handler2 });
     },
     handlers() {
       return handlers;
@@ -9232,8 +9240,8 @@ function Events() {
         let obj = {};
         params.split(",").forEach((k) => {
           Object.assign(obj, splitStr(k));
-          params = obj;
         });
+        params = obj;
       } catch (e) {
         de(e);
       }
@@ -9343,6 +9351,59 @@ function Packages(tw2) {
     }
   }
 }
+function parseParams(params2) {
+  if (params2 == null ? void 0 : params2.match(/^[a-z0-9]+:/i)) return strToObject(params2);
+  return paramsToArray(params2);
+}
+function strToObject(str) {
+  let obj = {};
+  str.split(",").map((k) => k.trim()).forEach((k) => {
+    let val2 = getKeyVal(k, ":");
+    let prop = Object.keys(val2)[0];
+    val2[prop] = getTypedParam(val2[prop]);
+    Object.assign(obj, val2);
+  });
+  return obj;
+}
+function paramsToArray(str) {
+  if (typeof str === "undefined" || str === "") return [];
+  let res = str.match(/\\?.|^$/g).reduce((p, c) => {
+    if (c === '"') {
+      p.quote ^= 1;
+    } else if (!p.quote && c === " ") {
+      p.a.push("");
+    } else {
+      p.a[p.a.length - 1] += c.replace(/\\(.)/, "$1");
+    }
+    return p;
+  }, { a: [""] }).a;
+  return getTypedParams(res);
+}
+function getKeyVal(x, delim) {
+  const y = x.split(delim);
+  return { [y[0].trim()]: y[1].trim() };
+}
+function getTypedParams(arr) {
+  return arr.map(getTypedParam) || [];
+}
+const reDoubleQuoted = /^["](.+)["]$/g;
+const reSingleQuoted = /^['](.+)[']$/g;
+const reEval = /^\{.+\}$/g;
+function getTypedParam(val) {
+  if (val === "null") return null;
+  if (strIsBoolean(val)) return val === "true";
+  if (strIsNumber(val)) return parseFloat(val);
+  if (reDoubleQuoted.test(val)) return val.replace(reDoubleQuoted, "$1");
+  if (reSingleQuoted.test(val)) return val.replace(reSingleQuoted, "$1");
+  if (reEval.test(val)) return eval(val);
+  return val;
+}
+function strIsBoolean(str) {
+  return ["true", "false"].includes(str);
+}
+function strIsNumber(str) {
+  return !isNaN(str) && !isNaN(parseFloat(str));
+}
 function formHotkeys(methods) {
   return function(e) {
     if (e.ctrlKey && (e.code === "Enter" || e.code === "NumpadEnter")) return methods.formSaveTiddler();
@@ -9396,22 +9457,39 @@ function button(text2, message, payload, id = "", attr = "") {
   let params2 = typeof payload === "object" ? JSON.stringify(payload) : payload;
   return `<button${id ? ' id="' + id + '"' : ""} class="${className}" onclick="tw.events.sendEncoded(this, '${message}', '${encoder(params2)}')" ${attr}>${text2}</button>`;
 }
+function section({ name, content, id, attr = "" }) {
+  if (!id) id = randstr();
+  return `<details ${attr}><summary>${name}</summary><div id="${id}">${content}</div></details>`;
+}
+function expand({ name, content, id, attr = "" }) {
+  if (!id) id = randstr();
+  return `<details style="display:inline" ${attr}><summary style="display:inline">${name}</summary><div id="${id}">${content}</div></details>`;
+}
+function randstr() {
+  return Math.random().toString(36).replace("0.", "");
+}
+const ui = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  button,
+  expand,
+  section
+}, Symbol.toStringTag, { value: "Module" }));
 const shadowTiddlers = [
   {
     "title": "$CorePackages",
-    "text": "* https://cawoodm.github.io/twiki/packages/core.json save,force\n* https://cawoodm.github.io/twiki/packages/icons.json save,force\n* https://cawoodm.github.io/twiki/packages/demo.json save,force\n* https://cawoodm.github.io/twiki/packages/website.json nooverwrite\n\nFor website/demo purposes we load more here than just core+icons",
+    "text": "* https://cawoodm.github.io/twiki/packages/core.json save,force",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "list",
     "created": "2024-10-04T19:45:16.2079534Z",
-    "updated": "2024-10-04T19:49:04.5504101Z"
+    "updated": "2024-10-11T19:08:19.6251816Z"
   },
   {
     "title": "$CoreThemeDark",
     "text": "* [[$StyleSheetCore]]\n* [[$StyleSheetCoreDark]]\n* [[$ThemeBase]]\n* [[$StyleSheetUser]]",
     "tags": [
-      "Shadow",
+      "$Shadow",
       "$Theme",
       "$ThemeDark"
     ],
@@ -9423,7 +9501,7 @@ const shadowTiddlers = [
     "title": "$CoreThemeLight",
     "text": "* [[$StyleSheetCore]]\n* [[$ThemeBase]]\n* [[$StyleSheetUser]]",
     "tags": [
-      "Shadow",
+      "$Shadow",
       "$Theme"
     ],
     "type": "x-twiki",
@@ -9431,10 +9509,20 @@ const shadowTiddlers = [
     "updated": "2024-10-04T19:45:16.2089505Z"
   },
   {
+    "title": "$ExtensionPackages",
+    "text": "* https://cawoodm.github.io/twiki/packages/icons.json save,force\n* https://cawoodm.github.io/twiki/packages/demo.json save,force\n* https://cawoodm.github.io/twiki/packages/website.json nooverwrite\n",
+    "tags": [
+      "$Shadow"
+    ],
+    "type": "list",
+    "created": "2024-10-11T19:07:58.5814034Z",
+    "updated": "2024-10-11T19:08:11.9307740Z"
+  },
+  {
     "title": "$GeneralSettings",
     "text": "{}",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "json",
     "created": "2024-10-04T19:45:16.2089505Z",
@@ -9444,7 +9532,7 @@ const shadowTiddlers = [
     "title": "$IconBackup",
     "text": "Backup",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T20:30:49.2443122Z",
@@ -9454,7 +9542,7 @@ const shadowTiddlers = [
     "title": "$IconCancel",
     "text": "ⓧ",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2089505Z",
@@ -9464,7 +9552,7 @@ const shadowTiddlers = [
     "title": "$IconCloseAll",
     "text": "Close All",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T20:27:07.7376234Z",
@@ -9474,7 +9562,7 @@ const shadowTiddlers = [
     "title": "$IconDelete",
     "text": "🗑",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2099502Z",
@@ -9484,7 +9572,7 @@ const shadowTiddlers = [
     "title": "$IconDone",
     "text": "✓",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2099502Z",
@@ -9494,7 +9582,7 @@ const shadowTiddlers = [
     "title": "$IconEdit",
     "text": "✎",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2099502Z",
@@ -9504,7 +9592,7 @@ const shadowTiddlers = [
     "title": "$IconFavorite",
     "text": "⭐",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2109509Z",
@@ -9514,7 +9602,7 @@ const shadowTiddlers = [
     "title": "$IconHelp",
     "text": "?",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2119516Z",
@@ -9524,7 +9612,7 @@ const shadowTiddlers = [
     "title": "$IconNew",
     "text": "New",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2119516Z",
@@ -9534,7 +9622,7 @@ const shadowTiddlers = [
     "title": "$IconOpenAll",
     "text": "Open All",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T20:28:35.0916955Z",
@@ -9544,7 +9632,7 @@ const shadowTiddlers = [
     "title": "$IconRefresh",
     "text": "🔃",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T20:21:19.0718810Z",
@@ -9554,7 +9642,7 @@ const shadowTiddlers = [
     "title": "$IconRestore",
     "text": "Restore",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T20:35:27.2984752Z",
@@ -9564,7 +9652,7 @@ const shadowTiddlers = [
     "title": "$IconSave",
     "text": "🖫",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2129525Z",
@@ -9574,7 +9662,7 @@ const shadowTiddlers = [
     "title": "$IconSettings",
     "text": "⚙️",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2129525Z",
@@ -9584,7 +9672,7 @@ const shadowTiddlers = [
     "title": "$IconSynch",
     "text": "Synch",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T20:37:05.7541639Z",
@@ -9594,7 +9682,7 @@ const shadowTiddlers = [
     "title": "$IconTag",
     "text": "Tags",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2139486Z",
@@ -9604,7 +9692,7 @@ const shadowTiddlers = [
     "title": "$Namespaces",
     "text": "<<NamespaceSelect>>",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2139486Z",
@@ -9612,19 +9700,19 @@ const shadowTiddlers = [
   },
   {
     "title": "$Settings",
-    "text": "* [[$GeneralSettings]]\n* [[$TitleBar]]\n  * [[$SiteTitle]]\n  * [[$SiteSubTitle]]\n* [[$Theme]]\n  * [[$TiddlerDisplay]]\n* [[$CorePackages]]",
+    "text": "* [[$GeneralSettings]]\n* [[$TitleBar]]\n  * [[$SiteTitle]]\n  * [[$SiteSubTitle]]\n* [[$Theme]]\n  * [[$TiddlerDisplay]]\n* [[$Packages]]\n  * [[$CorePackages]]\n  * [[$ExtensionPackages]]",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2139486Z",
-    "updated": "2024-10-04T19:45:16.2139486Z"
+    "updated": "2024-10-11T19:08:49.4378102Z"
   },
   {
     "title": "$SiteSubTitle",
     "text": "Inspired by [TiddlyWiki](https://tiddlwiki.com) ✨",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2139486Z",
@@ -9634,7 +9722,7 @@ const shadowTiddlers = [
     "title": "$SiteTitle",
     "text": "# TWIKI v{{$TWIKIVersion}}",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2149484Z",
@@ -9642,20 +9730,20 @@ const shadowTiddlers = [
   },
   {
     "title": "$StyleSheetCore",
-    "text": "/* CSS Reset */\nhtml {\n  box-sizing: border-box;\n  font-size: 16px;\n}\n\n*,\n*:before,\n*:after {\n  box-sizing: inherit;\n}\n\nbody,\np,\nol,\nul {\n  margin: 0;\n  padding: 0;\n  font-weight: normal;\n}\n\nol,\nul {\n  list-style: none;\n}\n\nimg {\n  max-width: 100%;\n  height: auto;\n}\n\na {\n  text-decoration: none;\n}\n\na:hover {\n  text-decoration: underline;\n}\n\n/* Responsive */\n.flex {\n  display: flex;\n  align-content: flex-start;\n}\n\n#header.flex {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: flex-end;\n}\n\n#header .col1 div {\n  width: 100%;\n}\n\n#titlebar.flex {\n  display: flex;\n  flex-wrap: wrap;\n  width: 100%;\n}\n\n#body.flex {\n  display: flex;\n  align-items: flex-start;\n  width: 100%;\n}\n\ndiv#visible-tiddlers {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  margin: 0.3rem;\n}\n\ndiv#sidebar {\n  margin: 0.3rem;\n  padding: 0.5rem;\n  background-color: var(--colbg3);\n  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);\n  outline: 1px solid var(--col1);\n  box-shadow: 1px 1px 0.5rem var(--col0);\n}\n\n#header .col1 {\n  flex-wrap: wrap;\n}\n\n#header .col2 {\n  gap: 10px;\n}\n\n#header .col3 input {\n  width: 100%;\n  border: solid 1px var(--col1)\n}\n\n@media (min-width: 0px) {\n  html {\n    font-size: 10px;\n  }\n\n  #header .col1,\n  #header .col2,\n  #header .col3 {\n    width: 100%;\n  }\n\n  #site-title,\n  #site-subtitle {\n    text-align: center;\n  }\n\n  #site-title h1,\n  #site-subtitle div {\n    margin: 2px;\n    padding: 2px;\n  }\n\n  #body.flex {\n    flex-wrap: wrap;\n  }\n\n  #sidebar {\n    flex-grow: 1;\n  }\n\n  div#visible-tiddlers {\n    flex-grow: 1;\n  }\n\n  h1 {\n    font-size: 1rem;\n  }\n}\n\n@media (min-width: 600px) {\n  html {\n    font-size: 16px;\n  }\n\n  #header .col1 {\n    width: 20%;\n  }\n\n  #header .col2 {\n    width: 60%;\n  }\n\n  #header .col3 {\n    width: 20%;\n  }\n\n  #body.flex {\n    flex-wrap: nowrap;\n    flex-direction: row;\n  }\n\n  #sidebar {\n    flex-grow: 1;\n  }\n\n  div#visible-tiddlers {\n    flex-grow: 4;\n  }\n\n  h1 {\n    font-size: 1.7rem;\n  }\n}\n\n/* Fallback Colors in case Themes forget them */\n:root {\n  --colbg1: #fdeeee;\n  --colbg2: #efefef;\n  --colbg3: #dfdfdf;\n  --colbgi: #efefef;\n  --colfgi: #373737;\n  --colfg: #323232;\n  --col0: #323232;\n  --col1: #6e6e6e;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col6: #6db193;\n  --notify-rgba: 210, 180, 90;\n  --rad1: 0.3rem;\n  --rad2: 0.3rem;\n  --rad3: 0.3rem;\n  --rad4: 0.3rem;\n}",
+    "text": "/* CSS Reset */\nhtml {\n  box-sizing: border-box;\n  font-size: 16px;\n}\n\n*,\n*:before,\n*:after {\n  box-sizing: inherit;\n}\n\nbody,\np,\nol,\nul {\n  margin: 0;\n  padding: 0;\n  font-weight: normal;\n}\n\nol,\nul {\n  list-style: none;\n}\n\nimg {\n  max-width: 100%;\n  height: auto;\n}\n\na {\n  text-decoration: none;\n}\n\na:hover {\n  text-decoration: underline;\n}\n\n/* Responsive */\n.flex {\n  display: flex;\n  align-content: flex-start;\n}\n\n#header.flex {\n  display: flex;\n  flex-wrap: wrap;\n  align-items: flex-end;\n}\n\n#header .col1 div {\n  width: 100%;\n}\n\n#titlebar.flex {\n  display: flex;\n  flex-wrap: wrap;\n  width: 100%;\n}\n\n#body.flex {\n  display: flex;\n  align-items: flex-start;\n  width: 100%;\n}\n\ndiv#visible-tiddlers {\n  display: flex;\n  flex-direction: column;\n  height: 100%;\n  margin: 0.3rem;\n}\n\ndiv#sidebar {\n  margin: 0.3rem;\n  padding: 0.5rem;\n  background-color: var(--colbg3);\n  border-radius: var(--rad1) var(--rad2) var(--rad3) var(--rad4);\n  outline: 1px solid var(--col1);\n  box-shadow: 1px 1px 0.5rem var(--col0);\n}\n\n#header .col1 {\n  flex-wrap: wrap;\n}\n\n#header .col2 {\n  gap: 10px;\n  flex-wrap: wrap;\n}\n\n#header .col3 input {\n  width: 100%;\n  border: solid 1px var(--col1)\n}\n\n@media (min-width: 0px) {\n  html {\n    font-size: 10px;\n  }\n\n  #header .col1,\n  #header .col2,\n  #header .col3 {\n    flex-grow: 1;\n  }\n\n  #site-title,\n  #site-subtitle {\n    text-align: center;\n  }\n\n  #site-title h1,\n  #site-subtitle div {\n    margin: 2px;\n    padding: 2px;\n  }\n\n  #body.flex {\n    flex-wrap: wrap;\n  }\n\n  #sidebar {\n    flex-grow: 1;\n  }\n\n  div#visible-tiddlers {\n    flex-grow: 1;\n  }\n\n  h1 {\n    font-size: 1rem;\n  }\n}\n\n@media (min-width: 600px) {\n  html {\n    font-size: 16px;\n  }\n\n  #header .col1 {\n    flex-grow: 1;\n  }\n\n  #header .col2 {\n    flex-grow: 3;\n  }\n\n  #header .col3 {\n    flex-grow: 2F<<F;\n  }\n\n  #body.flex {\n    flex-wrap: nowrap;\n    flex-direction: row;\n  }\n\n  #sidebar {\n    flex-grow: 1;\n  }\n\n  div#visible-tiddlers {\n    flex-grow: 4;\n  }\n\n  h1 {\n    font-size: 1.7rem;\n  }\n}\n\n/* Fallback Colors in case Themes forget them */\n:root {\n  --colbg1: #fdeeee;\n  --colbg2: #efefef;\n  --colbg3: #dfdfdf;\n  --colbgi: #efefef;\n  --colfgi: #373737;\n  --colfg: #323232;\n  --col0: #323232;\n  --col1: #6e6e6e;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col6: #6db193;\n  --notify-rgba: 210, 180, 90;\n  --rad1: 0.3rem;\n  --rad2: 0.3rem;\n  --rad3: 0.3rem;\n  --rad4: 0.3rem;\n}",
     "tags": [
-      "Shadow",
+      "$Shadow",
       "$StyleSheet"
     ],
     "type": "css",
     "created": "2024-10-04T18:48:42.3733765Z",
-    "updated": "2024-10-04T19:45:16.2149484Z"
+    "updated": "2024-10-12T05:11:49.4049730Z"
   },
   {
     "title": "$StyleSheetCoreDark",
     "text": ":root {\n  --colbg1: #101f1f;\n  --colbg2: #101f1f;\n  --colbg3: #2a2a2a;\n  --colbgi: #3f3f3f;\n  --colfgi: #d7d7d7;\n  --colfg: rgb(205, 205, 205);\n  --col0: #cdcdcd;\n  --col1: #6e6e6e;\n  --col3: #8fbfdf;\n  --col4: #8d8d8d;\n  --col6: #6db193;\n  --notify-rgba: 210, 180, 90;\n  --rad1: 0.3rem;\n  --rad2: 0.3rem;\n  --rad3: 0.3rem;\n  --rad4: 0.3rem;\n}",
     "tags": [
-      "Shadow",
+      "$Shadow",
       "$StyleSheet"
     ],
     "type": "css",
@@ -9666,7 +9754,7 @@ const shadowTiddlers = [
     "title": "$Theme",
     "text": "[[$CoreThemeLight]]",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2159490Z",
@@ -9913,7 +10001,7 @@ div.tiddler pre {
 }
 
 code {
-  background-color: var(--colbg4);
+  background-color: var(--col4);
   font-family: Consolas, 'Courier New', Courier, monospace;
 }
 
@@ -9950,6 +10038,12 @@ div.shadowtrue {
   outline: 2px dashed gray;
 }
 
+
+div.tiddler div.modified {
+  text-align: right;
+  font-style: italic;
+  color: var(--col1)
+}
 
 div.tiddler div.title {
   padding: 5px;
@@ -10014,18 +10108,18 @@ span.error {
   background-color: red;
 }`,
     "tags": [
-      "Shadow",
+      "$Shadow",
       "$StyleSheet"
     ],
     "type": "css",
     "created": "2024-10-04T19:45:16.2159490Z",
-    "updated": "2024-10-04T19:45:16.2159490Z"
+    "updated": "2024-10-11T18:58:53.9472340Z"
   },
   {
     "title": "$Themes",
     "text": "<<ThemeSelector>>",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2159490Z",
@@ -10033,20 +10127,20 @@ span.error {
   },
   {
     "title": "$TiddlerDisplay",
-    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.close:$currentTiddler.title">{{$IconCancel}}</button>\n    <button class="icon" title="edit" {{=editDisabled}} data-msg="tiddler.edit:{{=title}}">{{$IconEdit}}</button>\n    <button class="icon" title="delete"{{=editDisabled}} data-msg="tiddler.delete:{{=title}}">{{$IconDelete}}</button>\n    <button class="icon" title="favorite"{{=editDisabled}} data-msg="favorites.toggle:{{=title}}">{{$IconFavorite}}</button>\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
+    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.close:$currentTiddler.title">{{$IconCancel}}</button>\n    {{!editDisabled}}\n    <button class="icon" title="edit" {{=editDisabled}} data-msg="tiddler.edit:{{=title}}">{{$IconEdit}}</button>\n    <button class="icon" title="delete"{{=editDisabled}} data-msg="tiddler.delete:{{=title}}">{{$IconDelete}}</button>\n    <button class="icon" title="favorite"{{=editDisabled}} data-msg="favorites.toggle:{{=title}}">{{$IconFavorite}}</button>\n    {{/!editDisabled}}\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
     "tags": [
-      "Shadow",
+      "$Shadow",
       "$Template"
     ],
     "type": "html/template",
     "created": "2024-10-04T19:45:16.2159490Z",
-    "updated": "2024-10-04T21:25:44.1337862Z"
+    "updated": "2024-10-12T19:59:57.7935889Z"
   },
   {
     "title": "$TiddlerPreview",
     "text": '<div class="tiddler" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.preview.close:$currentTiddler.title">{{$IconCancel}}</button>\n    <!-- TODO: Save Button -->\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
     "tags": [
-      "Shadow",
+      "$Shadow",
       "$Template"
     ],
     "type": "html/template",
@@ -10057,7 +10151,7 @@ span.error {
     "title": "$TiddlerSearchResult",
     "text": "tbd<!-- Rendering Search Results -->",
     "tags": [
-      "Shadow",
+      "$Shadow",
       "$Template"
     ],
     "type": "html/template",
@@ -10068,7 +10162,7 @@ span.error {
     "title": "$TiddlerTrashed",
     "text": '<div class="tiddler" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.preview.close:$currentTiddler.title">{{$IconCancel}}</button>\n    <button class="icon" title="delete" data-msg="tiddler.trashed.destroy:$currentTiddler.title">{{$IconDelete}}</button>\n    <button class="icon" title="restore" data-msg="tiddler.trashed.restore:$currentTiddler.title">{{$IconRefresh}}</button>\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
     "tags": [
-      "Shadow",
+      "$Shadow",
       "$Template"
     ],
     "type": "html/template",
@@ -10079,38 +10173,38 @@ span.error {
     "title": "$TiddlerTypes",
     "text": "* x-twiki: TWiki Data\n* plain: Plain Text\n* html: HTML\n* html/template: HTML Template\n* css: StyleSheet\n* script/js: JavaScript\n* markdown: Markdown\n* macro: Macro\n* list: List\n* keyval: Key Values\n* table: Tabular Data\n* json: JSON Data\n",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
-    "type": "x-twiki",
+    "type": "keyval",
     "created": "2024-10-04T19:45:16.2169485Z",
-    "updated": "2024-10-04T19:45:16.2169485Z"
+    "updated": "2024-10-12T19:41:40.3662575Z"
   },
   {
     "title": "$TitleBar",
-    "text": '<<ShowAllTiddlersButton>> \n<<CloseAllTiddlersButton>>\n\n<<backup.backupButton>> \n<<backup.restoreButton>> \n \n<<synch.full>> \n\n<<New>>\n\n<<Save>>\n[{{$IconFavorite}}](#msg:ui.open.all:{"tag":"Favorite"})\n<<Settings>>\n<<TrashCanIcon>>\n[{{$IconTag}}](#Tags)\n\n [{{$IconHelp}}](#Help)',
+    "text": '<<ShowAllTiddlersButton>>\n\n<<CloseAllTiddlersButton>>\n\n<<backup.backupButton>>\n\n<<backup.restoreButton>>\n\n<<synch.full>>\n\n<<New>>\n\n<<Save>>\n\n[{{$IconFavorite}}](#msg:ui.open.all:{"tag":"Favorite"})\n\n<<Settings>>\n\n<<TrashCanIcon>>\n\n[{{$IconTag}}](#Tags)\n\n[{{$IconHelp}}](#Help)',
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2169485Z",
-    "updated": "2024-10-04T21:12:04.0540720Z"
+    "updated": "2024-10-12T05:01:06.4273315Z"
   },
   {
     "title": "$TWIKIVersion",
-    "text": "0.11.0 RC1",
+    "text": "0.11.0",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "text",
     "created": "2024-10-04T19:45:16.2149484Z",
-    "updated": "2024-10-04T21:39:49.9218148Z",
+    "updated": "2024-10-12T18:19:10.7590798Z",
     "readOnly": true
   },
   {
     "title": "Welcome",
     "text": "Welcome to your new TWiki!",
     "tags": [
-      "Shadow"
+      "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2169485Z",
@@ -10148,9 +10242,7 @@ const tw$1 = {
   },
   ui: {
     isDirty: false,
-    button,
-    formNewTiddler,
-    formEditShow
+    ...ui
   },
   util: { tagMatch, titleMatch, titleIs, tiddlerValidation, tiddlerExists },
   lib: { markdown: markdown1 },
@@ -10183,22 +10275,19 @@ const tw$1 = {
     closeTiddler,
     hideTiddler,
     renderAllTiddlers,
+    sendMessage,
     reload,
     tiddler: {
       getJSONObject,
       updateText: updateTiddlerText
     }
   },
-  fcn,
   call
 };
-function fcn(functionName) {
-  return eval(functionName);
-}
 function call(functionName, ...args) {
   return eval(functionName)(...args);
 }
-const { namespaceCreate, namespaceSwitch, namespaceLoad, namespaceDelete } = Namespaces(tw$1);
+const { namespaceCreate, namespaceSwitch, namespaceDelete } = Namespaces(tw$1);
 if (!tw$1.storage.get("namespace")) namespaceSwitch();
 tw$1.namespace = tw$1.storage.get("namespace");
 try {
@@ -10209,56 +10298,28 @@ try {
 }
 Object.assign(tw$1.run, Packages(tw$1));
 tw$1.ui.notify = Notifications(tw$1);
-tw$1.events.subscribe("namespace.switch", namespaceSwitch);
-tw$1.events.subscribe("namespace.load", namespaceLoad);
-tw$1.events.subscribe("namespace.create", namespaceCreate);
-tw$1.events.subscribe("namespace.delete", namespaceDelete);
 tw$1.events.subscribe("namespace.delete.ui", (namespace) => {
-  if (!confirm(`Sure you wanna delete the namespace '${namespace}'? This is irrevocable unless you have backups!`)) return;
+  if (!confirm(`Sure you want to delete the namespace '${namespace}'? This is irrevocable unless you have backups!`)) return;
   namespaceDelete(namespace);
   tw$1.ui.notify(`Namespace '${namespace} was deleted`, "S");
-});
+}, "core");
 tw$1.events.subscribe("namespace.clone", (namespace) => {
   namespaceCreate(namespace, true);
   tw$1.ui.notify(`Namespace '${namespace} was cloned`, "S");
-});
+}, "core");
+wireUpEvents();
 window.tw = tw$1;
-tw$1.events.subscribe("ui.open.all", (...rest) => tw$1.run.showAllTiddlers(...rest));
-tw$1.events.subscribe("ui.close.all", tw$1.run.closeAllTiddlers);
-tw$1.events.subscribe("save", save);
-tw$1.events.subscribe("save.silent", saveSilent);
-tw$1.events.subscribe("save.all", saveAll);
-tw$1.events.subscribe("form.new", formNewTiddler);
-tw$1.events.subscribe("form.edit", formEditTiddler);
-tw$1.events.subscribe("reboot.softer", rebootSofter);
-tw$1.events.subscribe("reboot.soft", rebootSoft);
-tw$1.events.subscribe("reboot.hard", rebootHard);
-tw$1.events.subscribe("search", searchQuery);
-tw$1.events.subscribe("ui.reload", reload);
-tw$1.events.subscribe("ui.theme.switch", themeSwitch);
-tw$1.events.subscribe("ui.theme.repaint", themeUpdate);
-tw$1.events.subscribe("tiddler.edit", formEditTiddler);
-tw$1.events.subscribe("tiddler.show", tw$1.run.showTiddler);
-tw$1.events.subscribe("tiddler.close", closeTiddler);
-tw$1.events.subscribe("tiddler.preview", previewTiddler);
-tw$1.events.subscribe("tiddler.preview.close", closePreview);
-tw$1.events.subscribe("tiddler.delete", deleteTiddler);
-tw$1.events.subscribe("tiddler.deleted", tw$1.run.reload);
-tw$1.events.subscribe("tiddler.refresh", rerenderTiddler);
-tw$1.events.subscribe("tiddler.edited", rerenderTiddler);
-tw$1.events.subscribe("tiddler.created", renderNewTiddler);
-tw$1.events.subscribe("tiddler.updated", tiddlerUpdated);
-tw$1.events.subscribe("store.load", loadStore);
-tw$1.events.subscribe("package.load.url", tw$1.run.loadPackageFromURL);
-tw$1.events.subscribe("package.reload.url", tw$1.run.reloadPackageFromUrl);
-tw$1.events.subscribe("package.reload.bin", tw$1.run.reloadPackageFromJSONBin);
 addEventListener("load", () => {
   addStyleSheet("highlight-light", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css");
   addStyleSheet("highlight-dark", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css");
+  if (location.host.match(/localhost/)) console.clear();
   uiWireEvents();
   rebootSoft();
 });
+const devMode = tw$1.storage.get("devmode") === true;
+window.devMode = devMode;
 const autoSave = tw$1.storage.get("autosave") !== false;
+const safeMode = tw$1.storage.get("safemode") === true;
 function disableStyleSheet(title2) {
   let el = document.querySelector(`link[title=${title2}]`);
   if (!el) throw new Error(`Stylesheet with title '${title2}' not found!`);
@@ -10282,6 +10343,7 @@ function rebootSofter() {
 }
 async function rebootSoft() {
   await loadCorePackages();
+  if (!safeMode) await loadExtensionPackages();
   reload();
 }
 function rebootHard() {
@@ -10304,9 +10366,16 @@ function loadTemplates() {
   tw$1.templates.TiddlerSearchResult = renderTiddler("$TiddlerSearchResult");
 }
 async function loadCorePackages() {
+  let packages = tw$1.run.getTiddlerList("$CorePackages");
+  await loadPackages(packages);
+}
+async function loadExtensionPackages() {
+  let packages = tw$1.run.getTiddlerList("$ExtensionPackages");
+  await loadPackages(packages);
+}
+async function loadPackages(packages) {
   var _a2;
-  let corePackages = tw$1.run.getTiddlerList("$CorePackages");
-  for (let p of corePackages) {
+  for (let p of packages) {
     let params2 = p.split(" ");
     let url = params2[0];
     let name = (_a2 = url.match(/([^.\/]+)\.json$/)) == null ? void 0 : _a2[1];
@@ -10326,6 +10395,39 @@ async function loadCorePackages() {
   }
   saveSilent();
 }
+function wireUp(event2, handler2) {
+  tw$1.events.subscribe(event2, handler2, "core");
+}
+function wireUpEvents() {
+  wireUp("ui.open.all", showAllTiddlers);
+  wireUp("ui.close.all", closeAllTiddlers);
+  wireUp("save", save);
+  wireUp("save.silent", saveSilent);
+  wireUp("save.all", saveAll);
+  wireUp("reboot.softer", rebootSofter);
+  wireUp("reboot.soft", rebootSoft);
+  wireUp("reboot.hard", rebootHard);
+  wireUp("search", searchQuery);
+  wireUp("ui.reload", reload);
+  wireUp("ui.theme.switch", themeSwitch);
+  wireUp("ui.theme.repaint", themeUpdate);
+  wireUp("tiddler.new", formNewTiddler);
+  wireUp("tiddler.edit", formEditTiddler);
+  wireUp("tiddler.show", tw$1.run.showTiddler);
+  wireUp("tiddler.close", closeTiddler);
+  wireUp("tiddler.preview", previewTiddler);
+  wireUp("tiddler.preview.close", closePreview);
+  wireUp("tiddler.delete", deleteTiddler);
+  wireUp("tiddler.deleted", tw$1.run.reload);
+  wireUp("tiddler.refresh", rerenderTiddler);
+  wireUp("tiddler.edited", rerenderTiddler);
+  wireUp("tiddler.created", renderNewTiddler);
+  wireUp("tiddler.updated", tiddlerUpdated);
+  wireUp("store.load", loadStore);
+  wireUp("package.load.url", tw$1.run.loadPackageFromURL);
+  wireUp("package.reload.url", tw$1.run.reloadPackageFromUrl);
+  wireUp("package.reload.bin", tw$1.run.reloadPackageFromJSONBin);
+}
 function tiddlerIsValid(t) {
   let msg = tiddlerValidation(t);
   if (msg.length)
@@ -10342,6 +10444,7 @@ function tiddlerToggleTag(title2, tag) {
 function validateTiddlerText(t) {
   if (t.type === "json") return jsonValidator(t.text);
   if (isCodeTiddler(t) && confirm("Would you like to validate your code?")) executeText(t.text);
+  if (isCodeTiddler(t) && t.tags.includes("$CodeDisabled")) alert("This code tiddler is disabled and will not run. Remove the $CodeDisabled tag to activate.");
 }
 function tiddlerValidation(t) {
   const msg = [];
@@ -10356,21 +10459,22 @@ function tiddlerValidation(t) {
   return msg;
 }
 function runCoreTiddlers() {
-  tw$1.tiddlers.all.filter(isCodeTiddler).filter(isCoreTiddler).forEach((t) => executeCodeTiddler(t.text, t.title));
+  tw$1.tiddlers.all.filter(isActiveCodeTiddler).filter(isCoreTiddler).forEach((t) => executeCodeTiddler(t.text, t.title));
 }
 function runExtensionTiddlers() {
-  let fails = 0;
-  tw$1.tiddlers.all.filter(isCodeTiddler).filter((t) => !isCoreTiddler(t)).forEach((t) => {
+  tw$1.tiddlers.all.filter(isActiveCodeTiddler).filter((t) => !isCoreTiddler(t)).forEach((t) => {
     try {
       executeCodeTiddler(t.text, t.title);
-    } catch {
-      fails++;
+    } catch (e) {
+      tw$1.ui.notify(`Extension Tiddler '${t.title} failed (see log)`, "E", e.stack);
+      de(`Extension Tiddler '${t.title} failed: ${e.message}`, e.stack);
+      if (confirm(`Extension Tiddler '${t.title} failed. Would you like to disable it?`)) {
+        t.tags.push("$CodeDisabled");
+      }
     }
-    if (fails > 1) throw new Error("Too many failures, launch safe mode!");
   });
 }
 function executeCodeTiddler(text2, title2) {
-  dp("**********executeCodeTiddler", title2);
   try {
     return executeText(text2, title2);
   } catch (e) {
@@ -10383,9 +10487,9 @@ function executeText(text2, title2, context) {
   try {
     result2 = (1, eval)(text2);
   } catch (e) {
-    let msg = `executeText "${title2}" ${context ? " in tiddler '" + context + "'" : ""}`;
+    let msg = `executeText "${title2}" ${""}`;
     de(`${msg}: ${e.message}`, e.stack);
-    throw new Error(`${msg}: ${e.message}`);
+    throw e;
   }
   return result2;
 }
@@ -10489,45 +10593,59 @@ function renderTwiki({ text, title, validation }) {
   let result = text;
   try {
     getMacros(text).forEach((m) => {
+      var _a2;
       let macroName = m[1];
       const macroCommand = new RegExp(`(?<!\`)${regEscape(m[0])}`);
       let dbg = 0;
+      if (dbg) ;
+      let err;
+      let macroFunction;
       try {
-        if (!eval(`tw.macros.${macroName}`)) macroName = `std.${macroName}`;
-        eval(`tw.macros.${macroName}`);
+        macroFunction = eval(`tw.macros.${macroName}`);
       } catch (e) {
-        dw("Unknown macro:", e.message);
+        err = e;
+      }
+      if (!macroFunction) try {
+        macroName = `std.${macroName}`;
+        macroFunction = eval(`tw.macros.${macroName}`);
+      } catch (e) {
+        err = e;
+      }
+      if (!macroFunction) {
+        let errmsg = `Unknown macro '${macroName}' in tiddler '${title}'!`;
+        dw(errmsg, (err == null ? void 0 : err.message) || "", err == null ? void 0 : err.stack);
         result = result.replace(macroCommand, `<span class="error">ERROR: Unknown macro '${macroName}'</span>`);
-        if (validation) throw e;
+        if (validation) throw new Error("Unknown macro " + m[1]);
         return;
       }
-      let macroParams = getTypedParams(m[2]).join(", ") || "";
-      macroParams = macroParams.replace(/("\{)|(\}")/ig, "");
-      let code = `tw.macros.${macroName}(${macroParams})`;
+      if ((_a2 = m[2]) == null ? void 0 : _a2.match(/;/)) dw('Deprecated ";" in macroParams', macroName, title);
+      let macroParams = m[2] || "";
+      macroParams = parseParams(macroParams);
       if (dbg) ;
       try {
-        let newText = executeText(code, `MACRO: ${macroName}`, title);
+        let newText = Array.isArray(macroParams) ? macroFunction(...macroParams) : macroFunction(macroParams);
         if (dbg) ;
         if (dbg) ;
         result = result.replace(macroCommand, newText);
         if (dbg) ;
       } catch (e) {
-        dw("MacroExecution Failed:", e.message);
-        result = result.replace(macroCommand, `<span class="error">ERROR: MacroExecution Failed '${macroName}'</span>`);
+        let errmsg = `Macro '${macroName}' failed in tiddler '${title}'!`;
+        dw(errmsg, e.message, e.stack);
+        result = result.replace(macroCommand, `<span class="error">${errmsg}: ${e.message.substr(0, 200)} (see log)</span>`);
         if (validation) throw e;
         return;
       }
+    });
+    getInclusions(result).forEach((m2) => {
+      let title2 = m2[1];
+      let text2 = getTiddlerTextRaw(title2);
+      result = result.replace(m2[0], text2);
     });
     getTiddlerLinks(result).forEach((m2) => {
       let linkName = m2[1];
       let linkURL = m2[1];
       let wikiLink = `[${linkName}](#${linkURL.replace(/ /g, "%20")})`;
       result = result.replace(m2[0], wikiLink);
-    });
-    getInclusions(result).forEach((m2) => {
-      let title2 = m2[1];
-      let text2 = getTiddlerTextRaw(title2);
-      result = result.replace(m2[0], text2);
     });
   } catch (e) {
     dw(`renderTwiki "${title}" Failed: ${e.message}`, e.stack);
@@ -10545,20 +10663,6 @@ function getTiddlerLinks(text2) {
 }
 function getInclusions(text2) {
   return Array.from(text2.matchAll(reInclusion));
-}
-function getTypedParams(str) {
-  return (str == null ? void 0 : str.split(";").map((p) => {
-    if (strIsBoolean(p)) return p === "true";
-    if (strIsNumber(p)) return parseFloat(p);
-    p = p.replace("EOF", "$");
-    return `"${p}"`;
-  })) || [];
-}
-function strIsBoolean(str) {
-  return ["true", "false"].includes(str);
-}
-function strIsNumber(str) {
-  return !isNaN(str) && !isNaN(parseFloat(str));
 }
 function regEscape(r) {
   return r.replace(/\\/g, "\\\\").replace(/\./g, "\\.").replace(/\^/g, "\\^").replace(/\(/g, "\\(").replace(/\$/g, "\\$").replace(/\*/g, "\\*").replace(/\)/g, "\\)");
@@ -10598,7 +10702,7 @@ function formNewTiddler() {
 }
 function formCancel() {
   let title2 = tw$1.dom.frm.elements["old-title"].value;
-  if (!getTiddler(title2, false)) hideTiddler(title2);
+  if (!getTiddler(title2)) hideTiddler(title2);
   $("new-dialog").close();
 }
 function formSaveTiddler() {
@@ -10748,7 +10852,7 @@ function tiddlerIsATemplate(t) {
 }
 function themeSwitch(theme) {
   if (!theme) return;
-  if (!tw$1.fcn("tiddlerExists")(theme)) return tw$1.ui.notify(`Unknown theme tiddler '${theme}'!`, "E");
+  if (!tw$1.call("tiddlerExists", theme)) return tw$1.ui.notify(`Unknown theme tiddler '${theme}'!`, "E");
   let tiddler = getTiddler("$Theme");
   tiddler.text = `[[${theme}]]`;
   delete tiddler.doNotSave;
@@ -10803,13 +10907,11 @@ function removeFromArray(array, test2) {
 }
 function showAllTiddlers({ tag = "", title: title2 = "" }) {
   if (!title2) title2 = "!^\\$";
-  if (!tag) tag = "!Shadow";
   tw$1.tiddlers.all.filter(titleMatch(title2)).filter(tagMatch(tag)).map((t) => t.title).forEach(showTiddler);
   renderAllTiddlers();
 }
 function closeAllTiddlers({ tag = "", title: title2 = "" }) {
   if (!title2) title2 = "!^\\$";
-  if (!tag) tag = "!Shadow";
   tw$1.tiddlers.all.filter(titleMatch(title2)).filter(tagMatch(tag)).map((t) => t.title).forEach(hideTiddler);
 }
 function getTiddlerElement(title2) {
@@ -10833,7 +10935,7 @@ function hideTiddler(title2) {
 function deleteTiddler(title2, automation) {
   var _a2;
   let t = getTiddler(title2);
-  if (!automation && !confirm("Sure you wanna delete me?")) return;
+  if (!automation && !confirm("Sure you want to delete me?")) return;
   const shadowTiddler = tw$1.shadowTiddlers.find(titleIs(title2));
   if (shadowTiddler && !automation && !confirm("Deleting a shadow tiddler will simply restore the default content OK?")) return;
   if (!t) return hideTiddler(title2);
@@ -10874,18 +10976,6 @@ function saveAll({ silent }) {
 }
 function saveVisible() {
   tw$1.store.set("tiddlers-visible", tw$1.tiddlers.visible);
-}
-function tiddlersToSave(t) {
-  return t.doNotSave !== true;
-}
-function titleIs(title2) {
-  return (t) => t.title === title2;
-}
-function isCodeTiddler(t) {
-  return ["script/js"].includes(t.type) && !t.tags.includes("Disabled");
-}
-function isCoreTiddler(t) {
-  return t.package === "core";
 }
 function htmlToNode(html) {
   const template = document.createElement("template");
@@ -10947,6 +11037,21 @@ function getJSONObject(title2) {
 function getTiddlersByTag(tag) {
   return tw$1.tiddlers.all.filter((t) => t.tags.includes(tag));
 }
+function tiddlersToSave(t) {
+  return t.doNotSave !== true;
+}
+function titleIs(title2) {
+  return (t) => t.title === title2;
+}
+function isCodeTiddler(t) {
+  return ["script/js"].includes(t.type);
+}
+function isActiveCodeTiddler(t) {
+  return ["script/js"].includes(t.type) && !t.tags.includes("$CodeDisabled");
+}
+function isCoreTiddler(t) {
+  return t.package === "core";
+}
 function tagMatch(tag) {
   if (!tag || tag === "*") return () => true;
   let re = new RegExp(tag.match(/^!/) ? tag.substr(1) : tag);
@@ -10957,8 +11062,18 @@ function titleMatch(title2) {
   let re = new RegExp(title2.match(/^!/) ? title2.substr(1) : title2);
   return (t) => title2.match(/^!/) ? !t.title.match(re) : t.title.match(re);
 }
-function showTiddlerList(list2) {
-  return tw$1.lib.markdown(list2.map((t) => `* ${t.title}`).join("\n"));
+function isMessage(str) {
+  var _a2;
+  return (_a2 = str == null ? void 0 : str.match(/^#?msg:(.+)/)) == null ? void 0 : _a2[1];
+}
+function isLocalLink(str) {
+  if (!str) return false;
+  if (!str.match(/^#/)) return false;
+  if (isMessage(str)) return false;
+  return true;
+}
+function showTiddlerList(list2, title2 = "unknown") {
+  return tw$1.lib.markdown(renderTwiki({ text: list2.map((t) => `* [[${t.title}]]`).join("\n"), title: title2 }));
 }
 function loadStore(store) {
   var _a2;
@@ -10975,6 +11090,7 @@ function loadStore(store) {
     t.doNotSave = true;
     t.isRawShadow = true;
     if (t.title === "$CorePackages" && document.location.host.match(/^(localhost)|(\d+\.\d+\.\d+\.\d+):\d+$/)) t.text = t.text.replaceAll("https://cawoodm.github.io/twiki", "http://" + document.location.host);
+    if (t.title === "$ExtensionPackages" && document.location.host.match(/^(localhost)|(\d+\.\d+\.\d+\.\d+):\d+$/)) t.text = t.text.replaceAll("https://cawoodm.github.io/twiki", "http://" + document.location.host);
     if (!tiddlerExists(t.title))
       addTiddler({ ...t });
   });
@@ -10990,11 +11106,28 @@ function loadStore(store) {
     return result2.filter((t) => !!t.title);
   }
 }
+function navigateTo(link2) {
+  if (!link2) return;
+  showTiddler(link2);
+  scrollToTiddler(link2);
+}
+function sendMessage(cmd) {
+  let cmds = cmd.match(reMessage);
+  if (!cmds) throw new Error(`Invalid command '${cmd}' does not match ${reMessage}/!`);
+  let msg = cmds[1];
+  let params2 = cmds.length > 2 ? cmds[2] : null;
+  tw$1.events.send(msg, params2);
+  if (msg === "tiddler.show") scrollToTiddler(params2);
+}
+function scrollToTiddler(title2) {
+  let topOfElement = getTiddlerElement(title2).offsetTop - $("header").offsetHeight;
+  window.scroll({ top: topOfElement, behavior: "smooth" });
+}
 function attachTiddlerEvents(newElement, title2) {
   tw$1.events.send("tiddler.element.created", { title: title2, newElement });
 }
 function uiWireEvents() {
-  var _a2, _b, _c, _d;
+  var _a2, _b, _c;
   document.addEventListener("click", (event2) => {
     let el = event2.target;
     let href = findAttributeUp(el, "href", "a[href]");
@@ -11013,33 +11146,6 @@ function uiWireEvents() {
       return sendMessage(msg);
     }
   });
-  function isMessage(str) {
-    var _a3;
-    return (_a3 = str == null ? void 0 : str.match(/^#?msg:(.+)/)) == null ? void 0 : _a3[1];
-  }
-  function isLocalLink(str) {
-    if (!str) return false;
-    if (!str.match(/^#/)) return false;
-    if (isMessage(str)) return false;
-    return true;
-  }
-  function navigateTo(link2) {
-    if (!link2) return;
-    showTiddler(link2);
-    scrollToTiddler(link2);
-  }
-  function sendMessage(cmd) {
-    let cmds = cmd.match(reMessage);
-    if (!cmds) throw new Error(`Invalid command '${cmd}' does not match ${reMessage}/!`);
-    let msg = cmds[1];
-    let params2 = cmds.length > 2 ? cmds[2] : null;
-    tw$1.events.send(msg, params2);
-    if (msg === "tiddler.show") scrollToTiddler(params2);
-  }
-  function scrollToTiddler(title2) {
-    let topOfElement = getTiddlerElement(title2).offsetTop - $("header").offsetHeight;
-    window.scroll({ top: topOfElement, behavior: "smooth" });
-  }
   document.addEventListener("dblclick", (event2) => {
     let el = event2.target;
     let t = findAttributeUp(el, "data-tiddler-title", ".tiddler") || findAttributeUp(el, "tiddler-include", "[tiddler-include]");
@@ -11056,10 +11162,9 @@ function uiWireEvents() {
   tw$1.dom.frm = $("new-form");
   tw$1.dom.frm.addEventListener("submit", (evt) => evt.preventDefault());
   tw$1.dom.frm.addEventListener("keypress", formHotkeys({ formSaveTiddler }));
-  (_a2 = $("new-btn")) == null ? void 0 : _a2.addEventListener("click", formNewTiddler);
-  (_b = $("new-save")) == null ? void 0 : _b.addEventListener("click", formSaveTiddler);
-  (_c = $("new-cancel")) == null ? void 0 : _c.addEventListener("click", formCancel);
-  (_d = $("search")) == null ? void 0 : _d.addEventListener("keyup", searchNow);
+  (_a2 = $("new-save")) == null ? void 0 : _a2.addEventListener("click", formSaveTiddler);
+  (_b = $("new-cancel")) == null ? void 0 : _b.addEventListener("click", formCancel);
+  (_c = $("search")) == null ? void 0 : _c.addEventListener("keyup", searchNow);
   window.addEventListener("error", (event2) => {
     tw$1.ui.notify("Unhandled: " + event2.message, "E", event2.error.stack);
     de("Unhandled:", event2.message, event2);

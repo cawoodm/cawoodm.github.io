@@ -17,6 +17,14 @@
       "updated": "2024-10-04T19:45:16.1906502Z"
     },
     {
+      "title": "$CoreThemeManager",
+      "text": "/**\n * ## Description\n * Provides all theme logic\n * Provides <<ThemeSelector>> widget\n */\n/**\n * ## Data\n * ```json\n * {\n *   \"version\": 1.0.1\n * }\n * ```\n */\n(function(){\n\n  wireUp('ui.loaded', () => {\n    tw.theme = {\n      stylesheets: {\n        custom: new CSSStyleSheet(),\n      },\n      getThemeNames,\n    };\n    document.adoptedStyleSheets.push(tw.theme.stylesheets.custom);\n    themeUpdate();\n  });\n\n  wireUp('tiddler.updated', (t) => {\n    if (tiddlerIsThemeRelevant(t.title))\n      return themeUpdate();\n    if (tiddlerIsATheme(t.title))\n      return themesUpdate();\n  });\n\n  wireUp('theme.switch', themeSwitch);\n  function themeSwitch(theme) {\n    if (!theme) return;\n    if (!tw.call('tiddlerExists', theme)) return tw.ui.notify(`Unknown theme tiddler '${theme}'!`, 'E');\n    let tiddler = tw.run.getTiddler('$Theme');\n    tiddler.text = `[[${theme}]]`;\n    delete tiddler.doNotSave;\n    tw.run.updateTiddlerHard('$Theme', tiddler);\n    if (theme.match(/Dark/)) tw.dom.disableStyleSheet('highlight-light');\n    else tw.dom.disableStyleSheet('highlight-dark');\n    tw.events.send('tiddler.refresh', '$Theme');\n    themeUpdate(theme);\n    tw.events.send('save.silent');\n  }\n\n  wireUp('ui.reloaded', themeUpdate);\n  function themeUpdate() {\n    let css = getThemeStyleSheets().map(tw.run.getTiddlerTextRaw).join('\\n');\n    tw.theme.stylesheets.custom.replaceSync(css);\n  }\n\n  function tiddlerIsATheme(title) {\n    return tw.run.getTiddler(title)?.tags.includes('$Theme');\n  }\n\n  function themesUpdate() {\n    tw.events.send('tiddler.refresh', '$Themes');\n  }\n\n  function tiddlerIsThemeRelevant(title) {\n    let themeName = getCurrentThemeName();\n    return title === '$Theme' || title === themeName || getThemeStyleSheets().includes(title);\n  }\n  function getCurrentThemeName() {\n    return tw.run.getTiddlerTextRaw('$Theme').replace(/[\\[\\]]/g, ''); // Remove possible [[links]]\n  }\n  function getThemeNames() {\n    return tw.run.getTiddlersByTag('$Theme').map(t => t.title);\n  }\n  function getThemeStyleSheets() {\n    let theme = getCurrentThemeName();\n    if (!tw.call('tiddlerExists', theme)) {\n      tw.ui.notify('Unable to determine theme name from $Theme tiddler! Falling back on $CoreTheme', 'W');\n      theme = '$CoreTheme';\n    }\n    return tw.run.getTiddlerList(theme);\n  }\n\n  tw.macros.std.ThemeSelector = () => {\n    let theme = getCurrentThemeName();\n    return `<select id=\"theme-select\" onchange=\"tw.events.send('theme.switch', this.value);\">\n    ${getThemeNames().map(n => `<option value=\"${n}\"${n === theme ? ' selected' : ''}>${n.replace(/(^\\$)|(Theme$)/g, '')}</option>`).join('\\n')}\n  </select>`;\n  };\n\n  function wireUp(event, handler) {\n    tw.events.subscribe(event, handler, 'CoreThemeManager');\n  }\n})();\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-10-16T19:39:32.3065795Z",
+      "updated": "2024-10-19T09:19:55.2898132Z"
+    },
+    {
       "title": "$GeneralWidgets",
       "text": "// Send any message\ntw.macros.std.SendMessage = (msg, payload = '') => {\n  return tw.ui.button(`Send: ${msg}:${payload}`, msg, payload, '', 'title=\"Send Message\"');\n};\n// Reload UI\ntw.macros.std.Reload = () => {\n  return tw.ui.button('🔄️', 'ui.reload', null, '', 'title=\"Reload\"');\n};\ntw.macros.std.Save = () => {\n  return tw.ui.button('{{$IconSave}}', 'save.all', null, '', 'title=\"Save\"');\n};\ntw.macros.std.Settings = () => {\n  return tw.ui.button('{{$IconSettings}}', 'tiddler.show', '$Settings', '', 'title=\"Settings\"');\n};\ntw.macros.std.New = () => {\n  return tw.ui.button('{{$IconNew}}', 'tiddler.new', null);\n};\n// Lists types used in all tiddlers\ntw.macros.std.AllTypesMacro = () => {\n  return tw.lib.markdown([...new Set(tw.tiddlers.all.map(t => `* [${t.type}](#msg:tiddlers.show:type:${t.type})\\n`))].join(''));\n};\n",
       "tags": [],
@@ -58,11 +66,11 @@
     },
     {
       "title": "$PackageWidgets",
-      "text": "tw.macros.packages = {\n  // Example: Import package website without overwriting\n  // <<packages.import name:website, url:./packages/website.json, filter:*, force:false>>\n  import({name, url, filter, overWrite, doNotSave}) {\n    if (!name) throw new Error('ERROR: No name supplied to packages.import macro!');\n    if (!url) throw new Error('ERROR: No url supplied to packages.import macro!');\n    return tw.ui.button(`Import: ${name} ${filter ? ' (' + filter + ')' : ''}`, 'package.reload.url', {url, name, overWrite, doNotSave});\n  },\n  importBin({name, url, filter, overWrite, doNotSave}) {\n    if (!name) throw new Error('ERROR: No name supplied to packages.importBin macro!');\n    if (!url) throw new Error('ERROR: No url supplied to packages.importBin macro!');\n    return tw.ui.button(`Import: ${name} ${filter ? ' (' + filter + ')' : ''}`, 'package.reload.bin', {url, name, overWrite, doNotSave});\n  },\n};\n",
+      "text": "tw.macros.packages = {\n  // Example: Import package website without overwriting\n  // <<packages.import name:website url:./packages/website.json filter:* force:false>>\n  import({name, url, filter, overWrite, doNotSave}) {\n    if (!name) throw new Error('ERROR: No name supplied to packages.import macro!');\n    if (!url) throw new Error('ERROR: No url supplied to packages.import macro!');\n    return tw.ui.button(`Import: ${name} ${filter ? ' (' + filter + ')' : ''}`, 'package.reload.url', {url, name, overWrite, doNotSave});\n  },\n  importBin({name, url, filter, overWrite, doNotSave}) {\n    if (!name) throw new Error('ERROR: No name supplied to packages.importBin macro!');\n    if (!url) throw new Error('ERROR: No url supplied to packages.importBin macro!');\n    return tw.ui.button(`Import: ${name} ${filter ? ' (' + filter + ')' : ''}`, 'package.reload.bin', {url, name, overWrite, doNotSave});\n  },\n};\n",
       "tags": [],
       "type": "script/js",
       "created": "2024-10-04T18:48:42.3651790Z",
-      "updated": "2024-10-11T11:18:22.0161473Z"
+      "updated": "2024-10-19T09:44:42.0935910Z"
     },
     {
       "title": "$ShowTiddlersWidgets",
@@ -79,14 +87,6 @@
       "type": "script/js",
       "created": "2024-10-04T19:45:16.1926481Z",
       "updated": "2024-10-11T19:58:40.2679667Z"
-    },
-    {
-      "title": "$ThemesPlugin",
-      "text": "/**\n * ## Description\n * Provide <<ThemeSelector>> widget\n *   Should eventually provide all theme logic\n */\n/**\n * ## Data\n * ```json\n * {\n *   \"version\": 1.0.1\n * }\n * ```\n */\ntw.macros.std.ThemeSelector = () => {\n  let theme = tw.call('getCurrentThemeName');\n  return `<select id=\"theme-select\" onchange=\"tw.events.send('ui.theme.switch', this.value);\">\n    ${tw.call('getThemeNames').map(n => `<option value=\"${n}\"${n === theme ? ' selected' : ''}>${n.replace(/(^\\$)|(Theme$)/g, '')}</option>`).join('\\n')}\n  </select>`;\n};\n",
-      "tags": [],
-      "type": "script/js",
-      "created": "2024-10-04T19:45:16.1926481Z",
-      "updated": "2024-10-11T11:03:42.0941192Z"
     },
     {
       "title": "$TiddlerSearchResult",
@@ -114,11 +114,11 @@
     },
     {
       "title": "Backup",
-      "text": "Backup will push all data (including trashed tiddlers and the visible state) to a remote.\n* <<backupButton>>: Backup data\n* <<restoreButton>>: Restore all data (!will overwrite everything)\n\nNote: In case you mess up we routinely make a local backup - press F12 and check under Application - Local Data",
+      "text": "Backup will push all data (including trashed tiddlers and the visible state) to a remote.\n* <<backup.backupButton>>: Backup data\n* <<backup.restoreButton>>: Restore all data (!will overwrite everything)\n\nNote: In case you mess up we routinely make a local backup - press F12 and check under Application - Local Data",
       "tags": [],
       "type": "x-twiki",
       "created": "2024-10-12T18:30:05.7439160Z",
-      "updated": "2024-10-12T18:31:59.6994993Z"
+      "updated": "2024-10-16T19:33:47.7878625Z"
     },
     {
       "title": "Synchronization",

@@ -10,13 +10,13 @@
     },
     {
       "title": "Links",
-      "text": "* [To Do](#ToDo)\n* https://jsonbin.io/app/bins\n* [[$AutoImport]]\n* [😎Shadows](#msg:search:$tag:Shadow)\n* [✌️Styling](#msg:search:$tag:Styling)\n---\n### Themes\n* Themes\n  * Importing a Theme doesn't mean it persists because we `doNotSave` it:\n    *  <<packages.import name:themes, url:./packages/themes.json, filter:white>>\n    *  <<packages.import name:themes, url:./packages/themes.json, filter:khaki>>\n  * [$Theme](#$Theme)\n    * [[$StyleForTiddlers]]\n    * [[$StyleSheetWhite]]\n    * [[$StyleSheetMarc]]\n      * [[$StyleSheet]]\n* Layout\n  * [$TiddlerDisplay](#$TiddlerDisplay)\n  * [$TitleBar](#$TitleBar)\n",
+      "text": "* [To Do](#ToDo)\n* https://jsonbin.io/app/bins\n* [[$AutoImport]]\n* [😎Shadows](#msg:search:$tag:Shadow)\n* [✌️Styling](#msg:search:$tag:Styling)\n---\n### Themes\n* Themes\n  * Importing a Theme doesn't mean it persists because we `doNotSave` it:\n    *  <<packages.import name:themes url:./packages/themes.json filter:white>>\n    *  <<packages.import name:themes url:./packages/themes.json filter:khaki>>\n  * [$Theme](#$Theme)\n    * [[$StyleForTiddlers]]\n    * [[$StyleSheetWhite]]\n    * [[$StyleSheetMarc]]\n      * [[$StyleSheet]]\n* Layout\n  * [$TiddlerDisplay](#$TiddlerDisplay)\n  * [$TitleBar](#$TitleBar)\n",
       "tags": [
         "Favorite"
       ],
       "type": "x-twiki",
       "created": "2024-10-11T19:02:03.7877813Z",
-      "updated": "2024-10-11T19:02:11.8347521Z"
+      "updated": "2024-10-19T09:45:24.4926677Z"
     },
     {
       "title": "MarcHacks",
@@ -33,6 +33,14 @@
       "type": "json",
       "created": "2024-09-18T07:54:56.0000000Z",
       "updated": "2024-09-18T07:54:56.0000000Z"
+    },
+    {
+      "title": "SelectorWidget",
+      "text": "/**\n  * .SYNOPSIS\n  * Show a selection of values\n  *\n  * .DESCRIPTION\n  * Provide a dynamic data-driven HTML <select> box with handler\n  *\n  * .EXAMPLE\n  * Show a selection of 3 fixed colors:\n  * <<selector red,green, blue>>\n  *\n  * .EXAMPLE\n  * Show a selection of colors from a datalist tiddler:\n  * <<selector {tw.run.getTiddlerTextList('ColorSelection')}>>\n  *\n  * .EXAMPLE\n  * Show a selection of 3 keyval pairs:\n  * <<selector #f00:red #0f0:green #00f:blue>>\n  *\n  * TODO: Create a widget which updates the text/field of a tiddler\n  *         This would be great in the $Theme tiddler to directly select a theme\n  *         <<selector {tw.theme.getThemeNames()}>>\n  */\ntw.macros.std.selector = (values) => {\n  if (typeof values === 'string') values = values.split(/,\\s?/);\n  if (typeof values === 'object' && !Array.isArray(values)) values = Object.keys(values).map(key => ({key, value: values[key]}));\n  if (!Array.isArray(values)) throw new Error('No array passed!');\n  return `<select>\n  ${values.map(v => '<option value=\"' + (v?.key || v) + '\">' + (v?.value || v) + '</option>').join('')}\n  </select>`;\n};\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-10-18T18:09:48.1135300Z",
+      "updated": "2024-10-19T15:12:23.8166492Z"
     }
   ]
 }

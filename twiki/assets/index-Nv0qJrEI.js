@@ -8935,12 +8935,6 @@ var store2 = { exports: {} };
 })(store2);
 var store2Exports = store2.exports;
 const storage = /* @__PURE__ */ getDefaultExportFromCjs(store2Exports);
-function $() {
-  return document.getElementById(...arguments);
-}
-function $$() {
-  return document.querySelectorAll(...arguments);
-}
 function simpleSort(a, b) {
   let A = a.title.toLowerCase();
   let B = b.title.toLowerCase();
@@ -9069,6 +9063,45 @@ function Logging({ logFilter: logFilter2, debugMode: debugMode2 }) {
     console.error(...arguments);
   }
 }
+function addStyleSheet(title2, url) {
+  var link2 = document.createElement("link");
+  link2.type = "text/css";
+  link2.title = title2;
+  link2.rel = "stylesheet";
+  link2.href = url;
+  document.head.appendChild(link2);
+}
+function disableStyleSheet(title2) {
+  let el = document.querySelector(`link[title=${title2}]`);
+  if (!el) throw new Error(`Stylesheet with title '${title2}' not found!`);
+  el.disabled = true;
+}
+function $() {
+  return document.getElementById(...arguments);
+}
+function $$() {
+  return document.querySelectorAll(...arguments);
+}
+function htmlToNode(html) {
+  const template = document.createElement("template");
+  template.innerHTML = html.trim();
+  const nNodes = template.content.childNodes.length;
+  if (nNodes !== 1) return de(`html parameter must represent a single node; got ${nNodes}. `);
+  return template.content.firstElementChild;
+}
+function nearestAttribute(el, attribute2, selector) {
+  var _a2, _b;
+  return el.getAttribute(attribute2) || ((_b = (_a2 = el.parentElement) == null ? void 0 : _a2.closest(selector)) == null ? void 0 : _b.getAttribute(attribute2));
+}
+const dom = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  $,
+  $$,
+  addStyleSheet,
+  disableStyleSheet,
+  htmlToNode,
+  nearestAttribute
+}, Symbol.toStringTag, { value: "Module" }));
 function Notifications(tw2) {
   tw2.dom.notify = tw2.dom.$("notify");
   if (!tw2.dom.notify) {
@@ -9352,12 +9385,12 @@ function Packages(tw2) {
   }
 }
 function parseParams(params2) {
-  if (params2 == null ? void 0 : params2.match(/^[a-z0-9]+:/i)) return strToObject(params2);
+  if (params2 == null ? void 0 : params2.match(/^\S+:/i)) return strToObject(params2);
   return paramsToArray(params2);
 }
 function strToObject(str) {
   let obj = {};
-  str.split(",").map((k) => k.trim()).forEach((k) => {
+  paramsToArray(str).map((k) => k.trim()).forEach((k) => {
     let val2 = getKeyVal(k, ":");
     let prop = Object.keys(val2)[0];
     val2[prop] = getTypedParam(val2[prop]);
@@ -9388,14 +9421,14 @@ function getTypedParams(arr) {
 }
 const reDoubleQuoted = /^["](.+)["]$/g;
 const reSingleQuoted = /^['](.+)[']$/g;
-const reEval = /^\{.+\}$/g;
+const reCurlyBraces = /^\{(.+)\}$/g;
 function getTypedParam(val) {
   if (val === "null") return null;
   if (strIsBoolean(val)) return val === "true";
   if (strIsNumber(val)) return parseFloat(val);
   if (reDoubleQuoted.test(val)) return val.replace(reDoubleQuoted, "$1");
   if (reSingleQuoted.test(val)) return val.replace(reSingleQuoted, "$1");
-  if (reEval.test(val)) return eval(val);
+  if (reCurlyBraces.test(val)) return eval(val.replace(reCurlyBraces, "$1"));
   return val;
 }
 function strIsBoolean(str) {
@@ -9881,9 +9914,10 @@ dialog#preview-dialog div.text {
 
 dialog#new-dialog {
   background-color: var(--colbg2);
-  width: 50%;
-  height: 50%;
-  min-height: 500px;
+  width: 75%;
+  height: 75%;
+  min-height: 600px;
+  min§-width: 600px;
 }
 
 dialog#new-dialog form {
@@ -10113,7 +10147,7 @@ span.error {
     ],
     "type": "css",
     "created": "2024-10-04T19:45:16.2159490Z",
-    "updated": "2024-10-11T18:58:53.9472340Z"
+    "updated": "2024-10-19T14:35:54.3682558Z"
   },
   {
     "title": "$Themes",
@@ -10227,8 +10261,7 @@ const tw$1 = {
   },
   shadowTiddlers,
   dom: {
-    $,
-    $$,
+    ...dom,
     divVisibleTiddlers: $("visible-tiddlers"),
     divAllTiddlers: $("all-tiddlers"),
     preview: $("preview-dialog")
@@ -10259,12 +10292,12 @@ const tw$1 = {
     deleteTiddler,
     getTiddler,
     getTiddlerList,
+    getTiddlersByTag,
     getTiddlerTextList,
     getTiddlerTextRaw,
     getJSONObject,
     getKeyValuesArray,
     getKeyValuesObject,
-    getThemeNames,
     tiddlerToggleTag,
     showTiddlerList,
     showTiddler,
@@ -10282,10 +10315,17 @@ const tw$1 = {
       updateText: updateTiddlerText
     }
   },
+  extensions: {
+    addMacro
+  },
   call
 };
 function call(functionName, ...args) {
   return eval(functionName)(...args);
+}
+function addMacro(name, fcn, options) {
+  tw$1.macros[name] = fcn;
+  if (options) Object.assign(tw$1.macros[name], options);
 }
 const { namespaceCreate, namespaceSwitch, namespaceDelete } = Namespaces(tw$1);
 if (!tw$1.storage.get("namespace")) namespaceSwitch();
@@ -10320,43 +10360,27 @@ const devMode = tw$1.storage.get("devmode") === true;
 window.devMode = devMode;
 const autoSave = tw$1.storage.get("autosave") !== false;
 const safeMode = tw$1.storage.get("safemode") === true;
-function disableStyleSheet(title2) {
-  let el = document.querySelector(`link[title=${title2}]`);
-  if (!el) throw new Error(`Stylesheet with title '${title2}' not found!`);
-  el.disabled = true;
-}
-function addStyleSheet(title2, url) {
-  var link2 = document.createElement("link");
-  link2.type = "text/css";
-  link2.title = title2;
-  link2.rel = "stylesheet";
-  link2.href = url;
-  document.head.appendChild(link2);
-}
 loadStore();
-tw$1.stylesheets = {
-  custom: new CSSStyleSheet()
-};
-document.adoptedStyleSheets.push(tw$1.stylesheets.custom);
 function rebootSofter() {
   reload();
 }
 async function rebootSoft() {
   await loadCorePackages();
   if (!safeMode) await loadExtensionPackages();
-  reload();
+  reload(1);
 }
 function rebootHard() {
   window.location.reload();
 }
-function reload() {
+function reload(time) {
   var _a2;
   tw$1.tiddlers.visible = tw$1.tiddlers.visible.filter((title2) => tiddlerExists(title2));
   runCoreTiddlers();
   loadTemplates();
   (_a2 = $$("*[tiddler-include]")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
   runExtensionTiddlers();
-  themeUpdate();
+  if (time === 1) tw$1.events.send("ui.loaded");
+  else tw$1.events.send("ui.reloaded", time);
   renderAllTiddlers();
 }
 function loadTemplates() {
@@ -10409,8 +10433,6 @@ function wireUpEvents() {
   wireUp("reboot.hard", rebootHard);
   wireUp("search", searchQuery);
   wireUp("ui.reload", reload);
-  wireUp("ui.theme.switch", themeSwitch);
-  wireUp("ui.theme.repaint", themeUpdate);
   wireUp("tiddler.new", formNewTiddler);
   wireUp("tiddler.edit", formEditTiddler);
   wireUp("tiddler.show", tw$1.run.showTiddler);
@@ -10512,7 +10534,7 @@ function renderTiddlerList(list2) {
 }
 function displayTiddlerLink({ title: title2, type }) {
   let newElement = document.createElement("li");
-  newElement.className = "tiddler-list" + (type ? " line-clamp" : "");
+  newElement.className = "tiddler-list";
   if (type) newElement.appendChild(newTiddlerLink({ title: title2, type }));
   else newElement.innerHTML = title2;
   tw$1.dom.divAllTiddlers.insertAdjacentElement("beforeend", newElement);
@@ -10541,7 +10563,7 @@ function createTiddlerElement(t, template) {
   let newElement = htmlToNode(html);
   newElement.setAttribute("data-tiddler-id", id);
   newElement.setAttribute("data-tiddler-title", t.title);
-  attachTiddlerEvents(newElement, t.title);
+  tw$1.events.send("tiddler.element.created", { title: t.title, newElement });
   return newElement;
 }
 function makeTiddlerText({ title: title2, text: text2, type }) {
@@ -10612,10 +10634,10 @@ function renderTwiki({ text, title, validation }) {
         err = e;
       }
       if (!macroFunction) {
-        let errmsg = `Unknown macro '${macroName}' in tiddler '${title}'!`;
+        let errmsg = `Unknown macro <<${m[1]}>> in tiddler '${title}'!`;
         dw(errmsg, (err == null ? void 0 : err.message) || "", err == null ? void 0 : err.stack);
-        result = result.replace(macroCommand, `<span class="error">ERROR: Unknown macro '${macroName}'</span>`);
-        if (validation) throw new Error("Unknown macro " + m[1]);
+        result = result.replace(macroCommand, `<span class="error">ERROR: Unknown macro &lt;&lt;${m[1]}>></span>`);
+        if (validation) throw new Error(errmsg);
         return;
       }
       if ((_a2 = m[2]) == null ? void 0 : _a2.match(/;/)) dw('Deprecated ";" in macroParams', macroName, title);
@@ -10639,6 +10661,7 @@ function renderTwiki({ text, title, validation }) {
     getInclusions(result).forEach((m2) => {
       let title2 = m2[1];
       let text2 = getTiddlerTextRaw(title2);
+      if (!text2) text2 = `No tiddler '${title2}' found - let's [create it](#${title2})!`;
       result = result.replace(m2[0], text2);
     });
     getTiddlerLinks(result).forEach((m2) => {
@@ -10707,7 +10730,7 @@ function formCancel() {
 }
 function formSaveTiddler() {
   const t = {
-    title: tw$1.dom.frm.elements["new-title"].value,
+    title: tw$1.dom.frm.elements["new-title"].value.trim(),
     text: tw$1.dom.frm.elements["new-body"].value,
     type: tw$1.dom.frm.elements["new-type"].value,
     tags: tw$1.dom.frm.elements["new-tags"].value.split(",").map((tg) => tg.trim(tg)),
@@ -10722,22 +10745,23 @@ function formSaveTiddler() {
     return $("new-dialog").close();
   }
   let existingTiddler = getTiddler(oldTitle, true);
+  let forceSave = false;
   try {
     renderTwiki({ text: t.text, title: t.title, validation: true });
-    if (oldTitle && existingTiddler) {
-      updateTiddler(oldTitle, t, true);
-      tw$1.events.send("tiddler.edited", t.title);
-    } else {
-      addTiddler(t, true);
-      tw$1.events.send("tiddler.created", t.title);
-    }
   } catch (e) {
     if (e.message.match(/existent/)) return tw$1.ui.notify(e.message, "W");
     if (confirm(e.message + "\nDo you want to force save?")) {
-      updateTiddlerHard(oldTitle, t);
+      forceSave = true;
     } else {
       return;
     }
+  }
+  if (oldTitle && existingTiddler) {
+    updateTiddler(oldTitle, t, true, forceSave);
+    tw$1.events.send("tiddler.edited", t.title);
+  } else {
+    addTiddler(t, true);
+    tw$1.events.send("tiddler.created", t.title);
   }
   $("new-dialog").close();
   tw$1.events.send("tiddler.updated", t.title);
@@ -10758,23 +10782,24 @@ function preventBrowserClose(event2) {
   event2.preventDefault();
   event2.returnValue = "Tiddlers were not yet saved!";
 }
-function addTiddler(newTiddler, userEdit) {
+function addTiddler(newTiddler, userEdit, forceSave) {
   if (userEdit) {
     const existingTiddler = getTiddler(newTiddler.title, false);
     if (existingTiddler) throw new Error(`Unable to add (overwrite) existent tiddler '${newTiddler.title}'!`);
     if (!newTiddler.created) newTiddler.created = newTiddler.updated || /* @__PURE__ */ new Date();
     delete newTiddler.doesNotExist;
     delete newTiddler.isRawShadow;
+    if (!forceSave) validateTiddlerText(newTiddler);
   }
   upsertInArray(tw$1.tiddlers.all, titleIs(newTiddler.title), newTiddler);
 }
-function updateTiddler(currentTitle, newTiddler, userEdit) {
+function updateTiddler(currentTitle, newTiddler, userEdit, forceSave) {
   const existingTiddler = getTiddler(currentTitle, true);
   if (!existingTiddler) throw new Error(`Unable to update non-existent tiddler '${currentTitle}'!`);
   if (newTiddler.title !== currentTitle && getTiddler(newTiddler.title)) throw new Error(`Cannot overwrite existing tiddler '${newTiddler.title}!`);
-  if (userEdit && existingTiddler.readOnly) throw new Error(`Readonly tiddler '${currentTitle}' cannot be updated!`);
+  if (!forceSave && userEdit && existingTiddler.readOnly) throw new Error(`Readonly tiddler '${currentTitle}' cannot be updated!`);
   if (userEdit) delete existingTiddler.doNotSave;
-  if (userEdit) validateTiddlerText(newTiddler);
+  if (!forceSave && userEdit) validateTiddlerText(newTiddler);
   delete newTiddler.isRawShadow;
   updateTiddlerHard(currentTitle, newTiddler);
   if (userEdit) replaceInArray(tw$1.tiddlers.visible, (title2) => title2 === currentTitle, newTiddler.title);
@@ -10833,10 +10858,6 @@ function tiddlerUpdated(title2) {
   let t = getTiddler(title2);
   if (isCodeTiddler(t))
     return executeCodeTiddler(t.text, title2);
-  if (tiddlerIsThemeRelevant(t.title))
-    return themeUpdate();
-  if (tiddlerIsATheme(t.title))
-    return themesUpdate();
   if (["$SiteTitle", "$SiteSubTitle", "$TitleBar"].includes(title2))
     (_a2 = $$("*[tiddler-include]")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
   if (tiddlerIsATemplate(t))
@@ -10849,48 +10870,6 @@ function tiddlerUpdated(title2) {
 }
 function tiddlerIsATemplate(t) {
   return t.tags.includes("$Template");
-}
-function themeSwitch(theme) {
-  if (!theme) return;
-  if (!tw$1.call("tiddlerExists", theme)) return tw$1.ui.notify(`Unknown theme tiddler '${theme}'!`, "E");
-  let tiddler = getTiddler("$Theme");
-  tiddler.text = `[[${theme}]]`;
-  delete tiddler.doNotSave;
-  updateTiddlerHard("$Theme", tiddler);
-  if (theme.match(/Dark/)) disableStyleSheet("highlight-light");
-  else disableStyleSheet("highlight-dark");
-  tw$1.events.send("tiddler.refresh", "$Theme");
-  tw$1.events.send("ui.theme.repaint", theme);
-  tw$1.events.send("save.silent");
-}
-function themeUpdate() {
-  let css2 = getThemeStyleSheets().map(getTiddlerTextRaw).join("\n");
-  tw$1.stylesheets.custom.replaceSync(css2);
-}
-function tiddlerIsATheme(title2) {
-  var _a2;
-  return (_a2 = getTiddler(title2)) == null ? void 0 : _a2.tags.includes("$Theme");
-}
-function themesUpdate() {
-  tw$1.events.send("tiddler.refresh", "$Themes");
-}
-function tiddlerIsThemeRelevant(title2) {
-  let themeName = getCurrentThemeName();
-  return title2 === "$Theme" || title2 === themeName || getThemeStyleSheets().includes(title2);
-}
-function getCurrentThemeName() {
-  return getTiddlerTextRaw("$Theme").replace(/[\[\]]/g, "");
-}
-function getThemeNames() {
-  return getTiddlersByTag("$Theme").map((t) => t.title);
-}
-function getThemeStyleSheets() {
-  let themeName = getCurrentThemeName();
-  if (!tiddlerExists(themeName)) {
-    tw$1.ui.notify("Unable to determine theme name from $Theme tiddler! Falling back on $CoreTheme", "W");
-    themeName = "$CoreTheme";
-  }
-  return getTiddlerList(themeName);
 }
 function replaceInArray(array, test2, newItem) {
   let index = array.findIndex(test2);
@@ -10976,13 +10955,6 @@ function saveAll({ silent }) {
 }
 function saveVisible() {
   tw$1.store.set("tiddlers-visible", tw$1.tiddlers.visible);
-}
-function htmlToNode(html) {
-  const template = document.createElement("template");
-  template.innerHTML = html.trim();
-  const nNodes = template.content.childNodes.length;
-  if (nNodes !== 1) return de(`html parameter must represent a single node; got ${nNodes}. `);
-  return template.content.firstElementChild;
 }
 function tiddlerSpanInclude(el) {
   let title2 = el.getAttribute("tiddler-include");
@@ -11123,24 +11095,27 @@ function scrollToTiddler(title2) {
   let topOfElement = getTiddlerElement(title2).offsetTop - $("header").offsetHeight;
   window.scroll({ top: topOfElement, behavior: "smooth" });
 }
-function attachTiddlerEvents(newElement, title2) {
-  tw$1.events.send("tiddler.element.created", { title: title2, newElement });
-}
 function uiWireEvents() {
   var _a2, _b, _c;
+  tw$1.dom.frm = $("new-form");
+  tw$1.dom.frm.addEventListener("submit", (evt) => evt.preventDefault());
+  tw$1.dom.frm.addEventListener("keypress", formHotkeys({ formSaveTiddler }));
+  (_a2 = $("new-save")) == null ? void 0 : _a2.addEventListener("click", formSaveTiddler);
+  (_b = $("new-cancel")) == null ? void 0 : _b.addEventListener("click", formCancel);
+  (_c = $("search")) == null ? void 0 : _c.addEventListener("keyup", searchNow);
   document.addEventListener("click", (event2) => {
     let el = event2.target;
-    let href = findAttributeUp(el, "href", "a[href]");
+    let href = nearestAttribute(el, "href", "a[href]");
     let link2 = decodeURI(href == null ? void 0 : href.replace(/^#/, ""));
     if (isLocalLink(href)) {
       event2.preventDefault();
       return navigateTo(link2);
     }
-    let msg = findAttributeUp(el, "data-msg", "[data-msg]");
+    let msg = nearestAttribute(el, "data-msg", "[data-msg]");
     if (!msg && isMessage(link2)) msg = isMessage(link2);
     if (!msg) return;
     event2.preventDefault();
-    let currentTiddlerTitle = findAttributeUp(el, "data-tiddler-title", ".tiddler");
+    let currentTiddlerTitle = nearestAttribute(el, "data-tiddler-title", ".tiddler");
     if (msg) {
       msg = msg.replaceAll("$currentTiddler.title", currentTiddlerTitle);
       return sendMessage(msg);
@@ -11148,23 +11123,13 @@ function uiWireEvents() {
   });
   document.addEventListener("dblclick", (event2) => {
     let el = event2.target;
-    let t = findAttributeUp(el, "data-tiddler-title", ".tiddler") || findAttributeUp(el, "tiddler-include", "[tiddler-include]");
+    let t = nearestAttribute(el, "data-tiddler-title", ".tiddler") || nearestAttribute(el, "tiddler-include", "[tiddler-include]");
     if (!t) return;
     formEditTiddler(t);
   });
   window.addEventListener("hashchange", function() {
     return navigateTo(decodeURI(document.location.hash));
   });
-  function findAttributeUp(el, attribute2, selector) {
-    var _a3, _b2;
-    return el.getAttribute(attribute2) || ((_b2 = (_a3 = el.parentElement) == null ? void 0 : _a3.closest(selector)) == null ? void 0 : _b2.getAttribute(attribute2));
-  }
-  tw$1.dom.frm = $("new-form");
-  tw$1.dom.frm.addEventListener("submit", (evt) => evt.preventDefault());
-  tw$1.dom.frm.addEventListener("keypress", formHotkeys({ formSaveTiddler }));
-  (_a2 = $("new-save")) == null ? void 0 : _a2.addEventListener("click", formSaveTiddler);
-  (_b = $("new-cancel")) == null ? void 0 : _b.addEventListener("click", formCancel);
-  (_c = $("search")) == null ? void 0 : _c.addEventListener("keyup", searchNow);
   window.addEventListener("error", (event2) => {
     tw$1.ui.notify("Unhandled: " + event2.message, "E", event2.error.stack);
     de("Unhandled:", event2.message, event2);

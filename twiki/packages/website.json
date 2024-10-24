@@ -28,11 +28,11 @@
     },
     {
       "title": "$Website",
-      "text": "// Apply some tags\nlet t = tw.run.getTiddler('Welcome');\nt.tags = ['Favorite'];\ntw.run.updateTiddler(t.title, t);\nif (!tw.tiddlers.visible.length)\n  tw.run.showTiddler('Welcome');\n",
+      "text": "tw.events.subscribe('ui.loaded', () => {\n  // Show 'Welcome' if no tiddlers are defined\n  let t = tw.run.getTiddler('Welcome');\n  if (!t) return;\n  if (!tw.tiddlers.visible.length)\n    tw.run.showTiddler('Welcome');\n}, 'website');\n",
       "tags": [],
       "type": "script/js",
       "created": "2024-09-18T07:54:56.0000000Z",
-      "updated": "2024-10-04T19:45:16.2215780Z"
+      "updated": "2024-10-23T07:47:05.6940304Z"
     },
     {
       "title": "Code Tiddler",
@@ -59,12 +59,52 @@
       "updated": "2024-10-11T20:48:03.9670569Z"
     },
     {
+      "title": "ExamplePlugin",
+      "text": "This plugin will do provide some examples of widgets and extensible functions.\n\nFeel free to customize it's [settings](#ExamplePluginSettings) or look at the [code](#ExamplePluginCode).\n# Examples\n{{ExamplePluginExamples}}\n# Settings\n{{ExamplePluginSettings}}\n# Config\n{{ExamplePluginConfig}}\n# Data\n{{ExamplePluginData}}\n# Code\n{{ExamplePluginCode}}\n# StyleSheet\n{{ExamplePluginStyleSheet}}\n# Theme\n{{ExamplePluginStyleTheme}}\n# Tests\n{{ExamplePluginTests}}\n# Meta\n* Author: Marc Cawood\n* Version: 1.0.1\n* URL: https://cawodm.github.io/packages/example-plugin.json\n",
+      "tags": [],
+      "type": "x-twiki",
+      "created": "2024-10-23T07:15:11.2763957Z",
+      "updated": "2024-10-23T07:18:33.9116277Z"
+    },
+    {
+      "title": "ExamplePluginCode",
+      "text": "tw.extensions.loadMacro('example', 'hello', (name) => {\n  return `Hello ${name}`;\n}, {version: '1.0.0'});\n\n// <<example.hello Marc>>\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-10-23T07:14:08.8903152Z",
+      "updated": "2024-10-23T07:14:12.2734893Z"
+    },
+    {
+      "title": "ExamplePluginConfig",
+      "text": "{\n  \"maxResults\": 100,\n  \"pageSize\": 20,\n  \"showRanking\": false\n}",
+      "tags": [],
+      "type": "json",
+      "created": "2024-10-23T07:15:31.9015882Z",
+      "updated": "2024-10-23T07:15:32.2559865Z"
+    },
+    {
+      "title": "ExamplePluginExamples",
+      "text": "## Greet John Smith\n`<<example \"John Smith\">>`  \n<<example \"John Smith\">>",
+      "tags": [],
+      "type": "x-twiki",
+      "created": "2024-10-23T07:14:34.4598044Z",
+      "updated": "2024-10-23T07:14:34.9017968Z"
+    },
+    {
+      "title": "ExamplePluginSettings",
+      "text": "* someSetting: hello\n* someValue: 42\n* someOption: true\n\nSome description of the settings here.",
+      "tags": [],
+      "type": "x-twiki",
+      "created": "2024-10-23T07:17:41.1063927Z",
+      "updated": "2024-10-23T07:17:41.5307082Z"
+    },
+    {
       "title": "Features",
-      "text": "* Saving works out of the box\n  * localStorage with Backup option via plugin\n  * [[Backup]] to or [[Synchronization]] with [JSONBin](https://jsonbin.io/)\n* Namespaces: Easily switch between different stores!\n* List all tiddlers\n  * [All Normal Tiddlers](#msg:ui.open.all)\n  * [Really All (*) Tiddlers](#msg:ui.open.all:{\"title\":\"*\",\"tag\":\"*\"})\n* Add, Edit, Close and Delete a tiddler\n  * Double-Click to edit\n  * Ctrl+Enter to save\n  * [[$TrashedTiddlers]] saved not really deleted\n  * TWiki tiddlers are validated (e.g. macros) on save\n  * JSON tiddlers are validated on save\n* Rendering \n  * x-twiki and [CommonMark](#Markdown%20Test) markdown\n  * Code highlighting ([js](#Code%20Tiddler), [css](#StyleSheet) and [html](#HTML%20Example))\n* Open single or list of tiddlers via link\n  * [⭐Favorties](#msg:ui.open.all:tag=Favorite)\n* Code/Plugin tiddlers\n  * Tiddlers of type `script/js` are just executed (eval) in global context\n  * Macros - e.g. to open/close all/selected tiddlers\n    * `<<ShowAllTiddlersButton>>` <<ShowAllTiddlersButton>>\n    * `<<CloseAllTiddlersButton>>` <<CloseAllTiddlersButton>>\n* Theming\n  * [[$Theme]] stores name of [Themes](#msg:search:$tag:$Theme) e.g.:\n    * [[$CoreTheme]] which lists [StyleSheets](#msg:search:$tag:$StyleSheet)\n  * Stylesheets can be in one or more tiddlers\n  * [[$DisplayTemplate]] tiddler determines display of tiddler\n  * [[$TitleBar]] to customize the titlebar\n  * `<<ThemeSelector>>` <<ThemeSelector>>\n* Structured Data\n  * Configurable lists or key-value pairs via `list` tiddlers\n    * e.g. Tiddler types from [[$TiddlerTypes]] tiddler\n  * Configuration objects via `json` tiddlers\n    * e.g. Backup settings for [[Backup2JSONBinPlugin]]\n* Packages\n  * Import tiddlers from a list of packages in [[$CorePackages]] ✅\n  * Import tiddlers from any URL\n\n## Other/Tech\n* Basic pub/sub events ✅\n* Vanilla JS, no complicated framework",
+      "text": "* Saving works out of the box\n  * localStorage with Backup option via plugin\n  * [[Backup]] to or [[Synchronization]] with [JSONBin](https://jsonbin.io/)\n* Namespaces: Easily switch between different stores!\n* List all tiddlers\n  * [All Normal Tiddlers](#msg:ui.open.all)\n  * [Really All (*) Tiddlers](#msg:ui.open.all:{\"title\":\"*\",\"tag\":\"*\"})\n* Add, Edit, Close and Delete a tiddler\n  * Double-Click to edit\n  * Ctrl+Enter to save\n  * [[$TrashedTiddlers]] saved not really deleted\n  * TWiki tiddlers are validated (e.g. macros) on save\n  * JSON tiddlers are validated on save\n* Rendering \n  * x-twiki and [CommonMark](#Markdown%20Test) markdown\n  * Code highlighting ([js](#Code%20Tiddler), [css](#StyleSheet) and [html](#HTML%20Example))\n* Open single or list of tiddlers via link\n  * [⭐Favorties](#msg:ui.open.all:tag:Favorite)\n* Code/Plugin tiddlers\n  * Tiddlers of type `script/js` are just executed (eval) in global context\n  * Macros - e.g. to open/close all/selected tiddlers\n    * `<<ShowAllTiddlersButton>>` <<ShowAllTiddlersButton>>\n    * `<<CloseAllTiddlersButton>>` <<CloseAllTiddlersButton>>\n* Theming\n  * [[$Theme]] stores name of [Themes](#msg:search:$tag:$Theme) e.g.:\n    * [[$CoreTheme]] which lists [StyleSheets](#msg:search:$tag:$StyleSheet)\n  * Stylesheets can be in one or more tiddlers\n  * [[$DisplayTemplate]] tiddler determines display of tiddler\n  * [[$TitleBar]] to customize the titlebar\n  * `<<ThemeSelector>>` <<ThemeSelector>>\n* Structured Data\n  * Configurable lists or key-value pairs via `list` tiddlers\n    * e.g. Tiddler types from [[$TiddlerTypes]] tiddler\n  * Configuration objects via `json` tiddlers\n    * e.g. Backup settings for [[Backup2JSONBinPlugin]]\n* Packages\n  * Import tiddlers from a list of packages in [[$CorePackages]] ✅\n  * Import tiddlers from any URL\n\n## Other/Tech\n* Basic pub/sub events ✅\n* Vanilla JS, no complicated framework",
       "tags": [],
       "type": "x-twiki",
       "created": "2024-09-16T10:30:27.0000000Z",
-      "updated": "2024-10-12T18:29:54.0446405Z"
+      "updated": "2024-10-22T10:25:39.1400391Z"
     },
     {
       "title": "Help",
@@ -76,11 +116,11 @@
     },
     {
       "title": "Parameters",
-      "text": "Parameters are used to pass messages to objects or widgets.\n\nFor example `<<selector red green blue>>` passes three colors to the [[SelectorWidget]].\n\nSince TWiki is text based the string `\"red green blue\"` must be parsed to produce parameters. We support 2 basic strategies for function parameters (named and unnamed).\n\n## Unnamed Parameters\nTradional JavaScript functions accept the passing of multiple unnamed (or positional) parameters as in `function macro(p1, p2, p3)` which accepts 3 arguments. We can invoke it as such:\n* `<<macro foo bar>>` becomes `macro(\"foo\", \"bar\")` (unquoted space-separated strings)\n* `<<macro 1 true car>>` becomes `macro(1, true, \"car\")` (literal numbers and booleans)\n* `<<macro 1 \"true car\">>` becomes `macro(1, \"true car\")` (quoted strings with spaces)\n* `<<macro 1 true \"{foo()}\">>` becomes `macro(1, true, foo())` (eval expression)\n\nNote: Technically the parameters are parsed into an array which is then spread as it is passed to the function.\n\n## Named Parameters\nModern JavaScript functions expect a single object as a parameter or what may be called named parameters:\nConsider the `function greet({title, lastName})` which accepts 2 named parameters. It can be invoked as such:\n* `<<greet title:Mr. lastName:Smith>>` yielding `greet(\"Mr.\", \"Smith\")` (unquoted space-separated strings)\n* `<<greet title:\"Prof. Dr.\" lastName:\"Bryson\">>` yielding `greet(\"Prof. Dr.\", \"Bryson\")` (quoted strings with spaces)\nThe same rules for booleans `true/false` or numbers and eval expressions apply as above.\n\nNote: There may be no space before or after the `:` and properties may contain only characters `a-z`, `A-Z`, `0-9` or the `_` .\n\n## Arrays\nIt is not yet possible to pass an array to a function. We get around this by passing a csv string which the function can then manually `split(',')`.\nIn future arrays will be possible via comma-separated tokens:\n* `<<add 1,2,3>>` yielding `add([1, 2, 3])`",
+      "text": "Parameters are used to pass messages to objects or widgets.\n\nFor example `<<example.greet Mr. Smith>>` passes 2 string parameters to the `greet` [[Widget]] in [[ExamplePlugin]].  Technically it's one parameter `\"red,green,blue\"` (because there are no spaces) and thus the widget must `split()` the string into an array.\n\nSince TWiki is text based the string `\"red green blue\"` must be parsed to produce parameters. We support 2 basic strategies for function parameters (named and unnamed).\n\n## Unnamed Parameters\nTradional JavaScript functions accept the passing of multiple unnamed (or positional) parameters as in `function macro(p1, p2, p3)` which accepts 3 arguments. We can invoke it as such:\n* `<<macro foo bar>>` becomes `macro(\"foo\", \"bar\")` (unquoted space-separated strings)\n* `<<macro 1 true car>>` becomes `macro(1, true, \"car\")` (literal numbers and booleans)\n* `<<macro 1 \"true car\">>` becomes `macro(1, \"true car\")` (quoted strings with spaces)\n* `<<macro 1 true \"{foo()}\">>` becomes `macro(1, true, foo())` (eval expression)\n\nNote: Technically the parameters are parsed into an array which is then spread as it is passed to the function.\n\n## Named Parameters\nModern JavaScript functions expect a single object as a parameter or what may be called named parameters:\nConsider the `function greet({title, lastName})` which accepts 2 named parameters. It can be invoked as such:\n* `<<greet title:Mr. lastName:Smith>>` yielding `greet(\"Mr.\", \"Smith\")` (unquoted space-separated strings)\n* `<<greet title:\"Prof. Dr.\" lastName:\"Bryson\">>` yielding `greet(\"Prof. Dr.\", \"Bryson\")` (quoted strings with spaces)\nThe same rules for booleans `true/false` or numbers and eval expressions apply as above.\n\nNote: There may be no space before or after the `:` and properties may contain only characters `a-z`, `A-Z`, `0-9` or the `_` .\n\n## Arrays\nIt is not yet possible to pass an array to a function. We get around this by passing a csv string which the function can then manually `split(',')`.\nIn future arrays will be possible via comma-separated tokens:\n* `<<add 1,2,3>>` yielding `add([1, 2, 3])`\n\nFor example `<<selector red,green,blue>>` passes three colors to the [[SelectorWidget]].  Technically it's one parameter `\"red,green,blue\"` (because there are no spaces) and thus the widget must `split()` the string into an array.",
       "tags": [],
       "type": "x-twiki",
       "created": "2024-10-19T14:37:09.0107072Z",
-      "updated": "2024-10-19T15:15:43.7546133Z"
+      "updated": "2024-10-23T07:14:09.6506282Z"
     },
     {
       "title": "Tags",

@@ -9093,6 +9093,10 @@ function nearestAttribute(el, attribute2, selector) {
   var _a2, _b;
   return el.getAttribute(attribute2) || ((_b = (_a2 = el.parentElement) == null ? void 0 : _a2.closest(selector)) == null ? void 0 : _b.getAttribute(attribute2));
 }
+function nearestElement(el, selector) {
+  var _a2;
+  return (_a2 = el.parentElement) == null ? void 0 : _a2.closest(selector);
+}
 const dom = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   $,
@@ -9100,7 +9104,8 @@ const dom = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty(
   addStyleSheet,
   disableStyleSheet,
   htmlToNode,
-  nearestAttribute
+  nearestAttribute,
+  nearestElement
 }, Symbol.toStringTag, { value: "Module" }));
 function Notifications(tw2) {
   tw2.dom.notify = tw2.dom.$("notify");
@@ -9220,6 +9225,59 @@ function Namespaces(tw2) {
     if (current) namespaceSwitch2(current);
   }
 }
+function parseParams(params2) {
+  if (params2 == null ? void 0 : params2.match(/^\S+:/i)) return strToObject(params2);
+  return paramsToArray(params2);
+}
+function strToObject(str) {
+  let obj = {};
+  paramsToArray(str).map((k) => k.trim()).forEach((k) => {
+    let val2 = getKeyVal(k, ":");
+    let prop = Object.keys(val2)[0];
+    val2[prop] = getTypedParam(val2[prop]);
+    Object.assign(obj, val2);
+  });
+  return obj;
+}
+function paramsToArray(str) {
+  if (typeof str === "undefined" || str === "") return [];
+  let res = str.match(/\\?.|^$/g).reduce((p, c) => {
+    if (c === '"') {
+      p.quote ^= 1;
+    } else if (!p.quote && c === " ") {
+      p.a.push("");
+    } else {
+      p.a[p.a.length - 1] += c.replace(/\\(.)/, "$1");
+    }
+    return p;
+  }, { a: [""] }).a;
+  return getTypedParams(res);
+}
+function getKeyVal(x, delim) {
+  const y = x.split(delim);
+  return { [y[0].trim()]: y[1].trim() };
+}
+function getTypedParams(arr) {
+  return arr.map(getTypedParam) || [];
+}
+const reDoubleQuoted = /^["](.+)["]$/g;
+const reSingleQuoted = /^['](.+)[']$/g;
+const reCurlyBraces = /^\{(.+)\}$/g;
+function getTypedParam(val) {
+  if (val === "null") return null;
+  if (strIsBoolean(val)) return val === "true";
+  if (strIsNumber(val)) return parseFloat(val);
+  if (reDoubleQuoted.test(val)) return val.replace(reDoubleQuoted, "$1");
+  if (reSingleQuoted.test(val)) return val.replace(reSingleQuoted, "$1");
+  if (reCurlyBraces.test(val)) return eval(val.replace(reCurlyBraces, "$1"));
+  return val;
+}
+function strIsBoolean(str) {
+  return ["true", "false"].includes(str);
+}
+function strIsNumber(str) {
+  return !isNaN(str) && !isNaN(parseFloat(str));
+}
 function Events() {
   const handlers = [];
   return {
@@ -9227,12 +9285,14 @@ function Events() {
       var _a2;
       let ctx2 = {};
       if (el) {
+        ctx2.el = el;
         let currentTiddlerTitle = (_a2 = el.parentElement.closest(".tiddler")) == null ? void 0 : _a2.getAttribute("data-tiddler-title");
         if (currentTiddlerTitle) ctx2.currentTiddler = tw.run.getTiddler(currentTiddlerTitle);
       }
       return send(event2, decoder(params2), ctx2);
     },
     send,
+    decode,
     // TODO: Should have subscribe to listen and override to handle
     // handlerName is used to ensure we don't call the same function twice for the same event
     subscribe(event, handler, handlerName) {
@@ -9245,7 +9305,7 @@ function Events() {
         dw(`No handlerName provided in events.subscribe(${event})!`);
         if (window.devMode) throw new Error(`No handlerName provided in events.subscribe(${event})!`);
       }
-      if (handlers.find((h) => h.event === event && h.handler.name === handlerName)) return dw("Ignoring duplicate event handler");
+      if (handlers.find((h) => h.event === event && h.handler.name === handlerName)) return dw("Ignoring duplicate event handler", event, handlerName);
       handlers.push({ event, handler });
     },
     override(event2, handler2) {
@@ -9256,38 +9316,40 @@ function Events() {
       return handlers;
     }
   };
+  function decode(params2) {
+    if (params2.match(/^---enc:/)) return decoder(params2.substring(7));
+    return params2;
+  }
   function send(event, params, ctx) {
+    let parsedParams;
     if (typeof params === "string") {
-      if (params == null ? void 0 : params.match(/^\{\{/)) try {
-        ctx;
-        params = eval(params);
-      } catch {
-        de("events.send received invalid JS payload: " + params);
-      }
-      else if (params == null ? void 0 : params.match(/^[\[\{]/)) try {
-        params = JSON.parse(params);
-      } catch {
-        de("events.send received invalid JSON payload: " + params);
-      }
-      else if (params == null ? void 0 : params.match(/.+=.+/)) try {
-        let obj = {};
-        params.split(",").forEach((k) => {
-          Object.assign(obj, splitStr(k));
-        });
-        params = obj;
-      } catch (e) {
-        de(e);
+      if (typeof params === "string") {
+        params = decode(params);
+        if (params == null ? void 0 : params.match(/^\{\{\{/)) try {
+          ctx;
+          params = eval(params);
+        } catch {
+          de("events.send received invalid JS payload: " + params);
+        }
+        else if (params == null ? void 0 : params.match(/^[\[\{]/)) try {
+          params = JSON.parse(params);
+        } catch {
+          de("events.send received invalid JSON payload: " + params);
+        }
+        else parsedParams = parseParams(params);
       }
     }
     let result = [];
     handlers.filter((h) => h.event === event).forEach((h) => {
-      result.push(h.handler(params));
+      if (parsedParams)
+        if (Array.isArray(parsedParams))
+          result.push(h.handler(...parsedParams));
+        else
+          result.push(h.handler(parsedParams));
+      else
+        result.push(h.handler(params));
     });
     return result;
-  }
-  function splitStr(x) {
-    const y = x.split("=");
-    return { [y[0].trim()]: y[1].trim() };
   }
 }
 function Packages(tw2) {
@@ -9344,9 +9406,9 @@ function Packages(tw2) {
       if (existingTiddler == null ? void 0 : existingTiddler.readOnly) return tw2.ui.notify(`Not importing read-only tiddler '${t.title}'!`, "E");
       t.package = name;
       if (existingTiddler)
-        tw2.run.updateTiddler(t.title, t);
+        tw2.run.updateTiddlerHard(t.title, t);
       else
-        tw2.run.addTiddler(t);
+        tw2.run.addTiddlerHard(t);
       count++;
     });
     return count;
@@ -9384,59 +9446,6 @@ function Packages(tw2) {
     }
   }
 }
-function parseParams(params2) {
-  if (params2 == null ? void 0 : params2.match(/^\S+:/i)) return strToObject(params2);
-  return paramsToArray(params2);
-}
-function strToObject(str) {
-  let obj = {};
-  paramsToArray(str).map((k) => k.trim()).forEach((k) => {
-    let val2 = getKeyVal(k, ":");
-    let prop = Object.keys(val2)[0];
-    val2[prop] = getTypedParam(val2[prop]);
-    Object.assign(obj, val2);
-  });
-  return obj;
-}
-function paramsToArray(str) {
-  if (typeof str === "undefined" || str === "") return [];
-  let res = str.match(/\\?.|^$/g).reduce((p, c) => {
-    if (c === '"') {
-      p.quote ^= 1;
-    } else if (!p.quote && c === " ") {
-      p.a.push("");
-    } else {
-      p.a[p.a.length - 1] += c.replace(/\\(.)/, "$1");
-    }
-    return p;
-  }, { a: [""] }).a;
-  return getTypedParams(res);
-}
-function getKeyVal(x, delim) {
-  const y = x.split(delim);
-  return { [y[0].trim()]: y[1].trim() };
-}
-function getTypedParams(arr) {
-  return arr.map(getTypedParam) || [];
-}
-const reDoubleQuoted = /^["](.+)["]$/g;
-const reSingleQuoted = /^['](.+)[']$/g;
-const reCurlyBraces = /^\{(.+)\}$/g;
-function getTypedParam(val) {
-  if (val === "null") return null;
-  if (strIsBoolean(val)) return val === "true";
-  if (strIsNumber(val)) return parseFloat(val);
-  if (reDoubleQuoted.test(val)) return val.replace(reDoubleQuoted, "$1");
-  if (reSingleQuoted.test(val)) return val.replace(reSingleQuoted, "$1");
-  if (reCurlyBraces.test(val)) return eval(val.replace(reCurlyBraces, "$1"));
-  return val;
-}
-function strIsBoolean(str) {
-  return ["true", "false"].includes(str);
-}
-function strIsNumber(str) {
-  return !isNaN(str) && !isNaN(parseFloat(str));
-}
 function formHotkeys(methods) {
   return function(e) {
     if (e.ctrlKey && (e.code === "Enter" || e.code === "NumpadEnter")) return methods.formSaveTiddler();
@@ -9457,22 +9466,29 @@ function search(q, list2) {
   if (!q.match(/^\$/)) title2 += ` Type '$${q}' to search hidden tiddlers!`;
   return sortedResults.length ? sortedResults.map((t) => t.tiddler) : [{ title: title2 }];
 }
+const reTag = /tag:(\S+)\s?/;
+const rePck = /pck:(\S+)\s?/;
 function simpleSearch(q) {
+  var _a2, _b;
+  q = q.trim().toLowerCase();
+  const Q = q;
   let searchAll = q[0] === "$";
   if (searchAll) q = q.substring(1);
-  let searchTag = q.substr(0, 4) === "tag:" ? q.substr(4).trim().toLowerCase() : false;
-  if (searchTag) q = q.substr(4);
-  let searchPackage = q.substr(0, 4) === "pck:" ? q.substr(4).trim().toLowerCase() : false;
-  if (searchPackage) q = q.substr(4);
+  let searchTag = (_a2 = q.match(reTag)) == null ? void 0 : _a2[1];
+  if (searchTag) q = q.replace(reTag, "");
+  let searchPackage = (_b = q.match(rePck)) == null ? void 0 : _b[1];
+  if (searchPackage) q = q.replace(rePck, "");
   return (t) => {
+    let rank = 0;
     if (!searchAll && t.title[0] === "$") return;
     let mainText = (t.title + t.tags).toLowerCase();
     let fullText = mainText + t.text;
     if (searchAll) fullText += t.type;
     fullText = fullText.toLowerCase();
-    let rank = mainText.indexOf(q) >= 0 ? TITLE_MATCH : fullText.indexOf(q) >= 0 ? TEXT_MATCH : 0;
-    if (searchTag) rank = t.tags.find((t2) => t2.toLowerCase() === searchTag) ? TAG_MATCH : 0;
-    if (searchPackage) rank = searchPackage === t.package ? TAG_MATCH : 0;
+    if (searchTag) rank = t.tags.find((t2) => t2.toLowerCase() === searchTag) ? rank + TAG_MATCH : 0;
+    if (searchPackage) rank = searchPackage === t.package ? rank + TAG_MATCH : 0;
+    if (q) rank = mainText.indexOf(q) >= 0 ? TITLE_MATCH : fullText.indexOf(q) >= 0 ? rank + TEXT_MATCH : 0;
+    else if (Q === "") rank = 1;
     return {
       rank,
       tiddler: t
@@ -9488,7 +9504,7 @@ function button(text2, message, payload, id = "", attr = "") {
   if (text2.match(/<svg/)) className = "icon";
   if (typeof payload === "undefined") payload = "";
   let params2 = typeof payload === "object" ? JSON.stringify(payload) : payload;
-  return `<button${id ? ' id="' + id + '"' : ""} class="${className}" onclick="tw.events.sendEncoded(this, '${message}', '${encoder(params2)}')" ${attr}>${text2}</button>`;
+  return `<button${id ? ' id="' + id + '"' : ""} class="${className}" data-msg="${message}:---enc:${encoder(params2)}" ${attr}>${text2}</button>`;
 }
 function section({ name, content, id, attr = "" }) {
   if (!id) id = randstr();
@@ -9660,6 +9676,26 @@ const shadowTiddlers = [
     "type": "x-twiki",
     "created": "2024-10-04T20:28:35.0916955Z",
     "updated": "2024-10-04T20:28:35.3551841Z"
+  },
+  {
+    "title": "$IconPull",
+    "text": "Pull",
+    "tags": [
+      "$Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-24T10:52:01.6391028Z",
+    "updated": "2024-10-24T10:52:02.2465239Z"
+  },
+  {
+    "title": "$IconPush",
+    "text": "Push",
+    "tags": [
+      "$Shadow"
+    ],
+    "type": "x-twiki",
+    "created": "2024-10-24T10:51:53.8388137Z",
+    "updated": "2024-10-24T10:51:54.4614194Z"
   },
   {
     "title": "$IconRefresh",
@@ -9917,7 +9953,7 @@ dialog#new-dialog {
   width: 75%;
   height: 75%;
   min-height: 600px;
-  min§-width: 600px;
+  min-width: 600px;
 }
 
 dialog#new-dialog form {
@@ -10091,6 +10127,10 @@ button:hover svg {
   fill: var(--col6);
 }
 
+button:yellow svg {
+  fill: yellow;
+}
+
 button.icon {
   fill: var(--col1);
   border: 1px solid var(--col4);
@@ -10147,7 +10187,7 @@ span.error {
     ],
     "type": "css",
     "created": "2024-10-04T19:45:16.2159490Z",
-    "updated": "2024-10-19T14:35:54.3682558Z"
+    "updated": "2024-10-24T11:29:37.2284751Z"
   },
   {
     "title": "$Themes",
@@ -10161,14 +10201,14 @@ span.error {
   },
   {
     "title": "$TiddlerDisplay",
-    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.close:$currentTiddler.title">{{$IconCancel}}</button>\n    {{!editDisabled}}\n    <button class="icon" title="edit" {{=editDisabled}} data-msg="tiddler.edit:{{=title}}">{{$IconEdit}}</button>\n    <button class="icon" title="delete"{{=editDisabled}} data-msg="tiddler.delete:{{=title}}">{{$IconDelete}}</button>\n    <button class="icon" title="favorite"{{=editDisabled}} data-msg="favorites.toggle:{{=title}}">{{$IconFavorite}}</button>\n    {{/!editDisabled}}\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
+    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.close:$currentTiddler.title">{{$IconCancel}}</button>\n    {{!editDisabled}}\n    <button class="icon" title="edit" {{=editDisabled}} data-msg="tiddler.edit:{{=title}}">{{$IconEdit}}</button>\n    <button class="icon" title="delete"{{=editDisabled}} data-msg="tiddler.delete:{{=title}}">{{$IconDelete}}</button>\n    <<favorites.toggle>>\n    <button class="icon" title="favorite"{{=editDisabled}} data-msg="favorites.toggle:{{=title}}">{{$IconFavorite}}</button>\n    {{/!editDisabled}}\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n  <div class="meta">{{=metaInfo}}</div>\n</div>',
     "tags": [
       "$Shadow",
       "$Template"
     ],
     "type": "html/template",
     "created": "2024-10-04T19:45:16.2159490Z",
-    "updated": "2024-10-12T19:59:57.7935889Z"
+    "updated": "2024-10-24T11:23:50.2756751Z"
   },
   {
     "title": "$TiddlerPreview",
@@ -10215,34 +10255,24 @@ span.error {
   },
   {
     "title": "$TitleBar",
-    "text": '<<ShowAllTiddlersButton>>\n\n<<CloseAllTiddlersButton>>\n\n<<backup.backupButton>>\n\n<<backup.restoreButton>>\n\n<<synch.full>>\n\n<<New>>\n\n<<Save>>\n\n[{{$IconFavorite}}](#msg:ui.open.all:{"tag":"Favorite"})\n\n<<Settings>>\n\n<<TrashCanIcon>>\n\n[{{$IconTag}}](#Tags)\n\n[{{$IconHelp}}](#Help)',
+    "text": '<<ShowAllTiddlersButton>>\n\n<<CloseAllTiddlersButton>>\n\n[{{$IconBackup}}](#Backup)\n\n<<synch.pull>>\n<<synch.push>>\n\n<<synch.full>>\n\n<<New>>\n\n<<Save>>\n\n[{{$IconFavorite}}](#msg:ui.open.all:{"tag":"Favorite"})\n\n<<Settings>>\n\n<<TrashCanIcon>>\n\n[{{$IconTag}}](#Tags)\n\n[{{$IconHelp}}](#Help)',
     "tags": [
       "$Shadow"
     ],
     "type": "x-twiki",
     "created": "2024-10-04T19:45:16.2169485Z",
-    "updated": "2024-10-12T05:01:06.4273315Z"
+    "updated": "2024-10-24T10:57:14.6446766Z"
   },
   {
     "title": "$TWIKIVersion",
-    "text": "0.11.0",
+    "text": "0.12.0",
     "tags": [
       "$Shadow"
     ],
     "type": "text",
     "created": "2024-10-04T19:45:16.2149484Z",
-    "updated": "2024-10-12T18:19:10.7590798Z",
+    "updated": "2024-10-24T11:04:17.4635198Z",
     "readOnly": true
-  },
-  {
-    "title": "Welcome",
-    "text": "Welcome to your new TWiki!",
-    "tags": [
-      "$Shadow"
-    ],
-    "type": "x-twiki",
-    "created": "2024-10-04T19:45:16.2169485Z",
-    "updated": "2024-10-04T19:45:16.2169485Z"
   }
 ];
 const reTiddlerTitle = /[a-z0-9_\-\.:\s\$\ud83c\ud000-\udfff\ud83d\ud000-\udfff\ud83e\ud000-\udfff]+/gi;
@@ -10268,7 +10298,7 @@ const tw$1 = {
   },
   plugins: {},
   macros: {
-    std: {
+    core: {
       showTiddlerList,
       disabled: (...rest) => "This macro is disabled!" + JSON.stringify(rest)
     }
@@ -10289,6 +10319,7 @@ const tw$1 = {
     updateTiddler,
     updateTiddlerHard,
     addTiddler,
+    addTiddlerHard,
     deleteTiddler,
     getTiddler,
     getTiddlerList,
@@ -10316,16 +10347,17 @@ const tw$1 = {
     }
   },
   extensions: {
-    addMacro
+    loadMacro
   },
   call
 };
 function call(functionName, ...args) {
   return eval(functionName)(...args);
 }
-function addMacro(name, fcn, options) {
-  tw$1.macros[name] = fcn;
-  if (options) Object.assign(tw$1.macros[name], options);
+function loadMacro(namespace, name, fcn, options) {
+  if (!tw$1.macros[namespace]) tw$1.macros[namespace] = {};
+  tw$1.macros[namespace][name] = fcn;
+  if (options) Object.assign(tw$1.macros[namespace][name], options);
 }
 const { namespaceCreate, namespaceSwitch, namespaceDelete } = Namespaces(tw$1);
 if (!tw$1.storage.get("namespace")) namespaceSwitch();
@@ -10349,12 +10381,13 @@ tw$1.events.subscribe("namespace.clone", (namespace) => {
 }, "core");
 wireUpEvents();
 window.tw = tw$1;
-addEventListener("load", () => {
+addEventListener("load", async () => {
   addStyleSheet("highlight-light", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css");
   addStyleSheet("highlight-dark", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css");
   if (location.host.match(/localhost/)) console.clear();
   uiWireEvents();
-  rebootSoft();
+  await rebootSoft();
+  if (location.hash) handleHashLink(location.hash);
 });
 const devMode = tw$1.storage.get("devmode") === true;
 window.devMode = devMode;
@@ -10376,9 +10409,9 @@ function reload(time) {
   var _a2;
   tw$1.tiddlers.visible = tw$1.tiddlers.visible.filter((title2) => tiddlerExists(title2));
   runCoreTiddlers();
+  runExtensionTiddlers();
   loadTemplates();
   (_a2 = $$("*[tiddler-include]")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
-  runExtensionTiddlers();
   if (time === 1) tw$1.events.send("ui.loaded");
   else tw$1.events.send("ui.reloaded", time);
   renderAllTiddlers();
@@ -10556,8 +10589,8 @@ function createTiddlerElement(t, template) {
     fullText: makeTiddlerText(t),
     editDisabled: t.readOnly ? "disabled" : "",
     tagLinks: makeTiddlerTagLinks(t.tags),
-    metaInfo: makeTiddlerMetaInfo(t),
     modified,
+    ...tiddlerDetails(t),
     ...t
   });
   let newElement = htmlToNode(html);
@@ -10565,6 +10598,23 @@ function createTiddlerElement(t, template) {
   newElement.setAttribute("data-tiddler-title", t.title);
   tw$1.events.send("tiddler.element.created", { title: t.title, newElement });
   return newElement;
+}
+tw$1.extend = { tiddlerDetails: {
+  metaInfo(t) {
+    return markdown1([
+      `${t.package ? "[pck:" + t.package + "](#msg:search:pck:" + t.package + ")" : ""}`,
+      `${t.readOnly ? "readOnly ✅" : ""}`,
+      `${t.doNotSave ? "doNotSave ✅" : ""}`,
+      `${t.isRawShadow ? "isRawShadow ✅" : ""}`
+    ].join(" "));
+  }
+} };
+function tiddlerDetails(t) {
+  let res = {};
+  Object.keys(tw$1.extend.tiddlerDetails).forEach((k) => {
+    res[k] = tw$1.extend.tiddlerDetails[k](t);
+  });
+  return res;
 }
 function makeTiddlerText({ title: title2, text: text2, type }) {
   const markdownTypes = ["markdown", "keyval", "list", "table"];
@@ -10585,14 +10635,6 @@ function makeTiddlerTagLinks(tags) {
   return markdown1(tags.map((t) => {
     return `[${t}](#msg:ui.open.all:{tag:'${t}',title:'*'})`;
   }).join(", "));
-}
-function makeTiddlerMetaInfo(t) {
-  return markdown1([
-    `${t.package ? "[pck:" + t.package + "](#msg:search:pck:" + t.package + ")" : ""}`,
-    `${t.readOnly ? "readOnly ✅" : ""}`,
-    `${t.doNotSave ? "doNotSave ✅" : ""}`,
-    `${t.isRawShadow ? "isRawShadow ✅" : ""}`
-  ].join(" "));
 }
 function languageFromTiddlerType(type) {
   switch (type) {
@@ -10628,7 +10670,7 @@ function renderTwiki({ text, title, validation }) {
         err = e;
       }
       if (!macroFunction) try {
-        macroName = `std.${macroName}`;
+        macroName = `core.${macroName}`;
         macroFunction = eval(`tw.macros.${macroName}`);
       } catch (e) {
         err = e;
@@ -10791,6 +10833,9 @@ function addTiddler(newTiddler, userEdit, forceSave) {
     delete newTiddler.isRawShadow;
     if (!forceSave) validateTiddlerText(newTiddler);
   }
+  addTiddlerHard(newTiddler);
+}
+function addTiddlerHard(newTiddler) {
   upsertInArray(tw$1.tiddlers.all, titleIs(newTiddler.title), newTiddler);
 }
 function updateTiddler(currentTitle, newTiddler, userEdit, forceSave) {
@@ -10884,14 +10929,17 @@ function removeFromArray(array, test2) {
   let index = array.findIndex(test2);
   if (index >= 0) return array.splice(index, 1);
 }
-function showAllTiddlers({ tag = "", title: title2 = "" }) {
+function showAllTiddlers({ tag, title: title2, pck }) {
   if (!title2) title2 = "!^\\$";
-  tw$1.tiddlers.all.filter(titleMatch(title2)).filter(tagMatch(tag)).map((t) => t.title).forEach(showTiddler);
+  tiddlerSearch({ title: title2, tag, pck }).map((t) => t.title).forEach(showTiddler);
   renderAllTiddlers();
 }
-function closeAllTiddlers({ tag = "", title: title2 = "" }) {
+function closeAllTiddlers({ tag = "", title: title2 = "", pck }) {
   if (!title2) title2 = "!^\\$";
-  tw$1.tiddlers.all.filter(titleMatch(title2)).filter(tagMatch(tag)).map((t) => t.title).forEach(hideTiddler);
+  tiddlerSearch({ title: title2, tag, pck }).map((t) => t.title).forEach(hideTiddler);
+}
+function tiddlerSearch({ title: title2, tag, pck }) {
+  return tw$1.tiddlers.all.filter(titleMatch(title2)).filter(tagMatch(tag)).filter((t) => !pck || t.package === pck);
 }
 function getTiddlerElement(title2) {
   let id = hash(title2);
@@ -11055,10 +11103,9 @@ function loadStore(store) {
     tw$1.tiddlers.all = [];
     store.set("tiddlers", []);
   }
-  tw$1.tiddlers.visible = ((_a2 = store.get("tiddlers-visible")) == null ? void 0 : _a2.length) ? store.get("tiddlers-visible") : ["Welcome"];
+  tw$1.tiddlers.visible = ((_a2 = store.get("tiddlers-visible")) == null ? void 0 : _a2.length) ? store.get("tiddlers-visible") : [];
   shadowTiddlers.forEach((t) => {
     if (!t.tags) t.tags = [];
-    if (!t.type) t.type = "x-twiki";
     t.doNotSave = true;
     t.isRawShadow = true;
     if (t.title === "$CorePackages" && document.location.host.match(/^(localhost)|(\d+\.\d+\.\d+\.\d+):\d+$/)) t.text = t.text.replaceAll("https://cawoodm.github.io/twiki", "http://" + document.location.host);
@@ -11082,18 +11129,37 @@ function navigateTo(link2) {
   if (!link2) return;
   showTiddler(link2);
   scrollToTiddler(link2);
+  location.hash = "";
 }
-function sendMessage(cmd) {
+function sendMessage(cmd, ctx2) {
   let cmds = cmd.match(reMessage);
   if (!cmds) throw new Error(`Invalid command '${cmd}' does not match ${reMessage}/!`);
   let msg = cmds[1];
   let params2 = cmds.length > 2 ? cmds[2] : null;
-  tw$1.events.send(msg, params2);
+  params2 = tw$1.events.decode(params2);
+  tw$1.events.send(msg, params2, ctx2);
   if (msg === "tiddler.show") scrollToTiddler(params2);
+  location.hash = "";
 }
 function scrollToTiddler(title2) {
-  let topOfElement = getTiddlerElement(title2).offsetTop - $("header").offsetHeight;
+  let top = getTiddlerElement(title2).offsetTop;
+  if (!top)
+    if (debugMode) return dw("Cannot scroll to tiddler", title2);
+    else return;
+  let topOfElement = top - $("header").offsetHeight;
   window.scroll({ top: topOfElement, behavior: "smooth" });
+}
+function handleHashLink(hash2) {
+  if (!hash2) return;
+  let link2 = decodeURI(hash2 == null ? void 0 : hash2.replace(/^#/, ""));
+  let msg = isMessage(link2);
+  if (msg) {
+    sendMessage(msg);
+    return msg;
+  } else {
+    navigateTo(link2);
+    return link2;
+  }
 }
 function uiWireEvents() {
   var _a2, _b, _c;
@@ -11116,9 +11182,14 @@ function uiWireEvents() {
     if (!msg) return;
     event2.preventDefault();
     let currentTiddlerTitle = nearestAttribute(el, "data-tiddler-title", ".tiddler");
+    let eventElement = nearestElement(el, "[data-msg]");
     if (msg) {
       msg = msg.replaceAll("$currentTiddler.title", currentTiddlerTitle);
-      return sendMessage(msg);
+      let ctx2 = {
+        currentTiddler: { title: currentTiddlerTitle },
+        el: eventElement
+      };
+      return sendMessage(msg, ctx2);
     }
   });
   document.addEventListener("dblclick", (event2) => {
@@ -11128,7 +11199,7 @@ function uiWireEvents() {
     formEditTiddler(t);
   });
   window.addEventListener("hashchange", function() {
-    return navigateTo(decodeURI(document.location.hash));
+    return handleHashLink(document.location.hash);
   });
   window.addEventListener("error", (event2) => {
     tw$1.ui.notify("Unhandled: " + event2.message, "E", event2.error.stack);

@@ -26,11 +26,11 @@
     },
     {
       "title": "$GeneralWidgets",
-      "text": "// Send any message\ntw.macros.core.SendMessage = (msg, payload = '') => {\n  return tw.ui.button(`Send: ${msg}:${payload}`, msg, payload, '', 'title=\"Send Message\"');\n};\n// Reload UI\ntw.macros.core.Reload = () => {\n  return tw.ui.button('🔄️', 'ui.reload', null, '', 'title=\"Reload\"');\n};\ntw.macros.core.Save = () => {\n  return tw.ui.button('{{$IconSave}}', 'save.all', null, '', 'title=\"Save\"');\n};\ntw.macros.core.Settings = () => {\n  return tw.ui.button('{{$IconSettings}}', 'tiddler.show', '$Settings', '', 'title=\"Settings\"');\n};\ntw.macros.core.New = () => {\n  return tw.ui.button('{{$IconNew}}', 'tiddler.new', null);\n};\n// Lists types used in all tiddlers\ntw.macros.core.AllTypesMacro = () => {\n  return tw.lib.markdown([...new Set(tw.tiddlers.all.map(t => `* [${t.type}](#msg:tiddlers.show:type:${t.type})\\n`))].join(''));\n};\n",
+      "text": "// Send any message <<command ui.open.all pck:website>>\ntw.macros.core.command = (msg, payload = '') => {\n  return tw.ui.button(`Send: ${msg}:${payload}`, msg, payload, '', 'title=\"Send Command\"');\n};\n// Reload UI\ntw.macros.core.Reload = () => {\n  return tw.ui.button('🔄️', 'ui.reload', null, '', 'title=\"Reload\"');\n};\ntw.macros.core.Save = () => {\n  return tw.ui.button('{{$IconSave}}', 'save.all', null, '', 'title=\"Save\"');\n};\ntw.macros.core.Settings = () => {\n  return tw.ui.button('{{$IconSettings}}', 'tiddler.show', '$Settings', '', 'title=\"Settings\"');\n};\ntw.macros.core.New = () => {\n  return tw.ui.button('{{$IconNew}}', 'tiddler.new', null);\n};\n// Lists types used in all tiddlers\ntw.macros.core.AllTypesMacro = () => {\n  return tw.lib.markdown([...new Set(tw.tiddlers.all.map(t => `* [${t.type}](#msg:tiddlers.show:type:${t.type})\\n`))].join(''));\n};\n",
       "tags": [],
       "type": "script/js",
       "created": "2024-10-04T18:48:42.3651790Z",
-      "updated": "2024-10-23T07:09:40.5338696Z"
+      "updated": "2024-10-26T10:53:54.6064493Z"
     },
     {
       "title": "$GithubSaverExtension",
@@ -42,19 +42,19 @@
     },
     {
       "title": "$IncludeFunctions",
-      "text": "/* eslint-disable no-eval */\n// Include the contents of another tiddler\n// <<include $TWIKIVersion>>\ntw.macros.include = (title) => {\n  // dp('include', title);\n  return tw.run.getTiddlerTextRaw(title);\n};\ntw.macros.eval = (code) => {\n  return eval(code);\n};\n",
+      "text": "/* eslint-disable no-eval */\n// Include the contents of another tiddler\n// <<include $TWIKIVersion>>\ntw.macros.include = (title) => {\n  // dp('include', title);\n  return tw.call('renderTiddler', title);\n};\ntw.macros.eval = (code) => {\n  return eval(code);\n};\n",
       "tags": [],
       "type": "script/js",
       "created": "2024-09-18T07:54:56.0000000Z",
-      "updated": "2024-09-18T07:54:56.0000000Z"
+      "updated": "2024-10-26T09:50:02.6523377Z"
     },
     {
       "title": "$ListTiddlersWidgets",
-      "text": "Object.assign(tw.macros.core, {\n  // List all tiddlers as a bulleted list\n  list({tag, title, pck, type} = {}) {\n    if (!title) title = '!^\\\\$'; // Hide system tiddlers by default\n    return tw.run.showTiddlerList(\n      tw.tiddlers.all\n        .filter(tw.util.titleMatch(title))\n        .filter(t => !pck || t.package === pck)\n        .filter(t => !type || t.type === type)\n        .filter(tw.util.tagMatch(tag)),\n    );\n  },\n  text (title) {\n    return tw.run.getTiddlerTextRaw(title);\n  },\n  Section ({name, content, message, payload, attr}) {\n    if (message) content = tw.events.send(message, payload)?.[0];\n    return tw.ui.section({name, content, attr});\n  },\n  Expand ({name, content, message, payload, attr}) {\n    if (message) content = tw.events.send(message, payload)?.[0];\n    return tw.ui.expand({name, content, attr});\n  },\n  // List all tiddlers on a single line with comma separation\n  AllTiddlersSimple (sep) {\n    return tw.lib.markdown(tw.tiddlers.all.map(t => t.title).join(sep || ', '));\n  },\n  // List all tags\n  AllTagsSimple (sep) {\n    if (!sep) sep = ', ';\n    let allTags = tw.macros.core.allTags();\n    return allTags.join(sep);\n  },\n  allTags () {\n    let tags = [];\n    tw.tiddlers.all.forEach(t => {\n      t.tags.filter(t => !!t).forEach(tag => {\n        tags.push(tag);\n      });\n    });\n    return [...new Set(tags)];\n  },\n  AllTagsLinked (sep) {\n    if (!sep) sep = ', ';\n    let allTags = tw.macros.core.allTags();\n    return tw.lib.markdown(\n      allTags.map(t => (`[${t}](#msg:ui.open.all:{\"tag\":\"${t}\",\"title\":\"*\"})`)).join(sep),\n    );\n  },\n});\n\ntw.events.subscribe('tiddlers.list', tw.macros.core.list);\ntw.events.subscribe('tiddler.text', tw.macros.core.text);\n",
+      "text": "Object.assign(tw.macros.core, {\n  // List all tiddlers as a bulleted list\n  list({tag, title, pck, type} = {}) {\n    if (!title) title = '!^\\\\$'; // Hide system tiddlers by default\n    return tw.run.showTiddlerList(\n      tw.tiddlers.all\n        .filter(tw.util.titleMatch(title))\n        .filter(t => !pck || t.package === pck)\n        .filter(t => !type || t.type === type)\n        .filter(tw.util.tagMatch(tag)),\n    );\n  },\n  text (title) {\n    return tw.run.getTiddlerTextRaw(title);\n  },\n  Section ({name, content, message, payload, attr}) {\n    if (message) content = tw.events.send(message, payload)?.[0];\n    return tw.ui.section({name, content, attr});\n  },\n  Expand ({name, content, message, payload, attr}) {\n    if (message) content = tw.events.send(message, payload)?.[0];\n    return tw.ui.expand({name, content, attr});\n  },\n  Expose ({name, content, message, payload, attr}) {\n    return tw.ui.expose({name, content, message, payload, attr});\n  },\n  // List all tiddlers on a single line with comma separation\n  AllTiddlersSimple (sep) {\n    return tw.lib.markdown(tw.tiddlers.all.map(t => t.title).join(sep || ', '));\n  },\n  // List all tags\n  AllTagsSimple (sep) {\n    if (!sep) sep = ', ';\n    let allTags = tw.macros.core.allTags();\n    return allTags.join(sep);\n  },\n  allTags () {\n    let tags = [];\n    tw.tiddlers.all.forEach(t => {\n      t.tags.filter(t => !!t).forEach(tag => {\n        tags.push(tag);\n      });\n    });\n    return [...new Set(tags)];\n  },\n  AllTagsLinked (sep) {\n    if (!sep) sep = ', ';\n    let allTags = tw.macros.core.allTags();\n    return tw.lib.markdown(\n      allTags.map(t => (`[${t}](#msg:ui.open.all:{\"tag\":\"${t}\",\"title\":\"*\"})`)).join(sep),\n    );\n  },\n});\n\ntw.events.subscribe('tiddlers.list', tw.macros.core.list);\ntw.events.subscribe('tiddler.text', tw.macros.core.text);\n",
       "tags": [],
       "type": "script/js",
       "created": "2024-09-18T07:54:56.0000000Z",
-      "updated": "2024-10-23T07:09:40.0666740Z"
+      "updated": "2024-10-26T08:46:06.4596127Z"
     },
     {
       "title": "$NamespaceWidgets",
@@ -74,11 +74,11 @@
     },
     {
       "title": "$ShowTiddlersWidgets",
-      "text": "/**\n  * Buttons to Show/Hide Tiddlers:\n  * Examples:\n  *  - Show all tiddlers tagged with Foo\n  *    <<ShowAllTiddlersButton tag:Foo>>\n  * -  Show all tiddlers not tagged with $Shadow\n  *    <<ShowAllTiddlersButton tag:!$Shadow>>\n  * - Show all tiddlers not tagged with $Shadow with title containing 'oo'\n  *    <<ShowAllTiddlersButton !$Shadow title:oo>>\n  * -  Show all tiddlers with title beginning with A\n  *   <<ShowAllTiddlersButton tag:*, title:^A>>\n  */\ntw.macros.core.ShowAllTiddlersButton = ({tag = '', title = ''} = {}) => {\n  return tw.ui.button('{{$IconOpenAll}}', 'ui.open.all', {tag, title}, 'close-all', 'title=\"Open All Tiddlers\"');\n};\n// Show all tiddlers with text (but really all)\ntw.macros.core.CloseAllTiddlersButton = ({tag = '*', title = '*'} = {}) => {\n  return tw.ui.button('{{$IconCloseAll}}', 'ui.close.all', {tag, title}, 'close-all', 'title=\"Close All Tiddlers\"');\n};\n",
+      "text": "/**\n  * Buttons to Show/Hide Tiddlers:\n  * Examples:\n  *  - Show all tiddlers tagged with Foo\n  *    <<ShowAllTiddlersButton tag:Foo>>\n  * -  Show all tiddlers not tagged with $Shadow\n  *    <<ShowAllTiddlersButton tag:!$Shadow>>\n  * - Show all tiddlers not tagged with $Shadow with title containing 'oo'\n  *    <<ShowAllTiddlersButton !$Shadow title:oo>>\n  * -  Show all tiddlers with title beginning with A\n  *   <<ShowAllTiddlersButton tag:*, title:^A>>\n  */\ntw.macros.core.ShowAllTiddlersButton = ({tag = '', title = ''} = {}) => {\n  return tw.ui.button('{{$IconOpenAll}}', 'ui.open.all', {tag, title}, 'open-all', 'title=\"Open All Tiddlers\"');\n};\n// Show all tiddlers with text (but really all)\ntw.macros.core.CloseAllTiddlersButton = ({tag = '*', title = '*'} = {}) => {\n  return tw.ui.button('{{$IconCloseAll}}', 'ui.close.all', {tag, title}, 'close-all', 'title=\"Close All Tiddlers\"');\n};\n",
       "tags": [],
       "type": "script/js",
       "created": "2024-09-18T07:54:56.0000000Z",
-      "updated": "2024-10-23T07:09:40.0839267Z"
+      "updated": "2024-10-26T09:12:54.7195956Z"
     },
     {
       "title": "$SynchDataPlugin",

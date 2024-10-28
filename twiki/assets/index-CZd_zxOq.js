@@ -9093,6 +9093,11 @@ function nearestAttribute(el, attribute2, selector) {
   var _a2, _b;
   return el.getAttribute(attribute2) || ((_b = (_a2 = el.parentElement) == null ? void 0 : _a2.closest(selector)) == null ? void 0 : _b.getAttribute(attribute2));
 }
+function nearestElementWithAttribute(el, attribute2) {
+  var _a2;
+  let selector = `[${attribute2}]`;
+  return el.getAttribute(attribute2) ? el : (_a2 = el.parentElement) == null ? void 0 : _a2.closest(selector);
+}
 function nearestElement(el, selector) {
   var _a2;
   return (_a2 = el.parentElement) == null ? void 0 : _a2.closest(selector);
@@ -9105,7 +9110,8 @@ const dom = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty(
   disableStyleSheet,
   htmlToNode,
   nearestAttribute,
-  nearestElement
+  nearestElement,
+  nearestElementWithAttribute
 }, Symbol.toStringTag, { value: "Module" }));
 function Notifications(tw2) {
   tw2.dom.notify = tw2.dom.$("notify");
@@ -9117,13 +9123,13 @@ function Notifications(tw2) {
   tw2.dom.notify.addEventListener("mouseout", notifyMouseOut);
   tw2.dom.notify.addEventListener("click", notifyClick);
   return notify;
-  function notify(msg, type = "I", stack) {
+  function notify(msg2, type = "I", stack) {
     if (type === "D" && !tw2.logging.debugMode) return;
-    if (!tw2.logging.logFilter.test(msg)) return;
+    if (!tw2.logging.logFilter.test(msg2)) return;
     const n = tw2.dom.notify;
     if (window.getComputedStyle(tw2.dom.$("new-dialog"), null).getPropertyValue("display") === "block") {
       delete tw2.tmp.notifyId;
-      return alert(msg.replaceAll("<br>", "\n"));
+      return alert(msg2.replaceAll("<br>", "\n"));
     }
     let preserveMsg = "";
     if (tw2.tmp.notifyId) {
@@ -9132,8 +9138,8 @@ function Notifications(tw2) {
     }
     const types = { S: "📗 Success", E: '<b title="Error">📕</b>', W: '<b title="Warning">📙</b>', D: '<b title="Debug">📓</b>', I: '<b title="Info">📘</b>' };
     if (type === "E")
-      de(preserveMsg + types[type] + ": " + msg, stack || "");
-    n.innerHTML = (preserveMsg + types[type] + " " + escapeHtml(msg)).replace(/\n/g, "<br>");
+      de(preserveMsg + types[type] + ": " + msg2, stack || "");
+    n.innerHTML = (preserveMsg + types[type] + " " + escapeHtml(msg2)).replace(/\n/g, "<br>");
     notifyShow();
   }
   function notifyShow() {
@@ -9157,11 +9163,11 @@ function Notifications(tw2) {
     tw2.tmp.notifyMouseOverPause = true;
     window.setTimeout(() => delete tw2.tmp.notifyMouseOverPause, 500);
   }
-  function silentNotify(msg, type, stack) {
-    if (type === "E") console.error(msg);
-    else if (type === "W") console.warn(msg);
-    else if (type === "D") console.debug(msg);
-    else console.log(msg);
+  function silentNotify(msg2, type, stack) {
+    if (type === "E") console.error(msg2);
+    else if (type === "W") console.warn(msg2);
+    else if (type === "D") console.debug(msg2);
+    else console.log(msg2);
     if (stack) console.error(stack);
   }
 }
@@ -9225,71 +9231,16 @@ function Namespaces(tw2) {
     if (current) namespaceSwitch2(current);
   }
 }
-function parseParams(params2) {
-  if (params2 == null ? void 0 : params2.match(/^\S+:/i)) return strToObject(params2);
-  return paramsToArray(params2);
-}
-function strToObject(str) {
-  let obj = {};
-  paramsToArray(str).map((k) => k.trim()).forEach((k) => {
-    let val2 = getKeyVal(k, ":");
-    let prop = Object.keys(val2)[0];
-    val2[prop] = getTypedParam(val2[prop]);
-    Object.assign(obj, val2);
-  });
-  return obj;
-}
-function paramsToArray(str) {
-  if (typeof str === "undefined" || str === "") return [];
-  let res = str.match(/\\?.|^$/g).reduce((p, c) => {
-    if (c === '"') {
-      p.quote ^= 1;
-    } else if (!p.quote && c === " ") {
-      p.a.push("");
-    } else {
-      p.a[p.a.length - 1] += c.replace(/\\(.)/, "$1");
-    }
-    return p;
-  }, { a: [""] }).a;
-  return getTypedParams(res);
-}
-function getKeyVal(x, delim) {
-  const y = x.split(delim);
-  return { [y[0].trim()]: y[1].trim() };
-}
-function getTypedParams(arr) {
-  return arr.map(getTypedParam) || [];
-}
-const reDoubleQuoted = /^["](.+)["]$/g;
-const reSingleQuoted = /^['](.+)[']$/g;
-const reCurlyBraces = /^\{(.+)\}$/g;
-function getTypedParam(val) {
-  if (val === "null") return null;
-  if (strIsBoolean(val)) return val === "true";
-  if (strIsNumber(val)) return parseFloat(val);
-  if (reDoubleQuoted.test(val)) return val.replace(reDoubleQuoted, "$1");
-  if (reSingleQuoted.test(val)) return val.replace(reSingleQuoted, "$1");
-  if (reCurlyBraces.test(val)) return eval(val.replace(reCurlyBraces, "$1"));
-  return val;
-}
-function strIsBoolean(str) {
-  return ["true", "false"].includes(str);
-}
-function strIsNumber(str) {
-  return !isNaN(str) && !isNaN(parseFloat(str));
-}
 function Events() {
   const handlers = [];
   return {
     sendEncoded(el, event2, params2) {
       var _a2;
-      let ctx2 = {};
       if (el) {
-        ctx2.el = el;
         let currentTiddlerTitle = (_a2 = el.parentElement.closest(".tiddler")) == null ? void 0 : _a2.getAttribute("data-tiddler-title");
-        if (currentTiddlerTitle) ctx2.currentTiddler = tw.run.getTiddler(currentTiddlerTitle);
+        if (currentTiddlerTitle) tw.run.getTiddler(currentTiddlerTitle);
       }
-      return send(event2, decoder(params2), ctx2);
+      return send(event2, decoder(params2));
     },
     send,
     decode,
@@ -9320,36 +9271,15 @@ function Events() {
     if (params2.match(/^---enc:/)) return decoder(params2.substring(7));
     return params2;
   }
-  function send(event, params, ctx) {
-    let parsedParams;
-    if (typeof params === "string") {
-      if (typeof params === "string") {
-        params = decode(params);
-        if (params == null ? void 0 : params.match(/^\{\{\{/)) try {
-          ctx;
-          params = eval(params);
-        } catch {
-          de("events.send received invalid JS payload: " + params);
-        }
-        else if (params == null ? void 0 : params.match(/^[\[\{]/)) try {
-          params = JSON.parse(params);
-        } catch {
-          de("events.send received invalid JSON payload: " + params);
-        }
-        else parsedParams = parseParams(params);
-      }
-    }
-    let result = [];
-    handlers.filter((h) => h.event === event).forEach((h) => {
-      if (parsedParams)
-        if (Array.isArray(parsedParams))
-          result.push(h.handler(...parsedParams));
-        else
-          result.push(h.handler(parsedParams));
+  function send(event2, params2) {
+    let result2 = [];
+    handlers.filter((h) => h.event === event2).forEach((h) => {
+      if (Array.isArray(params2))
+        result2.push(h.handler(...params2));
       else
-        result.push(h.handler(params));
+        result2.push(h.handler(params2));
     });
-    return result;
+    return result2;
   }
 }
 function Packages(tw2) {
@@ -9446,6 +9376,59 @@ function Packages(tw2) {
     }
   }
 }
+function parseParams(params2) {
+  if (params2 == null ? void 0 : params2.match(/^[a-z0-9_]+:/i)) return strToObject(params2);
+  return paramsToArray(params2);
+}
+function strToObject(str) {
+  let obj = {};
+  paramsToArray(str).map((k) => k.trim()).forEach((k) => {
+    let val2 = getKeyVal(k, ":");
+    let prop = Object.keys(val2)[0];
+    val2[prop] = getTypedParam(val2[prop]);
+    Object.assign(obj, val2);
+  });
+  return obj;
+}
+function paramsToArray(str) {
+  if (typeof str === "undefined" || str === "") return [];
+  let res = str.match(/\\?.|^$/g).reduce((p, c) => {
+    if (c === '"') {
+      p.quote ^= 1;
+    } else if (!p.quote && c === " ") {
+      p.a.push("");
+    } else {
+      p.a[p.a.length - 1] += c.replace(/\\(.)/, "$1");
+    }
+    return p;
+  }, { a: [""] }).a;
+  return getTypedParams(res);
+}
+function getKeyVal(x, delim) {
+  const y = x.split(delim);
+  return { [y[0].trim()]: y[1].trim() };
+}
+function getTypedParams(arr) {
+  return arr.map(getTypedParam) || [];
+}
+const reDoubleQuoted = /^["](.+)["]$/g;
+const reSingleQuoted = /^['](.+)[']$/g;
+const reCurlyBraces = /^\{(.+)\}$/g;
+function getTypedParam(val) {
+  if (val === "null") return null;
+  if (strIsBoolean(val)) return val === "true";
+  if (strIsNumber(val)) return parseFloat(val);
+  if (reDoubleQuoted.test(val)) return val.replace(reDoubleQuoted, "$1");
+  if (reSingleQuoted.test(val)) return val.replace(reSingleQuoted, "$1");
+  if (reCurlyBraces.test(val)) return eval(val.replace(reCurlyBraces, "$1"));
+  return val;
+}
+function strIsBoolean(str) {
+  return ["true", "false"].includes(str);
+}
+function strIsNumber(str) {
+  return !isNaN(str) && !isNaN(parseFloat(str));
+}
 function formHotkeys(methods) {
   return function(e) {
     if (e.ctrlKey && (e.code === "Enter" || e.code === "NumpadEnter")) return methods.formSaveTiddler();
@@ -9502,9 +9485,7 @@ function button(text2, message, payload, id = "", attr = "") {
     text2 = escapeHtml(text2);
   let className = "";
   if (text2.match(/<svg/)) className = "icon";
-  if (typeof payload === "undefined") payload = "";
-  let params2 = typeof payload === "object" ? JSON.stringify(payload) : payload;
-  return `<button${id ? ' id="' + id + '"' : ""} class="${className}" data-msg="${message}:---enc:${encoder(params2)}" ${attr}>${text2}</button>`;
+  return `<button${id ? ' id="' + id + '"' : ""} class="${className}" data-msg="${encodeMessage(message, payload)}" ${attr}>${text2}</button>`;
 }
 function section({ name, content, id, attr = "" }) {
   if (!id) id = randstr();
@@ -9512,7 +9493,16 @@ function section({ name, content, id, attr = "" }) {
 }
 function expand({ name, content, id, attr = "" }) {
   if (!id) id = randstr();
-  return `<details style="display:inline" ${attr}><summary style="display:inline">${name}</summary><div id="${id}">${content}</div></details>`;
+  return `<details ${attr}><summary style="display:inline">${name}</summary><div id="${id}">${content}</div></details>`;
+}
+function expose({ name, content, message, payload, id, attr = "" }) {
+  if (!id) id = randstr();
+  return `<details ${attr}><summary data-msg="${encodeMessage(message, payload)}" data-target="${id}" data-default="true">${name}</summary><div id="${id}">${content}</div></details>`;
+}
+function encodeMessage(message, payload) {
+  let params2 = typeof payload === "undefined" ? "" : payload;
+  params2 = typeof params2 === "object" ? JSON.stringify(params2) : params2;
+  return `${message}:---enc:${encoder(params2)}`;
 }
 function randstr() {
   return Math.random().toString(36).replace("0.", "");
@@ -9521,6 +9511,7 @@ const ui = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
   button,
   expand,
+  expose,
   section
 }, Symbol.toStringTag, { value: "Module" }));
 const shadowTiddlers = [
@@ -10201,25 +10192,25 @@ span.error {
   },
   {
     "title": "$TiddlerDisplay",
-    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.close:$currentTiddler.title">{{$IconCancel}}</button>\n    {{!editDisabled}}\n    <button class="icon" title="edit" {{=editDisabled}} data-msg="tiddler.edit:{{=title}}">{{$IconEdit}}</button>\n    <button class="icon" title="delete"{{=editDisabled}} data-msg="tiddler.delete:{{=title}}">{{$IconDelete}}</button>\n    <<favorites.toggle>>\n    <button class="icon" title="favorite"{{=editDisabled}} data-msg="favorites.toggle:{{=title}}">{{$IconFavorite}}</button>\n    {{/!editDisabled}}\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n  <div class="meta">{{=metaInfo}}</div>\n</div>',
+    "text": '<div class="tiddler shadow{{=isRawShadow}}" data-tiddler-id="{{=id}}" data-tiddler-title="$currentTiddler" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.close" data-param="$currentTiddler">{{$IconCancel}}</button>\n    {{!editDisabled}}\n    <button class="icon" title="edit" {{=editDisabled}} data-msg="tiddler.edit" data-param="$currentTiddler">{{$IconEdit}}</button>\n    <button class="icon" title="delete"{{=editDisabled}} data-msg="tiddler.delete" data-param="$currentTiddler">{{$IconDelete}}</button>\n    <button class="icon" title="favorite"{{=editDisabled}} data-msg="favorites.toggle" data-param="$currentTiddler">{{$IconFavorite}}</button>\n    {{/!editDisabled}}\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n  <div class="meta">{{=metaInfo}}</div>\n</div>',
     "tags": [
       "$Shadow",
       "$Template"
     ],
     "type": "html/template",
     "created": "2024-10-04T19:45:16.2159490Z",
-    "updated": "2024-10-24T11:23:50.2756751Z"
+    "updated": "2024-10-26T11:28:17.6724110Z"
   },
   {
     "title": "$TiddlerPreview",
-    "text": '<div class="tiddler" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.preview.close:$currentTiddler.title">{{$IconCancel}}</button>\n    <!-- TODO: Save Button -->\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
+    "text": '<div class="tiddler" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.preview.close:$currentTiddler">{{$IconCancel}}</button>\n    <!-- TODO: Save Button -->\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
     "tags": [
       "$Shadow",
       "$Template"
     ],
     "type": "html/template",
     "created": "2024-10-04T20:11:48.2373631Z",
-    "updated": "2024-10-04T20:51:08.1240679Z"
+    "updated": "2024-10-26T11:06:26.9435180Z"
   },
   {
     "title": "$TiddlerSearchResult",
@@ -10234,14 +10225,14 @@ span.error {
   },
   {
     "title": "$TiddlerTrashed",
-    "text": '<div class="tiddler" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.preview.close:$currentTiddler.title">{{$IconCancel}}</button>\n    <button class="icon" title="delete" data-msg="tiddler.trashed.destroy:$currentTiddler.title">{{$IconDelete}}</button>\n    <button class="icon" title="restore" data-msg="tiddler.trashed.restore:$currentTiddler.title">{{$IconRefresh}}</button>\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
+    "text": '<div class="tiddler" data-tiddler-id="{{=id}}" data-tiddler-title="{{=title}}" tabindex="0">\n  <div class="title" title="{{=type}}">\n    {{=title}}\n    <button class="icon" title="close" data-msg="tiddler.preview.close:$currentTiddler">{{$IconCancel}}</button>\n    <button class="icon" title="delete" data-msg="tiddler.trashed.destroy:$currentTiddler">{{$IconDelete}}</button>\n    <button class="icon" title="restore" data-msg="tiddler.trashed.restore:$currentTiddler">{{$IconRefresh}}</button>\n  </div>\n  <div class="modified">{{=modified}}</div>\n  <div class="text">{{=fullText}}</div>\n  <div class="tags">{{=tagLinks}}</div>\n</div>',
     "tags": [
       "$Shadow",
       "$Template"
     ],
     "type": "html/template",
     "created": "2024-10-04T20:47:04.6086845Z",
-    "updated": "2024-10-04T20:47:04.8798731Z"
+    "updated": "2024-10-26T11:06:26.7797243Z"
   },
   {
     "title": "$TiddlerTypes",
@@ -10265,13 +10256,13 @@ span.error {
   },
   {
     "title": "$TWIKIVersion",
-    "text": "0.12.0",
+    "text": "0.13.0 RC1",
     "tags": [
       "$Shadow"
     ],
     "type": "text",
     "created": "2024-10-04T19:45:16.2149484Z",
-    "updated": "2024-10-24T11:04:17.4635198Z",
+    "updated": "2024-10-28T16:25:31.8254839Z",
     "readOnly": true
   }
 ];
@@ -10280,7 +10271,7 @@ const reTiddlerTitleComplete = RegExp.compose(/^reTiddlerTitle$/gi, { reTiddlerT
 const reInclusion = RegExp.compose(/\{\{(reTiddlerTitle)\|?([^\}]+)?}}/gi, { reTiddlerTitle });
 const reLinks = RegExp.compose(/\[\[(reTiddlerTitle)]]/gi, { reTiddlerTitle });
 const reEventName = /[a-z0-9\.]+/g;
-const reMessage = RegExp.compose(/(reEventName):?(.+)?/, { reEventName });
+const reCommand = RegExp.compose(/(reEventName):?(.+)?/, { reEventName });
 const logFilter = storage.get("logfilter") ? new RegExp(storage.get("logfilter")) : /./;
 const debugMode = storage.get("debug") === true;
 const tw$1 = {
@@ -10339,7 +10330,7 @@ const tw$1 = {
     closeTiddler,
     hideTiddler,
     renderAllTiddlers,
-    sendMessage,
+    sendCommand,
     reload,
     tiddler: {
       getJSONObject,
@@ -10475,6 +10466,8 @@ function wireUpEvents() {
   wireUp("tiddler.delete", deleteTiddler);
   wireUp("tiddler.deleted", tw$1.run.reload);
   wireUp("tiddler.refresh", rerenderTiddler);
+  wireUp("tiddler.text", getTiddlerTextRaw);
+  wireUp("tiddler.content", renderTiddler);
   wireUp("tiddler.edited", rerenderTiddler);
   wireUp("tiddler.created", renderNewTiddler);
   wireUp("tiddler.updated", tiddlerUpdated);
@@ -10484,10 +10477,10 @@ function wireUpEvents() {
   wireUp("package.reload.bin", tw$1.run.reloadPackageFromJSONBin);
 }
 function tiddlerIsValid(t) {
-  let msg = tiddlerValidation(t);
-  if (msg.length)
-    dw("tiddlerValidation", t.title, msg.join("; "));
-  return msg.length === 0;
+  let msg2 = tiddlerValidation(t);
+  if (msg2.length)
+    dw("tiddlerValidation", t.title, msg2.join("; "));
+  return msg2.length === 0;
 }
 function tiddlerToggleTag(title2, tag) {
   let t = getTiddler(title2);
@@ -10502,16 +10495,16 @@ function validateTiddlerText(t) {
   if (isCodeTiddler(t) && t.tags.includes("$CodeDisabled")) alert("This code tiddler is disabled and will not run. Remove the $CodeDisabled tag to activate.");
 }
 function tiddlerValidation(t) {
-  const msg = [];
-  if (!t.title) msg.push("No title!");
-  if (!t.title.match(reTiddlerTitleComplete)) msg.push("Invalid title!");
-  if (!t.type) msg.push("No type!");
-  if (!Array.isArray(t.tags)) msg.push("Invalid tags!");
+  const msg2 = [];
+  if (!t.title) msg2.push("No title!");
+  if (!t.title.match(reTiddlerTitleComplete)) msg2.push("Invalid title!");
+  if (!t.type) msg2.push("No type!");
+  if (!Array.isArray(t.tags)) msg2.push("Invalid tags!");
   t.tags = typeof t.tags === "string" ? t.tags.length ? t.tags.split(" ") : [] : t.tags;
-  if (!Array.isArray(t.tags)) msg.push("No tags array!");
-  if (!t.created) msg.push("No created date!");
-  if (!t.updated) msg.push("No updated date!");
-  return msg;
+  if (!Array.isArray(t.tags)) msg2.push("No tags array!");
+  if (!t.created) msg2.push("No created date!");
+  if (!t.updated) msg2.push("No updated date!");
+  return msg2;
 }
 function runCoreTiddlers() {
   tw$1.tiddlers.all.filter(isActiveCodeTiddler).filter(isCoreTiddler).forEach((t) => executeCodeTiddler(t.text, t.title));
@@ -10542,8 +10535,8 @@ function executeText(text2, title2, context) {
   try {
     result2 = (1, eval)(text2);
   } catch (e) {
-    let msg = `executeText "${title2}" ${""}`;
-    de(`${msg}: ${e.message}`, e.stack);
+    let msg2 = `executeText "${title2}" ${""}`;
+    de(`${msg2}: ${e.message}`, e.stack);
     throw e;
   }
   return result2;
@@ -10574,7 +10567,8 @@ function displayTiddlerLink({ title: title2, type }) {
 }
 function newTiddlerLink({ title: title2 }) {
   let newElement = document.createElement("a");
-  newElement.setAttribute("data-msg", `tiddler.show:${title2}`);
+  newElement.setAttribute("data-msg", "tiddler.show");
+  newElement.setAttribute("data-param", title2);
   newElement.setAttribute("data-tiddler-backref", hash(title2));
   newElement.setAttribute("href", "javascript:false;");
   newElement.innerText = title2;
@@ -10690,7 +10684,12 @@ function renderTwiki({ text, title, validation }) {
         let newText = Array.isArray(macroParams) ? macroFunction(...macroParams) : macroFunction(macroParams);
         if (dbg) ;
         if (dbg) ;
-        result = result.replace(macroCommand, newText);
+        if (result.match(macroCommand)) {
+          result = result.replace(macroCommand, newText);
+        } else {
+          dw("Unable to replace exact macro text", macroName, macroCommand);
+          result = result.replace(new RegExp(`<<${macroName}[^>]*>>`), newText);
+        }
         if (dbg) ;
       } catch (e) {
         let errmsg = `Macro '${macroName}' failed in tiddler '${title}'!`;
@@ -10858,6 +10857,7 @@ function updateTiddlerText(title2, text2) {
   updateTiddler(title2, { ...t, text: text2 });
 }
 function rerenderTiddler(title2) {
+  dp("rerender", title2);
   let el = getTiddlerElement(title2);
   if (!el) return;
   let tiddler = getTiddler(title2);
@@ -10878,7 +10878,7 @@ function renderNewTiddler(title2) {
   showTiddler(title2);
 }
 function showTiddler(title2) {
-  if (getTiddlerElement(title2)) hideTiddler(title2);
+  if (getTiddlerElement(title2)) return scrollToTiddler(title2);
   let tiddler = getTiddler(title2);
   let tiddlerExists2 = !!tiddler;
   if (!tiddler) tiddler = nonExistentTiddler(title2);
@@ -11082,14 +11082,14 @@ function titleMatch(title2) {
   let re = new RegExp(title2.match(/^!/) ? title2.substr(1) : title2);
   return (t) => title2.match(/^!/) ? !t.title.match(re) : t.title.match(re);
 }
-function isMessage(str) {
+function isCommand(str) {
   var _a2;
   return (_a2 = str == null ? void 0 : str.match(/^#?msg:(.+)/)) == null ? void 0 : _a2[1];
 }
 function isLocalLink(str) {
   if (!str) return false;
   if (!str.match(/^#/)) return false;
-  if (isMessage(str)) return false;
+  if (isCommand(str)) return false;
   return true;
 }
 function showTiddlerList(list2, title2 = "unknown") {
@@ -11131,15 +11131,31 @@ function navigateTo(link2) {
   scrollToTiddler(link2);
   location.hash = "";
 }
-function sendMessage(cmd, ctx2) {
-  let cmds = cmd.match(reMessage);
-  if (!cmds) throw new Error(`Invalid command '${cmd}' does not match ${reMessage}/!`);
+function sendCommand(cmd, param) {
+  let cmds = cmd.match(reCommand);
+  if (!cmds) throw new Error(`Invalid command '${cmd}' does not match ${reCommand}/!`);
   let msg = cmds[1];
-  let params2 = cmds.length > 2 ? cmds[2] : null;
-  params2 = tw$1.events.decode(params2);
-  tw$1.events.send(msg, params2, ctx2);
-  if (msg === "tiddler.show") scrollToTiddler(params2);
+  let params = cmds.length > 2 ? cmds[2] : null;
+  if (typeof param === "undefined" || param === null) {
+    params = tw$1.events.decode(params);
+    if (params == null ? void 0 : params.match(/^\{\{\{/)) try {
+      ctx;
+      params = eval(params);
+    } catch {
+      dp("events.send received invalid JS payload: " + params);
+    }
+    else if (params == null ? void 0 : params.match(/^[\[\{]/)) try {
+      params = JSON.parse(params);
+    } catch {
+      dp("events.send received invalid JSON payload: " + params);
+    }
+    else params = parseParams(params);
+  } else
+    params = param;
+  let result = tw$1.events.send(msg, params);
+  if (msg === "tiddler.show") scrollToTiddler(params);
   location.hash = "";
+  return result;
 }
 function scrollToTiddler(title2) {
   let top = getTiddlerElement(title2).offsetTop;
@@ -11152,10 +11168,10 @@ function scrollToTiddler(title2) {
 function handleHashLink(hash2) {
   if (!hash2) return;
   let link2 = decodeURI(hash2 == null ? void 0 : hash2.replace(/^#/, ""));
-  let msg = isMessage(link2);
-  if (msg) {
-    sendMessage(msg);
-    return msg;
+  let msg2 = isCommand(link2);
+  if (msg2) {
+    sendCommand(msg2);
+    return msg2;
   } else {
     navigateTo(link2);
     return link2;
@@ -11177,19 +11193,27 @@ function uiWireEvents() {
       event2.preventDefault();
       return navigateTo(link2);
     }
-    let msg = nearestAttribute(el, "data-msg", "[data-msg]");
-    if (!msg && isMessage(link2)) msg = isMessage(link2);
-    if (!msg) return;
-    event2.preventDefault();
+    let src = nearestElementWithAttribute(el, "data-msg");
+    if (!src) return;
+    let msg2 = src.getAttribute("data-msg");
+    let param2 = src.getAttribute("data-param");
+    if (!msg2 && isCommand(link2)) msg2 = isCommand(link2);
+    if (!msg2) return;
+    if (src.getAttribute("data-default") !== "true") event2.preventDefault();
     let currentTiddlerTitle = nearestAttribute(el, "data-tiddler-title", ".tiddler");
-    let eventElement = nearestElement(el, "[data-msg]");
-    if (msg) {
-      msg = msg.replaceAll("$currentTiddler.title", currentTiddlerTitle);
-      let ctx2 = {
-        currentTiddler: { title: currentTiddlerTitle },
-        el: eventElement
-      };
-      return sendMessage(msg, ctx2);
+    if (msg2) {
+      msg2 = msg2.replaceAll("$currentTiddler", currentTiddlerTitle);
+      if (param2) param2 = param2.replaceAll("$currentTiddler", currentTiddlerTitle);
+      let result2 = sendCommand(msg2, param2);
+      let targetId = src.getAttribute("data-target");
+      if (!targetId) return result2;
+      let target = tw$1.dom.$(targetId);
+      if (!target) {
+        dp(`No target '${targetId}' found`);
+        tw$1.events.send("tiddler.preview", { title: "Results", text: result2[0], type: "x-twiki", tags: [] });
+        return result2;
+      }
+      target.innerHTML = result2[0];
     }
   });
   document.addEventListener("dblclick", (event2) => {

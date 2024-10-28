@@ -328,25 +328,25 @@
     },
     {
       "title": "$TiddlerDisplay",
-      "text": "<div class=\"tiddler shadow{{=isRawShadow}}\" data-tiddler-id=\"{{=id}}\" data-tiddler-title=\"{{=title}}\" tabindex=\"0\">\n  <div class=\"title\" title=\"{{=type}}\">\n    {{=title}}\n    <button class=\"icon\" title=\"close\" data-msg=\"tiddler.close:$currentTiddler.title\">{{$IconCancel}}</button>\n    {{!editDisabled}}\n    <button class=\"icon\" title=\"edit\" {{=editDisabled}} data-msg=\"tiddler.edit:{{=title}}\">{{$IconEdit}}</button>\n    <button class=\"icon\" title=\"delete\"{{=editDisabled}} data-msg=\"tiddler.delete:{{=title}}\">{{$IconDelete}}</button>\n    <<favorites.toggle>>\n    <button class=\"icon\" title=\"favorite\"{{=editDisabled}} data-msg=\"favorites.toggle:{{=title}}\">{{$IconFavorite}}</button>\n    {{/!editDisabled}}\n  </div>\n  <div class=\"modified\">{{=modified}}</div>\n  <div class=\"text\">{{=fullText}}</div>\n  <div class=\"tags\">{{=tagLinks}}</div>\n  <div class=\"meta\">{{=metaInfo}}</div>\n</div>",
+      "text": "<div class=\"tiddler shadow{{=isRawShadow}}\" data-tiddler-id=\"{{=id}}\" data-tiddler-title=\"$currentTiddler\" tabindex=\"0\">\n  <div class=\"title\" title=\"{{=type}}\">\n    {{=title}}\n    <button class=\"icon\" title=\"close\" data-msg=\"tiddler.close\" data-param=\"$currentTiddler\">{{$IconCancel}}</button>\n    {{!editDisabled}}\n    <button class=\"icon\" title=\"edit\" {{=editDisabled}} data-msg=\"tiddler.edit\" data-param=\"$currentTiddler\">{{$IconEdit}}</button>\n    <button class=\"icon\" title=\"delete\"{{=editDisabled}} data-msg=\"tiddler.delete\" data-param=\"$currentTiddler\">{{$IconDelete}}</button>\n    <button class=\"icon\" title=\"favorite\"{{=editDisabled}} data-msg=\"favorites.toggle\" data-param=\"$currentTiddler\">{{$IconFavorite}}</button>\n    {{/!editDisabled}}\n  </div>\n  <div class=\"modified\">{{=modified}}</div>\n  <div class=\"text\">{{=fullText}}</div>\n  <div class=\"tags\">{{=tagLinks}}</div>\n  <div class=\"meta\">{{=metaInfo}}</div>\n</div>",
       "tags": [
         "$Shadow",
         "$Template"
       ],
       "type": "html/template",
       "created": "2024-10-04T19:45:16.2159490Z",
-      "updated": "2024-10-24T11:23:50.2756751Z"
+      "updated": "2024-10-26T11:28:17.6724110Z"
     },
     {
       "title": "$TiddlerPreview",
-      "text": "<div class=\"tiddler\" data-tiddler-id=\"{{=id}}\" data-tiddler-title=\"{{=title}}\" tabindex=\"0\">\n  <div class=\"title\" title=\"{{=type}}\">\n    {{=title}}\n    <button class=\"icon\" title=\"close\" data-msg=\"tiddler.preview.close:$currentTiddler.title\">{{$IconCancel}}</button>\n    <!-- TODO: Save Button -->\n  </div>\n  <div class=\"modified\">{{=modified}}</div>\n  <div class=\"text\">{{=fullText}}</div>\n  <div class=\"tags\">{{=tagLinks}}</div>\n</div>",
+      "text": "<div class=\"tiddler\" data-tiddler-id=\"{{=id}}\" data-tiddler-title=\"{{=title}}\" tabindex=\"0\">\n  <div class=\"title\" title=\"{{=type}}\">\n    {{=title}}\n    <button class=\"icon\" title=\"close\" data-msg=\"tiddler.preview.close:$currentTiddler\">{{$IconCancel}}</button>\n    <!-- TODO: Save Button -->\n  </div>\n  <div class=\"modified\">{{=modified}}</div>\n  <div class=\"text\">{{=fullText}}</div>\n  <div class=\"tags\">{{=tagLinks}}</div>\n</div>",
       "tags": [
         "$Shadow",
         "$Template"
       ],
       "type": "html/template",
       "created": "2024-10-04T20:11:48.2373631Z",
-      "updated": "2024-10-04T20:51:08.1240679Z"
+      "updated": "2024-10-26T11:06:26.9435180Z"
     },
     {
       "title": "$TiddlerSearchResult",
@@ -361,14 +361,14 @@
     },
     {
       "title": "$TiddlerTrashed",
-      "text": "<div class=\"tiddler\" data-tiddler-id=\"{{=id}}\" data-tiddler-title=\"{{=title}}\" tabindex=\"0\">\n  <div class=\"title\" title=\"{{=type}}\">\n    {{=title}}\n    <button class=\"icon\" title=\"close\" data-msg=\"tiddler.preview.close:$currentTiddler.title\">{{$IconCancel}}</button>\n    <button class=\"icon\" title=\"delete\" data-msg=\"tiddler.trashed.destroy:$currentTiddler.title\">{{$IconDelete}}</button>\n    <button class=\"icon\" title=\"restore\" data-msg=\"tiddler.trashed.restore:$currentTiddler.title\">{{$IconRefresh}}</button>\n  </div>\n  <div class=\"modified\">{{=modified}}</div>\n  <div class=\"text\">{{=fullText}}</div>\n  <div class=\"tags\">{{=tagLinks}}</div>\n</div>",
+      "text": "<div class=\"tiddler\" data-tiddler-id=\"{{=id}}\" data-tiddler-title=\"{{=title}}\" tabindex=\"0\">\n  <div class=\"title\" title=\"{{=type}}\">\n    {{=title}}\n    <button class=\"icon\" title=\"close\" data-msg=\"tiddler.preview.close:$currentTiddler\">{{$IconCancel}}</button>\n    <button class=\"icon\" title=\"delete\" data-msg=\"tiddler.trashed.destroy:$currentTiddler\">{{$IconDelete}}</button>\n    <button class=\"icon\" title=\"restore\" data-msg=\"tiddler.trashed.restore:$currentTiddler\">{{$IconRefresh}}</button>\n  </div>\n  <div class=\"modified\">{{=modified}}</div>\n  <div class=\"text\">{{=fullText}}</div>\n  <div class=\"tags\">{{=tagLinks}}</div>\n</div>",
       "tags": [
         "$Shadow",
         "$Template"
       ],
       "type": "html/template",
       "created": "2024-10-04T20:47:04.6086845Z",
-      "updated": "2024-10-04T20:47:04.8798731Z"
+      "updated": "2024-10-26T11:06:26.7797243Z"
     },
     {
       "title": "$TiddlerTypes",
@@ -392,13 +392,13 @@
     },
     {
       "title": "$TWIKIVersion",
-      "text": "0.12.0",
+      "text": "0.13.0 RC1",
       "tags": [
         "$Shadow"
       ],
       "type": "text",
       "created": "2024-10-04T19:45:16.2149484Z",
-      "updated": "2024-10-24T11:04:17.4635198Z",
+      "updated": "2024-10-28T16:25:31.8254839Z",
       "readOnly": true
     }
   ]

@@ -1,0 +1,36 @@
+{
+  "tiddlers": [
+    {
+      "title": "$TestFrameworkPlugin",
+      "text": "(function() {\n  const WAIT = 300;\n  const queue = [];\n  const results = [];\n  tw.tmp.tests = {queue, results};\n  Object.freeze(tw.tmp.tests);\n  tw.extensions.loadMacro('tests', 'queue', (options) => {\n    let id = randstr();\n    if (options.expect) options.expect = options.expect.split(/,\\s?/);\n    if (options.click) queue.push(() => clickTest({id, ...options}));\n    else throw new Error('Unknown test type');\n    return `<div id=\"${id}\">Preparing test '${options.name}'...</div>`;\n  });\n  async function clickTest({id, name, click, find, expect, expectNone}) {\n    let src = document.querySelector(click);\n    if (!src?.click) throw new Error(`Failed to find clickable element width id '${click}!`);\n    src.click();\n    await sleep(WAIT);\n    let target;\n    if (find) {\n      target = document.querySelectorAll(find);\n      if (!target && !expectNone) throw new Error(`Failed to find target element matching selector '${find}!`);\n      else if (expect?.length && target?.length !== expect.length) throw new Error(`Failed to find correct number of elements (got ${target?.length || 0} expected ${expect.length})!`);\n      // TODO: expect.all(id => target.find\n    }\n    let res = `✅ ${name}`;\n    // Fails because we closed it:\n    // tw.dom.$(id).innerHTML = res;\n    return res;\n  }\n\n  tw.extensions.loadMacro('tests', 'clear', () => {\n    queue.length = 0;\n    return 'Tests Cleared';\n  });\n  tw.extensions.loadMacro('tests', 'run', ({name}) => {\n    results.length = 0;\n    let id = randstr();\n    return `<div id=\"${id}\">${tw.ui.button('Run', 'tests.run', {name, id})}</div>`;\n  });\n  tw.extensions.loadMacro('tests', 'results', () => {\n    let success = results.filter(t => t.success).length;\n    let error = results.filter(t => t.error).length;\n    let res = `## ${success} passed, ${error} failed: \n* ${results.map(t => `${t.success ? '✅' : '❌'} ${t.name}`).join('\\n* ')}\n    `;\n    dp(res);\n    return res;\n  });\n\n  tw.events.subscribe('tests.run', async({name, id}) => {\n    for (let t of queue) {\n      try {\n        let res = await t();\n        results.push({name, success: res});\n      } catch (e) {\n        results.push({name, error: e.message});\n      }\n    }\n    // alert(JSON.stringify(results));\n    // Impossible since we closed all tiddlers:\n    // tw.dom.$(id).innerHTML = `<h2>Testing '${name}' ...</h2><ul><li>${results.join('</li>\\n<li> ')}</ul>`;\n    tw.run.hideTiddler('TestResults');\n    tw.run.showTiddler('TestResults');\n  }, 'tests.run');\n\n  function sleep(ms) {return new Promise(r => setTimeout(r, ms));}\n  function randstr() {return Math.random().toString(36).replace('0.', '');}\n\n})();\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-10-26T08:58:33.2726400Z",
+      "updated": "2024-10-26T19:57:37.3270816Z"
+    },
+    {
+      "title": "$TestLinks",
+      "text": "Test links:\n\n* <<tests.clear>>\n* <<tests.queue name:\"Close All Tiddlers\" click:#close-all find:[data-tiddler-title] expectNone:1>>\n* <<tests.queue name:\"Open All Tiddlers\" click:#open-all find:[data-tiddler-title] expect:\"Welcome,Help\">>\n\n<<tests.run name:\"Links\">>\n\n## To Test \n\n* Link to search results: [😎Shadows](#msg:search:$tag:$Shadow)\n* Open all tagged with `Favorite`: [⭐Favorties](#msg:ui.open.all:{tag:'Favorite'})\n* [Favorite](#msg:ui.open.all:tag:Favorite)\n",
+      "tags": [],
+      "type": "x-twiki",
+      "created": "2024-10-26T09:17:49.3058582Z",
+      "updated": "2024-10-26T19:33:39.7639397Z"
+    },
+    {
+      "title": "TestResults",
+      "text": "<<tests.results>>",
+      "tags": [],
+      "type": "x-twiki",
+      "created": "2024-10-26T19:39:01.1811023Z",
+      "updated": "2024-10-26T19:39:14.1649367Z"
+    },
+    {
+      "title": "Tests",
+      "text": "* [[$TestLinks]]",
+      "tags": [],
+      "type": "x-twiki",
+      "created": "2024-10-26T09:18:37.5529053Z",
+      "updated": "2024-10-26T19:08:54.9130015Z"
+    }
+  ]
+}

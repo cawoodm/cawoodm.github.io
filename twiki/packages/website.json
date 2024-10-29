@@ -60,11 +60,11 @@
     },
     {
       "title": "ExamplePlugin",
-      "text": "This plugin will do provide some examples of widgets and extensible functions.\n\nFeel free to customize it's [settings](#ExamplePluginSettings) or look at the [code](#ExamplePluginCode).\n# Examples\n{{ExamplePluginExamples}}\n# Settings\n{{ExamplePluginSettings}}\n# Config\n{{ExamplePluginConfig}}\n# Data\n{{ExamplePluginData}}\n# Code\n{{ExamplePluginCode}}\n# StyleSheet\n{{ExamplePluginStyleSheet}}\n# Theme\n{{ExamplePluginStyleTheme}}\n# Tests\n{{ExamplePluginTests}}\n# Meta\n* Author: Marc Cawood\n* Version: 1.0.1\n* URL: https://cawodm.github.io/packages/example-plugin.json\n",
+      "text": "This ExamplePlugin is not really a plugin but a proof of concept in packaging plugins.\nThe idea is that we can have a single tiddler with multiple named sections which can then be handled as if they were individual tiddlers.\n\nFor example referencing or linking to [[ExamplePlugin/Settings]] would link to that section or \"sub-tiddler\".\n\nEach subtiddler has it's own content type and can thus be JS, CSS, JSON, DataList and can be used as if it were an individual tiddler.\n\nA developer may work with these sections as individual files (for intellisense and code formatting in their IDE) but the published result is a single tiddler. Strictly speaking we don't need this to be a single tiddler since we can include separate tiddlers into one and just add all separate tiddlers to a single package. However, it's neat for end-users to be able to delete or update a single tiddler and thus delete/update the plugin.\n\nFor the moment we include\n\nThis plugin will do provide some examples of widgets and extensible functions.\n\nFeel free to customize it's [settings](#ExamplePluginSettings) or look at the [code](#ExamplePluginCode).\n# Examples\ntype: x-twiki\n{{ExamplePluginExamples}}\n# Settings\ntype: list\n{{ExamplePluginSettings}}\n# Config\ntype: json\n{{ExamplePluginConfig}}\n# Data\ntype: json\n{{ExamplePluginData}}\n# Code\ntype: script/js\n{{ExamplePluginCode}}\n# StyleSheet\n```css\n{{ExamplePluginStyleSheet}}\n```\n# Theme\ntype: list\n{{ExamplePluginTheme}}\n# Tests\ntype: script/js\n{{ExamplePluginTests}}\n# Meta\n* Author: Marc Cawood\n* Version: 1.0.1\n* URL: https://cawodm.github.io/packages/example-plugin.json\n",
       "tags": [],
       "type": "x-twiki",
       "created": "2024-10-23T07:15:11.2763957Z",
-      "updated": "2024-10-23T07:18:33.9116277Z"
+      "updated": "2024-10-28T21:04:20.5828037Z"
     },
     {
       "title": "ExamplePluginCode",

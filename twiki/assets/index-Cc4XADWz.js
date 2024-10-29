@@ -10372,6 +10372,7 @@ tw$1.events.subscribe("namespace.clone", (namespace) => {
 }, "core");
 wireUpEvents();
 window.tw = tw$1;
+f$extens;
 addEventListener("load", async () => {
   addStyleSheet("highlight-light", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css");
   addStyleSheet("highlight-dark", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css");
@@ -10905,12 +10906,10 @@ function tiddlerUpdated(title2) {
     return executeCodeTiddler(t.text, title2);
   if (["$SiteTitle", "$SiteSubTitle", "$TitleBar"].includes(title2))
     (_a2 = $$("*[tiddler-include]")) == null ? void 0 : _a2.forEach(tiddlerSpanInclude);
-  if (tiddlerIsATemplate(t))
+  else if (tiddlerIsATemplate(t))
     loadTemplates();
-  switch (title2) {
-    case "$CorePackages":
-      if (confirm("Would you like to refresh?")) tw$1.events.send("reboot.soft");
-      break;
+  else if (isPackageList(t)) {
+    if (confirm("Would you like to refresh?")) tw$1.events.send("reboot.soft");
   }
 }
 function tiddlerIsATemplate(t) {
@@ -11065,6 +11064,9 @@ function titleIs(title2) {
 }
 function isCodeTiddler(t) {
   return ["script/js"].includes(t.type);
+}
+function isPackageList(t) {
+  return ["$CorePackages", "$ExtensionPackages"].includes(t.title);
 }
 function isActiveCodeTiddler(t) {
   return ["script/js"].includes(t.type) && !t.tags.includes("$CodeDisabled");

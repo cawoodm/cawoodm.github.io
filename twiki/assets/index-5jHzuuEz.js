@@ -10372,7 +10372,6 @@ tw$1.events.subscribe("namespace.clone", (namespace) => {
 }, "core");
 wireUpEvents();
 window.tw = tw$1;
-f$extens;
 addEventListener("load", async () => {
   addStyleSheet("highlight-light", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css");
   addStyleSheet("highlight-dark", "https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css");
@@ -10683,15 +10682,7 @@ function renderTwiki({ text, title, validation }) {
       if (dbg) ;
       try {
         let newText = Array.isArray(macroParams) ? macroFunction(...macroParams) : macroFunction(macroParams);
-        if (dbg) ;
-        if (dbg) ;
-        if (result.match(macroCommand)) {
-          result = result.replace(macroCommand, newText);
-        } else {
-          dw("Unable to replace exact macro text", macroName, macroCommand);
-          result = result.replace(new RegExp(`<<${macroName}[^>]*>>`), newText);
-        }
-        if (dbg) ;
+        result = result.replace(m[0], newText);
       } catch (e) {
         let errmsg = `Macro '${macroName}' failed in tiddler '${title}'!`;
         dw(errmsg, e.message, e.stack);

@@ -77,7 +77,7 @@ window.boot = async function(p = {}) {
     } catch {
     }
     if (!res.ok) throw new Error(`OS_DOWNLOAD_ERROR: Unable to download OS from '${osUrl}' HTTP status: ${res.statusCode}`);
-    if ((_b = res.headers.get("Content-Type")) == null ? void 0 : _b.match(/text\/javascript/)) os.code = await res.text();
+    if ((_b = res.headers.get("Content-Type")) == null ? void 0 : _b.match(/\/javascript/)) os.code = await res.text();
     else if ((_c = res.headers.get("Content-Type")) == null ? void 0 : _c.match(/application\/json/)) {
       try {
         console.debug(`BOOT: Loading OS '${osName}'...`);

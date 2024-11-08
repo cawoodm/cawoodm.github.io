@@ -48,7 +48,7 @@
         // Fallback to .json
         if (!res) try {let osUrl = baseUrl + platformName + '.json'; res = await fetch(osUrl);} catch {}
         if (!res.ok) throw new Error(`  OS: Unable to download platform from '${osUrl}' HTTP status: ${res.statusCode}`);
-        if (res.headers.get('Content-Type')?.match(/text\/javascript/)) platform.code = await res.text();
+        if (res.headers.get('Content-Type')?.match(/\/javascript/)) platform.code = await res.text();
         else if (res.headers.get('Content-Type')?.match(/application\/json/)) {
           try {
             console.debug(`  OS: Loading platform '${platformName}'...`);

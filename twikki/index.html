@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <script src="boot.js"></script>
+    <script>
+      window.addEventListener('load', () => {
+        window.boot({
+          os: {
+            name: "weboose.latest",
+            url: 'https://cawoodm.github.io/weboose',
+          },
+          platform: {
+            name: 'twikki.latest',
+            url: 'https://cawoodm.github.io/twikki',
+            extensions: ["foo"]
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

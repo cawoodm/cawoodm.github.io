@@ -2,20 +2,24 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <script type="module" crossorigin src="/weboose/assets/index-_w5z920B.js"></script>
   </head>
-  <body>
-    <script src="boot.js"></script>
-    <script>boot(
-      {
-        base: 'https://cawoodm.github.io/weboose',
-        os: {
-          name: "weboose.latest",
-          demo: true
-        },
-        platform: {
-          name: 'example.latest',
-        }
-      });
+  <body>
+    <script>
+      window.addEventListener('load', () => {
+        console.log("loaded")
+        window.boot(
+          {
+            base: 'https://cawoodm.github.io/weboose',
+            os: {
+              name: "weboose.latest",
+              demo: true
+            },
+            platform: {
+              name: 'example.latest',
+            }
+          });
+        });
     </script>
   </body>
 </html>

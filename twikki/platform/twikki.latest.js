@@ -81,10 +81,7 @@
         '/core.markdown.js',
       ];
       let packagesLoaded = await Promise.all(packagesToLoad.map(loadCorePackage));
-      packagesToLoad.forEach((p, i) => {
-        writeObject(packagesToLoad[i], packagesLoaded[i]);
-        tw.packages[i] = {name: packagesToLoad[i], res: packagesLoaded[i]};
-      });
+      tw.packages = packagesToLoad.map((p, i) => ({name: p, res: packagesLoaded[i]}));
 
       os.write('/base.url', baseUrl);
 
@@ -92,13 +89,6 @@
     // eslint-disable-next-line require-await
     async start() {
       const errMsgs = [];
-
-      // TODO: Cleanup calls to ui.notify - legacy support:
-      tw.ui = {
-        notify: function (a, b, c) {
-          tw.core.notifications.notify(a, b, c);
-        },
-      };
 
       tw.packages
         .forEach(pck => {
@@ -137,6 +127,7 @@
             console.warn(`Skipping unknown package type '${pck.res.type}' in package '${pck.name}'!`);
           }
         });
+      tw.ui = {notify: tw.core.notifications.notify}; // Legacy API
       tw.shadowTiddlers = Array.from(tw.tiddlers.all);
       tw.shadowTiddlers.forEach(t => {
         // HACK: Load packages locally for development
@@ -146,7 +137,8 @@
       Object.freeze(tw.shadowTiddlers);
       console.debug(`${tw.packages.length} packages loaded. Running packages...`);
 
-      // TODO: wireUpEvents or delegate to core packages
+      loadStore();
+
       tw.packages
         .filter(pck => pck.meta?.run)
         .forEach(pck => {
@@ -169,7 +161,8 @@
       console.debug('Packages run');
 
       wireUpEvents();
-      loadStore();
+
+      document.title = renderTiddler('$SiteTitle');
       tw.extend = {tiddlerDetails: {
         metaInfo(t) {
           return tw.core.markdown.render([
@@ -197,6 +190,7 @@
         getJSONObject,
         getKeyValuesArray,
         getKeyValuesObject,
+        getTiddlerElement,
         tiddlerToggleTag,
         showTiddlerList,
         showTiddler,
@@ -265,9 +259,6 @@
 
   async function onPageLoad() {
     tw.events.send('ui.loading');
-    // tw.core.dom.addStyleSheet('highlight-light', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css');
-    // tw.core.dom.addStyleSheet('highlight-dark', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css');
-    // if (location.host.match(/localhost/)) console.clear();
     wireEvents();
     await rebootSoft(1); // Event: tw.events.send('reboot.soft');
     if (location.hash) handleHashLink(location.hash);
@@ -282,7 +273,6 @@
   // rebootSoft is called when the local store changes - i.e. after restoring a backup
   //   it reloads CorePackages packages, runs tiddlers, does span includes, themes and renders all tiddlers
   async function rebootSoft() {
-  // TODO: Clear events.clearAll()
     await loadCorePackages();
     if (!qs.safemode) await loadExtensionPackages();
     // TODO: Load registered scripts/css here like our highlighter core, css and languages
@@ -292,6 +282,7 @@
     window.location.reload();
   }
   function reload(time) {
+    // TODO: Clear events.clearAll()
     tw.tiddlers.visible = tw.tiddlers.visible.filter(title => tiddlerExists(title));
     runCoreTiddlers();
     if (!qs.safemode) runExtensionTiddlers();
@@ -302,6 +293,7 @@
     renderAllTiddlers();
   }
   function loadTemplates() {
+    tw.templates.MainLayout = renderTiddler('$MainLayout');
     tw.templates.TiddlerDisplay = renderTiddler('$TiddlerDisplay');
     tw.templates.TiddlerPreview = renderTiddler('$TiddlerPreview');
     tw.templates.TiddlerTrashed = renderTiddler('$TiddlerTrashed');
@@ -322,7 +314,7 @@
       let name = url.match(/([^.\/]+)\.json$/)?.[1];
       let overWrite = false; // Overwrite after prompt
       let noOverWrite = false;
-      let doNotSave = true; // This is weird and makes TW not work offline
+      let doNotSave = false;
       if (p.length > 1) {
       // TODO: * <<packages.import url:... force:true save:true>>
         params.splice(0, 1);
@@ -331,7 +323,7 @@
         let options = opt.split(',').map(o => o.trim().toLowerCase());
         overWrite = options.includes('force'); // Overwrite silently
         noOverWrite = options.includes('nooverwrite'); // Never overwrite, skip silently
-        doNotSave = !options.includes('save');
+        doNotSave = options.includes('nosave');
       }
       // TODO: Split URL and check update,force(overWrite),save(doNotSave) options
       let count = await tw.core.packaging.loadPackageFromURL({url, name, overWrite, noOverWrite, doNotSave});
@@ -354,8 +346,8 @@
     wireUp('reboot.softer', rebootSofter);
     wireUp('reboot.soft', rebootSoft);
     wireUp('reboot.hard', rebootHard);
-    wireUp('search', searchQuery);
-    wireUp('ui.reload', reload); // E.g. if styles are deleted
+    // wireUp('search', searchQuery);
+    wireUp('ui.reload', reload);
 
     wireUp('tiddler.new', formNewTiddler);
     wireUp('tiddler.edit', formEditTiddler);
@@ -364,7 +356,7 @@
     wireUp('tiddler.preview', previewTiddler);
     wireUp('tiddler.preview.close', closePreview);
     wireUp('tiddler.delete', deleteTiddler);
-    wireUp('tiddler.deleted', reload); // E.g. if styles are deleted
+    wireUp('tiddler.deleted', tiddlerDeleted);
     wireUp('tiddler.refresh', rerenderTiddler);
     wireUp('tiddler.text', getTiddlerTextRaw);
     wireUp('tiddler.content', renderTiddler);
@@ -400,7 +392,7 @@
 
   function validateTiddlerText(t) {
     if (t.type === 'json') return jsonValidator(t.text);
-    if (isCodeTiddler(t)) executeText(t.text);
+    if (isActiveCodeTiddler(t)) executeText(t.text);
     if (isCodeTiddler(t) && t.tags.includes('$CodeDisabled')) alert('This code tiddler is disabled and will not run. Remove the $CodeDisabled tag to activate.');
   }
   function tiddlerValidation(t) {
@@ -464,37 +456,7 @@
   function renderAllTiddlers() {
     tw.core.dom.divVisibleTiddlers.innerHTML = '';
     tw.tiddlers.visible.forEach(showTiddler);
-    renderTiddlerList();
-  }
-  function searchQuery(q) {
-    tw.core.dom.$('search').value = q;
-    searchNow();
-  }
-  function searchNow() {
-    renderTiddlerList(tw.core.search.search(tw.core.dom.$('search').value, tw.tiddlers.all));
-  }
-  function renderTiddlerList(list) {
-    if (!list) return searchNow();
-    tw.core.dom.divAllTiddlers.innerHTML = '';
-    list.forEach(displayTiddlerLink);
-  }
-  function displayTiddlerLink({title, type}) {
-  // TODO: Apply tw.templates.TiddlerSearchResult
-    let newElement = document.createElement('li');
-    newElement.className = 'tiddler-list'; // + (type ? ' line-clamp' : '');
-    // BUG: If tiddlers have no type we don't display a link!
-    if (type) newElement.appendChild(newTiddlerLink({title, type}));
-    else newElement.innerHTML = title;
-    tw.core.dom.divAllTiddlers.insertAdjacentElement('beforeend', newElement);
-  }
-  function newTiddlerLink({title}) {
-    let newElement = document.createElement('a');
-    newElement.setAttribute('data-msg', 'tiddler.show');
-    newElement.setAttribute('data-param', title);
-    newElement.setAttribute('data-tiddler-backref', tw.core.common.hash(title));
-    newElement.setAttribute('href', 'javascript:false;');
-    newElement.innerText = title;
-    return newElement;
+    // searchShowResults();
   }
   function createTiddlerElement(t, template) {
   // TODO: If $TiddlerDisplay breaks TW is unusable!
@@ -528,7 +490,7 @@
   function makeTiddlerText({title, text, type}) {
     const markdownTypes = ['markdown', 'keyval', 'list', 'table'];
     const codeTypes = ['macro', 'script/js', 'css', 'json', 'html/template'];
-    if (type === 'x-twikki') {
+    if (type === 'x-twikki' || type === 'x-twiki') {
       return tw.core.markdown.render(renderTWikki({text, title}));
     } else if (markdownTypes.includes(type)) {
       return tw.core.markdown.render(text);
@@ -537,7 +499,7 @@
     } else if (type === 'html') {
       return text;
     } else {
-      return `<pre>${tw.core.common.escapeHtml(text)}</pre>`;
+      return `UNKNOWN TYPE:<hr><pre>${tw.core.common.escapeHtml(text)}</pre>`;
     }
   }
   function makeTiddlerTagLinks(tags) {
@@ -593,6 +555,7 @@
         /* *** Run Macro *** */
         // TODO: Support async macros
           let newText = Array.isArray(macroParams) ? macroFunction(...macroParams) : macroFunction(macroParams);
+          if (typeof newText === 'undefined') console.warn('Macro returned undefined!', macroName, 'in', title);
           result = replaceFrom(result, indexOfMacro, m[0], newText);
         } catch (e) {
           let errmsg = `Macro '${macroName}' failed in tiddler '${title}'!`;
@@ -819,9 +782,13 @@
     Object.assign(t, {title, text: `The tiddler '${title}' does not exist`, doesNotExist: true});
     return t;
   }
+  function tiddlerDeleted(t) {
+    if (isActiveCodeTiddler(t))
+      if (confirm('Code tiddler deleted - would you like to reload?')) rebootHard();
+  }
   function tiddlerUpdated(title) {
     let t = getTiddler(title);
-    if (isCodeTiddler(t))
+    if (isActiveCodeTiddler(t))
     // TODO: Try, catch, return error <span class="error">
       return executeCodeTiddler(t.text, title);
     if (['$SiteTitle', '$SiteSubTitle', '$TitleBar'].includes(title))
@@ -829,6 +796,8 @@
     else if (tiddlerIsATemplate(t))
       loadTemplates();
     else if (isPackageList(t))
+      if (confirm('Would you like to refresh?')) tw.events.send('reboot.soft');
+    if (title === '$MainLayout')
       if (confirm('Would you like to refresh?')) tw.events.send('reboot.soft');
   }
   function tiddlerIsATemplate(t) {
@@ -900,10 +869,10 @@
     if (t.tags.includes('$NoEdit') && !automation && !confirm('This tiddler is marked as read-only. Deleting it may cause issues. Really delete?')) return;
     let tiddler = removeFromArray(tw.tiddlers.all, titleIs(title))?.[0];
     if (shadowTiddler) addTiddler({...shadowTiddler});
-    /* if (shadowTiddler)
-    rerenderTiddler(title);
-  else */
-    hideTiddler(title);
+    if (shadowTiddler)
+      rerenderTiddler(title);
+    else
+      hideTiddler(title);
     tiddler.updated = new Date();
     // If we trash it without the doNotSave flag then a synch may delete it remotely
     // delete tiddler.doNotSave;
@@ -914,7 +883,7 @@
     } else
       tw.events.send('tiddler.deleted', title);
     save();
-    renderTiddlerList();
+    // searchShowResults();
   }
   function closeTiddler(title) {
     hideTiddler(title);
@@ -929,13 +898,14 @@
     if (!autoSave) return;
     saveAll({silent: true});
   }
-  function saveAll({silent}) {
+  function saveAll() {
     const oldTiddlers = tw.store.get('tiddlers');
+    // TODO: Better local backups/versioning
     if (oldTiddlers?.length) tw.store.set('tiddlers-backup1', oldTiddlers);
     tw.store.set('tiddlers', tw.tiddlers.all.filter(tiddlersToSave));
     tw.store.set('tiddlers-trashed', tw.tiddlers.trashed);
     saveVisible();
-    if (!silent) tw.ui.notify('Saved!');
+    // if (!silent) tw.ui.notify('Saved!');
     setDirty(false);
   }
 
@@ -1051,7 +1021,10 @@
   /* Store */
   function loadStore(store) {
     if (!store) store = tw.store;
-    tw.tiddlers.all = tw.shadowTiddlers.concat(storeLoadTiddlers('tiddlers'));
+    tw.tiddlers.all = storeLoadTiddlers('tiddlers');
+    tw.shadowTiddlers
+      .filter(t => !tiddlerExists(t.title))
+      .forEach(addTiddlerHard);
     if (!tw.tiddlers.all.length) {
       tw.tiddlers.all = [];
       store.set('tiddlers', []);
@@ -1079,12 +1052,12 @@
     scrollToTiddler(link);
     location.hash = '';
   }
-  function sendCommand(cmd, param, currentTiddlerTitle) {
+  function sendCommand(cmd, param, params, currentTiddlerTitle) {
   // "foo.bar:etc etc" => events.send('foo.bar', ['etc', 'etc'])
     let cmds = cmd.match(reCommand);
     if (!cmds) throw new Error(`Invalid command '${cmd}' does not match ${reCommand}/!`);
     let msg = cmds[1];
-    let params = cmds.length > 2 ? cmds[2] : null;
+    if (!params) params = cmds.length > 2 ? cmds[2] : null;
     if (typeof param === 'undefined' || param === null) {
       params = tw.events.decode(params);
       if (params) params = params.replaceAll('$currentTiddler', currentTiddlerTitle);
@@ -1129,7 +1102,6 @@
     // Edit Mode
     tw.core.dom.$('new-save')?.addEventListener('click', formDone);
     tw.core.dom.$('new-cancel')?.addEventListener('click', formCancel);
-    tw.core.dom.$('search')?.addEventListener('keyup', searchNow);
 
     document.addEventListener('click', event => {
       let el = event.target;
@@ -1149,12 +1121,13 @@
       if (!src) return;
       let msg = src.getAttribute('data-msg');
       let param = src.getAttribute('data-param');
+      let params = src.getAttribute('data-params');
       if (!msg && isCommand(link)) msg = isCommand(link);
       if (!msg) return;
       if (src.getAttribute('data-default') !== 'true') event.preventDefault();
       let currentTiddlerTitle = tw.core.dom.nearestAttribute(el, 'data-tiddler-title', '.tiddler');
       if (msg) {
-        let result = sendCommand(msg, param, currentTiddlerTitle);
+        let result = sendCommand(msg, param, params, currentTiddlerTitle);
         let targetId = src.getAttribute('data-target');
         if (!targetId) return result;
         // Display results
@@ -1201,6 +1174,7 @@
   async function loadCorePackage(packageName) {
     let res = readObject('/packages' + packageName);
     if (!res?.code || qs.reload) res = await fetchPackage(packageName);
+    writeObject('/packages' + packageName, res);
     return res;
   }
   async function fetchPackage(packageName) {

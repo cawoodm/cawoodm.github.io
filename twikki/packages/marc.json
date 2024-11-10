@@ -20,11 +20,11 @@
     },
     {
       "title": "MarcHacks",
-      "text": "tw.macros.marc = {\n  loadThemeButton(filter, force = true) {\n    if (!filter) filter = 'default';\n    return tw.ui.button(`Load Theme: ${filter}`, 'package.reload.url', {url: './packages/themes.json', name: 'test', filter, force});\n  },\n  loadThemeFromBinButton(filter, force = true) {\n    if (!filter) filter = 'default';\n    return tw.ui.button(`Load Theme JSONBin: ${filter}`, 'package.reload.bin', {url: 'https://api.jsonbin.io/v3/b/66eb26c8ad19ca34f8a87ae9', name: 'test', filter, force});\n  },\n};\ntw.events.subscribe('script.loaded', (name) => {\n  if (name !== 'highlight-core') return;\n  tw.core.dom.addScript('highlight-lang-powershell', '//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js');\n}, 'marc.addLanguages');\n",
+      "text": "tw.macros.marc = {\n  loadThemeButton(filter, force = true) {\n    if (!filter) filter = 'default';\n    return tw.ui.button(`Load Theme: ${filter}`, 'package.reload.url', {url: './packages/themes.json', name: 'test', filter, force});\n  },\n  loadThemeFromBinButton(filter, force = true) {\n    if (!filter) filter = 'default';\n    return tw.ui.button(`Load Theme JSONBin: ${filter}`, 'package.reload.bin', {url: 'https://api.jsonbin.io/v3/b/66eb26c8ad19ca34f8a87ae9', name: 'test', filter, force});\n  },\n};\ntw.events.subscribe('script.loaded', (name) => {\n  if (name !== 'highlight-core') return;\n  tw.core.dom.addScript('highlight-lang-powershell', '//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js');\n}, 'marc.addLanguages');\n\ntw.tiddlers.all.filter(t => t.type === 'x-twiki').forEach(t => (t.type = 'x-twikki'));\n",
       "tags": [],
       "type": "script/js",
       "created": "2024-11-08T10:20:43.5298485Z",
-      "updated": "2024-11-08T11:29:43.2136135Z"
+      "updated": "2024-11-09T21:07:08.4630530Z"
     },
     {
       "title": "MarcSettings",

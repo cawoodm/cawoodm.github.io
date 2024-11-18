@@ -68,11 +68,11 @@
     },
     {
       "title": "ExamplePluginExamples",
-      "text": "## Greet John Smith\n`<<example \"John Smith\">>`  \n<<example.hello \"John Smith\">>",
+      "text": "## Greet John Smith\n`<<example \"John Smith\">>`  ",
       "tags": [],
       "type": "x-twikki",
       "created": "2024-11-08T10:20:43.4646123Z",
-      "updated": "2024-10-26T19:18:34.0614170Z"
+      "updated": "2024-11-15T15:01:40.6156987Z"
     },
     {
       "title": "Features",

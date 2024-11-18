@@ -32,13 +32,13 @@
     },
     {
       "title": "$GeneralWidgets",
-      "text": "// Send any message <<command ui.open.all pck:website>>\ntw.macros.core.command = (msg, payload = '') => {\n  return tw.ui.button(`Send: ${msg}:${payload}`, msg, payload, '', 'title=\"Send Command\"');\n};\n// Reload UI\ntw.macros.core.Reload = () => {\n  return tw.ui.button('🔄️', 'ui.reload', null, '', 'title=\"Reload\"');\n};\ntw.macros.core.Save = () => {\n  return tw.ui.button('{{$IconSave}}', 'save.all', null, '', 'title=\"Save\"');\n};\ntw.macros.core.Settings = () => {\n  return tw.ui.button('{{$IconSettings}}', 'tiddler.show', '$Settings', '', 'title=\"Settings\"');\n};\ntw.macros.core.New = () => {\n  return tw.ui.button('{{$IconNew}}', 'tiddler.new', null);\n};\n// Lists types used in all tiddlers\ntw.macros.core.AllTypesMacro = () => {\n  return tw.lib.markdown([...new Set(tw.tiddlers.all.map(t => `* [${t.type}](#msg:tiddlers.show:type:${t.type})\\n`))].join(''));\n};\n",
+      "text": "// Send any message <<command ui.open.all pck:website>>\ntw.macros.core.command = (msg, payload = '') => {\n  return tw.ui.button(`Send: ${msg}:${payload}`, msg, payload, '', 'title=\"Send Command\"');\n};\n// Reload UI\ntw.macros.core.Reload = () => {\n  return tw.ui.button('🔄️', 'ui.reload', null, '', 'title=\"Reload\"');\n};\ntw.macros.core.Save = () => {\n  return tw.ui.button('{{$IconSave}}', 'save.all', null, '', 'title=\"Save\"');\n};\ntw.macros.core.Settings = (size = '22') => {\n  return tw.ui.button(`{{$IconSettings|size:${size}px}}`, 'tiddler.show', '$Settings', '', 'title=\"Settings\"');\n};\ntw.macros.core.New = () => {\n  return tw.ui.button('{{$IconNew}}', 'tiddler.new', null);\n};\n// Lists types used in all tiddlers\ntw.macros.core.AllTypesMacro = () => {\n  return tw.lib.markdown([...new Set(tw.tiddlers.all.map(t => `* [${t.type}](#msg:tiddlers.show:type:${t.type})\\n`))].join(''));\n};\n",
       "tags": [
         "$NoEdit"
       ],
       "type": "script/js",
       "created": "2024-11-08T10:20:43.4791785Z",
-      "updated": "2024-10-26T10:53:54.6064493Z"
+      "updated": "2024-11-18T11:16:45.6047070Z"
     },
     {
       "title": "$GithubSaverExtension",
@@ -52,13 +52,13 @@
     },
     {
       "title": "$IncludeFunctions",
-      "text": "/* eslint-disable no-eval */\n// Include the contents of another tiddler\n// <<include $TWikkiVersion>>\ntw.macros.include = (title) => {\n  // dp('include', title);\n  return tw.call('renderTiddler', title);\n};\ntw.macros.eval = (code) => {\n  return eval(code);\n};\n",
+      "text": "// Include the contents of another tiddler\n// <<include $TWikkiVersion>>\ntw.macros.include = (title, params) => {\n  return tw.call('renderTiddler', title, params);\n};\ntw.macros.eval = (code) => {\n  return eval(code);\n};\n",
       "tags": [
         "$NoEdit"
       ],
       "type": "script/js",
       "created": "2024-11-08T10:20:43.4811778Z",
-      "updated": "2024-11-08T11:51:50.8318222Z"
+      "updated": "2024-11-18T11:19:52.1124467Z"
     },
     {
       "title": "$ListTiddlersWidgets",

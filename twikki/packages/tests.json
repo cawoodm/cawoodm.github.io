@@ -6,7 +6,7 @@
       "tags": [],
       "type": "script/js",
       "created": "2024-11-08T10:20:43.5887195Z",
-      "updated": "2024-11-09T20:46:16.8148983Z"
+      "updated": "2024-11-20T22:30:40.8624476Z"
     },
     {
       "title": "TestLinks",
@@ -26,11 +26,11 @@
     },
     {
       "title": "TestSearch",
-      "text": "* <<tests.clear>>\n* <<tests.queue name:\"Close All Tiddlers\" click:#close-all find:[data-tiddler-title] expectNone:1>>\n* <<tests.queue name:\"Search Welcome\" type:#search input:welcome find:\"#search-results [data-param=Welcome]\">>\n* <<tests.queue comment:\"Done\">>\n\n<<tests.run suite:\"Search\">>\n",
+      "text": "* <<tests.clear>>\n* <<tests.queue name:\"Close All Tiddlers\" click:#close-all find:[data-tiddler-title] expectNone:1>>\n* <<tests.queue name:\"Search Welcome\" type:#search input:welcome find:\"#search-results [data-param=Welcome]\">>\n* <<tests.queue name:\"Search Advanced 1\" type:#search input:\"$close pck:icons\" find:\"#search-results div\" expect:\"$IconClose\">>\n* <<tests.queue name:\"Search Advanced 2\" type:#search input:\"$all pck:icons\" find:\"#search-results div\" expect:\"$IconOpenAll,$IconCloseAll\">>\n* <<tests.queue comment:\"Done\">>\n\n<<tests.run suite:\"Search\">>\n",
       "tags": [],
       "type": "x-twikki",
       "created": "2024-11-08T10:20:43.5925660Z",
-      "updated": "2024-11-09T20:33:13.2129384Z"
+      "updated": "2024-11-20T22:30:18.2428888Z"
     }
   ]
 }

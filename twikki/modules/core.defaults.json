@@ -340,14 +340,14 @@
     },
     {
       "title": "$TiddlerDisplay",
-      "text": "<div class=\"tiddler shadow{{=isRawShadow}}\" data-tiddler-id=\"{{=id}}\" data-tiddler-title=\"$currentTiddler\" tabindex=\"0\">\n  <div class=\"title\" title=\"{{=type}}\">\n    {{=title}}\n    <button class=\"icon\" title=\"close\" data-msg=\"tiddler.close\" data-param=\"$currentTiddler\">{{$IconCancel}}</button>\n    {{!editDisabled}}\n    <button class=\"icon\" title=\"edit\" {{=editDisabled}} data-msg=\"tiddler.edit\" data-param=\"$currentTiddler\">{{$IconEdit}}</button>\n    <button class=\"icon\" title=\"delete\"{{=editDisabled}} data-msg=\"tiddler.delete\" data-param=\"$currentTiddler\">{{$IconDelete}}</button>\n    {{/!editDisabled}}\n    <<favorites.toggle>>\n    <!--<button class=\"icon\" title=\"favorite\" data-msg=\"favorites.toggle\" data-param=\"$currentTiddler\">{{$IconFavorite}}</button>-->\n  </div>\n  <div class=\"modified\">{{=modified}}</div>\n  <div class=\"text\">{{=fullText}}</div>\n  <div class=\"tags\">{{=tagLinks}}</div>\n  <div class=\"meta\">{{=metaInfo}}</div>\n</div>",
+      "text": "<div class=\"tiddler shadow{{=isRawShadow}}\" data-tiddler-id=\"{{=id}}\" data-tiddler-title=\"$currentTiddler\" tabindex=\"0\">\n  <div class=\"title\" title=\"{{=type}}\">\n    {{=title}}\n    <button class=\"icon\" title=\"close\" data-msg=\"tiddler.close\" data-param=\"$currentTiddler\">{{$IconCancel}}</button>\n    {{!editDisabled}}\n    <button class=\"icon\" title=\"edit\" {{=editDisabled}} data-msg=\"tiddler.edit\" data-param=\"$currentTiddler\">{{$IconEdit}}</button>\n    <button class=\"icon\" title=\"delete\"{{=editDisabled}} data-msg=\"tiddler.delete\" data-param=\"$currentTiddler\">{{$IconDelete}}</button>\n    {{/!editDisabled}}\n  </div>\n  <div class=\"modified\">{{=modified}}</div>\n  <div class=\"text\">{{=fullText}}</div>\n  <div class=\"tags\">{{=tagLinks}}</div>\n  <div class=\"meta\">{{=metaInfo}}</div>\n</div>",
       "tags": [
         "$Shadow",
         "$Template"
       ],
       "type": "html/template",
       "created": "2024-11-03T20:36:53.3613581Z",
-      "updated": "2024-10-30T11:01:34.6865456Z"
+      "updated": "2024-11-20T09:22:32.3631905Z"
     },
     {
       "title": "$TiddlerPreview",
@@ -394,24 +394,24 @@
     },
     {
       "title": "$TitleBar",
-      "text": "<<ShowAllTiddlersButton>>\n\n<<CloseAllTiddlersButton>>\n\n[{{$IconBackup}}](#Backup)\n\n<<synch.pull>>\n<<synch.push>>\n\n<<synch.full>>\n\n<<New>>\n\n<<Save>>\n\n[{{$IconFavorite}}](#msg:ui.open.all:{\"tag\":\"Favorite\"})\n\n<<Settings>>\n\n<<TrashCanIcon>>\n\n[{{$IconTag}}](#Tags)\n\n[{{$IconHelp}}](#Help)",
+      "text": "<<ShowAllTiddlersButton>>\n\n<<CloseAllTiddlersButton>>\n\n[{{$IconBackup}}](#Backup)\n\n<<synch.pull>>\n<<synch.push>>\n\n<<synch.full>>\n\n<<New>>\n\n<<Save>>\n\n[{{$IconFavorite}}](#msg:ui.open.all:{\"tag\":\"Favorite\"})\n\n<<Settings>>\n<<Tag 44>>\n\n<<TrashCanIcon>>\n\n[{{$IconTag}}](#Tags)\n\n[{{$IconHelp}}](#Help)",
       "tags": [
         "$Shadow"
       ],
       "type": "x-twikki",
       "created": "2024-11-03T20:36:53.3694933Z",
-      "updated": "2024-11-18T11:13:10.0129437Z"
+      "updated": "2024-11-20T09:41:44.1582048Z"
     },
     {
       "title": "$TWikkiVersion",
-      "text": "0.14.0 🎉",
+      "text": "0.15.0",
       "tags": [
         "$Shadow",
         "$NoEdit"
       ],
       "type": "plain",
       "created": "2024-11-03T20:36:53.3722371Z",
-      "updated": "2024-11-11T11:53:34.0458075Z"
+      "updated": "2024-11-20T11:55:36.2930003Z"
     },
     {
       "title": "$Workspaces",

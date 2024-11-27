@@ -17,14 +17,6 @@
       "updated": "2024-11-10T19:49:19.9280515Z"
     },
     {
-      "title": "$MassDeletePlugin",
-      "text": "/**\n * ## Description\n * Provide <<favorites.toggle>> widget\n *   Toggles tag 'Favorite' on current tiddler\n *   for use on $TiddlerDisplay template\n */\n/**\n * ## Data\n * ```json\n * {\n *   \"version\": 1.0.0\n * }\n * ```\n */\n(function(){\n  let tiddlersToManage = [];\n  tw.tmp.mass = {\n    show(e, frm) {\n      let o = {\n        id: 'mass-search-list',\n        all: true,\n        title: frm.elements[0].value,\n        tag: frm.elements[1].value,\n        pck: frm.elements[2].value,\n      };\n      e.preventDefault();\n      tiddlersToManage = tw.events.send('search.advanced', o)[0];\n    },\n    delete(e, frm) {\n      e.preventDefault();\n      this.show(e, frm); // tiddlersToManage = tw.events.send('search.advanced', o)[0];\n      if (!tiddlersToManage.length) return alert('No tiddlers selected!');\n      setTimeout(() => {\n        if (!confirm(`Sure you want to delete these ${tiddlersToManage.length} tiddlers?`)) return;\n        tiddlersToManage.forEach(t => (tw.run.deleteTiddler(t.title, true)));\n      }, 300);\n    },\n  };\n  tw.macros.mass = {\n    delete() {\n      return `<form>\n      <input name=title placeholder=title>\n      <input name=tag placeholder=tag>\n      <input name=package placeholder=package>\n      ${tw.ui.button('Show', null, null, 'btnMassShow', 'onclick=\"tw.tmp.mass.show(event, this.form)\"')}\n      ${tw.ui.button('Delete', null, null, 'btnMassDelete', 'onclick=\"tw.tmp.mass.delete(event, this.form)\"')}\n      </form><div id=\"mass-search-list\">No tiddlers to show</div>`;\n    },\n  };\n  tw.events.subscribe('tiddlers.delete.mass', massDelete);\n  function massDelete({title, tag, pck}) {\n    let list = tw.call('tiddlerSearch')({title, tag, pck})\n      .map(t => t.title);\n    if (!confirm(`Sure you want to delet these ${list.length} tiddlers?`)) return;\n    list.forEach(title => (tw.run.deleteTiddler(title, true)));\n  }\n})();\n",
-      "tags": [],
-      "type": "script/js",
-      "created": "2024-11-08T10:20:43.4997526Z",
-      "updated": "2024-11-20T22:43:02.2377327Z"
-    },
-    {
       "title": "$TiddlerDisplay",
       "text": "<div class=\"tiddler shadow{{=isRawShadow}}\" data-tiddler-id=\"{{=id}}\" data-tiddler-title=\"$currentTiddler\" tabindex=\"0\">\n  <div class=\"title\" title=\"{{=type}}\">\n    {{=title}}\n    <button class=\"icon\" title=\"close\" data-msg=\"tiddler.close\" data-param=\"$currentTiddler\">{{$IconCancel}}</button>\n    {{!editDisabled}}\n    <button class=\"icon\" title=\"edit\" {{=editDisabled}} data-msg=\"tiddler.edit\" data-param=\"$currentTiddler\">{{$IconEdit}}</button>\n    <button class=\"icon\" title=\"delete\"{{=editDisabled}} data-msg=\"tiddler.delete\" data-param=\"$currentTiddler\">{{$IconDelete}}</button>\n    {{/!editDisabled}}\n    <<favorites.toggle>>\n    <!--<button class=\"icon\" title=\"favorite\" data-msg=\"favorites.toggle\" data-param=\"$currentTiddler\">{{$IconFavorite}}</button>-->\n  </div>\n  <div class=\"modified\">{{=modified}}</div>\n  <div class=\"text\">{{=fullText}}</div>\n  <div class=\"tags\">{{=tagLinks}}</div>\n  <div class=\"meta\">{{=metaInfo}}</div>\n</div>",
       "tags": [
@@ -35,14 +27,22 @@
       "updated": "2024-11-20T09:19:57.5619230Z"
     },
     {
+      "title": "$TiddlerManagerPlugin",
+      "text": "/**\n * ## Description\n * Provide <<favorites.toggle>> widget\n *   Toggles tag 'Favorite' on current tiddler\n *   for use on $TiddlerDisplay template\n */\n/**\n * ## Data\n * ```json\n * {\n *   \"version\": 1.1.0\n * }\n * ```\n */\n(function(){\n  let tiddlersToManage = [];\n  tw.tmp.manager = {\n    show(e, frm) {\n      e.preventDefault();\n      tiddlersToManage = tw.events.send('search.advanced', {\n        id: 'manager-search-list',\n        all: true,\n        title: frm.elements.title.value,\n        tag: frm.elements.tag.value,\n        pck: frm.elements.package.value,\n        type: frm.elements.type.value,\n      })[0];\n    },\n    delete(e, frm) {\n      e.preventDefault();\n      this.show(e, frm); // tiddlersToManage = tw.events.send('search.advanced', o)[0];\n      if (!tiddlersToManage.length) return alert('No tiddlers selected!');\n      setTimeout(() => {\n        if (!confirm(`Sure you want to delete these ${tiddlersToManage.length} tiddlers?`)) return;\n        tiddlersToManage.forEach(t => (tw.run.deleteTiddler(t.title, true)));\n      }, 300);\n    },\n  };\n  tw.macros.manager = {\n    form() {\n      const titles = tw.macros.core.allProperty('title');\n      const types = tw.macros.core.allProperty('type');\n      const tags = tw.macros.core.allTags();\n      const packages = tw.macros.core.allProperty('package');\n      return `<form>\n      <input name=title placeholder=title list=\"manager-all-titles\">\n        <datalist id=\"manager-all-titles\">${titles.map(t => `<option value=\"${t}\">${t}</option>`).join('\\n')}</datalist>\n      <input name=type placeholder=type list=\"manager-all-types\">\n        <datalist id=\"manager-all-types\">${types.map(t => `<option value=\"${t}\">${t}</option>`).join('\\n')}</datalist>\n      <input name=tag placeholder=tag list=\"manager-all-tags\">\n        <datalist id=\"manager-all-tags\">${tags.map(t => `<option value=\"${t}\">${t}</option>`).join('\\n')}</datalist>\n      <input name=package placeholder=package list=\"manager-all-packages\">\n        <datalist id=\"manager-all-packages\">${packages.map(t => `<option value=\"${t}\">${t}</option>`).join('\\n')}</datalist>\n      ${tw.ui.button('Show', null, null, 'btnmanagerShow', 'onclick=\"tw.tmp.manager.show(event, this.form)\"')}\n      ${tw.ui.button('Delete', null, null, 'btnmanagerDelete', 'onclick=\"tw.tmp.manager.delete(event, this.form)\"')}\n      </form><div id=\"manager-search-list\">No tiddlers to show</div>`;\n    },\n  };\n  tw.events.subscribe('tiddlers.delete.manager', managerDelete);\n  function managerDelete({title, tag, pck}) {\n    let list = tw.call('tiddlerSearch')({title, tag, pck})\n      .map(t => t.title);\n    if (!confirm(`Sure you want to delet these ${list.length} tiddlers?`)) return;\n    list.forEach(title => (tw.run.deleteTiddler(title, true)));\n  }\n})();\n",
+      "tags": [],
+      "type": "script/js",
+      "created": "2024-11-08T10:20:43.4997526Z",
+      "updated": "2024-11-27T21:13:22.1639598Z"
+    },
+    {
       "title": "MassDeleteDemo",
-      "text": "<<mass.delete>>",
+      "text": "<<manager.form>>",
       "tags": [
         "Demo"
       ],
       "type": "x-twikki",
       "created": "2024-11-20T22:31:05.2331695Z",
-      "updated": "2024-11-20T22:31:35.5326945Z"
+      "updated": "2024-11-21T08:07:21.7767736Z"
     }
   ]
 }

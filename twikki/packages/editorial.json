@@ -1,0 +1,14 @@
+{
+  "tiddlers": [
+    {
+      "title": "$MainLayout",
+      "text": "<div>\n  <div style=\"position:absolute; top: 0px; left: 10px; z-index: 1\" tiddler-include=\"$Workspaces\"></div>\n  <div style=\"position:absolute; top: 0px; right: 10px; z-index: 1\" tiddler-include=\"$Themes\"></div>\n  <div id=\"header\" class=\"flex\">\n    <div id=\"header-col1\" class=\"flex col1\">\n      <div id=\"site-title\" tiddler-include=\"$SiteTitle\"><h1>TWikki</h1></div>\n      <div id=\"site-title\" tiddler-include=\"$SiteSubTitle\">...</h1></div>\n  </div>\n  <div id=\"header-col2\" class=\"flex col2\" tiddler-include=\"$TitleBar\">\n  </div>\n  <div id=\"header-col3\" class=\"flex col3\">\n      <input id=\"search\" type=\"search\" placeholder=\"search\" autocomplete=\"off\"/>\n      <div id=\"search-results\">\n        \n      </div>\n    </div>\n  </div>\n  <div id=\"body\" class=\"flex\">\n    <div id=\"sidebar\">\n      \n    </div>\n    <div id=\"visible-tiddlers\">\n    </div>\n  </div>\n  <dialog id=\"preview-dialog\">\n  </dialog>\n  <dialog id=\"new-dialog\">\n    <form id=\"new-form\">\n      <div class=\"toolbar\">\n        <button class=\"icon\" data-msg=\"form.done\" tiddler-include=\"$IconDone\" title=\"Done\"></button>\n        <button class=\"icon\" data-msg=\"form.cancel\" tiddler-include=\"$IconCancel\" title=\"Cancel\"></button>\n      </div>\n      <input id=\"old-title\" type=\"hidden\" />\n      <div class=\"title\"><input id=\"new-title\" placeholder=\"Title\" size /></div>\n      <div class=\"text\"><textarea row=\"10\" id=\"new-body\" placeholder=\"Text\"></textarea></div>\n      <div><input id=\"new-type\" list=\"new-types\" onfocus=\"this.value=null;\" onchange=\"this.blur();\" />\n        <datalist id=\"new-types\">\n        </datalist>\n      </div>\n      <div><input id=\"new-tags\" placeholder=\"Tags\" size/>allTags>></div>\n    </form>\n  </dialog>\n  <div id=\"notify\" class=\"notifyHidden\"></div>\n</div>",
+      "tags": [
+        "$Template"
+      ],
+      "type": "html/template",
+      "created": "2024-11-26T09:54:55.0814959Z",
+      "updated": "2024-11-27T21:53:10.6139015Z"
+    }
+  ]
+}

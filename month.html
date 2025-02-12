@@ -6,35 +6,29 @@
     body.b {
       max-width: unset;
     }
+    select.b {width: unset;}
   </style>
 </head>
 
 <body class="b">
+  <h1>Monitor your Payments</h1>
   <details>
     <summary>Input</summary>
     <form id="post" onsubmit="event.preventDefault(); postPayment(this)">
+      <p>Enter a new expense/payment here:</p>
       <input placeholder="Description" name="name" required/>
       <input placeholder="Amount" name="amount" pattern="^\d*(\.\d{0,2})?$" size="4" required/>
       <br>
-      <select name="category" required>
+      <select name="category" id="categoryFilter" required>
         <option value="">Category</option>
-        <option value="Flat">Flat</option>
-        <option value="Food">Food</option>
-        <option value="Josie">Josie</option>
-        <option value="Sophia">Sophia</option>
-        <option value="Holiday">Holiday</option>
-        <option value="Vehicles">Vehicles</option>
-        <option value="Insurance">Insurance</option>
-        <option value="Pension">Pension</option>
-        <option value="Extra">Extra</option>
-        <option value="Other">Other</option>
       </select>
       <input placeholder="Date" name="date" type="date" required/>
       <input type="submit" value="Submit" />
     </form>
   </details>
   <div>
-    <select id="periodFilter"></select>
+    <select id="periodFilter" class="b" onchange="listPayments()" style="background-color: blue"></select>
+    <select id="periodFilter2" class="b" onchange="listPayments()" style="background-color: red"></select>
     <canvas id="canvas" width="320" height="150" style="border:1px solid grey; width: 100%"></canvas>
   </div>
   <details>
@@ -43,16 +37,18 @@
   </details>
   <details>
     <summary>Import</summary>
-    <form onsubmit="event.preventDefault(); doImport(this)">
-      <textarea name="import" style="width: 100%; height: 200px" placeholder="Date, Name, Amount, Category (.tsv tab-seperated)">Date	Name	Amount	Category</textarea>
+    <form onsubmit="event.preventDefault(); doImport(this)" id="frmImport">
+      <textarea name="import" style="width: 100%; height: 200px" placeholder="Paste from Excel 4 columns: Date, Name, Amount, Category (.tsv tab-seperated)"></textarea>
       <input type="button" value="Clear" onclick="doClear()"/>
+      <input type="button" value="Example Data" onclick="doExample()"/>
       <input type="submit" value="Import"/>
     </form>
   </details>
   <details id="settings">
     <summary>Settings</summary>
     <form onsubmit="event.preventDefault(); saveSettings(this)" id="frmSettings">
-      <input name="budget" placeholder="Monthly Budget" value="2000" required/>
+      Monthly Target: <input name="budget" placeholder="Monthly Budget" value="2000" required/>
+      <label for="graphType">Type: </label><select name="graphType" id="graphType"><option value="bar">Bar</option><option value="line">Line</option></select> 
       <input type="submit" value="Save"/>
     </form>
   </details>
@@ -62,6 +58,7 @@
     const CANVAS_HEIGHT = 150;
     const MAX_SPEND = 3000;
     let MONTHLY_BUDGET = parseFloat(localStorage.getItem('budget') || 2000);
+    let optGraphType = localStorage.getItem('graphtype') || 'bar';
     /*
     Payment: {id, name, date, category, amount}
     */
@@ -69,10 +66,16 @@
     const elPayments = document.querySelector('div#payments');
     const ctx = document.getElementById("canvas").getContext("2d");
     const elDate = document.querySelector('form#post input[name="date"]');
+    const elCategoryFilter = document.querySelector('select#categoryFilter');
     const elPeriodFilter = document.querySelector('select#periodFilter');
+    const elPeriodFilter2 = document.querySelector('select#periodFilter2');
 
     function init() {
       if (!localStorage.getItem('payments')) localStorage.setItem('payments', '[]');
+      if (payments.length == 0 && confirm("No payments found. Load example data?")) {
+        doExample();
+        doImport(document.getElementById('frmImport'));
+      }
       payments = JSON.parse(localStorage.getItem('payments'));
       payments.forEach(payment => {
         payment.date = new Date(payment.date);
@@ -80,17 +83,15 @@
         payment.period = formatDate(payment.date, 'y-M');
         payment.day = formatDate(payment.date, 'y-M-d');
       });
-      updatePeriods(formatDate(new Date(), 'y-M'));
-      elPeriodFilter.addEventListener('change', listPayments);
-      resetChart();
-      listPayments();
       // Show last month in blue
       let firstOfMonth = new Date(formatDate(new Date(), 'y-M') + '-01');
       firstOfMonth.setTime(firstOfMonth.getTime() - (24*60*60*1000));
       let lastPeriod = formatDate(firstOfMonth, 'y-M');
-      chartPayments(lastPeriod, 'blue');
+      updateLists(formatDate(new Date(), 'y-M'), lastPeriod);
+      listPayments();
       elDate.value = formatDate(new Date(), 'y-M-d');
       document.getElementById('frmSettings').budget.value = MONTHLY_BUDGET;
+      document.getElementById('frmSettings').graphType.selectedIndex = optGraphType === 'line' ? 1 : 0;
     }
 
     function postPayment(frm) {
@@ -130,9 +131,10 @@
       listPayments();
     }
 
-    function listPayments() {
+    function listPayments(compareMode) {
       const filteredPeriod = elPeriodFilter.options[elPeriodFilter.selectedIndex].value;
-      if (elPeriodFilter.selectedIndex === 0) resetChart();
+      const filteredPeriod2 = elPeriodFilter2.options[elPeriodFilter2.selectedIndex].value;
+      //if (elPeriodFilter.selectedIndex === 0) resetChart();
       elPayments.innerHTML = '';
       let html = '<ol>';
       const filteredPayments = payments.filter(payment => !filteredPeriod || payment.period === filteredPeriod);
@@ -141,16 +143,26 @@
       });
       html += '</ol>';
       elPayments.innerHTML = html;
+      if (filteredPeriod || filteredPeriod2) resetChart();
       if (filteredPeriod) chartPayments(filteredPeriod, 'blue');
+      if (filteredPeriod2) chartPayments(filteredPeriod2, 'red', false);
     }
 
-    function updatePeriods(per) {
+    function updateLists(per1, per2) {
+      updatePeriods(per1, per2);
+      updateCategories();
+    }
+    function updatePeriods(per1, per2) {
       let periods = Array.from(new Set(payments.map(p => p.period).sort(descending)));
-      elPeriodFilter.innerHTML = `<option></option>${periods.map(period => `<option ${period === per ? 'selected' : ''} value="${period}">${period}</option>`).join('\n')}`;
+      elPeriodFilter.innerHTML = `<option value="">-period 1-</option>${periods.map(period => `<option ${period === per1 ? 'selected' : ''} value="${period}">${period}</option>`).join('\n')}`;
+      elPeriodFilter2.innerHTML = `<option value="">-period 2-</option>${periods.map(period => `<option ${period === per2 ? 'selected' : ''} value="${period}">${period}</option>`).join('\n')}`;
+    }
+    function updateCategories(cat) {
+      let categories = Array.from(new Set(payments.map(p => p.category).sort(ascending)));
+      elCategoryFilter.innerHTML = `<option value="">-category-</option>${categories.map(category => `<option ${category === cat ? 'selected' : ''} value="${category}">${category}</option>`).join('\n')}`;
     }
 
     function chartPayments(filteredPeriod, col) {
-//      resetChart();
       let periodPayments = payments.filter(payment => payment.period === filteredPeriod);
       let sum = 0;
       const days = getDaysOfMonth(filteredPeriod);
@@ -171,7 +183,9 @@
     function saveSettings(frm) {
       let budget = isNaN(parseFloat(frm.budget.value)) ? 0 : parseFloat(frm.budget.value);
       if (!budget) return alert('Invalid budget');
+      optGraphType = frm.graphType.options[frm.graphType.selectedIndex].value;
       localStorage.setItem('budget', budget);
+      localStorage.setItem('graphtype', optGraphType);
       MONTHLY_BUDGET = budget;
       resetChart();
       listPayments();
@@ -205,7 +219,7 @@
           if (savePayment(payment)) success++;
         });
         listPayments();
-        updatePeriods();
+        updateLists();
         alert(`Imported ${success}/${lines.length} payments successfully`);
 
       } catch (e) {
@@ -215,6 +229,21 @@
       }
     }
 
+    function doExample() {
+      document.getElementById('frmImport').import.value = [
+        'Date\tText\tAmount\tCategory',
+        '2025-01-01\t"Food"\t200\tFood',
+        '2025-01-02\t"Rent Costs"\t1000\tFlat',
+        '2025-01-03\t"Dog Food"\t100\tPets',
+        '2025-01-04\t"SwissLife"\t100\tPension',
+        '2025-01-05\t"Car Insurance"\t100\tInsurance',
+        '2025-02-01\t"Food"\t100\tFood',
+        '2025-02-02\t"Rent Costs"\t1000\tFlat',
+        '2025-02-03\t"Dog Food"\t80\tPets',
+        '2025-02-04\t"SwissLife"\t10\tPension',
+        '2025-02-05\t"Car Insurance"\t10\tInsurance',
+      ].join('\n');
+    }
     function doClear() {
       if (!confirm("Definitely clear all payments?")) return;
       payments = [];
@@ -248,10 +277,13 @@
     function bar(x, h, col) {
       ctx.fillStyle = col;
       const W = CANVAS_WIDTH / 32;
-      ctx.fillRect(x * W, CANVAS_HEIGHT, W, -(h * CANVAS_HEIGHT) / MAX_SPEND);
+      const Y = (h * CANVAS_HEIGHT) / MAX_SPEND;
+      if (optGraphType === 'line') ctx.fillRect(x * W, CANVAS_HEIGHT-Y, W, 2);
+      else ctx.fillRect(x * W, CANVAS_HEIGHT-Y, W, Y);
     }
 
     function getDaysOfMonth(period) {
+      if (!period) return [];
       const year = parseInt(period.substring(0, 4), 10);
       const month = parseInt(period.substring(5, 7), 10);
       const dayCount = daysInMonth(year, month);

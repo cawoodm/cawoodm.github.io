@@ -72,11 +72,11 @@
 
     function init() {
       if (!localStorage.getItem('payments')) localStorage.setItem('payments', '[]');
+      payments = JSON.parse(localStorage.getItem('payments'));
       if (payments.length == 0 && confirm("No payments found. Load example data?")) {
         doExample();
         doImport(document.getElementById('frmImport'));
       }
-      payments = JSON.parse(localStorage.getItem('payments'));
       payments.forEach(payment => {
         payment.date = new Date(payment.date);
         payment.amount = parseFloat(payment.amount, 10);
@@ -110,6 +110,7 @@
         amount = parseFloat(amount);
         if (payments.find(p => p.day === day && p.category === category && p.amount === amount)) console.warn(`Possible duplicate payment: day: ${day}, category: ${category}, amount=${amount}`);
         payments.push({id, name, category, amount, date: parsedDate, period, day});
+        // TODO: payments = payments.sort(descending by day);
         save();
         return true;
       } catch (e) {

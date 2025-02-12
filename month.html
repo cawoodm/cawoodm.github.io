@@ -36,7 +36,7 @@
   <details>
     <summary>Import</summary>
     <form onsubmit="event.preventDefault(); doImport(this)">
-      <textarea name="import" style="width: 100%; height: 200px"></textarea>
+      <textarea name="import" style="width: 100%; height: 200px" placeholder="Date, Name, Amount, Category (.tsv tab-seperated)">Date	Name	Amount	Category</textarea>
       <input type="submit" value="Import"/>
     </form>
   </details>
@@ -50,7 +50,6 @@
     Payment: {id, name, date, category, amount}
     */
     let payments = [];
-    let periods = [];
     const elPayments = document.querySelector('div#payments');
     const ctx = document.getElementById("canvas").getContext("2d");
     const elDate = document.querySelector('form#post input[name="date"]');
@@ -64,12 +63,8 @@
         payment.amount = parseFloat(payment.amount, 10);
         payment.period = formatDate(payment.date, 'y-M');
         payment.day = formatDate(payment.date, 'y-M-d');
-        if (periods.indexOf(payment.period) === -1) periods.push(payment.period);
       });
-      periods = periods.sort(descending);
-      let todaysPeriod = formatDate(new Date(), 'y-M');
-      //todaysPeriod = '2024-12'; // TODO: Debug remove
-      elPeriodsFilter.innerHTML = `<option></option>${periods.map(period => `<option ${period === todaysPeriod ? 'selected' : ''} value="${period}">${period}</option>`).join('\n')}`;
+      updatePeriods(formatDate(new Date(), 'y-M'));
       elPeriodsFilter.addEventListener('change', listPayments);
       resetChart();
       listPayments();
@@ -89,21 +84,25 @@
     }
     function savePayment({name, date, category, amount}) {
       const parsedDate = new Date(date);
-      if (!validatePayment(name, parsedDate, category, amount)) return false;
-      const id = randomId(length); //new Date().toISOString().replace(/[T:Z\-\.]/g, '');
-      const period = formatDate(parsedDate, 'y-M');
-      const day = formatDate(parsedDate, 'y-M-d');
-      amount = parseFloat(amount);
-      if (payments.find(p => p.day === day && p.category === category && p.amount === amount)) console.warn(`Possible duplicate payment: day: ${day}, category: ${category}, amount=${amount}`);
-      payments.push({id, name, category, amount, date: parsedDate, period, day});
-      save();
-      return true;
+      try {
+        validatePayment(name, parsedDate, category, amount);
+        const id = randomId(length); //new Date().toISOString().replace(/[T:Z\-\.]/g, '');
+        const period = formatDate(parsedDate, 'y-M');
+        const day = formatDate(parsedDate, 'y-M-d');
+        amount = parseFloat(amount);
+        if (payments.find(p => p.day === day && p.category === category && p.amount === amount)) console.warn(`Possible duplicate payment: day: ${day}, category: ${category}, amount=${amount}`);
+        payments.push({id, name, category, amount, date: parsedDate, period, day});
+        save();
+        return true;
+      } catch (e) {
+        alert(e.message + ` in record ${name}, ${date}, ${category}, ${amount}`);
+      }
     }
     function validatePayment(name, date, category, amount) {
-      if (!date) return alert('Date missing');
-      if (!name) return alert('Description missing');
-      if (!category) return alert('Category missing');
-      if (!parseFloat(amount)) return alert('Amount must be a number');
+      if (!date) throw new Error(`Date missing in record ${name}, ${date}, ${category}, ${amount}`);
+      if (!name) throw new Error(`Description missing in record ${name}, ${date}, ${category}, ${amount}`);
+      if (!category) throw new Error(`Category missing in record ${name}, ${date}, ${category}, ${amount}`);
+      if (!parseFloat(amount)) throw new Error(`Amount must be a number in record ${name}, ${date}, ${category}, ${amount}`);
       return true;
     }
 
@@ -127,6 +126,11 @@
       if (filteredPeriod) chartPayments(filteredPeriod, 'blue');
     }
 
+    function updatePeriods(per) {
+      let periods = Array.from(new Set(payments.map(p => p.period).sort(descending)));
+      elPeriodsFilter.innerHTML = `<option></option>${periods.map(period => `<option ${period === per ? 'selected' : ''} value="${period}">${period}</option>`).join('\n')}`;
+    }
+
     function chartPayments(filteredPeriod, col) {
 //      resetChart();
       let periodPayments = payments.filter(payment => payment.period === filteredPeriod);
@@ -137,7 +141,6 @@
         green: 'rgba(0, 255, 0, 0.5)',
         blue: 'rgba(0, 0, 255, 0.5)',
       }[col];
-      console.log(colour);
       days.forEach(day => {
         if (new Date(day) > new Date()) return;
         const dayPayments = periodPayments.filter(payment => payment.day === day);
@@ -151,18 +154,18 @@
       try {
         const importData = frm.import.value;
         if (!importData) throw new Error('No data to import');
-        const lines = importData.split('\n');
+        let lines = importData.split('\n');
         if (!lines.length) throw new Error('No data to import');
+        const headers = lines[0].split('\t')
+        if (headers[0] !== 'Date' || headers[1] !== 'Text' || headers[2] !== 'Amount' || headers[3] !== 'Category') throw new Error('Headers mismatch: Should be TSV: Date, Text, Amount, Category');
+        lines = lines.slice(1).filter(l => !!l.trim());
         let success = 0;
         const validPayments = lines
           .map((line, i) => {
+            if (line.trim() === '') return null;
             const parts = line.split('\t');
-            if (i===0) {
-              if (parts[0] !== 'date' || parts[1] !== 'name' || parts[2] !== 'category' || parts[3] !== 'amount') throw new Error('Headers mismatch: Should be TSV: date, name, category, amount');
-              return;
-            }
-            if (parts.length < 4) throw new Error(`Data mismatch: Should be TSV: date, name, category, amount (Line ${i}): ${line}`);
-            let [date, name, category, amount] = parts;
+            if (parts.length < 4) throw new Error(`Data mismatch: Should be TSV: Date, Text, Amount, Category (Line ${i}): ${line}`);
+            let [date, name, amount, category] = parts;
             name = name.replace(/^"/g, '').replace(/"$/g, '');
             if (!validatePayment(name, new Date(date), category, amount))
               return null;
@@ -170,13 +173,14 @@
           })
           .filter(payment => !!payment);
 
-        if (validPayments.length < (lines.length -1)) return alert('Cancelling due to invalid payments found!');
+        if (validPayments.length < lines.length) return alert('Cancelling due to invalid payments found!');
 
         validPayments.forEach(payment => {
           if (savePayment(payment)) success++;
         });
         listPayments();
-        alert(`Imported ${success}/${lines.length-1} payments successfully`);
+        updatePeriods();
+        alert(`Imported ${success}/${lines.length} payments successfully`);
 
       } catch (e) {
         console.log(e.stack);
@@ -203,7 +207,7 @@
       }
       // Draw budget line
       const filteredPeriod = elPeriodsFilter.options[elPeriodsFilter.selectedIndex].value;
-      const days = getDaysOfMonth(filteredPeriod);
+      const days = getDaysOfMonth(formatDate(new Date(), 'y-M'));
       const dailyBudget = MONTHLY_BUDGET / days.length;
       days.forEach((day, i) => {
         bar(days.indexOf(day), (i + 1)*dailyBudget, 'rgba(100, 100, 100, 0.5)');

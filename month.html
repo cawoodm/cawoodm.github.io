@@ -46,10 +46,9 @@
   </details>
   <details id="settings">
     <summary>Settings</summary>
-    <form onsubmit="event.preventDefault(); doImport(this)">
-      <textarea name="import" style="width: 100%; height: 200px" placeholder="Date, Name, Amount, Category (.tsv tab-seperated)">Date	Name	Amount	Category</textarea>
-      <input type="button" value="Clear" onclick="doClear()"/>
-      <input type="submit" value="Import"/>
+    <form onsubmit="event.preventDefault(); saveSettings(this)" id="frmSettings">
+      <input name="budget" placeholder="Monthly Budget" value="2000" required/>
+      <input type="submit" value="Save"/>
     </form>
   </details>
   
@@ -57,7 +56,7 @@
     const CANVAS_WIDTH = 320;
     const CANVAS_HEIGHT = 150;
     const MAX_SPEND = 3000;
-    const MONTHLY_BUDGET = parseFloat(localStorage.getItem('budget') || 2000);
+    let MONTHLY_BUDGET = parseFloat(localStorage.getItem('budget') || 2000);
     /*
     Payment: {id, name, date, category, amount}
     */
@@ -86,6 +85,7 @@
       let lastPeriod = formatDate(firstOfMonth, 'y-M');
       chartPayments(lastPeriod, 'blue');
       elDate.value = formatDate(new Date(), 'y-M-d');
+      document.getElementById('frmSettings').budget.value = MONTHLY_BUDGET;
     }
 
     function postPayment(frm) {
@@ -163,6 +163,14 @@
       });
     }
 
+    function saveSettings(frm) {
+      let budget = isNaN(parseFloat(frm.budget.value)) ? 0 : parseFloat(frm.budget.value);
+      if (!budget) return alert('Invalid budget');
+      localStorage.setItem('budget', budget);
+      MONTHLY_BUDGET = budget;
+      resetChart();
+      listPayments();
+    }
     function doImport(frm) {
       try {
         const importData = frm.import.value;

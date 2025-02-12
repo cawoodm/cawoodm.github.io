@@ -2,9 +2,14 @@
 
 <head>
   <title>Monthly Expenses</title>
+  <style>
+    body.b {
+      max-width: unset;
+    }
+  </style>
 </head>
 
-<body>
+<body class="b">
   <details>
     <summary>Input</summary>
     <form id="post" onsubmit="event.preventDefault(); postPayment(this)">

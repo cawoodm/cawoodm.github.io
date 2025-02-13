@@ -133,8 +133,8 @@
     }
 
     function listPayments(compareMode) {
-      const filteredPeriod = elPeriodFilter.options[elPeriodFilter.selectedIndex].value;
-      const filteredPeriod2 = elPeriodFilter2.options[elPeriodFilter2.selectedIndex].value;
+      const filteredPeriod = elPeriodFilter.value;
+      const filteredPeriod2 = elPeriodFilter2.value;
       //if (elPeriodFilter.selectedIndex === 0) resetChart();
       elPayments.innerHTML = '';
       let html = '<ol>';
@@ -267,7 +267,7 @@
         ctx.stroke();
       }
       // Draw budget line
-      const filteredPeriod = elPeriodFilter.options[elPeriodFilter.selectedIndex].value;
+      const filteredPeriod = elPeriodFilter.value;
       const days = getDaysOfMonth(formatDate(new Date(), 'y-')+'01');
       const dailyBudget = MONTHLY_BUDGET / days.length;
       days.forEach((day, i) => {

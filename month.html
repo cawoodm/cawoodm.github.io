@@ -3,6 +3,9 @@
 <head>
   <title>Monthly Expenses</title>
   <style>
+    * {
+      afont-size: 1.3em !important;
+    }
     body.b {
       max-width: unset;
     }
@@ -29,7 +32,7 @@
   <div>
     <select id="periodFilter" class="b" onchange="listPayments()" style="background-color: blue"></select>
     <select id="periodFilter2" class="b" onchange="listPayments()" style="background-color: red"></select>
-    <canvas id="canvas" width="320" height="150" style="border:1px solid grey; width: 100%"></canvas>
+    <canvas id="canvas" style="border:1px solid grey;"></canvas>
   </div>
   <details>
     <summary>Details</summary>
@@ -54,8 +57,8 @@
   </details>
   
   <script>
-    const CANVAS_WIDTH = 320;
-    const CANVAS_HEIGHT = 150;
+    const CANVAS_WIDTH = Math.floor(window.innerWidth * 0.9);
+    const CANVAS_HEIGHT = Math.floor(150 * CANVAS_WIDTH / 320);
     const MAX_SPEND = 3000;
     let MONTHLY_BUDGET = parseFloat(localStorage.getItem('budget') || 2000);
     let optGraphType = localStorage.getItem('graphtype') || 'bar';
@@ -64,7 +67,10 @@
     */
     let payments = [];
     const elPayments = document.querySelector('div#payments');
-    const ctx = document.getElementById("canvas").getContext("2d");
+    const elCanvas = document.getElementById("canvas");
+    elCanvas.width = CANVAS_WIDTH;
+    elCanvas.height = CANVAS_HEIGHT;
+    const ctx = elCanvas.getContext("2d");
     const elDate = document.querySelector('form#post input[name="date"]');
     const elCategoryFilter = document.querySelector('select#categoryFilter');
     const elPeriodFilter = document.querySelector('select#periodFilter');
@@ -137,12 +143,12 @@
       const filteredPeriod2 = elPeriodFilter2.value;
       //if (elPeriodFilter.selectedIndex === 0) resetChart();
       elPayments.innerHTML = '';
-      let html = '<ol>';
+      let html = '<table>';
       const filteredPayments = payments.filter(payment => !filteredPeriod || payment.period === filteredPeriod);
       filteredPayments.forEach(payment => {
-        html += `<li>${fmtDate(payment.date)} - ${payment.name} - ${parseFloat(payment.amount).toFixed(2)} <a href="javascript:deletePayment('${payment.id}')">X</a></li>`;
+        html += `<tr><td>${fmtDate(payment.date)} - ${payment.name} - ${parseFloat(payment.amount).toFixed(2)} <a href="javascript:deletePayment('${payment.id}')">X</a></tr>`;
       });
-      html += '</ol>';
+      html += '</table>';
       elPayments.innerHTML = html;
       if (filteredPeriod || filteredPeriod2) resetChart();
       if (filteredPeriod) chartPayments(filteredPeriod, 'blue');

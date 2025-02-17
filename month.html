@@ -6,6 +6,10 @@
     * {
       afont-size: 1.3em !important;
     }
+    input, select {
+      border: 1px solid #ccc !important;
+      width: inherit  !important;
+    }
     body.b {
       max-width: unset;
     }
@@ -116,7 +120,7 @@
         amount = parseFloat(amount);
         if (payments.find(p => p.day === day && p.category === category && p.amount === amount)) console.warn(`Possible duplicate payment: day: ${day}, category: ${category}, amount=${amount}`);
         payments.push({id, name, category, amount, date: parsedDate, period, day});
-        // TODO: payments = payments.sort(descending by day);
+        payments = payments.sort(descendingDay);
         save();
         return true;
       } catch (e) {
@@ -146,7 +150,7 @@
       let html = '<table>';
       const filteredPayments = payments.filter(payment => !filteredPeriod || payment.period === filteredPeriod);
       filteredPayments.forEach(payment => {
-        html += `<tr><td>${fmtDate(payment.date)} - ${payment.name} - ${parseFloat(payment.amount).toFixed(2)} <a href="javascript:deletePayment('${payment.id}')">X</a></tr>`;
+        html += `<tr><td>${fmtDate(payment.date)} - ${payment.name} - ${parseFloat(payment.amount).toFixed(2)} <td><a href="javascript:deletePayment('${payment.id}')">X</a></tr>`;
       });
       html += '</table>';
       elPayments.innerHTML = html;
@@ -330,6 +334,9 @@
 
     function descending(a, b) {
       return a < b ? 1 : -1;
+    }
+    function descendingDay(a, b) {
+      return a.day < b.day ? 1 : -1;
     }
 
     function fmtDate(dt) {

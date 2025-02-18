@@ -1,65 +1,100 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
+    <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core@8/dist/ionic/ionic.esm.js"></script>
+  </head>
+<body>
+  <ion-app>
+    <ion-accordion-group value="overview">
+      <ion-accordion value="overview" toggle-icon="pie-chart">
+        <ion-item slot="header" color="light">
+          <ion-label>Overview</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ion-select id="periodFilter" style="background-color: blue"></ion-select>
+          <ion-select id="periodFilter2" style="background-color: red"></ion-select>
+          <br>
+          <canvas id="canvas" style="border:1px solid grey;"></canvas>
+        </div>
+      </ion-accordion>
+      <ion-accordion value="expenses">
+        <ion-item slot="header" color="light">
+          <ion-label>Entry</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <form id="post" onsubmit="event.preventDefault(); postPayment(this)">
+            <ion-list>
+              <ion-item>
+                <p>Enter a new expense/payment here:</p>
+              </ion-item>
+              <ion-item>
+                <ion-input label="Text" placeholder="Groceries..." name="name" required/>
+              </ion-item>
+              <ion-item>
+              <ion-input label="Amount" placeholder="12.99" name="amount" pattern="^\d*(\.\d{0,2})?$" size="4" required/>
+              </ion-item>
+              <ion-item>
+                <ion-select name="category" id="categoryFilter" required>
+                  <ion-select-option value="">Category</ion-select-option>
+                </ion-select>
+              </ion-item>
+              <ion-item>
+                <ion-input label="Date" name="date" type="date" required/>
+              </ion-item>
+            <ion-button type="submit">Add Expense</ion-button>
+          </form>
+        </div>
+      </ion-accordion>
+      <ion-accordion value="payments">
+        <ion-item slot="header" color="light">
+          <ion-label>Expenses <span id="total"></span></ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content" id="payments">
+        </div>
+      </ion-accordion>
+      <ion-accordion value="import">
+        <ion-item slot="header" color="light">
+          <ion-label>Data</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <form onsubmit="event.preventDefault(); doImport(this)" id="frmImport">
+            <ion-textarea name="import" fill="outline" placeholder="Paste from Excel 4 columns: Date, Name, Amount, Category (.tsv tab-seperated)" rows="20"></ion-textarea>
+            <ion-button type="submit" value="Import" expand="block">Import</ion-button>
+            <ion-button onclick="doExample()" color="warning" expand="block">Example Data</ion-button>
+            <ion-button onclick="doClear()" color="danger" expand="block"><ion-icon slot="start" name="trash-outline"></ion-icon>Clear All Data</ion-button>
+          </form>
+        </div>
+      </ion-accordion>
+      <ion-accordion value="settings">
+        <ion-item slot="header" color="light">
+          <ion-label>Settings</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <form onsubmit="event.preventDefault(); saveSettings(this)" id="frmSettings">
+            <ion-list>
+              <ion-item>
+                <ion-input name="budget" label="Monthly Budget" value="2000" required></ion-input>
+              </ion-item>
+              <ion-item>
+                <ion-select name="graphType" label="Graph Type" interface="popover" id="graphType"><ion-select-option value="bar">Bar</ion-select-option><ion-select-option value="line">Line</ion-select-option></ion-select> 
+              </ion-item>
+            <ion-list>
+            <ion-button type="submit" expand="block"><ion-icon slot="start" name="save"></ion-icon>Save</ion-button>
+          </form>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+    <span class="https://ionic.io/ionicons"></span>
+    <span class="https://github.com/ionic-team/ionicons/blob/4477c0251291dee6c2aeeebef8df928edf3e620f/src/data.json#L8051"></span>
+    
+  </ion-app>
 
-<head>
-  <title>Monthly Expenses</title>
-  <style>
-    * {
-      afont-size: 1.3em !important;
-    }
-    input, select {
-      border: 1px solid #ccc !important;
-      width: inherit  !important;
-    }
-    body.b {
-      max-width: unset;
-    }
-    select.b {width: unset;}
-  </style>
-</head>
-
-<body class="b">
-  <h1>Expense Tracker</h1>
-  <details>
-    <summary>Input</summary>
-    <form id="post" onsubmit="event.preventDefault(); postPayment(this)">
-      <p>Enter a new expense/payment here:</p>
-      <input placeholder="Description" name="name" required/>
-      <input placeholder="Amount" name="amount" pattern="^\d*(\.\d{0,2})?$" size="4" required/>
-      <br>
-      <select name="category" id="categoryFilter" required>
-        <option value="">Category</option>
-      </select>
-      <input placeholder="Date" name="date" type="date" required/>
-      <input type="submit" value="Submit" />
-    </form>
-  </details>
-  <div>
-    <select id="periodFilter" class="b" onchange="listPayments()" style="background-color: blue"></select>
-    <select id="periodFilter2" class="b" onchange="listPayments()" style="background-color: red"></select>
-    <canvas id="canvas" style="border:1px solid grey;"></canvas>
-  </div>
-  <details>
-    <summary>Details <span id="total"></span></summary>
-    <div id="payments"></div>
-  </details>
-  <details>
-    <summary>Import</summary>
-    <form onsubmit="event.preventDefault(); doImport(this)" id="frmImport">
-      <textarea name="import" style="width: 100%; height: 200px" placeholder="Paste from Excel 4 columns: Date, Name, Amount, Category (.tsv tab-seperated)"></textarea>
-      <input type="button" value="Clear" onclick="doClear()"/>
-      <input type="button" value="Example Data" onclick="doExample()"/>
-      <input type="submit" value="Import"/>
-    </form>
-  </details>
-  <details id="settings">
-    <summary>Settings</summary>
-    <form onsubmit="event.preventDefault(); saveSettings(this)" id="frmSettings">
-      Monthly Target: <input name="budget" placeholder="Monthly Budget" value="2000" required/>
-      <label for="graphType">Type: </label><select name="graphType" id="graphType"><option value="bar">Bar</option><option value="line">Line</option></select> 
-      <input type="submit" value="Save"/>
-    </form>
-  </details>
-  
   <script>
     const CANVAS_WIDTH = Math.floor(window.innerWidth * 0.9);
     const CANVAS_HEIGHT = Math.floor(150 * CANVAS_WIDTH / 320);
@@ -76,10 +111,12 @@
     elCanvas.width = CANVAS_WIDTH;
     elCanvas.height = CANVAS_HEIGHT;
     const ctx = elCanvas.getContext("2d");
-    const elDate = document.querySelector('form#post input[name="date"]');
-    const elCategoryFilter = document.querySelector('select#categoryFilter');
-    const elPeriodFilter = document.querySelector('select#periodFilter');
-    const elPeriodFilter2 = document.querySelector('select#periodFilter2');
+    const elDate = document.querySelector('form#post ion-input[name="date"]');
+    const elCategoryFilter = document.querySelector('#categoryFilter');
+    const elPeriodFilter = document.querySelector('#periodFilter');
+    elPeriodFilter.addEventListener('ionChange', listPayments);
+    const elPeriodFilter2 = document.querySelector('#periodFilter2');
+    elPeriodFilter2.addEventListener('ionChange', listPayments);
 
     function init() {
       if (!localStorage.getItem('payments')) localStorage.setItem('payments', '[]');
@@ -102,7 +139,7 @@
       listPayments();
       elDate.value = formatDate(new Date(), 'y-M-d');
       document.getElementById('frmSettings').budget.value = MONTHLY_BUDGET;
-      document.getElementById('frmSettings').graphType.selectedIndex = optGraphType === 'line' ? 1 : 0;
+      document.getElementById('frmSettings').graphType.value = optGraphType; // === 'line' ? 1 : 0;
     }
 
     function postPayment(frm) {
@@ -130,7 +167,7 @@
     }
     function validatePayment(name, date, category, amount) {
       if (!date) throw new Error(`Date missing in record ${name}, ${date}, ${category}, ${amount}`);
-      if (!name) throw new Error(`Description missing in record ${name}, ${date}, ${category}, ${amount}`);
+      if (!name) throw new Error(`Text missing in record ${name}, ${date}, ${category}, ${amount}`);
       if (!category) throw new Error(`Category missing in record ${name}, ${date}, ${category}, ${amount}`);
       if (isNaN(parseFloat(amount))) throw new Error(`Amount must be a number in record ${name}, ${date}, ${category}, ${amount}`);
       return true;
@@ -149,11 +186,11 @@
       const filteredPayments = payments.filter(payment => !filteredPeriod || payment.period === filteredPeriod);
       const sumOfPayments = filteredPayments.map(a => a.amount).reduce((a, c) => a + c, 0);
       elTotal.innerHTML = 'CHF ' + sumOfPayments.toFixed(2);
-      let html = '<table>';
+      let html = '<ion-grid fixed="true">';
       filteredPayments.forEach(payment => {
-        html += `<tr><td>${fmtDate(payment.date)} - ${payment.name} - ${parseFloat(payment.amount).toFixed(2)} <td><a href="javascript:deletePayment('${payment.id}')">X</a></tr>`;
+        html += `<ion-row><ion-col size="2">${fmtDate(payment.date)}</ion-col><ion-col>${payment.name}</ion-col><ion-col size="3">${parseFloat(payment.amount).toFixed(2)} </ion-col><ion-col size="1"><a href="javascript:deletePayment('${payment.id}')"><ion-icon name="trash-outline"></ion-icon></a></ion-row>`;
       });
-      html += '</table>';
+      html += '</ion-grid>';
       elPayments.innerHTML = html;
       if (filteredPeriod || filteredPeriod2) resetChart();
       if (filteredPeriod) chartPayments(filteredPeriod, 'blue');
@@ -166,12 +203,14 @@
     }
     function updatePeriods(per1, per2) {
       let periods = Array.from(new Set(payments.map(p => p.period).sort(descending)));
-      elPeriodFilter.innerHTML = `<option value="">-period 1-</option>${periods.map(period => `<option ${period === per1 ? 'selected' : ''} value="${period}">${period}</option>`).join('\n')}`;
-      elPeriodFilter2.innerHTML = `<option value="">-period 2-</option>${periods.map(period => `<option ${period === per2 ? 'selected' : ''} value="${period}">${period}</option>`).join('\n')}`;
+      elPeriodFilter.innerHTML = `<ion-select-option value="">-period 1-</ion-select-option>${periods.map(period => `<ion-select-option ${period === per1 ? 'selected' : ''} value="${period}">${period}</ion-select-option>`).join('\n')}`;
+      elPeriodFilter.value = per1;
+      elPeriodFilter2.innerHTML = `<ion-select-option value="">-period 2-</ion-select-option>${periods.map(period => `<ion-select-option ${period === per2 ? 'selected' : ''} value="${period}">${period}</ion-select-option>`).join('\n')}`;
+      elPeriodFilter2.value = per2;
     }
     function updateCategories(cat) {
       let categories = Array.from(new Set(payments.map(p => p.category).sort(ascending)));
-      elCategoryFilter.innerHTML = `<option value="">-category-</option>${categories.map(category => `<option ${category === cat ? 'selected' : ''} value="${category}">${category}</option>`).join('\n')}`;
+      elCategoryFilter.innerHTML = `<ion-select-option value="">-category-</ion-select-option>${categories.map(category => `<ion-select-option ${category === cat ? 'selected' : ''} value="${category}">${category}</ion-select-option>`).join('\n')}`;
     }
 
     function chartPayments(filteredPeriod, col) {
@@ -341,7 +380,8 @@
     }
 
     function fmtDate(dt) {
-      return dt.toLocaleString('en-us', {weekday: "short", year: "numeric", month: "short", day: "numeric"});
+      //return dt.toLocaleString('en-us', {weekday: "short", year: "numeric", month: "short", day: "numeric"});
+      return dt.toLocaleString('en-us', {month: "short", day: "numeric"});
     }
 
     function save() {
@@ -352,69 +392,5 @@
   </script>
 
 </body>
-<script>
-// CSS Switcher thanks to: https://github.com/dohliam/dropin-minimal-css
 
-function inline_switcher() {
-  let frameworks = "a11yana,almond,axist,bahunya,bamboo,bare,base,basic,bolt,bonsai,brutalist,bullframe,caiuss,caramel,cardinal,centigram,centurion,chota,cirrus,classless,clmaterial,codify,comet,concise,concrete,cutestrap,flat-ui,fluidity,furtive,gd,generic,github-markdown,gutenberg,hack,hello,hiq,holiday,html-starterkit,hyp,kathamo,koochak,kraken,kube,latex,lemon,lissom,lit,lotus,magick,markdown,marx,material,materialize,mercury,milligram,min,mini,minimal,minimal-stylesheet,missing-style,mobi,motherplate,mu,mui,mvp,neat,new,no-class,normalize,oh-my-css,ok,pandoc-scholar,paper,papier,pavilion,picnic,pico,preface,primer,propeller,pure,roble,sakura,sanitize,scooter,semantic-ui,shoelace,siimple,simple,skeleton,skeleton-framework,skeleton-plus,snack,spcss,spectre,style,stylize,superstylin,tacit,tent,terminal,thao,tui,vanilla,vital,water,wing,writ,yamb,yorha,ads-gazette,ads-medium,ads-notebook,ads-tufte,attri-bright-light-green,attri-midnight-green,attri-dark-forest-green,attri-dark-fairy-pink,attri-light-fairy-pink,awsm-default,awsm-black,awsm-bigstone,awsm-gondola,awsm-mischka,awsm-pastelpink,awsm-pearllusta,awsm-tasman,awsm-white,boot-cerulean,boot-cosmo,boot-cyborg,boot-darkly,boot-flatly,boot-journal,boot-lumen,boot-paper,boot-readable,boot-sandstone,boot-slate,boot-spacelab,boot-superhero,boot-yeti,md-air,md-modest,md-retro,md-splendor,w3c-chocolate,w3c-midnight,w3c-modernist,w3c-oldstyle,w3c-steely,w3c-swiss,w3c-traditional,w3c-ultramarine";
-  switcher = document.getElementById("switcher");
-  frameworks_array = frameworks.split(",");
-  select_open = '\n        <select name="switcher_dropdown" id="switcher_dropdown" accesskey="s" onchange="switch_css(this.value)">\n';
-  dropdown = select_open;
-  css = localStorage.getItem('css');
-  for (i = 0; i < frameworks_array.length; i++) {
-    f = frameworks_array[i];
-    framework_name = capitalize(f);
-    option = '          <option value="' + f + '"' + (css === f ? ' selected' : '') + '>' + framework_name + ' CSS</option>\n';
-    dropdown = dropdown + option;
-  }
-  select_close = '        </select>\n      '
-  dropdown = dropdown + select_close;
-  switcher.innerHTML = dropdown;
-}
-
-function add_switcher() {
-  css_link = document.getElementsByTagName("link")[0];
-  if (css_link == undefined) {
-    head = document.getElementsByTagName('head')[0];
-    css_link = document.createElement('link');
-    css_link.rel="stylesheet";
-    css_link.type="text/css";
-    css = localStorage.getItem('css') || 'bamboo';
-    css_link.href="https://dohliam.github.io/dropin-minimal-css/min/" + css + ".min.css";
-    head.appendChild(css_link);
-  }
-
-  let new_div = document.createElement('div');
-  new_div.id = 'switcher';
-  new_div.innerHTML = '<div>&nbsp;</div>';
-  //new_div.innerHTML = '      <div>&nbsp;</div>\n      <script type="text/javascript">inline_switcher();</sc'+'ript>';
-  document.getElementById('settings').append(new_div);  //document.body.style.paddingLeft = "24px";
-
-  inline_switcher();
-
-  css_link.onload = on_css_load;
-}
-
-function switch_css(css) {
-  css_link.href = "https://dohliam.github.io/dropin-minimal-css/min/" + css + ".min.css";
-  localStorage.setItem('css', css);
-}
-
-function capitalize(s) {
-  u = s.replace(/^(.)/, function(_, l){
-    return l.toUpperCase();
-  });
-  return u;
-}
-
-function on_css_load() {
-  let bgColor = getComputedStyle(document.body).backgroundColor;
-  if (bgColor.match(/^rgba\(.*\)/) ) bgColor = 'white';
-  switcher.style.backgroundColor = bgColor;
-}
-
-add_switcher();
-
-</script>
 </html>

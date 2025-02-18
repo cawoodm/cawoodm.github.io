@@ -1,406 +1,464 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Expense Tracker</title>
     <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
     <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
-    <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core@8/dist/ionic/ionic.esm.js"></script>
+    <alink rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/palettes/dark.always.css" />
+    <style>
+      ion-textarea {
+        border: 1px solid grey;
+      }
+    </style>
   </head>
-<body>
-  <ion-app>
-    <ion-accordion-group value="overview">
-      <ion-accordion value="overview" toggle-icon="pie-chart" toggle-icon-slot="start">
-        <ion-item slot="header" color="light">
-          <ion-label>Overview</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <ion-select id="periodFilter" style="background-color: blue"></ion-select>
-          <ion-select id="periodFilter2" style="background-color: red"></ion-select>
-          <br>
-          <canvas id="canvas" style="border:1px solid grey;"></canvas>
-        </div>
-      </ion-accordion>
-      <ion-accordion value="expenses" toggle-icon="cash-outline" toggle-icon-slot="start">
-        <ion-item slot="header" color="light">
-          <ion-label>Entry</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <form id="post" onsubmit="event.preventDefault(); postPayment(this)">
-            <ion-list>
-              <ion-item>
-                <p>Enter a new expense/payment here:</p>
+  <body>
+    <ion-app>
+      <div class="ion-page" id="main-content">
+        <ion-menu content-id="main-content">
+          <ion-header>
+            <ion-toolbar>
+              <ion-title>Settings</ion-title>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding"> </ion-content>
+        </ion-menu>
+
+        <ion-header>
+          <ion-toolbar>
+            <ion-buttons slot="start">
+              <ion-menu-button></ion-menu-button>
+            </ion-buttons>
+            <ion-title><ion-icon name="stats-chart-outline"></ion-icon> Expense Tracker</ion-title>
+          </ion-toolbar>
+        </ion-header>
+
+        <ion-content>
+          <ion-accordion-group value="overview" multiple="true">
+            <ion-accordion value="overview" toggle-icon="caret-down-circle" toggle-icon-slot="start">
+              <ion-item slot="header" color="light">
+                <ion-label>Overview <span id="percentage"></span></ion-label><ion-icon name="pie-chart"></ion-icon>
               </ion-item>
-              <ion-item>
-                <ion-input label="Text" placeholder="Groceries..." name="name" required/>
+              <div class="ion-padding" slot="content">
+                <ion-progress-bar id="progress" value="0.30"></ion-progress-bar>
+                <ion-grid>
+                  <ion-row>
+                    <ion-col>
+                      <ion-select id="periodFilter" style="background-color: #8888dd" label="Period"></ion-select>
+                    </ion-col>
+                    <ion-col>
+                      <ion-select id="periodFilter2" style="background-color: #dd8888" label="Compare"></ion-select>
+                    </ion-col>
+                  </ion-row>
+                </ion-grid>
+                <br />
+                <canvas id="canvas" style="border: 1px solid grey"></canvas>
+              </div>
+            </ion-accordion>
+
+            <ion-accordion value="expenses" toggle-icon="caret-down-circle" toggle-icon-slot="start">
+              <ion-item slot="header" color="light"> <ion-label>Entry</ion-label><ion-icon name="cash-outline"></ion-icon> </ion-item>
+              <div class="ion-padding" slot="content">
+                <form id="post" onsubmit="event.preventDefault(); postPayment(this)">
+                  <ion-list>
+                    <ion-item>
+                      <p>Enter a new expenses here:</p>
+                    </ion-item>
+                    <ion-item>
+                      <ion-input label="Text" placeholder="Groceries..." name="name" required />
+                    </ion-item>
+                    <ion-item>
+                      <ion-input label="Amount" placeholder="12.99" name="amount" pattern="^\d*(\.\d{0,2})?$" size="4" required />
+                    </ion-item>
+                    <ion-item>
+                      <ion-select name="category" id="categoryFilter" label="Category" required>
+                        <ion-select-option value="">Category</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                    <ion-item>
+                      <ion-datetime label="Date" name="date" type="date" required presentation="date"></ion-datetime>
+                    </ion-item>
+                    <ion-button type="submit">Add Expense</ion-button>
+                  </ion-list>
+                </form>
+              </div>
+            </ion-accordion>
+
+            <ion-accordion value="payments" toggle-icon="caret-down-circle" toggle-icon-slot="start">
+              <ion-item slot="header" color="light">
+                <ion-label>Expenses <span id="total"></span></ion-label><ion-icon name="grid-outline"></ion-icon>
               </ion-item>
-              <ion-item>
-              <ion-input label="Amount" placeholder="12.99" name="amount" pattern="^\d*(\.\d{0,2})?$" size="4" required/>
-              </ion-item>
-              <ion-item>
-                <ion-select name="category" id="categoryFilter" required>
-                  <ion-select-option value="">Category</ion-select-option>
-                </ion-select>
-              </ion-item>
-              <ion-item>
-                <ion-input label="Date" name="date" type="date" required/>
-              </ion-item>
-            <ion-button type="submit">Add Expense</ion-button>
-          </form>
-        </div>
-      </ion-accordion>
-      <ion-accordion value="payments" toggle-icon="grid-outline" toggle-icon-slot="start">
-        <ion-item slot="header" color="light">
-          <ion-label>Expenses <span id="total"></span></ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <ion-searchbar placeholder="Search payments"></ion-searchbar>
-          <div id="payments"></div>
-        </div>
-      </ion-accordion>
-      <ion-accordion value="import" toggle-icon="cloud-upload-outline" toggle-icon-slot="start">
-        <ion-item slot="header" color="light">
-          <ion-label>Data</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <form onsubmit="event.preventDefault(); doImport(this)" id="frmImport">
-            <ion-textarea name="import" fill="outline" placeholder="Paste from Excel 4 columns: Date, Name, Amount, Category (.tsv tab-seperated)" rows="20"></ion-textarea>
-            <ion-button type="submit" value="Import" expand="block">Import</ion-button>
-            <ion-button onclick="doExample()" color="warning" expand="block">Example Data</ion-button>
-            <ion-button onclick="doClear()" color="danger" expand="block"><ion-icon slot="start" name="trash-outline"></ion-icon>Clear All Data</ion-button>
-          </form>
-        </div>
-      </ion-accordion>
-      <ion-accordion value="settings" toggle-icon="cog-outline" toggle-icon-slot="start">
-        <ion-item slot="header" color="light">
-          <ion-label>Settings</ion-label>
-        </ion-item>
-        <div class="ion-padding" slot="content">
-          <form onsubmit="event.preventDefault(); saveSettings(this)" id="frmSettings">
-            <ion-list>
-              <ion-item>
-                <ion-input name="budget" label="Monthly Budget" value="2000" required></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-select name="graphType" label="Graph Type" interface="popover" id="graphType"><ion-select-option value="bar">Bar</ion-select-option><ion-select-option value="line">Line</ion-select-option></ion-select> 
-              </ion-item>
-            <ion-list>
-            <ion-button type="submit" expand="block"><ion-icon slot="start" name="save"></ion-icon>Save</ion-button>
-          </form>
-        </div>
-      </ion-accordion>
-    </ion-accordion-group>
+              <div slot="content">
+                <ion-searchbar placeholder="Search payments" onkeyup="doSearchPayments(this)"></ion-searchbar>
+                <div id="payments"></div>
+              </div>
+            </ion-accordion>
 
-    <ion-toast duration="5000" message="This toast will close in 5 seconds" id="toast"></ion-toast>
+            <ion-accordion value="import" toggle-icon="caret-down-circle" toggle-icon-slot="start">
+              <ion-item slot="header" color="light"> <ion-label>Data</ion-label><ion-icon name="cloud-upload-outline"></ion-icon></ion-item>
+              <div class="ion-padding" slot="content">
+                <form onsubmit="event.preventDefault(); doImport(this)" id="frmImport">
+                  <ion-textarea name="import" fill="outline" placeholder="Paste from Excel 4 columns: Date, Name, Amount, Category (.tsv tab-seperated)" rows="20"></ion-textarea>
+                  <ion-button type="submit" value="Import" expand="block">Import</ion-button>
+                  <ion-button onclick="doExample()" color="warning" expand="block">Example Data</ion-button>
+                  <ion-button onclick="doClear()" color="danger" expand="block"><ion-icon slot="start" name="trash-outline"></ion-icon>Clear All Data</ion-button>
+                </form>
+              </div>
+            </ion-accordion>
 
-  </ion-app>
+            <ion-accordion value="settings" toggle-icon="caret-down-circle" toggle-icon-slot="start">
+              <ion-item slot="header" color="light"> <ion-label>Settings </ion-label><ion-icon name="cog-outline"></ion-icon> </ion-item>
+              <div class="ion-padding" slot="content">
+                <form onsubmit="event.preventDefault(); saveSettings(this)" id="frmSettings">
+                  <ion-list>
+                    <ion-item>
+                      <ion-input name="budget" label="Monthly Budget" value="2000" required id="budget"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                      <ion-input name="max" label="Max Spend" value="3000" required id="max"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                      <ion-select name="graphType" label="Graph Type" interface="popover" id="graphType">
+                        <ion-select-option value="bar">Bar</ion-select-option>
+                        <ion-select-option value="line">Line</ion-select-option>
+                      </ion-select>
+                    </ion-item>
+                  </ion-list>
+                  <ion-button type="submit" expand="block"><ion-icon slot="start" name="save"></ion-icon>Save</ion-button>
+                </form>
+              </div>
+            </ion-accordion>
+          </ion-accordion-group>
 
-  <script>
-    // https://ionic.io/ionicons
+          <ion-toast duration="5000" message="This toast will close in 5 seconds" id="toast"></ion-toast>
+        </ion-content>
+      </div>
+    </ion-app>
 
-    const CANVAS_WIDTH = Math.floor(window.innerWidth * 0.9);
-    const CANVAS_HEIGHT = Math.floor(150 * CANVAS_WIDTH / 320);
-    const MAX_SPEND = 3000;
-    let MONTHLY_BUDGET = parseFloat(localStorage.getItem('budget') || 2000);
-    let optGraphType = localStorage.getItem('graphtype') || 'bar';
-    /*
-    Payment: {id, name, date, category, amount}
-    */
-    let payments = [];
-    const elPayments = document.querySelector('#payments');
-    const elTotal = document.querySelector('#total');
-    const elCanvas = document.getElementById("canvas");
-    elCanvas.width = CANVAS_WIDTH;
-    elCanvas.height = CANVAS_HEIGHT;
-    const ctx = elCanvas.getContext("2d");
-    const elDate = document.querySelector('form#post ion-input[name="date"]');
-    const elCategoryFilter = document.querySelector('#categoryFilter');
-    const elPeriodFilter = document.querySelector('#periodFilter');
-    elPeriodFilter.addEventListener('ionChange', listPayments);
-    const elPeriodFilter2 = document.querySelector('#periodFilter2');
-    elPeriodFilter2.addEventListener('ionChange', listPayments);
-    const elToast = document.querySelector('#toast');
+    <script>
+      // https://ionic.io/ionicons
 
-    function init() {
-      if (!localStorage.getItem('payments')) localStorage.setItem('payments', '[]');
-      payments = JSON.parse(localStorage.getItem('payments'));
-      if (payments.length == 0 && confirm("No payments found. Load example data?")) {
-        doExample();
-        doImport(document.getElementById('frmImport'));
-      }
-      payments.forEach(payment => {
-        payment.date = new Date(payment.date);
-        payment.amount = parseFloat(payment.amount, 10);
-        payment.period = formatDate(payment.date, 'y-M');
-        payment.day = formatDate(payment.date, 'y-M-d');
-      });
-      // Show last month in blue
-      let firstOfMonth = new Date(formatDate(new Date(), 'y-M') + '-01');
-      firstOfMonth.setTime(firstOfMonth.getTime() - (24*60*60*1000));
-      let lastPeriod = formatDate(firstOfMonth, 'y-M');
-      updateLists(formatDate(new Date(), 'y-M'), lastPeriod);
-      listPayments();
-      elDate.value = formatDate(new Date(), 'y-M-d');
-      document.getElementById('frmSettings').budget.value = MONTHLY_BUDGET;
-      document.getElementById('frmSettings').graphType.value = optGraphType; // === 'line' ? 1 : 0;
-    }
+      const CANVAS_WIDTH = Math.floor(window.innerWidth * 0.9);
+      const CANVAS_HEIGHT = Math.floor((150 * CANVAS_WIDTH) / 320);
+      let MAX_SPEND = parseFloat(localStorage.getItem("max") || 3000);
+      let MONTHLY_BUDGET = parseFloat(localStorage.getItem("budget") || 2000);
+      let optGraphType = localStorage.getItem("graphtype") || "bar";
+      /* Payment: {id, name, date, category, amount} */
+      let payments = [];
+      const elPayments = document.querySelector("#payments");
+      const elTotal = document.querySelector("#total");
+      const elCanvas = document.getElementById("canvas");
+      elCanvas.width = CANVAS_WIDTH;
+      elCanvas.height = CANVAS_HEIGHT;
+      const ctx = elCanvas.getContext("2d");
+      const elDate = document.querySelector('form#post input[name="date"]');
+      const elCategoryFilter = document.querySelector("#categoryFilter");
+      const elPeriodFilter = document.querySelector("#periodFilter");
+      elPeriodFilter.addEventListener("ionChange", listPayments);
+      const elPeriodFilter2 = document.querySelector("#periodFilter2");
+      elPeriodFilter2.addEventListener("ionChange", listPayments);
+      const elToast = document.querySelector("#toast");
+      const elProgress = document.getElementById("progress");
 
-    function postPayment(frm) {
-      const o = Object.assign(...Array.from(new FormData(frm).entries(), ([x,y]) => ({[x]:y})));
-      savePayment(o);
-      showMessage(`Payment ${o.amount} ${o.name} (${o.category}) saved`);
-      listPayments();
-      return false;
-    }
-    function showMessage(msg) {
-      elToast.message = msg;
-      elToast.present();
-    }
-    function savePayment({name, date, category, amount}) {
-      const parsedDate = new Date(date);
-      try {
-        validatePayment(name, parsedDate, category, amount);
-        const id = randomId(length); //new Date().toISOString().replace(/[T:Z\-\.]/g, '');
-        const period = formatDate(parsedDate, 'y-M');
-        const day = formatDate(parsedDate, 'y-M-d');
-        amount = parseFloat(amount);
-        if (payments.find(p => p.day === day && p.category === category && p.amount === amount)) console.warn(`Possible duplicate payment: day: ${day}, category: ${category}, amount=${amount}`);
-        payments.push({id, name, category, amount, date: parsedDate, period, day});
-        payments = payments.sort(descendingDay);
-        save();
-        return true;
-      } catch (e) {
-        alert(e.message + ` in record ${name}, ${date}, ${category}, ${amount}`);
-      }
-    }
-    function validatePayment(name, date, category, amount) {
-      if (!date) throw new Error(`Date missing in record ${name}, ${date}, ${category}, ${amount}`);
-      if (!name) throw new Error(`Text missing in record ${name}, ${date}, ${category}, ${amount}`);
-      if (!category) throw new Error(`Category missing in record ${name}, ${date}, ${category}, ${amount}`);
-      if (isNaN(parseFloat(amount))) throw new Error(`Amount must be a number in record ${name}, ${date}, ${category}, ${amount}`);
-      return true;
-    }
-
-    function deletePayment(id) {
-      if (!confirm("Definitely delete?")) return;
-      payments = payments.filter(payment => payment.id !== id);
-      save();
-      listPayments();
-    }
-
-    function listPayments(compareMode) {
-      const filteredPeriod = elPeriodFilter.value;
-      const filteredPeriod2 = elPeriodFilter2.value;
-      const filteredPayments = payments.filter(payment => !filteredPeriod || payment.period === filteredPeriod);
-      const sumOfPayments = filteredPayments.map(a => a.amount).reduce((a, c) => a + c, 0);
-      elTotal.innerHTML = 'CHF ' + sumOfPayments.toFixed(2);
-      let html = '<ion-grid fixed="true">';
-      filteredPayments.forEach(payment => {
-        html += `<ion-row><ion-col size="2">${fmtDate(payment.date)}</ion-col><ion-col>${payment.name}</ion-col><ion-col size="3">${parseFloat(payment.amount).toFixed(2)} </ion-col><ion-col size="1"><a href="javascript:deletePayment('${payment.id}')"><ion-icon name="trash-outline"></ion-icon></a></ion-row>`;
-      });
-      html += '</ion-grid>';
-      elPayments.innerHTML = html;
-      if (filteredPeriod || filteredPeriod2) resetChart();
-      if (filteredPeriod) chartPayments(filteredPeriod, 'blue');
-      if (filteredPeriod2) chartPayments(filteredPeriod2, 'red', false);
-    }
-
-    function updateLists(per1, per2) {
-      updatePeriods(per1, per2);
-      updateCategories();
-    }
-    function updatePeriods(per1, per2) {
-      let periods = Array.from(new Set(payments.map(p => p.period).sort(descending)));
-      elPeriodFilter.innerHTML = `<ion-select-option value="">-period 1-</ion-select-option>${periods.map(period => `<ion-select-option ${period === per1 ? 'selected' : ''} value="${period}">${period}</ion-select-option>`).join('\n')}`;
-      elPeriodFilter.value = per1;
-      elPeriodFilter2.innerHTML = `<ion-select-option value="">-period 2-</ion-select-option>${periods.map(period => `<ion-select-option ${period === per2 ? 'selected' : ''} value="${period}">${period}</ion-select-option>`).join('\n')}`;
-      elPeriodFilter2.value = per2;
-    }
-    function updateCategories(cat) {
-      let categories = Array.from(new Set(payments.map(p => p.category).sort(ascending)));
-      elCategoryFilter.innerHTML = `<ion-select-option value="">-category-</ion-select-option>${categories.map(category => `<ion-select-option ${category === cat ? 'selected' : ''} value="${category}">${category}</ion-select-option>`).join('\n')}`;
-    }
-
-    function chartPayments(filteredPeriod, col) {
-      let periodPayments = payments.filter(payment => payment.period === filteredPeriod);
-      let sum = 0;
-      const days = getDaysOfMonth(filteredPeriod);
-      let colour = {
-        red: 'rgba(255, 0, 0, 0.5)',
-        green: 'rgba(0, 255, 0, 0.5)',
-        blue: 'rgba(0, 0, 255, 0.5)',
-      }[col];
-      days.forEach(day => {
-        if (new Date(day) > new Date()) return;
-        const dayPayments = periodPayments.filter(payment => payment.day === day);
-        const daySum = dayPayments.reduce((acc, payment) => acc + payment.amount, 0);
-        sum += daySum;
-        bar(days.indexOf(day), sum, colour);
-      });
-    }
-
-    function saveSettings(frm) {
-      let budget = isNaN(parseFloat(frm.budget.value)) ? 0 : parseFloat(frm.budget.value);
-      if (!budget) return alert('Invalid budget');
-      optGraphType = frm.graphType.options[frm.graphType.selectedIndex].value;
-      localStorage.setItem('budget', budget);
-      localStorage.setItem('graphtype', optGraphType);
-      MONTHLY_BUDGET = budget;
-      resetChart();
-      listPayments();
-    }
-    function doImport(frm) {
-      try {
-        const importData = frm.import.value;
-        if (!importData) throw new Error('No data to import');
-        let lines = importData.split('\n');
-        if (!lines.length) throw new Error('No data to import');
-        const headers = lines[0].split('\t')
-        if (headers[0] !== 'Date' || headers[1] !== 'Text' || headers[2] !== 'Amount' || headers[3] !== 'Category') throw new Error('Headers mismatch: Should be TSV: Date, Text, Amount, Category');
-        lines = lines.slice(1).filter(l => !!l.trim());
-        let success = 0;
-        const validPayments = lines
-          .map((line, i) => {
-            if (line.trim() === '') return null;
-            const parts = line.split('\t');
-            if (parts.length < 4) throw new Error(`Data mismatch: Should be TSV: Date, Text, Amount, Category (Line ${i}): ${line}`);
-            let [date, name, amount, category] = parts;
-            name = name.replace(/^"/g, '').replace(/"$/g, '');
-            if (!validatePayment(name, new Date(date), category, amount))
-              return null;
-            return {name, amount, category, date};
-          })
-          .filter(payment => !!payment);
-
-        if (validPayments.length < lines.length) return alert('Cancelling due to invalid payments found!');
-
-        validPayments.forEach(payment => {
-          if (savePayment(payment)) success++;
+      function init() {
+        if (!localStorage.getItem("payments")) localStorage.setItem("payments", "[]");
+        payments = JSON.parse(localStorage.getItem("payments"));
+        if (payments.length == 0 && confirm("No payments found. Load example data?")) {
+          doExample();
+          doImport(document.getElementById("frmImport"));
+        }
+        payments.forEach((payment) => {
+          payment.date = new Date(payment.date);
+          payment.amount = parseFloat(payment.amount, 10);
+          payment.period = formatDate(payment.date, "y-M");
+          payment.day = formatDate(payment.date, "y-M-d");
         });
+        let firstOfMonth = new Date(formatDate(new Date(), "y-M") + "-01");
+        firstOfMonth.setTime(firstOfMonth.getTime() - 24 * 60 * 60 * 1000);
+        let lastPeriod = formatDate(firstOfMonth, "y-M");
+        updateLists(formatDate(new Date(), "y-M"), lastPeriod);
         listPayments();
-        updateLists();
-        alert(`Imported ${success}/${lines.length} payments successfully`);
-
-      } catch (e) {
-        console.log(e.stack);
-        alert(`Validation Error: ${e.message}`);
-        return;
+        //elDate.value = formatDate(new Date(), "y-M-d");
+        document.getElementById("budget").value = MONTHLY_BUDGET;
+        document.getElementById("max").value = MAX_SPEND;
+        document.getElementById("graphType").value = optGraphType;
       }
-    }
 
-    function doExample() {
-      document.getElementById('frmImport').import.value = [
-        'Date\tText\tAmount\tCategory',
-        '2025-01-01\t"Food"\t200\tFood',
-        '2025-01-02\t"Rent Costs"\t1000\tFlat',
-        '2025-01-03\t"Dog Food"\t100\tPets',
-        '2025-01-04\t"SwissLife"\t100\tPension',
-        '2025-01-05\t"Car Insurance"\t100\tInsurance',
-        '2025-02-01\t"Food"\t100\tFood',
-        '2025-02-02\t"Rent Costs"\t1000\tFlat',
-        '2025-02-03\t"Dog Food"\t80\tPets',
-        '2025-02-04\t"SwissLife"\t10\tPension',
-        '2025-02-05\t"Car Insurance"\t10\tInsurance',
-      ].join('\n');
-    }
-    function doClear() {
-      if (!confirm("Definitely clear all payments?")) return;
-      payments = [];
-    }
-
-    function resetChart() {
-      ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-      ctx.fillStyle = 'white';
-      ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-      ctx.font = '8pt sans-serif';
-      ctx.strokeStyle = 'gray';
-      ctx.lineWidth = 1;
-      const LINES = Math.ceil(MAX_SPEND / 1000);
-      ctx.fillStyle = "#435a6b";
-      for(let i = 0; i < LINES; i++) {
-        ctx.fillText(1000 * (LINES - i), 0, i * CANVAS_HEIGHT / LINES);
-        ctx.beginPath();
-        ctx.moveTo(0, i * CANVAS_HEIGHT / LINES);
-        ctx.lineTo(CANVAS_WIDTH, i * CANVAS_HEIGHT / LINES);
-        ctx.stroke();
+      function postPayment(frm) {
+        const o = Object.assign(...Array.from(new FormData(frm).entries(), ([x, y]) => ({ [x]: y })));
+        savePayment(o);
+        showMessage(`Payment ${o.amount} ${o.name} (${o.category}) saved`);
+        listPayments();
+        return false;
       }
-      // Draw budget line
-      const filteredPeriod = elPeriodFilter.value;
-      const days = getDaysOfMonth(formatDate(new Date(), 'y-')+'01');
-      const dailyBudget = MONTHLY_BUDGET / days.length;
-      days.forEach((day, i) => {
-        bar(days.indexOf(day), (i + 1)*dailyBudget, 'rgba(100, 100, 100, 0.5)');
-      });
-    }
+      function showMessage(msg) {
+        elToast.message = msg;
+        elToast.present();
+      }
+      function savePayment({ name, date, category, amount }) {
+        const parsedDate = new Date(date);
+        try {
+          validatePayment(name, parsedDate, category, amount);
+          const id = randomId(length); //new Date().toISOString().replace(/[T:Z\-\.]/g, '');
+          const period = formatDate(parsedDate, "y-M");
+          const day = formatDate(parsedDate, "y-M-d");
+          amount = parseFloat(amount);
+          if (payments.find((p) => p.day === day && p.category === category && p.amount === amount)) console.warn(`Possible duplicate payment: day: ${day}, category: ${category}, amount=${amount}`);
+          payments.push({ id, name, category, amount, date: day, period, day });
+          payments = payments.sort(descendingDay);
+          save();
+          return true;
+        } catch (e) {
+          alert(e.message + ` in record ${name}, ${date}, ${category}, ${amount}`);
+        }
+      }
+      function validatePayment(name, date, category, amount) {
+        if (!date) throw new Error(`Date missing in record ${name}, ${date}, ${category}, ${amount}`);
+        if (!name) throw new Error(`Text missing in record ${name}, ${date}, ${category}, ${amount}`);
+        if (!category) throw new Error(`Category missing in record ${name}, ${date}, ${category}, ${amount}`);
+        if (isNaN(parseFloat(amount))) throw new Error(`Amount must be a number in record ${name}, ${date}, ${category}, ${amount}`);
+        return true;
+      }
 
-    function bar(x, h, col) {
-      ctx.fillStyle = col;
-      const W = CANVAS_WIDTH / 32;
-      const Y = (h * CANVAS_HEIGHT) / MAX_SPEND;
-      if (optGraphType === 'line') ctx.fillRect(x * W, CANVAS_HEIGHT-Y, W, 2);
-      else ctx.fillRect(x * W, CANVAS_HEIGHT-Y, W, Y);
-    }
+      function deletePayment(id) {
+        if (!confirm("Definitely delete?")) return;
+        payments = payments.filter((payment) => payment.id !== id);
+        save();
+        listPayments();
+      }
 
-    function getDaysOfMonth(period) {
-      if (!period) return [];
-      const year = parseInt(period.substring(0, 4), 10);
-      const month = parseInt(period.substring(5, 7), 10);
-      const dayCount = daysInMonth(year, month);
-      return new Array(dayCount).fill(0).map((_, i) => formatDate(new Date(year, month - 1, i + 1), "y-M-d"));
-    }
+      function listPayments({ search = "" } = {}) {
+        const filteredPeriod = elPeriodFilter.value;
+        const filteredPeriod2 = elPeriodFilter2.value;
+        const filteredPayments = payments.filter((payment) => !filteredPeriod || payment.period === filteredPeriod).filter(searchFilter(search));
+        const sumOfPayments = filteredPayments.map((a) => a.amount).reduce((a, c) => a + c, 0);
+        let percentage = sumOfPayments / MONTHLY_BUDGET;
+        elProgress.value = percentage;
+        if (percentage > 1) elProgress.color = "danger";
+        else elProgress.color = "primary";
+        document.getElementById("percentage").innerHTML = Math.floor(percentage * 100) + "%";
+        elTotal.innerHTML = "CHF " + sumOfPayments.toFixed(2);
+        let html = '<ion-grid fixed="true">';
+        filteredPayments
+          .map((payment) => ({ ...payment, amountFormatted: payment.amount.toFixed(2) }))
+          .forEach((payment) => {
+            html += `<ion-row><ion-col size="2">${fmtDate(payment.date)}</ion-col><ion-col size="6" class="ion-text-nowrap">${payment.name}</ion-col><ion-col size="3" class="ion-text-right">${
+              payment.amountFormatted
+            }</ion-col><ion-col size="1"><a href="javascript:deletePayment('${payment.id}')"><ion-icon name="trash-outline"></ion-icon></a></ion-row>`;
+          });
+        html += "</ion-grid>";
+        elPayments.innerHTML = html;
+        if (filteredPeriod || filteredPeriod2) resetChart();
+        if (filteredPeriod) chartPayments(filteredPeriod, "blue");
+        if (filteredPeriod2) chartPayments(filteredPeriod2, "red", false);
+      }
+      function searchFilter(searchTerm) {
+        return (payment) => {
+          return !searchTerm || payment.name.toLowerCase().includes(searchTerm.toLowerCase()) || payment.category.toLowerCase().includes(searchTerm.toLowerCase());
+        };
+      }
+      function updateLists(per1, per2) {
+        updatePeriods(per1, per2);
+        updateCategories();
+      }
+      function updatePeriods(per1, per2) {
+        let periods = Array.from(new Set(payments.map((p) => p.period).sort(descending)));
+        elPeriodFilter.innerHTML = periods.map((period) => `<ion-select-option ${period === per1 ? "selected" : ""} value="${period}">${period}</ion-select-option>`).join("\n");
+        elPeriodFilter.value = per1;
+        elPeriodFilter2.innerHTML = periods.map((period) => `<ion-select-option ${period === per2 ? "selected" : ""} value="${period}">${period}</ion-select-option>`).join("\n");
+        elPeriodFilter2.value = per2;
+      }
+      function updateCategories(cat) {
+        let categories = Array.from(new Set(payments.map((p) => p.category).sort(ascending)));
+        elCategoryFilter.innerHTML = categories.map((category) => `<ion-select-option ${category === cat ? "selected" : ""} value="${category}">${category}</ion-select-option>`).join("\n");
+      }
 
-    function daysInMonth(year, month) {
-      return new Date(year, month, 0).getDate();
-    }
+      function chartPayments(filteredPeriod, col) {
+        let periodPayments = payments.filter((payment) => payment.period === filteredPeriod);
+        let sum = 0;
+        const days = getDaysOfMonth(filteredPeriod);
+        let colour = {
+          red: "rgba(255, 0, 0, 0.5)",
+          green: "rgba(0, 255, 0, 0.5)",
+          blue: "rgba(0, 0, 255, 0.5)",
+        }[col];
+        days.forEach((day) => {
+          if (new Date(day) > new Date()) return;
+          const dayPayments = periodPayments.filter((payment) => payment.day === day);
+          const daySum = dayPayments.reduce((acc, payment) => acc + payment.amount, 0);
+          sum += daySum;
+          bar(days.indexOf(day), sum, colour);
+        });
+      }
 
-    function formatDate(date, format = 'Y-m-d') {
-      const parts = {
-        y: date.getFullYear().toString(),
-        M: ('0' + (date.getMonth() + 1)).toString().slice(-2),
-        d: ('0' + date.getDate()).toString().slice(-2),
-        h: ('0' + date.getHours()).toString().slice(-2),
-        m: ('0' + date.getMinutes()).toString().slice(-2),
-        s: ('0' + date.getSeconds()).toString().slice(-2)
-      };
+      function saveSettings(frm) {
+        let budget = isNaN(parseFloat(frm.budget.value)) ? 0 : parseFloat(frm.budget.value);
+        if (!budget) return alert("Invalid budget");
+        let max = isNaN(parseFloat(frm.max.value)) ? 0 : parseFloat(frm.max.value);
+        if (!max) return alert("Invalid max spend");
+        optGraphType = frm.graphType.value;
+        localStorage.setItem("budget", budget);
+        localStorage.setItem("max", max);
+        localStorage.setItem("graphtype", optGraphType);
+        MONTHLY_BUDGET = budget;
+        MAX_SPEND = max;
+        resetChart();
+        listPayments();
+      }
+      function doSearchPayments(el) {
+        listPayments({ search: el.value });
+      }
+      function doImport(frm) {
+        try {
+          const importData = frm.import.value;
+          if (!importData) throw new Error("No data to import");
+          let lines = importData.split("\n");
+          if (!lines.length) throw new Error("No data to import");
+          const headers = lines[0].split("\t");
+          if (headers[0] !== "Date" || headers[1] !== "Text" || headers[2] !== "Amount" || headers[3] !== "Category") throw new Error("Headers mismatch: Should be TSV: Date, Text, Amount, Category");
+          lines = lines.slice(1).filter((l) => !!l.trim());
+          let success = 0;
+          const validPayments = lines
+            .map((line, i) => {
+              if (line.trim() === "") return null;
+              const parts = line.split("\t");
+              if (parts.length < 4) throw new Error(`Data mismatch: Should be TSV: Date, Text, Amount, Category (Line ${i}): ${line}`);
+              let [date, name, amount, category] = parts;
+              name = name.replace(/^"/g, "").replace(/"$/g, "");
+              if (!validatePayment(name, new Date(date), category, amount)) return null;
+              return { name, amount, category, date };
+            })
+            .filter((payment) => !!payment);
 
-      const modifiers = Object.keys(parts).join('');
-      const reDate = new RegExp(`(?<!\\\\)[${modifiers}]`, 'g');
-      const reEscape = new RegExp(`\\\\([${modifiers}])`, 'g');
+          if (validPayments.length < lines.length) return alert("Cancelling due to invalid payments found!");
 
-      return format
-        .replace(reDate, $0 => parts[$0])
-        .replace(reEscape, ($0, $1) => $1);
-    }
+          validPayments.forEach((payment) => {
+            if (savePayment(payment)) success++;
+          });
+          listPayments();
+          updateLists();
+          alert(`Imported ${success}/${lines.length} payments successfully`);
+        } catch (e) {
+          console.log(e.stack);
+          alert(`Validation Error: ${e.message}`);
+          return;
+        }
+      }
 
-    function randomId(length) {
-      return Math.random().toString(36).replace('0.', '');
-  }
+      function doExample() {
+        document.getElementById("frmImport").import.value = [
+          "Date\tText\tAmount\tCategory",
+          '2025-01-01\t"Food"\t180.25\tFood',
+          '2025-01-02\t"Rent Costs"\t1000\tFlat',
+          '2025-01-03\t"Dog Food"\t100\tPets',
+          '2025-01-04\t"SwissLife"\t100\tPension',
+          '2025-01-05\t"Car Insurance"\t100\tInsurance',
+          '2025-02-01\t"Food"\t100\tFood',
+          '2025-02-02\t"Rent Costs"\t1000\tFlat',
+          '2025-02-03\t"Dog Food"\t80\tPets',
+          '2025-02-04\t"SwissLife"\t10\tPension',
+          '2025-02-05\t"Car Insurance"\t10\tInsurance',
+        ].join("\n");
+        showMessage("Example data loaded. Click Import to add it");
+      }
+      function doClear() {
+        if (!confirm("Definitely clear all payment data?")) return;
+        payments = [];
+        save();
+        listPayments();
+        showMessage("Payments cleared");
+      }
 
-    function ascending(a, b) {
-      return a > b ? 1 : -1;
-    }
+      function resetChart() {
+        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        ctx.font = "8pt sans-serif";
+        ctx.strokeStyle = "gray";
+        ctx.lineWidth = 1;
+        let LineGap = 500;
+        const LINES = Math.ceil(MAX_SPEND / LineGap);
+        ctx.fillStyle = "#435a6b";
+        for (let i = 0; i < LINES; i++) {
+          ctx.fillText(LineGap * (LINES - i), 0, (i * CANVAS_HEIGHT) / LINES);
+          ctx.beginPath();
+          ctx.moveTo(0, (i * CANVAS_HEIGHT) / LINES);
+          ctx.lineTo(CANVAS_WIDTH, (i * CANVAS_HEIGHT) / LINES);
+          ctx.stroke();
+        }
+        // Draw budget line
+        const filteredPeriod = elPeriodFilter.value;
+        const days = getDaysOfMonth(formatDate(new Date(), "y-") + "01");
+        const dailyBudget = MONTHLY_BUDGET / days.length;
+        days.forEach((day, i) => {
+          bar(days.indexOf(day), (i + 1) * dailyBudget, "rgba(100, 100, 100, 0.5)");
+        });
+      }
 
-    function descending(a, b) {
-      return a < b ? 1 : -1;
-    }
-    function descendingDay(a, b) {
-      return a.day < b.day ? 1 : -1;
-    }
+      function bar(x, h, col) {
+        ctx.fillStyle = col;
+        const W = CANVAS_WIDTH / 32;
+        const Y = (h * CANVAS_HEIGHT) / MAX_SPEND;
+        if (optGraphType === "line") ctx.fillRect(x * W, CANVAS_HEIGHT - Y, W, 2);
+        else ctx.fillRect(x * W, CANVAS_HEIGHT - Y, W, Y);
+      }
 
-    function fmtDate(dt) {
-      //return dt.toLocaleString('en-us', {weekday: "short", year: "numeric", month: "short", day: "numeric"});
-      return dt.toLocaleString('en-us', {month: "short", day: "numeric"});
-    }
+      function getDaysOfMonth(period) {
+        if (!period) return [];
+        const year = parseInt(period.substring(0, 4), 10);
+        const month = parseInt(period.substring(5, 7), 10);
+        const dayCount = daysInMonth(year, month);
+        return new Array(dayCount).fill(0).map((_, i) => formatDate(new Date(year, month - 1, i + 1), "y-M-d"));
+      }
 
-    function save() {
-      localStorage.setItem('payments', JSON.stringify(payments));
-    }
+      function daysInMonth(year, month) {
+        return new Date(year, month, 0).getDate();
+      }
 
-    window.addEventListener('load', init);
-  </script>
+      function formatDate(date, format = "Y-m-d") {
+        const parts = {
+          y: date.getFullYear().toString(),
+          M: ("0" + (date.getMonth() + 1)).toString().slice(-2),
+          d: ("0" + date.getDate()).toString().slice(-2),
+          h: ("0" + date.getHours()).toString().slice(-2),
+          m: ("0" + date.getMinutes()).toString().slice(-2),
+          s: ("0" + date.getSeconds()).toString().slice(-2),
+        };
 
-</body>
+        const modifiers = Object.keys(parts).join("");
+        const reDate = new RegExp(`(?<!\\\\)[${modifiers}]`, "g");
+        const reEscape = new RegExp(`\\\\([${modifiers}])`, "g");
 
+        return format.replace(reDate, ($0) => parts[$0]).replace(reEscape, ($0, $1) => $1);
+      }
+
+      function randomId(length) {
+        return Math.random().toString(36).replace("0.", "");
+      }
+
+      function ascending(a, b) {
+        return a > b ? 1 : -1;
+      }
+
+      function descending(a, b) {
+        return a < b ? 1 : -1;
+      }
+      function descendingDay(a, b) {
+        return a.day < b.day ? 1 : -1;
+      }
+
+      function fmtDate(dt) {
+        //return dt.toLocaleString('en-us', {weekday: "short", year: "numeric", month: "short", day: "numeric"});
+        return dt.toLocaleString("en-us", { month: "short", day: "numeric" });
+      }
+
+      function save() {
+        localStorage.setItem("payments", JSON.stringify(payments));
+      }
+
+      window.addEventListener("load", init);
+    </script>
+  </body>
 </html>

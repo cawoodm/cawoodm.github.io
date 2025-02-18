@@ -18,7 +18,7 @@
 </head>
 
 <body class="b">
-  <h1>Monitor your Payments</h1>
+  <h1>Expense Tracker</h1>
   <details>
     <summary>Input</summary>
     <form id="post" onsubmit="event.preventDefault(); postPayment(this)">
@@ -39,7 +39,7 @@
     <canvas id="canvas" style="border:1px solid grey;"></canvas>
   </div>
   <details>
-    <summary>Details</summary>
+    <summary>Details <span id="total"></span></summary>
     <div id="payments"></div>
   </details>
   <details>
@@ -70,7 +70,8 @@
     Payment: {id, name, date, category, amount}
     */
     let payments = [];
-    const elPayments = document.querySelector('div#payments');
+    const elPayments = document.querySelector('#payments');
+    const elTotal = document.querySelector('#total');
     const elCanvas = document.getElementById("canvas");
     elCanvas.width = CANVAS_WIDTH;
     elCanvas.height = CANVAS_HEIGHT;
@@ -145,10 +146,10 @@
     function listPayments(compareMode) {
       const filteredPeriod = elPeriodFilter.value;
       const filteredPeriod2 = elPeriodFilter2.value;
-      //if (elPeriodFilter.selectedIndex === 0) resetChart();
-      elPayments.innerHTML = '';
-      let html = '<table>';
       const filteredPayments = payments.filter(payment => !filteredPeriod || payment.period === filteredPeriod);
+      const sumOfPayments = filteredPayments.map(a => a.amount).reduce((a, c) => a + c, 0);
+      elTotal.innerHTML = 'CHF ' + sumOfPayments.toFixed(2);
+      let html = '<table>';
       filteredPayments.forEach(payment => {
         html += `<tr><td>${fmtDate(payment.date)} - ${payment.name} - ${parseFloat(payment.amount).toFixed(2)} <td><a href="javascript:deletePayment('${payment.id}')">X</a></tr>`;
       });

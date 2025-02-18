@@ -12,7 +12,7 @@
 <body>
   <ion-app>
     <ion-accordion-group value="overview">
-      <ion-accordion value="overview" toggle-icon="pie-chart">
+      <ion-accordion value="overview" toggle-icon="pie-chart" toggle-icon-slot="start">
         <ion-item slot="header" color="light">
           <ion-label>Overview</ion-label>
         </ion-item>
@@ -23,7 +23,7 @@
           <canvas id="canvas" style="border:1px solid grey;"></canvas>
         </div>
       </ion-accordion>
-      <ion-accordion value="expenses">
+      <ion-accordion value="expenses" toggle-icon="cash-outline" toggle-icon-slot="start">
         <ion-item slot="header" color="light">
           <ion-label>Entry</ion-label>
         </ion-item>
@@ -51,14 +51,16 @@
           </form>
         </div>
       </ion-accordion>
-      <ion-accordion value="payments">
+      <ion-accordion value="payments" toggle-icon="grid-outline" toggle-icon-slot="start">
         <ion-item slot="header" color="light">
           <ion-label>Expenses <span id="total"></span></ion-label>
         </ion-item>
-        <div class="ion-padding" slot="content" id="payments">
+        <div class="ion-padding" slot="content">
+          <ion-searchbar placeholder="Search payments"></ion-searchbar>
+          <div id="payments"></div>
         </div>
       </ion-accordion>
-      <ion-accordion value="import">
+      <ion-accordion value="import" toggle-icon="cloud-upload-outline" toggle-icon-slot="start">
         <ion-item slot="header" color="light">
           <ion-label>Data</ion-label>
         </ion-item>
@@ -71,7 +73,7 @@
           </form>
         </div>
       </ion-accordion>
-      <ion-accordion value="settings">
+      <ion-accordion value="settings" toggle-icon="cog-outline" toggle-icon-slot="start">
         <ion-item slot="header" color="light">
           <ion-label>Settings</ion-label>
         </ion-item>
@@ -90,12 +92,14 @@
         </div>
       </ion-accordion>
     </ion-accordion-group>
-    <span class="https://ionic.io/ionicons"></span>
-    <span class="https://github.com/ionic-team/ionicons/blob/4477c0251291dee6c2aeeebef8df928edf3e620f/src/data.json#L8051"></span>
-    
+
+    <ion-toast duration="5000" message="This toast will close in 5 seconds" id="toast"></ion-toast>
+
   </ion-app>
 
   <script>
+    // https://ionic.io/ionicons
+
     const CANVAS_WIDTH = Math.floor(window.innerWidth * 0.9);
     const CANVAS_HEIGHT = Math.floor(150 * CANVAS_WIDTH / 320);
     const MAX_SPEND = 3000;
@@ -117,6 +121,7 @@
     elPeriodFilter.addEventListener('ionChange', listPayments);
     const elPeriodFilter2 = document.querySelector('#periodFilter2');
     elPeriodFilter2.addEventListener('ionChange', listPayments);
+    const elToast = document.querySelector('#toast');
 
     function init() {
       if (!localStorage.getItem('payments')) localStorage.setItem('payments', '[]');
@@ -145,8 +150,13 @@
     function postPayment(frm) {
       const o = Object.assign(...Array.from(new FormData(frm).entries(), ([x,y]) => ({[x]:y})));
       savePayment(o);
+      showMessage(`Payment ${o.amount} ${o.name} (${o.category}) saved`);
       listPayments();
       return false;
+    }
+    function showMessage(msg) {
+      elToast.message = msg;
+      elToast.present();
     }
     function savePayment({name, date, category, amount}) {
       const parsedDate = new Date(date);

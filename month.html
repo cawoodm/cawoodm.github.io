@@ -12,6 +12,11 @@
       ion-textarea {
         border: 1px solid grey;
       }
+      @media (prefers-color-scheme: dark) {
+        input {
+          background-color: #888;
+        }
+      }
     </style>
   </head>
   <body>
@@ -61,7 +66,7 @@
             <ion-accordion value="expenses" toggle-icon="caret-down-circle" toggle-icon-slot="start">
               <ion-item slot="header" color="light"> <ion-label>Entry</ion-label><ion-icon name="cash-outline"></ion-icon> </ion-item>
               <div class="ion-padding" slot="content">
-                <form id="post" onsubmit="event.preventDefault(); postPayment(this)">
+                <form onsubmit="event.preventDefault(); postPayment(this)" id="expenses">
                   <ion-list>
                     <ion-item>
                       <p>Enter expenses here:</p>
@@ -73,9 +78,11 @@
                       <ion-input label="Amount" placeholder="12.99" name="amount" pattern="^\d*(\.\d{0,2})?$" size="4" required tabindex="2" />
                     </ion-item>
                     <ion-item>
-                      <ion-select name="category" id="categoryFilter" label="Category" required tabindex="3">
+                      <input name="category" list="categories" placeholder="Category" required tabindex="3" class="native-input sc-ion-input-md" />
+                      <datalist id="categories"></datalist>
+                      <!--<ion-select name="category" id="categoryFilter" label="Category" required tabindex="3">
                         <ion-select-option value="">Category</ion-select-option>
-                      </ion-select>
+                      </ion-select>-->
                     </ion-item>
                     <ion-item>
                       <ion-datetime-button datetime="date"></ion-datetime-button>
@@ -165,7 +172,7 @@
       elCanvas.width = CANVAS_WIDTH;
       elCanvas.height = CANVAS_HEIGHT;
       const ctx = elCanvas.getContext("2d");
-      const elDate = document.querySelector('form#post input[name="date"]');
+      const elDate = document.querySelector('form#expenses input[name="date"]');
       const elCategoryFilter = document.querySelector("#categoryFilter");
       const elPeriodFilter = document.querySelector("#periodFilter");
       elPeriodFilter.addEventListener("ionChange", listPayments);
@@ -173,11 +180,14 @@
       elPeriodFilter2.addEventListener("ionChange", listPayments);
       const elToast = document.querySelector("#toast");
       const elProgress = document.getElementById("progress");
+      const frmExpenses = document.getElementById("expenses");
 
       function init() {
         if (!localStorage.getItem("payments")) localStorage.setItem("payments", "[]");
         payments = JSON.parse(localStorage.getItem("payments"));
         setTimeout(() => {
+          // Some things only work in ionic after a 1s delay
+          frmExpenses.date.value = formatDate(new Date(), "y-M-d");
           if (payments.length == 0 && confirm("No payments found. Load example data?")) {
             loadExampleData();
             doImport();
@@ -219,7 +229,7 @@
           const day = formatDate(parsedDate, "y-M-d");
           amount = parseFloat(amount);
           if (payments.find((p) => p.day === day && p.category === category && p.amount === amount)) console.warn(`Possible duplicate payment: day: ${day}, category: ${category}, amount=${amount}`);
-          payments.push({ id, name, category, amount, date: day, period, day });
+          payments.push({ id, name, category, amount, date: parsedDate, period, day });
           payments = payments.sort(descendingDay);
           save();
           return true;
@@ -269,7 +279,7 @@
       }
       function searchFilter(searchTerm) {
         return (p) => {
-          return !searchTerm || [payment.name, p.category, p.amount, p.day].join(" ").toLowerCase().includes(searchTerm.toLowerCase());
+          return !searchTerm || [p.name, p.category, p.amount, p.day].join(" ").toLowerCase().includes(searchTerm.toLowerCase());
         };
       }
       function updateLists(per1, per2) {
@@ -285,7 +295,8 @@
       }
       function updateCategories(cat) {
         let categories = Array.from(new Set(payments.map((p) => p.category).sort(ascending)));
-        elCategoryFilter.innerHTML = categories.map((category) => `<ion-select-option ${category === cat ? "selected" : ""} value="${category}">${category}</ion-select-option>`).join("\n");
+        //elCategoryFilter.innerHTML = categories.map((category) => `<ion-select-option ${category === cat ? "selected" : ""} value="${category}">${category}</ion-select-option>`).join("\n");
+        document.getElementById("categories").innerHTML = categories.map((category) => `<option ${category === cat ? "selected" : ""} value="${category}">${category}</option>`).join("\n");
       }
 
       function chartPayments(filteredPeriod, col) {
@@ -444,7 +455,7 @@
         return new Date(year, month, 0).getDate();
       }
 
-      function formatDate(date, format = "Y-m-d") {
+      function formatDate(date, format = "y-M-d") {
         const parts = {
           y: date.getFullYear().toString(),
           M: ("0" + (date.getMonth() + 1)).toString().slice(-2),
@@ -482,7 +493,8 @@
       }
 
       function save() {
-        localStorage.setItem("payments", JSON.stringify(payments));
+        const paymentsCompressed = payments.map((p) => ({ id: p.id, name: p.name, date: formatDate(p.date), category: p.category, amount: p.amount }));
+        localStorage.setItem("payments", JSON.stringify(paymentsCompressed));
       }
 
       window.addEventListener("load", init);

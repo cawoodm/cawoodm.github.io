@@ -64,23 +64,23 @@
                 <form id="post" onsubmit="event.preventDefault(); postPayment(this)">
                   <ion-list>
                     <ion-item>
-                      <p>Enter a new expenses here:</p>
+                      <p>Enter expenses here:</p>
                     </ion-item>
                     <ion-item>
-                      <ion-input label="Text" placeholder="Groceries..." name="name" required />
+                      <ion-input label="Text" placeholder="Groceries..." name="name" required tabindex="1" />
                     </ion-item>
                     <ion-item>
-                      <ion-input label="Amount" placeholder="12.99" name="amount" pattern="^\d*(\.\d{0,2})?$" size="4" required />
+                      <ion-input label="Amount" placeholder="12.99" name="amount" pattern="^\d*(\.\d{0,2})?$" size="4" required tabindex="2" />
                     </ion-item>
                     <ion-item>
-                      <ion-select name="category" id="categoryFilter" label="Category" required>
+                      <ion-select name="category" id="categoryFilter" label="Category" required tabindex="3">
                         <ion-select-option value="">Category</ion-select-option>
                       </ion-select>
                     </ion-item>
                     <ion-item>
                       <ion-datetime-button datetime="date"></ion-datetime-button>
                       <ion-modal>
-                        <ion-datetime label="Date" name="date" type="date" required presentation="date" id="date"></ion-datetime>
+                        <ion-datetime label="Date" name="date" type="date" required presentation="date" id="date" tabindex="4"></ion-datetime>
                       </ion-modal>
                     </ion-item>
                     <ion-button type="submit">Add Expense</ion-button>
@@ -264,8 +264,8 @@
         html += "</ion-grid>";
         elPayments.innerHTML = html;
         if (filteredPeriod || filteredPeriod2) resetChart();
-        if (filteredPeriod) chartPayments(filteredPeriod, "blue");
         if (filteredPeriod2) chartPayments(filteredPeriod2, "red", false);
+        if (filteredPeriod) chartPayments(filteredPeriod, "blue");
       }
       function searchFilter(searchTerm) {
         return (p) => {

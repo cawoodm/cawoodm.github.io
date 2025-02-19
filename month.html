@@ -78,7 +78,10 @@
                       </ion-select>
                     </ion-item>
                     <ion-item>
-                      <ion-datetime label="Date" name="date" type="date" required presentation="date"></ion-datetime>
+                      <ion-datetime-button datetime="date"></ion-datetime-button>
+                      <ion-modal>
+                        <ion-datetime label="Date" name="date" type="date" required presentation="date" id="date"></ion-datetime>
+                      </ion-modal>
                     </ion-item>
                     <ion-button type="submit">Add Expense</ion-button>
                   </ion-list>

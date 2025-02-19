@@ -7,7 +7,7 @@
     <script type="module" src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.esm.js"></script>
     <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
-    <alink rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/palettes/dark.always.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/palettes/dark.system.css" />
     <style>
       ion-textarea {
         border: 1px solid grey;
@@ -99,8 +99,16 @@
             <ion-accordion value="import" toggle-icon="caret-down-circle" toggle-icon-slot="start">
               <ion-item slot="header" color="light"> <ion-label>Data</ion-label><ion-icon name="cloud-upload-outline"></ion-icon></ion-item>
               <div class="ion-padding" slot="content">
-                <form onsubmit="event.preventDefault(); doImport(this)" id="frmImport">
-                  <ion-textarea name="import" fill="outline" placeholder="Paste from Excel 4 columns: Date, Name, Amount, Category (.tsv tab-seperated)" rows="20"></ion-textarea>
+                <form onsubmit="event.preventDefault(); doImport()" id="frmImport">
+                  <ion-textarea
+                    name="import"
+                    fill="outline"
+                    placeholder="Paste from Excel 4 columns: Date, Text, Amount, Category (.tsv tab-seperated)"
+                    rows="20"
+                    id="import"
+                    value="Date,Text,Amount,Category
+2025-01-01,Groceries,180.25,Food"
+                  ></ion-textarea>
                   <ion-button type="submit" value="Import" expand="block">Import</ion-button>
                   <ion-button onclick="doExample()" color="warning" expand="block">Example Data</ion-button>
                   <ion-button onclick="doClear()" color="danger" expand="block"><ion-icon slot="start" name="trash-outline"></ion-icon>Clear All Data</ion-button>
@@ -112,7 +120,7 @@
               <ion-item slot="header" color="light"> <ion-label>Settings </ion-label><ion-icon name="cog-outline"></ion-icon> </ion-item>
               <div class="ion-padding" slot="content">
                 <form onsubmit="event.preventDefault(); saveSettings(this)" id="frmSettings">
-                  <ion-list>
+                  <ion-list inset="true">
                     <ion-item>
                       <ion-input name="budget" label="Monthly Budget" value="2000" required id="budget"></ion-input>
                     </ion-item>
@@ -140,6 +148,7 @@
     <script>
       // https://ionic.io/ionicons
 
+      const DARK_MODE = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
       const CANVAS_WIDTH = Math.floor(window.innerWidth * 0.9);
       const CANVAS_HEIGHT = Math.floor((150 * CANVAS_WIDTH) / 320);
       let MAX_SPEND = parseFloat(localStorage.getItem("max") || 3000);
@@ -165,10 +174,12 @@
       function init() {
         if (!localStorage.getItem("payments")) localStorage.setItem("payments", "[]");
         payments = JSON.parse(localStorage.getItem("payments"));
-        if (payments.length == 0 && confirm("No payments found. Load example data?")) {
-          doExample();
-          doImport(document.getElementById("frmImport"));
-        }
+        setTimeout(() => {
+          if (payments.length == 0 && confirm("No payments found. Load example data?")) {
+            loadExampleData();
+            doImport();
+          }
+        }, 1000);
         payments.forEach((payment) => {
           payment.date = new Date(payment.date);
           payment.amount = parseFloat(payment.amount, 10);
@@ -180,7 +191,6 @@
         let lastPeriod = formatDate(firstOfMonth, "y-M");
         updateLists(formatDate(new Date(), "y-M"), lastPeriod);
         listPayments();
-        //elDate.value = formatDate(new Date(), "y-M-d");
         document.getElementById("budget").value = MONTHLY_BUDGET;
         document.getElementById("max").value = MAX_SPEND;
         document.getElementById("graphType").value = optGraphType;
@@ -255,8 +265,8 @@
         if (filteredPeriod2) chartPayments(filteredPeriod2, "red", false);
       }
       function searchFilter(searchTerm) {
-        return (payment) => {
-          return !searchTerm || payment.name.toLowerCase().includes(searchTerm.toLowerCase()) || payment.category.toLowerCase().includes(searchTerm.toLowerCase());
+        return (p) => {
+          return !searchTerm || [payment.name, p.category, p.amount, p.day].join(" ").toLowerCase().includes(searchTerm.toLowerCase());
         };
       }
       function updateLists(per1, per2) {
@@ -310,23 +320,34 @@
       function doSearchPayments(el) {
         listPayments({ search: el.value });
       }
-      function doImport(frm) {
+      function doImport() {
+        const frm = document.getElementById("frmImport");
         try {
           const importData = frm.import.value;
           if (!importData) throw new Error("No data to import");
           let lines = importData.split("\n");
           if (!lines.length) throw new Error("No data to import");
-          const headers = lines[0].split("\t");
-          if (headers[0] !== "Date" || headers[1] !== "Text" || headers[2] !== "Amount" || headers[3] !== "Category") throw new Error("Headers mismatch: Should be TSV: Date, Text, Amount, Category");
+          let SEP = "\t";
+          let headers = lines[0].split(SEP);
+          if (headers.length != 4) {
+            SEP = ",";
+            headers = lines[0].split(SEP);
+            if (headers.length != 4) throw new Error("Header mismatch: Should be 4 comma- (*.csv) or tab-separated (*.tsv) headers: Date, Text, Amount, Category");
+          }
+          if (headers[0].trim() !== "Date" || headers[1].trim() !== "Text" || headers[2].trim() !== "Amount" || headers[3].trim() !== "Category")
+            throw new Error("Headers mismatch: Should be: Date, Text, Amount, Category");
           lines = lines.slice(1).filter((l) => !!l.trim());
           let success = 0;
           const validPayments = lines
             .map((line, i) => {
               if (line.trim() === "") return null;
-              const parts = line.split("\t");
-              if (parts.length < 4) throw new Error(`Data mismatch: Should be TSV: Date, Text, Amount, Category (Line ${i}): ${line}`);
+              const parts = line.split(SEP);
+              if (parts.length < 4) throw new Error(`Data mismatch: Should be comma- (*.csv) or tab-separated (*.tsv): Date, Text, Amount, Category (Line ${i}): ${line}`);
               let [date, name, amount, category] = parts;
-              name = name.replace(/^"/g, "").replace(/"$/g, "");
+              date = date.trim();
+              name = name.replace(/^"/g, "").replace(/"$/g, "").trim();
+              amount = amount.trim();
+              category = category.trim();
               if (!validatePayment(name, new Date(date), category, amount)) return null;
               return { name, amount, category, date };
             })
@@ -347,20 +368,23 @@
         }
       }
 
-      function doExample() {
+      function loadExampleData() {
         document.getElementById("frmImport").import.value = [
-          "Date\tText\tAmount\tCategory",
-          '2025-01-01\t"Food"\t180.25\tFood',
-          '2025-01-02\t"Rent Costs"\t1000\tFlat',
-          '2025-01-03\t"Dog Food"\t100\tPets',
-          '2025-01-04\t"SwissLife"\t100\tPension',
-          '2025-01-05\t"Car Insurance"\t100\tInsurance',
-          '2025-02-01\t"Food"\t100\tFood',
-          '2025-02-02\t"Rent Costs"\t1000\tFlat',
-          '2025-02-03\t"Dog Food"\t80\tPets',
-          '2025-02-04\t"SwissLife"\t10\tPension',
-          '2025-02-05\t"Car Insurance"\t10\tInsurance',
+          "Date,Text,Amount,Category",
+          '2025-01-01,"Food",180.25,Food',
+          '2025-01-02,"Rent Costs",1000,Flat',
+          '2025-01-03,"Dog Food",100,Pets',
+          '2025-01-04,"SwissLife",100,Pension',
+          '2025-01-05,"Car Insurance",100,Insurance',
+          '2025-02-01,"Food",100,Food',
+          '2025-02-02,"Rent Costs",1000,Flat',
+          '2025-02-03,"Dog Food",80,Pets',
+          '2025-02-04,"SwissLife",10,Pension',
+          '2025-02-05,"Car Insurance",10,Insurance',
         ].join("\n");
+      }
+      function doExample() {
+        loadExampleData();
         showMessage("Example data loaded. Click Import to add it");
       }
       function doClear() {
@@ -373,14 +397,14 @@
 
       function resetChart() {
         ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        ctx.fillStyle = "white";
+        ctx.fillStyle = DARK_MODE ? "#333" : "white";
         ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         ctx.font = "8pt sans-serif";
-        ctx.strokeStyle = "gray";
+        ctx.strokeStyle = DARK_MODE ? "#ccc" : "gray";
+        ctx.fillStyle = ctx.strokeStyle;
         ctx.lineWidth = 1;
         let LineGap = 500;
         const LINES = Math.ceil(MAX_SPEND / LineGap);
-        ctx.fillStyle = "#435a6b";
         for (let i = 0; i < LINES; i++) {
           ctx.fillText(LineGap * (LINES - i), 0, (i * CANVAS_HEIGHT) / LINES);
           ctx.beginPath();

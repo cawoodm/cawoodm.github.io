@@ -21,138 +21,127 @@
   </head>
   <body>
     <ion-app>
-      <div class="ion-page" id="main-content">
-        <ion-menu content-id="main-content">
-          <ion-header>
-            <ion-toolbar>
-              <ion-title>Settings</ion-title>
-            </ion-toolbar>
-          </ion-header>
-          <ion-content class="ion-padding"> </ion-content>
-        </ion-menu>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+          <ion-title><ion-icon name="stats-chart-outline"></ion-icon> Expense Tracker</ion-title>
+        </ion-toolbar>
+      </ion-header>
 
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="start">
-              <ion-menu-button></ion-menu-button>
-            </ion-buttons>
-            <ion-title><ion-icon name="stats-chart-outline"></ion-icon> Expense Tracker</ion-title>
-          </ion-toolbar>
-        </ion-header>
+      <ion-content>
+        <ion-accordion-group value="overview" multiple="true">
+          <ion-accordion value="overview" toggle-icon="caret-down-circle" toggle-icon-slot="start">
+            <ion-item slot="header" color="light">
+              <ion-label>Overview <span id="percentage"></span></ion-label><ion-icon name="pie-chart"></ion-icon>
+            </ion-item>
+            <div class="ion-padding" slot="content">
+              <ion-progress-bar id="progress" value="0.30"></ion-progress-bar>
+              <ion-grid>
+                <ion-row>
+                  <ion-col>
+                    <ion-select id="periodFilter" style="background-color: #8888dd" label="Period"></ion-select>
+                  </ion-col>
+                  <ion-col>
+                    <ion-select id="periodFilter2" style="background-color: #dd8888" label="Compare"></ion-select>
+                  </ion-col>
+                </ion-row>
+              </ion-grid>
+              <br />
+              <canvas id="canvas" style="border: 1px solid grey"></canvas>
+            </div>
+          </ion-accordion>
 
-        <ion-content>
-          <ion-accordion-group value="overview" multiple="true">
-            <ion-accordion value="overview" toggle-icon="caret-down-circle" toggle-icon-slot="start">
-              <ion-item slot="header" color="light">
-                <ion-label>Overview <span id="percentage"></span></ion-label><ion-icon name="pie-chart"></ion-icon>
-              </ion-item>
-              <div class="ion-padding" slot="content">
-                <ion-progress-bar id="progress" value="0.30"></ion-progress-bar>
-                <ion-grid>
-                  <ion-row>
-                    <ion-col>
-                      <ion-select id="periodFilter" style="background-color: #8888dd" label="Period"></ion-select>
-                    </ion-col>
-                    <ion-col>
-                      <ion-select id="periodFilter2" style="background-color: #dd8888" label="Compare"></ion-select>
-                    </ion-col>
-                  </ion-row>
-                </ion-grid>
-                <br />
-                <canvas id="canvas" style="border: 1px solid grey"></canvas>
-              </div>
-            </ion-accordion>
-
-            <ion-accordion value="expenses" toggle-icon="caret-down-circle" toggle-icon-slot="start">
-              <ion-item slot="header" color="light"> <ion-label>Entry</ion-label><ion-icon name="cash-outline"></ion-icon> </ion-item>
-              <div class="ion-padding" slot="content">
-                <form onsubmit="event.preventDefault(); postPayment(this)" id="expenses">
-                  <ion-list>
-                    <ion-item>
-                      <p>Enter expenses here:</p>
-                    </ion-item>
-                    <ion-item>
-                      <ion-input label="Text" placeholder="Groceries..." name="name" required tabindex="1" />
-                    </ion-item>
-                    <ion-item>
-                      <ion-input label="Amount" placeholder="12.99" name="amount" pattern="^\d*(\.\d{0,2})?$" size="4" required tabindex="2" />
-                    </ion-item>
-                    <ion-item>
-                      <input name="category" list="categories" placeholder="Category" required tabindex="3" class="native-input sc-ion-input-md" />
-                      <datalist id="categories"></datalist>
-                      <!--<ion-select name="category" id="categoryFilter" label="Category" required tabindex="3">
+          <ion-accordion value="expenses" toggle-icon="caret-down-circle" toggle-icon-slot="start">
+            <ion-item slot="header" color="light"> <ion-label>Entry</ion-label><ion-icon name="cash-outline"></ion-icon> </ion-item>
+            <div class="ion-padding" slot="content">
+              <form onsubmit="event.preventDefault(); postPayment(this)" id="expenses">
+                <ion-list>
+                  <ion-item>
+                    <p>Enter expenses here:</p>
+                  </ion-item>
+                  <ion-item>
+                    <ion-input label="Text" placeholder="Groceries..." name="name" required tabindex="1" />
+                  </ion-item>
+                  <ion-item>
+                    <ion-input label="Amount" placeholder="12.99" name="amount" pattern="^\d*(\.\d{0,2})?$" size="4" required tabindex="2" />
+                  </ion-item>
+                  <ion-item>
+                    <input name="category" list="categories" placeholder="Category" required tabindex="3" class="native-input sc-ion-input-md" />
+                    <datalist id="categories"></datalist>
+                    <!--<ion-select name="category" id="categoryFilter" label="Category" required tabindex="3">
                         <ion-select-option value="">Category</ion-select-option>
                       </ion-select>-->
-                    </ion-item>
-                    <ion-item>
-                      <ion-datetime-button datetime="date"></ion-datetime-button>
-                      <ion-modal>
-                        <ion-datetime label="Date" name="date" type="date" required presentation="date" id="date" tabindex="4"></ion-datetime>
-                      </ion-modal>
-                    </ion-item>
-                    <ion-button type="submit">Add Expense</ion-button>
-                  </ion-list>
-                </form>
-              </div>
-            </ion-accordion>
+                  </ion-item>
+                  <ion-item>
+                    <ion-datetime-button datetime="date"></ion-datetime-button>
+                    <ion-modal>
+                      <ion-datetime label="Date" name="date" type="date" required presentation="date" id="date" tabindex="4"></ion-datetime>
+                    </ion-modal>
+                  </ion-item>
+                  <ion-button type="submit">Add Expense</ion-button>
+                </ion-list>
+              </form>
+            </div>
+          </ion-accordion>
 
-            <ion-accordion value="payments" toggle-icon="caret-down-circle" toggle-icon-slot="start">
-              <ion-item slot="header" color="light">
-                <ion-label>Expenses <span id="total"></span></ion-label><ion-icon name="grid-outline"></ion-icon>
-              </ion-item>
-              <div slot="content">
-                <ion-searchbar placeholder="Search payments" onkeyup="doSearchPayments(this)"></ion-searchbar>
-                <div id="payments"></div>
-              </div>
-            </ion-accordion>
+          <ion-accordion value="payments" toggle-icon="caret-down-circle" toggle-icon-slot="start">
+            <ion-item slot="header" color="light">
+              <ion-label>Expenses <span id="total"></span></ion-label><ion-icon name="grid-outline"></ion-icon>
+            </ion-item>
+            <div slot="content">
+              <ion-searchbar placeholder="Search payments" onkeyup="doSearchPayments(this)"></ion-searchbar>
+              <div id="payments"></div>
+            </div>
+          </ion-accordion>
 
-            <ion-accordion value="import" toggle-icon="caret-down-circle" toggle-icon-slot="start">
-              <ion-item slot="header" color="light"> <ion-label>Data</ion-label><ion-icon name="cloud-upload-outline"></ion-icon></ion-item>
-              <div class="ion-padding" slot="content">
-                <form onsubmit="event.preventDefault(); doImport()" id="frmImport">
-                  <ion-textarea
-                    name="import"
-                    fill="outline"
-                    placeholder="Paste from Excel 4 columns: Date, Text, Amount, Category (.tsv tab-seperated)"
-                    rows="20"
-                    id="import"
-                    value="Date,Text,Amount,Category
+          <ion-accordion value="import" toggle-icon="caret-down-circle" toggle-icon-slot="start">
+            <ion-item slot="header" color="light"> <ion-label>Data</ion-label><ion-icon name="cloud-upload-outline"></ion-icon></ion-item>
+            <div class="ion-padding" slot="content">
+              <form onsubmit="event.preventDefault(); doImport()" id="frmImport">
+                <ion-textarea
+                  name="import"
+                  fill="outline"
+                  placeholder="Paste from Excel 4 columns: Date, Text, Amount, Category (.tsv tab-seperated)"
+                  rows="20"
+                  id="import"
+                  value="Date,Text,Amount,Category
 2025-01-01,Groceries,180.25,Food"
-                  ></ion-textarea>
-                  <ion-button type="submit" value="Import" expand="block">Import</ion-button>
-                  <ion-button onclick="doExample()" color="warning" expand="block">Example Data</ion-button>
-                  <ion-button onclick="doClear()" color="danger" expand="block"><ion-icon slot="start" name="trash-outline"></ion-icon>Clear All Data</ion-button>
-                </form>
-              </div>
-            </ion-accordion>
+                ></ion-textarea>
+                <ion-button type="submit" value="Import" expand="block">Import</ion-button>
+                <ion-button onclick="doExample()" color="warning" expand="block">Example Data</ion-button>
+                <ion-button onclick="doClear()" color="danger" expand="block"><ion-icon slot="start" name="trash-outline"></ion-icon>Clear All Data</ion-button>
+              </form>
+            </div>
+          </ion-accordion>
 
-            <ion-accordion value="settings" toggle-icon="caret-down-circle" toggle-icon-slot="start">
-              <ion-item slot="header" color="light"> <ion-label>Settings </ion-label><ion-icon name="cog-outline"></ion-icon> </ion-item>
-              <div class="ion-padding" slot="content">
-                <form onsubmit="event.preventDefault(); saveSettings(this)" id="frmSettings">
-                  <ion-list inset="true">
-                    <ion-item>
-                      <ion-input name="budget" label="Monthly Budget" value="2000" required id="budget"></ion-input>
-                    </ion-item>
-                    <ion-item>
-                      <ion-input name="max" label="Max Spend" value="3000" required id="max"></ion-input>
-                    </ion-item>
-                    <ion-item>
-                      <ion-select name="graphType" label="Graph Type" interface="popover" id="graphType">
-                        <ion-select-option value="bar">Bar</ion-select-option>
-                        <ion-select-option value="line">Line</ion-select-option>
-                      </ion-select>
-                    </ion-item>
-                  </ion-list>
-                  <ion-button type="submit" expand="block"><ion-icon slot="start" name="save"></ion-icon>Save</ion-button>
-                </form>
-              </div>
-            </ion-accordion>
-          </ion-accordion-group>
+          <ion-accordion value="settings" toggle-icon="caret-down-circle" toggle-icon-slot="start">
+            <ion-item slot="header" color="light"> <ion-label>Settings </ion-label><ion-icon name="cog-outline"></ion-icon> </ion-item>
+            <div class="ion-padding" slot="content">
+              <form onsubmit="event.preventDefault(); saveSettings(this)" id="frmSettings">
+                <ion-list inset="true">
+                  <ion-item>
+                    <ion-input name="budget" label="Monthly Budget" value="2000" required id="budget"></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-input name="max" label="Max Spend" value="3000" required id="max"></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-select name="graphType" label="Graph Type" interface="popover" id="graphType">
+                      <ion-select-option value="bar">Bar</ion-select-option>
+                      <ion-select-option value="line">Line</ion-select-option>
+                    </ion-select>
+                  </ion-item>
+                </ion-list>
+                <ion-button type="submit" expand="block"><ion-icon slot="start" name="save"></ion-icon>Save</ion-button>
+              </form>
+            </div>
+          </ion-accordion>
+        </ion-accordion-group>
 
-          <ion-toast duration="5000" message="This toast will close in 5 seconds" id="toast"></ion-toast>
-        </ion-content>
-      </div>
+        <ion-toast duration="5000" message="This toast will close in 5 seconds" id="toast"></ion-toast>
+      </ion-content>
     </ion-app>
 
     <script>

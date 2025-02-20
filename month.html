@@ -223,7 +223,7 @@
           save();
           return true;
         } catch (e) {
-          alert(e.message + ` in record ${name}, ${date}, ${category}, ${amount}`);
+          alert(`ERROR: ${e.message} in record ${name}, ${date}, ${category}, ${amount}`);
         }
       }
       function validatePayment(name, date, category, amount) {
@@ -482,11 +482,16 @@
       }
 
       function save() {
+        throw new Error("doo");
         const paymentsCompressed = payments.map((p) => ({ id: p.id, name: p.name, date: formatDate(p.date), category: p.category, amount: p.amount }));
         localStorage.setItem("payments", JSON.stringify(paymentsCompressed));
       }
+      function errorHandler(e) {
+        showMessage(`ERROR: ${e.message}`);
+      }
 
       window.addEventListener("load", init);
+      window.addEventListener("error", errorHandler);
     </script>
   </body>
 </html>

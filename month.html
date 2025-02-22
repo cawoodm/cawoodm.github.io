@@ -482,7 +482,6 @@
       }
 
       function save() {
-        throw new Error("doo");
         const paymentsCompressed = payments.map((p) => ({ id: p.id, name: p.name, date: formatDate(p.date, "y-M-d h:m:s"), category: p.category, amount: p.amount }));
         localStorage.setItem("payments", JSON.stringify(paymentsCompressed));
       }

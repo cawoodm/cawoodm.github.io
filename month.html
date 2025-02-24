@@ -56,23 +56,22 @@
           <ion-accordion value="expenses" toggle-icon="caret-down-circle" toggle-icon-slot="start">
             <ion-item slot="header" color="light"> <ion-label>Entry</ion-label><ion-icon name="cash-outline"></ion-icon> </ion-item>
             <div class="ion-padding" slot="content">
-              <form onsubmit="event.preventDefault(); postPayment(this)" id="expenses">
+              <form id="expenses">
                 <ion-list>
                   <ion-item>
                     <p>Enter expenses here:</p>
                   </ion-item>
                   <ion-item>
-                    <ion-input label="Text" placeholder="Groceries..." name="name" required tabindex="1" />
+                    <ion-input label="Text" placeholder="Groceries..." name="name" required autocapitalize="on" tabindex="1" />
                   </ion-item>
                   <ion-item>
-                    <ion-input label="Amount" placeholder="12.99" name="amount" pattern="^\-?\d*(\.\d{0,2})?$" size="4" required tabindex="2" />
+                    <ion-input label="Amount" placeholder="12.99" name="amount" pattern="^-?\d*(\.\d{0,2})?$" size="4" required tabindex="2" />
                   </ion-item>
                   <ion-item>
-                    <input name="category" list="categories" placeholder="Category" required tabindex="3" class="native-input sc-ion-input-md" />
-                    <datalist id="categories"></datalist>
-                    <!--<ion-select name="category" id="categoryFilter" label="Category" required tabindex="3">
-                        <ion-select-option value="">Category</ion-select-option>
-                      </ion-select>-->
+                    <ion-input name="category" placeholder="Category" required tabindex="3" />
+                  </ion-item>
+                  <ion-item>
+                    <div id="categories"></div>
                   </ion-item>
                   <ion-item>
                     <ion-datetime-button datetime="date"></ion-datetime-button>
@@ -80,7 +79,7 @@
                       <ion-datetime label="Date" name="date" type="date" required presentation="date" id="date" tabindex="4"></ion-datetime>
                     </ion-modal>
                   </ion-item>
-                  <ion-button type="submit">Add Expense</ion-button>
+                  <ion-button type="button" onclick="addExpense()">Add Expense</ion-button>
                 </ion-list>
               </form>
             </div>
@@ -91,7 +90,7 @@
               <ion-label>Expenses <span id="total"></span></ion-label><ion-icon name="grid-outline"></ion-icon>
             </ion-item>
             <div slot="content">
-              <ion-searchbar placeholder="Search payments" onkeyup="doSearchPayments(this)"></ion-searchbar>
+              <ion-searchbar placeholder="Search payments" onkeyup="listPayments()" id="search"></ion-searchbar>
               <div id="payments"></div>
             </div>
           </ion-accordion>
@@ -99,7 +98,7 @@
           <ion-accordion value="import" toggle-icon="caret-down-circle" toggle-icon-slot="start">
             <ion-item slot="header" color="light"> <ion-label>Data</ion-label><ion-icon name="cloud-upload-outline"></ion-icon></ion-item>
             <div class="ion-padding" slot="content">
-              <form onsubmit="event.preventDefault(); doImport()" id="frmImport">
+              <form id="frmImport">
                 <ion-textarea
                   name="import"
                   fill="outline"
@@ -109,7 +108,7 @@
                   value="Date,Text,Amount,Category
 2025-01-01,Groceries,180.25,Food"
                 ></ion-textarea>
-                <ion-button type="submit" value="Import" expand="block">Import</ion-button>
+                <ion-button type="button" value="Import" expand="block" onclick="doImport()">Import</ion-button>
                 <ion-button onclick="doExample()" color="warning" expand="block">Example Data</ion-button>
                 <ion-button onclick="doClear()" color="danger" expand="block"><ion-icon slot="start" name="trash-outline"></ion-icon>Clear All Data</ion-button>
               </form>
@@ -119,7 +118,7 @@
           <ion-accordion value="settings" toggle-icon="caret-down-circle" toggle-icon-slot="start">
             <ion-item slot="header" color="light"> <ion-label>Settings </ion-label><ion-icon name="cog-outline"></ion-icon> </ion-item>
             <div class="ion-padding" slot="content">
-              <form onsubmit="event.preventDefault(); saveSettings(this)" id="frmSettings">
+              <form id="frmSettings">
                 <ion-list inset="true">
                   <ion-item>
                     <ion-input name="budget" label="Monthly Budget" value="2000" required id="budget"></ion-input>
@@ -134,13 +133,13 @@
                     </ion-select>
                   </ion-item>
                 </ion-list>
-                <ion-button type="submit" expand="block"><ion-icon slot="start" name="save"></ion-icon>Save</ion-button>
+                <ion-button type="button" expand="block"><ion-icon slot="start" name="save" onclick="saveSettings(this)"></ion-icon>Save</ion-button>
               </form>
             </div>
           </ion-accordion>
         </ion-accordion-group>
 
-        <ion-toast duration="5000" message="This toast will close in 5 seconds" id="toast"></ion-toast>
+        <ion-toast duration="5000" message="This toast will close in 5 seconds" id="toast" position="middle" color="success"></ion-toast>
       </ion-content>
     </ion-app>
 
@@ -170,6 +169,7 @@
       const elToast = document.querySelector("#toast");
       const elProgress = document.getElementById("progress");
       const frmExpenses = document.getElementById("expenses");
+      const elSearch = document.getElementById("search");
 
       function init() {
         if (!localStorage.getItem("payments")) localStorage.setItem("payments", "[]");
@@ -198,18 +198,18 @@
         document.getElementById("graphType").value = optGraphType;
       }
 
-      function postPayment(frm) {
-        const o = Object.assign(...Array.from(new FormData(frm).entries(), ([x, y]) => ({ [x]: y })));
+      function addExpense() {
+        const o = Object.assign(...Array.from(new FormData(frmExpenses).entries(), ([x, y]) => ({ [x]: y })));
         savePayment(o);
         showMessage(`Payment ${o.amount} ${o.name} (${o.category}) saved`);
         listPayments();
-        return false;
       }
       function showMessage(msg) {
         elToast.message = msg;
         elToast.present();
       }
       function savePayment({ name, date, category, amount }) {
+        console.log(date);
         const parsedDate = new Date(date);
         try {
           validatePayment(name, parsedDate, category, amount);
@@ -241,7 +241,8 @@
         listPayments();
       }
 
-      function listPayments({ search = "" } = {}) {
+      function listPayments() {
+        const search = elSearch.value || "";
         const filteredPeriod = elPeriodFilter.value;
         const filteredPeriod2 = elPeriodFilter2.value;
         const filteredPayments = payments.filter((payment) => !filteredPeriod || payment.period === filteredPeriod).filter(searchFilter(search));
@@ -256,9 +257,11 @@
         filteredPayments
           .map((payment) => ({ ...payment, amountFormatted: payment.amount.toFixed(2) }))
           .forEach((payment) => {
-            html += `<ion-row><ion-col size="2">${fmtDate(payment.date)}</ion-col><ion-col size="6" class="ion-text-nowrap">${payment.name}</ion-col><ion-col size="3" class="ion-text-right">${
-              payment.amountFormatted
-            }</ion-col><ion-col size="1"><a href="javascript:deletePayment('${payment.id}')"><ion-icon name="trash-outline"></ion-icon></a></ion-row>`;
+            html += `<ion-row><ion-col size="2" title="${payment.date}">${fmtDate(payment.date)}</ion-col><ion-col size="6" class="ion-text-nowrap">${
+              payment.name
+            }</ion-col><ion-col size="3" class="ion-text-right">${payment.amountFormatted}</ion-col><ion-col size="1"><a href="javascript:deletePayment('${
+              payment.id
+            }')"><ion-icon name="trash-outline"></ion-icon></a></ion-row>`;
           });
         html += "</ion-grid>";
         elPayments.innerHTML = html;
@@ -285,7 +288,15 @@
       function updateCategories(cat) {
         let categories = Array.from(new Set(payments.map((p) => p.category).sort(ascending)));
         //elCategoryFilter.innerHTML = categories.map((category) => `<ion-select-option ${category === cat ? "selected" : ""} value="${category}">${category}</ion-select-option>`).join("\n");
-        document.getElementById("categories").innerHTML = categories.map((category) => `<option ${category === cat ? "selected" : ""} value="${category}">${category}</option>`).join("\n");
+        //document.getElementById("categories").innerHTML = categories.map((category) => `<option ${category === cat ? "selected" : ""} value="${category}">${category}</option>`).join("\n");
+        document.getElementById("categories").innerHTML = categories.map((category) => `<ion-chip onclick="setCategory(this, '${category}')">${category}</ion-chip>`).join("\n");
+      }
+      let lastCategoryChip = null;
+      function setCategory(el, category) {
+        if (lastCategoryChip) lastCategoryChip.setAttribute("color", "");
+        el.setAttribute("color", "primary");
+        frmExpenses.category.value = category;
+        lastCategoryChip = el;
       }
 
       function chartPayments(filteredPeriod, col) {
@@ -319,9 +330,6 @@
         MAX_SPEND = max;
         resetChart();
         listPayments();
-      }
-      function doSearchPayments(el) {
-        listPayments({ search: el.value });
       }
       function doImport() {
         const frm = document.getElementById("frmImport");

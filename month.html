@@ -62,13 +62,13 @@
                     <p>Enter expenses here:</p>
                   </ion-item>
                   <ion-item>
-                    <ion-input label="Text" placeholder="Groceries..." name="name" required autocapitalize="on" tabindex="1" />
+                    <ion-input label="Text" labelPlacement="stacked" placeholder="Groceries..." name="name" required autocapitalize="on" tabindex="1" />
                   </ion-item>
                   <ion-item>
-                    <ion-input label="Amount" placeholder="12.99" name="amount" pattern="^-?\d*(\.\d{0,2})?$" size="4" required tabindex="2" />
+                    <ion-input label="Amount" labelPlacement="stacked" placeholder="12.99" name="amount" pattern="^-?\d*(\.\d{0,2})?$" size="4" required tabindex="2" />
                   </ion-item>
                   <ion-item>
-                    <ion-input name="category" placeholder="Category" required tabindex="3" />
+                    <ion-input name="category" labelPlacement="stacked" placeholder="Category" required tabindex="3" />
                   </ion-item>
                   <ion-item>
                     <div id="categories"></div>
@@ -209,8 +209,9 @@
         elToast.present();
       }
       function savePayment({ name, date, category, amount }) {
-        console.log(date);
+        const now = new Date();
         const parsedDate = new Date(date);
+        parsedDate.setTime(now); // Ensure time is set to now for sorted entry
         try {
           validatePayment(name, parsedDate, category, amount);
           const id = randomId(length); //new Date().toISOString().replace(/[T:Z\-\.]/g, '');

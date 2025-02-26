@@ -211,7 +211,7 @@
       function savePayment({ name, date, category, amount }) {
         const now = new Date();
         const parsedDate = new Date(date);
-        parsedDate.setTime(now); // Ensure time is set to now for sorted entry
+        parsedDate.setHours(now.getHours(), now.getMinutes(), now.getSeconds()); // Ensure time is set to now for sorted entry
         try {
           validatePayment(name, parsedDate, category, amount);
           const id = randomId(length); //new Date().toISOString().replace(/[T:Z\-\.]/g, '');

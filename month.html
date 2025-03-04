@@ -139,7 +139,7 @@
           </ion-accordion>
         </ion-accordion-group>
 
-        <ion-toast duration="5000" message="This toast will close in 5 seconds" id="toast" position="middle" color="success"></ion-toast>
+        <ion-toast duration="5000" message="This toast will close in 5 seconds" id="toast" position="bottom" color="success"></ion-toast>
       </ion-content>
     </ion-app>
 
@@ -203,6 +203,7 @@
         savePayment(o);
         showMessage(`Payment ${o.amount} ${o.name} (${o.category}) saved`);
         listPayments();
+        updateCategories();
       }
       function showMessage(msg) {
         elToast.message = msg;
@@ -255,9 +256,12 @@
         document.getElementById("percentage").innerHTML = Math.floor(percentage * 100) + "%";
         elTotal.innerHTML = "CHF " + sumOfPayments.toFixed(2);
         let html = '<ion-grid fixed="true">';
+        let lastDay = "";
         filteredPayments
           .map((payment) => ({ ...payment, amountFormatted: payment.amount.toFixed(2) }))
           .forEach((payment) => {
+            if (lastDay !== payment.day) html += `<ion-row style="background-color: silver"><ion-col size="12"><b>${fmtDateDay2(payment.date)}</b></ion-col></ion-row>`;
+            lastDay = payment.day;
             html += `<ion-row><ion-col size="2" title="${payment.date}">${fmtDate(payment.date)}</ion-col><ion-col size="6" class="ion-text-nowrap">${
               payment.name
             }</ion-col><ion-col size="3" class="ion-text-right">${payment.amountFormatted}</ion-col><ion-col size="1"><a href="javascript:deletePayment('${
@@ -309,8 +313,10 @@
           green: "rgba(0, 255, 0, 0.5)",
           blue: "rgba(0, 0, 255, 0.5)",
         }[col];
+        const today = new Date();
         days.forEach((day) => {
-          if (new Date(day) > new Date()) return;
+          const futurePayments = periodPayments.filter((payment) => payment.day > day);
+          if (new Date(day) > today && futurePayments.length == 0) return;
           const dayPayments = periodPayments.filter((payment) => payment.day === day);
           const daySum = dayPayments.reduce((acc, payment) => acc + payment.amount, 0);
           sum += daySum;
@@ -486,8 +492,10 @@
       }
 
       function fmtDate(dt) {
-        //return dt.toLocaleString('en-us', {weekday: "short", year: "numeric", month: "short", day: "numeric"});
         return dt.toLocaleString("en-us", { month: "short", day: "numeric" });
+      }
+      function fmtDateDay2(dt) {
+        return dt.toLocaleString("en-us", { weekday: "short", day: "numeric" });
       }
 
       function save() {

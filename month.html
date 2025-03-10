@@ -133,7 +133,7 @@
                     </ion-select>
                   </ion-item>
                 </ion-list>
-                <ion-button type="button" expand="block"><ion-icon slot="start" name="save" onclick="saveSettings(this)"></ion-icon>Save</ion-button>
+                <ion-button onclick="saveSettings(this)" type="button" expand="block"><ion-icon slot="start" name="save"></ion-icon>Save</ion-button>
               </form>
             </div>
           </ion-accordion>
@@ -169,6 +169,7 @@
       const elToast = document.querySelector("#toast");
       const elProgress = document.getElementById("progress");
       const frmExpenses = document.getElementById("expenses");
+      const frmSettings = document.getElementById("frmSettings");
       const elSearch = document.getElementById("search");
 
       function init() {
@@ -324,7 +325,8 @@
         });
       }
 
-      function saveSettings(frm) {
+      function saveSettings() {
+        let frm = frmSettings;
         let budget = isNaN(parseFloat(frm.budget.value)) ? 0 : parseFloat(frm.budget.value);
         if (!budget) return alert("Invalid budget");
         let max = isNaN(parseFloat(frm.max.value)) ? 0 : parseFloat(frm.max.value);

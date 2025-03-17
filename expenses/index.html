@@ -8,8 +8,8 @@
     <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/palettes/dark.system.css" />
-    <title>Expense Tracker v0.1.0</title>
-    <script type="module" crossorigin src="/expenses/assets/index-C7R8T8aG.js"></script>
+    <title>Expense Tracker v0.1.1</title>
+    <script type="module" crossorigin src="/expenses/assets/index-BLPUj759.js"></script>
     <link rel="stylesheet" crossorigin href="/expenses/assets/index-BgrnLHY6.css">
   </head>
   <body>
@@ -72,7 +72,7 @@
                       <ion-datetime label="Date" name="date" type="date" required presentation="date" id="date" tabindex="4"></ion-datetime>
                     </ion-modal>
                   </ion-item>
-                  <ion-button type="button" id="btnAddExpense">Add Expense</ion-button>
+                  <ion-button id="btnAddExpense">Add Expense</ion-button>
                 </ion-list>
               </form>
             </div>
@@ -101,7 +101,7 @@
                   value="Date,Text,Amount,Category
 2025-01-01,Groceries,180.25,Food"
                 ></ion-textarea>
-                <ion-button type="button" value="Import" expand="block" id="btnImport">Import</ion-button>
+                <ion-button value="Import" expand="block" id="btnImport">Import</ion-button>
                 <ion-button id="btnExample" color="warning" expand="block">Example Data</ion-button>
                 <ion-button id="btnClear" color="danger" expand="block"><ion-icon slot="start" name="trash-outline"></ion-icon>Clear All Data</ion-button>
               </form>
@@ -126,7 +126,7 @@
                     </ion-select>
                   </ion-item>
                 </ion-list>
-                <ion-button onclick="saveSettings(this)" type="button" expand="block"><ion-icon slot="start" name="save"></ion-icon>Save</ion-button>
+                <ion-button id="btnSaveSettings" expand="block"><ion-icon slot="start" name="save"></ion-icon>Save</ion-button>
               </form>
             </div>
           </ion-accordion>

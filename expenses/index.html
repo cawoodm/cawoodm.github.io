@@ -8,8 +8,8 @@
     <script nomodule src="https://cdn.jsdelivr.net/npm/@ionic/core/dist/ionic/ionic.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/ionic.bundle.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ionic/core/css/palettes/dark.system.css" />
-    <title>Goal Tracker v0.1.3</title>
-    <script type="module" crossorigin src="/expenses/assets/index-Duio2PD7.js"></script>
+    <title>Goal Tracker v0.1.4</title>
+    <script type="module" crossorigin src="/expenses/assets/index-C33aIDPG.js"></script>
     <link rel="stylesheet" crossorigin href="/expenses/assets/index-BgrnLHY6.css">
   </head>
   <body>
@@ -89,6 +89,7 @@
             <ion-item slot="header" color="light"> <ion-label>Data</ion-label><ion-icon name="cloud-upload-outline"></ion-icon></ion-item>
             <div class="ion-padding" slot="content">
               <form id="frmImport">
+                <input type="file" id="importFile" />
                 <ion-textarea
                   name="import"
                   fill="outline"
@@ -99,6 +100,7 @@
 2025-01-01,Groceries,180.25,Food"
                 ></ion-textarea>
                 <ion-button value="Import" expand="block" id="btnImport">Import</ion-button>
+                <ion-button value="Export" expand="block" id="btnExport" color="tertiary">Export</ion-button>
                 <ion-button id="btnExample" color="warning" expand="block">Example Data</ion-button>
                 <ion-button id="btnClear" color="danger" expand="block"><ion-icon slot="start" name="trash-outline"></ion-icon>Clear All Data</ion-button>
               </form>

@@ -199,7 +199,12 @@
       }
       function addTable() {
         let title = prompt("Enter table title:");
+        if (!title) return;
         let code = title.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
+        if (localStorage.getItem(code + "-list")) {
+          alert("Table with this name already exists. Please choose a different name.");
+          return;
+        }
         createTable(code);
       }
 

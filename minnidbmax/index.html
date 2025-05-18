@@ -18,13 +18,14 @@
         margin: auto;
       }
     </style>
-    <script type="module" crossorigin src="/minnidbmax/assets/index-snhEgXvk.js"></script>
+    <script type="module" crossorigin src="/minnidbmax/assets/index-B17VckQo.js"></script>
   </head>
   <body>
     <h1>MinniDBMax</h1>
     <button onclick="addTable()">+ New Table</button>
     <button onclick="dataPush()">⬆️ Push Data</button>
     <button onclick="dataPull()">⬇️ Pull Data</button>
+    <button onclick="dataDump()">🗃️ Dump Data</button>
 
     <template id="data-entry-template">
       <style>
@@ -59,10 +60,6 @@
           font-size: 16px;
           border: 1px solid #ddd;
           border-radius: 4px;
-        }
-        .outer-container {
-          /*overflow-y: scroll;
-          max-height: 500px;*/
         }
         .hide {
           display: none;
@@ -198,11 +195,16 @@
       function dataPull() {
         gistLoadData();
       }
+      function dataDump() {
+        const dump = {};
+        store.dir().forEach(([key, data]) => (dump[key] = data));
+        downloadFile("minnidbmax.json", JSON.stringify(dump, null, 2));
+      }
       function addTable() {
         let title = prompt("Enter table title:");
         if (!title) return;
         let code = title.replace(/[^a-zA-Z0-9]/g, "_").toLowerCase();
-        if (localStorage.getItem(code + "-list")) {
+        if (store.get(code + ".table.json")) {
           alert("Table with this name already exists. Please choose a different name.");
           return;
         }
@@ -218,11 +220,8 @@
         document.body.removeChild(element);
       }
       function createTable(code, data) {
-        function toTitleCase(str) {
-          return str.replace(/\w\S*/g, (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase());
-        }
         const newTable = document.createElement("data-entry-table");
-        newTable.setAttribute("storage-key", `${code}-list`);
+        newTable.setAttribute("storage-key", `${code}.table.json`);
         newTable.setAttribute("id", "table-" + code);
         // https://github.com/nextapps-de/winbox?tab=readme-ov-file
         let win = new WinBox(toTitleCase(code), {
@@ -270,26 +269,23 @@
         if (data?.elementRect?.minimized) win.minimize(true);
         else if (data?.elementRect?.maximized) win.maximize(true);
         // TODO: Remove data reading from data table class?
-        // if (data) newTable.importData(data);
-        //document.body.appendChild(newTable);
-        //makeDraggableAndResizable(newTable.shadowRoot.querySelector(".container"), newTable.resizedCallback.bind(newTable));
+        function toTitleCase(str) {
+          return str.replace(/\w\S*/g, (text) => text.charAt(0).toUpperCase() + text.substring(1).toLowerCase());
+        }
       }
 
       function deleteTable(win, table) {
         if (!confirm("Are you sure you want to delete this table?")) return;
         let key = table.getAttribute("storage-key");
-        localStorage.removeItem(key);
+        store.delete(key);
         win.close();
       }
 
       // Example of how to interact with the component programmatically
       document.addEventListener("DOMContentLoaded", function () {
         //gistLoadData(); return;
-        Object.entries(localStorage)
-          .filter((k) => k[0].match(/\-list$/))
-          .forEach(([key, data]) => createTable(key.replace(/\-list$/, ""), JSON.parse(data)));
-
-        console.debug("Data loaded from localStorage");
+        store.dir({ suffix: ".table.json" }).forEach(([key, data]) => createTable(key.replace(".table.json", ""), data));
+        console.debug("Data loaded from browser store");
       });
     </script>
   </body>

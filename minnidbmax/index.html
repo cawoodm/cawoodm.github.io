@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link type="image/png" sizes="96x96" rel="icon" href="favicon.png" />
-    <title>MinniDBMax v0.0.3</title>
+    <title>MinniDBMax v0.0.4</title>
 
     <style>
       body {
@@ -18,7 +18,7 @@
         margin: auto;
       }
     </style>
-    <script type="module" crossorigin src="/minnidbmax/assets/index-CN357KH6.js"></script>
+    <script type="module" crossorigin src="/minnidbmax/assets/index-D-GFD7Xd.js"></script>
   </head>
   <body>
     <h1>MinniDBMax</h1>
@@ -38,7 +38,7 @@
           display: flex;
           flex-direction: column;
           width: 100%;
-          max-width: 1200px;
+          /*max-width: 1200px;*/
           margin: 0;
           /*
                   background-color: white;
@@ -53,11 +53,19 @@
         input.dataInput {
           border: 0px;
           border-radius: 4px;
-          width: 100%;
+          field-sizing: content;
+          min-width: 80px;
+          max-width: 200px;
           height: 100%;
           box-sizing: border-box;
           padding: 5px;
           font-size: medium;
+        }
+        td.number input.dataInput {
+          text-align: right;
+          field-sizing: content;
+          min-width: 80px;
+          max-width: 200px;
         }
         .data-input {
           flex-grow: 1;
@@ -87,6 +95,9 @@
         td.number,
         td.number input.dataInput {
           text-align: right;
+        }
+        td.null {
+          background-color: #f9dddd;
         }
         th.actions,
         td.actions {
@@ -180,13 +191,11 @@
       <div class="container">
         <div class="alert success"></div>
         <div class="outer-container">
-          <div class="input-container hide">
+          <div class="table-container"></div>
+          <div class="input-container">
             <div style="display: flex">
-              <textarea class="data-input" placeholder='Enter comma separated values (e.g. "Text", Category, 12.93, 2024-01-01, true)'></textarea>
+              <textarea class="data-input" placeholder='Drag a .csv her or enter some CSV values (e.g. "Text", Category, 12.93, 2024-01-01, true)'></textarea>
             </div>
-          </div>
-          <div class="table-container">
-            <div class="empty-message">Enter your first data row to establish columns and data types.</div>
           </div>
         </div>
       </div>
@@ -257,6 +266,7 @@
           image: "icon-data-input.svg",
           click: function (event, winbox) {
             newTable.shadowRoot.querySelector(".input-container").classList.toggle("hide");
+            newTable.shadowRoot.querySelector(".input-container textarea").focus();
           },
         });
         win.addControl({
@@ -284,7 +294,6 @@
         if (!confirm("Are you sure you want to delete this table?")) return;
         let key = table.getAttribute("storage-key");
         store.delete(key);
-        win.close();
       }
 
       // Example of how to interact with the component programmatically

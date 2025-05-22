@@ -63,3 +63,35 @@ Menu
 })();
 
 
+/** FORM */
+(function() {
+  var form = document.getElementById("my-form");
+  async function handleSubmit(event) {
+    event.preventDefault();
+    var status = document.getElementById("my-form");
+    var data = new FormData(event.target);
+    fetch(event.target.action, {
+      method: form.method,
+      body: data,
+      headers: {
+          'Accept': 'application/json'
+      }
+    }).then(response => {
+      if (response.ok) {
+        status.innerHTML = "<h1>Danke für Ihre Nachricht! Wir werden uns in Kürze bei Ihnen melden.</h1>";
+        form.reset()
+      } else {
+        response.json().then(data => {
+          if (Object.hasOwn(data, 'errors')) {
+            status.innerHTML = data["errors"].map(error => error["message"]).join(", ")
+          } else {
+            status.innerHTML = "Leider gab es ein Problem mit dem Absenden des Formulars. Versuchen Sie es bitte per Email oder rufen Sie uns an.";
+          }
+        })
+      }
+    }).catch(error => {
+      status.innerHTML = "Leider gab es ein Problem mit dem Absenden des Formulars. Versuchen Sie es bitte per Email oder rufen Sie uns an.";
+    });
+  }
+  form.addEventListener("submit", handleSubmit);
+})();

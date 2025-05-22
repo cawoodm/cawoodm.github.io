@@ -33,7 +33,6 @@
               <!-- Menu Links -->
               <div class="icon-list">
                 <a href="#home"><i class="fa fa-fw fa-home"></i><span>Homeworx</span></a>
-                <a href="#service"><i class="fa fa-fw fa-globe"></i><span>Dienste</span></a>
                 <a href="#portfolio"><i class="fa fa-fw fa-picture-o"></i><span>Projekte</span></a>
                 <a href="#contact"><i class="fa fa-fw fa-envelope-o"></i><span>Kontakt</span></a>
               </div>
@@ -318,25 +317,25 @@
           </div>
           <!-- Contact Form -->
           <div class="col-md-6 contact">
-            <form role="form">
+            <form role="form" id="my-form" action="https://formspree.io/f/mdkgvlap" method="POST">
               <!-- Name -->
               <div class="row">
                 <div class="col-md-6">
                   <!-- E-Mail -->
                   <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Name" />
+                    <input type="text" class="form-control" name="name" placeholder="Name" />
                   </div>
                 </div>
                 <div class="col-md-6">
                   <!-- Phone Number -->
                   <div class="form-group">
-                    <input type="email" class="form-control" placeholder="Emailadresse" />
+                    <input type="email" class="form-control" name="email" placeholder="Emailadresse" />
                   </div>
                 </div>
               </div>
               <!-- Message Area -->
               <div class="form-group">
-                <textarea class="form-control" placeholder="Ihre Nachricht..." style="height: 232px"></textarea>
+                <textarea class="form-control" name="message" placeholder="Ihre Nachricht..." style="height: 232px"></textarea>
               </div>
               <!-- Subtmit Button -->
               <button type="submit" class="btn btn-send">Abschicken</button>

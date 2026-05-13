@@ -38,7 +38,7 @@ By defining attributes on a field we can control what kind of data will appear i
 Setting number explicitly aids with proper sorting and data validation:
 ![Sorting](./docs/screenshot_sorting.png)
 
-Click filter to filter columns, enter a search term and press enter:  
+Click filter to filter columns, enter a search term or select from the list of values:
 ![Filtering](./docs/screenshot_filter.png)
 
 ### Column Types
@@ -46,7 +46,6 @@ Click filter to filter columns, enter a search term and press enter:
 * Data which looks like an HTML color (e.g. "#FF0000") will be rendered as a color swatch
 * Data which looks like an HTML image (e.g. "data:image/png;base64,iVBO...") will be rendered as an image
 * Data identified as numbers will be sorted numerically
-
 
 ### Other:
 
@@ -64,5 +63,10 @@ In order to Push/Pull data you need to [create](http://gist.github.com/) a (pref
 * `localStorage.setItem('minnidb-gist-id', 'c4c***')`
 You will now be able to synch your data with this Gist for free on Github.
 
+## Import/Export
+* Each table can import/export data via .csv and supports drag and drop
+* Then entire database can be exported to a .db.json file which can also be imported via drag & drop
+
 ### Limitations
+* Local Storage in the browser is limited to 5MB
 * Gist files are limited to 1MB [See API Reference](https://docs.github.com/en/rest/gists/gists?utm_source=chatgpt.com&apiVersion=2026-03-10#truncation) so tables above 1Mb won't be synched properly

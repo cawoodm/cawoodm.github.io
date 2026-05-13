@@ -4,15 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link type="image/png" sizes="96x96" rel="icon" href="favicon.png" />
-    <title>MinniDBMax v0.0.19</title>
-    <script type="module" crossorigin src="/minnidbmax/assets/index-ljQ0RfB7.js"></script>
-    <link rel="stylesheet" crossorigin href="/minnidbmax/assets/index-CPRXHt7X.css">
+    <title>MinniDBMax v0.0.20</title>
+    <script type="module" crossorigin src="/minnidbmax/assets/index-CiVQQApQ.js"></script>
+    <link rel="stylesheet" crossorigin href="/minnidbmax/assets/index-BElHFEnZ.css">
   </head>
   <body>
     <header class="flex items-center justify-between gap-4 px-4 py-2 bg-slate-800 text-white shadow-md">
       <div class="flex items-center gap-3">
         <h1 class="text-lg font-semibold tracking-wide">MinniDBMax</h1>
-        <span class="text-xs text-slate-400">v0.0.19</span>
+        <span class="text-xs text-slate-400">v0.0.20</span>
         <select id="workspaceSelect" class="bg-slate-700 text-white rounded px-2 py-1 text-sm border border-slate-600 focus:outline-none focus:ring-1 focus:ring-blue-400"></select>
       </div>
       <div class="flex items-center gap-2">
@@ -145,6 +145,42 @@
           text-align: center;
           border-bottom: 1px solid #ddd;
         }
+        /* Material Icons class rules need to live inside the Shadow DOM template
+           because Shadow DOM doesn't inherit class definitions from the outer
+           document. The font itself is loaded via @font-face at document scope. */
+        .material-icons {
+          font-family: "Material Icons";
+          font-weight: normal;
+          font-style: normal;
+          font-size: 24px;
+          line-height: 1;
+          letter-spacing: normal;
+          text-transform: none;
+          display: inline-block;
+          white-space: nowrap;
+          word-wrap: normal;
+          direction: ltr;
+          -webkit-font-feature-settings: "liga";
+          -webkit-font-smoothing: antialiased;
+        }
+        button.filter-toggle {
+          background: none;
+          border: 0;
+          cursor: pointer;
+          padding: 2px;
+          color: #999;
+          border-radius: 3px;
+          line-height: 1;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+        }
+        button.filter-toggle:hover {
+          background-color: #e0e0e0;
+        }
+        button.filter-toggle.active {
+          color: #2563eb;
+        }
         tr.filter-row td {
           padding: 4px 6px;
           background-color: #fafafa;
@@ -244,6 +280,32 @@
           color: #777;
           font-weight: bold;
           vertical-align: middle;
+        }
+        .col-resizer {
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          width: 5px;
+          cursor: col-resize;
+          user-select: none;
+          z-index: 2;
+        }
+        .col-resizer:hover {
+          background-color: #60a5fa;
+        }
+        th.col-dragging {
+          opacity: 0.4;
+        }
+        th.drop-before {
+          box-shadow:
+            inset 3px 0 0 #2563eb,
+            inset 0 -1px 0 #ddd;
+        }
+        th.drop-after {
+          box-shadow:
+            inset -3px 0 0 #2563eb,
+            inset 0 -1px 0 #ddd;
         }
         .empty-message {
           padding: 15px;

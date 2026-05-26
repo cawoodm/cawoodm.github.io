@@ -2,14 +2,14 @@
   "tiddlers": [
     {
       "title": "$BasePackage",
-      "text": "* code: base\n* namespace: base\n* version: 0.0.1\n* url: https://cawoodm.github.io/twikki/packages/base.json\n* overwrite: yes\n* save: no\n",
+      "text": "* code: base\n* namespace: base\n* version: 0.0.1\n* url: https://cawoodm.github.io/twikki/packages/base.json\n* overwrite: yes\n* save: no",
       "tags": [
         "$Shadow",
         "$Package"
       ],
       "type": "list",
-      "created": "2024-11-11T11:53:50.0654157Z",
-      "updated": "2024-11-11T12:14:05.5116855Z"
+      "created": "2024-11-11T11:53:50.065Z",
+      "updated": "2024-11-11T12:14:05.512Z"
     },
     {
       "title": "$CorePackages",
@@ -18,8 +18,8 @@
         "$Shadow"
       ],
       "type": "list",
-      "created": "2024-11-03T20:36:53.2910798Z",
-      "updated": "2024-11-09T19:01:27.1028260Z"
+      "created": "2024-11-03T20:36:53.291Z",
+      "updated": "2024-11-09T19:01:27.103Z"
     },
     {
       "title": "$CoreThemeDark",
@@ -30,8 +30,8 @@
         "$ThemeDark"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.2938565Z",
-      "updated": "2024-11-03T20:45:52.0549499Z"
+      "created": "2024-11-03T20:36:53.294Z",
+      "updated": "2024-11-03T20:45:52.055Z"
     },
     {
       "title": "$CoreThemeLight",
@@ -41,18 +41,18 @@
         "$Theme"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3004609Z",
-      "updated": "2024-10-04T19:45:16.2089505Z"
+      "created": "2024-11-03T20:36:53.300Z",
+      "updated": "2024-10-04T19:45:16.209Z"
     },
     {
       "title": "$ExtensionPackages",
-      "text": "* https://cawoodm.github.io/twikki/packages/icons.json force\n* https://cawoodm.github.io/twikki/packages/demo.json force\n* https://cawoodm.github.io/twikki/packages/website.json nooverwrite\n",
+      "text": "* https://cawoodm.github.io/twikki/packages/icons.json force\n* https://cawoodm.github.io/twikki/packages/demo.json force\n* https://cawoodm.github.io/twikki/packages/website.json nooverwrite",
       "tags": [
         "$Shadow"
       ],
       "type": "list",
-      "created": "2024-11-03T20:36:53.3022594Z",
-      "updated": "2024-11-09T19:01:27.0100424Z"
+      "created": "2024-11-03T20:36:53.302Z",
+      "updated": "2024-11-09T19:01:27.010Z"
     },
     {
       "title": "$GeneralSettings",
@@ -61,8 +61,8 @@
         "$Shadow"
       ],
       "type": "json",
-      "created": "2024-11-03T20:36:53.3022594Z",
-      "updated": "2024-10-29T14:55:06.4807827Z"
+      "created": "2024-11-03T20:36:53.302Z",
+      "updated": "2024-10-29T14:55:06.481Z"
     },
     {
       "title": "$IconBackup",
@@ -71,8 +71,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3022594Z",
-      "updated": "2024-10-04T20:30:49.4911028Z"
+      "created": "2024-11-03T20:36:53.302Z",
+      "updated": "2024-10-04T20:30:49.491Z"
     },
     {
       "title": "$IconCancel",
@@ -81,8 +81,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3067674Z",
-      "updated": "2024-10-04T19:45:16.2099502Z"
+      "created": "2024-11-03T20:36:53.307Z",
+      "updated": "2024-10-04T19:45:16.210Z"
     },
     {
       "title": "$IconCloseAll",
@@ -91,8 +91,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3074827Z",
-      "updated": "2024-10-04T20:27:08.0374043Z"
+      "created": "2024-11-03T20:36:53.307Z",
+      "updated": "2024-10-04T20:27:08.037Z"
     },
     {
       "title": "$IconDelete",
@@ -101,8 +101,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3074827Z",
-      "updated": "2024-10-04T19:45:16.2099502Z"
+      "created": "2024-11-03T20:36:53.307Z",
+      "updated": "2024-10-04T19:45:16.210Z"
     },
     {
       "title": "$IconDone",
@@ -111,8 +111,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3074827Z",
-      "updated": "2024-10-04T19:45:16.2099502Z"
+      "created": "2024-11-03T20:36:53.307Z",
+      "updated": "2024-10-04T19:45:16.210Z"
     },
     {
       "title": "$IconEdit",
@@ -121,8 +121,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3152307Z",
-      "updated": "2024-10-04T19:45:16.2109509Z"
+      "created": "2024-11-03T20:36:53.315Z",
+      "updated": "2024-10-04T19:45:16.211Z"
     },
     {
       "title": "$IconFavorite",
@@ -131,8 +131,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3172315Z",
-      "updated": "2024-10-04T19:45:16.2109509Z"
+      "created": "2024-11-03T20:36:53.317Z",
+      "updated": "2024-10-04T19:45:16.211Z"
     },
     {
       "title": "$IconHelp",
@@ -141,8 +141,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3172315Z",
-      "updated": "2024-10-04T19:45:16.2119516Z"
+      "created": "2024-11-03T20:36:53.317Z",
+      "updated": "2024-10-04T19:45:16.212Z"
     },
     {
       "title": "$IconNew",
@@ -151,8 +151,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3207657Z",
-      "updated": "2024-10-04T19:45:16.2119516Z"
+      "created": "2024-11-03T20:36:53.321Z",
+      "updated": "2024-10-04T19:45:16.212Z"
     },
     {
       "title": "$IconOpenAll",
@@ -161,8 +161,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3207657Z",
-      "updated": "2024-10-04T20:28:35.3551841Z"
+      "created": "2024-11-03T20:36:53.321Z",
+      "updated": "2024-10-04T20:28:35.355Z"
     },
     {
       "title": "$IconPull",
@@ -171,8 +171,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3232728Z",
-      "updated": "2024-10-24T10:52:02.2465239Z"
+      "created": "2024-11-03T20:36:53.323Z",
+      "updated": "2024-10-24T10:52:02.247Z"
     },
     {
       "title": "$IconPush",
@@ -181,8 +181,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3232728Z",
-      "updated": "2024-10-24T10:51:54.4614194Z"
+      "created": "2024-11-03T20:36:53.323Z",
+      "updated": "2024-10-24T10:51:54.461Z"
     },
     {
       "title": "$IconRefresh",
@@ -191,8 +191,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3232728Z",
-      "updated": "2024-10-04T20:21:19.3672282Z"
+      "created": "2024-11-03T20:36:53.323Z",
+      "updated": "2024-10-04T20:21:19.367Z"
     },
     {
       "title": "$IconRestore",
@@ -201,8 +201,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3232728Z",
-      "updated": "2024-10-04T20:35:27.6136249Z"
+      "created": "2024-11-03T20:36:53.323Z",
+      "updated": "2024-10-04T20:35:27.614Z"
     },
     {
       "title": "$IconSave",
@@ -211,8 +211,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3307556Z",
-      "updated": "2024-10-04T19:45:16.2129525Z"
+      "created": "2024-11-03T20:36:53.331Z",
+      "updated": "2024-10-04T19:45:16.213Z"
     },
     {
       "title": "$IconSettings",
@@ -221,8 +221,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3325171Z",
-      "updated": "2024-10-04T19:45:16.2129525Z"
+      "created": "2024-11-03T20:36:53.333Z",
+      "updated": "2024-10-04T19:45:16.213Z"
     },
     {
       "title": "$IconSynch",
@@ -231,8 +231,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3325171Z",
-      "updated": "2024-10-04T20:37:06.0098287Z"
+      "created": "2024-11-03T20:36:53.333Z",
+      "updated": "2024-10-04T20:37:06.010Z"
     },
     {
       "title": "$IconTag",
@@ -241,8 +241,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3378409Z",
-      "updated": "2024-10-04T19:45:16.2139486Z"
+      "created": "2024-11-03T20:36:53.338Z",
+      "updated": "2024-10-04T19:45:16.214Z"
     },
     {
       "title": "$MainLayout",
@@ -252,8 +252,8 @@
         "$Template"
       ],
       "type": "html/template",
-      "created": "2024-11-07T17:05:57.9455610Z",
-      "updated": "2024-11-27T22:01:44.2263706Z"
+      "created": "2024-11-07T17:05:57.946Z",
+      "updated": "2024-11-27T22:01:44.226Z"
     },
     {
       "title": "$Settings",
@@ -262,8 +262,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3420197Z",
-      "updated": "2024-11-09T18:32:27.6345319Z"
+      "created": "2024-11-03T20:36:53.342Z",
+      "updated": "2024-11-09T18:32:27.635Z"
     },
     {
       "title": "$SiteSubTitle",
@@ -272,8 +272,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3434628Z",
-      "updated": "2024-11-09T19:46:00.0940160Z"
+      "created": "2024-11-03T20:36:53.343Z",
+      "updated": "2024-11-09T19:46:00.094Z"
     },
     {
       "title": "$SiteTitle",
@@ -282,8 +282,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3451847Z",
-      "updated": "2024-11-08T11:51:50.9704605Z"
+      "created": "2024-11-03T20:36:53.345Z",
+      "updated": "2024-11-08T11:51:50.970Z"
     },
     {
       "title": "$StyleSheetCore",
@@ -293,8 +293,8 @@
         "$StyleSheet"
       ],
       "type": "css",
-      "created": "2024-11-03T20:36:53.3493314Z",
-      "updated": "2024-11-11T15:57:54.6046114Z"
+      "created": "2024-11-03T20:36:53.349Z",
+      "updated": "2024-11-11T15:57:54.605Z"
     },
     {
       "title": "$StyleSheetCoreDark",
@@ -304,8 +304,8 @@
         "$StyleSheet"
       ],
       "type": "css",
-      "created": "2024-11-03T20:36:53.3493314Z",
-      "updated": "2024-10-04T19:45:16.2149484Z"
+      "created": "2024-11-03T20:36:53.349Z",
+      "updated": "2024-10-04T19:45:16.215Z"
     },
     {
       "title": "$Theme",
@@ -314,8 +314,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3556100Z",
-      "updated": "2024-10-04T19:45:16.2159490Z"
+      "created": "2024-11-03T20:36:53.356Z",
+      "updated": "2024-10-04T19:45:16.216Z"
     },
     {
       "title": "$ThemeBase",
@@ -325,8 +325,8 @@
         "$StyleSheet"
       ],
       "type": "css",
-      "created": "2024-11-03T20:36:53.3556100Z",
-      "updated": "2024-11-11T13:23:54.1390950Z"
+      "created": "2024-11-03T20:36:53.356Z",
+      "updated": "2024-11-11T13:23:54.139Z"
     },
     {
       "title": "$Themes",
@@ -335,8 +335,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3556100Z",
-      "updated": "2024-10-04T19:45:16.2159490Z"
+      "created": "2024-11-03T20:36:53.356Z",
+      "updated": "2024-10-04T19:45:16.216Z"
     },
     {
       "title": "$TiddlerDisplay",
@@ -346,8 +346,8 @@
         "$Template"
       ],
       "type": "html/template",
-      "created": "2024-11-03T20:36:53.3613581Z",
-      "updated": "2024-11-20T09:22:32.3631905Z"
+      "created": "2024-11-03T20:36:53.361Z",
+      "updated": "2024-11-20T09:22:32.363Z"
     },
     {
       "title": "$TiddlerPreview",
@@ -357,8 +357,8 @@
         "$Template"
       ],
       "type": "html/template",
-      "created": "2024-11-03T20:36:53.3613581Z",
-      "updated": "2024-10-29T12:59:43.5491253Z"
+      "created": "2024-11-03T20:36:53.361Z",
+      "updated": "2024-10-29T12:59:43.549Z"
     },
     {
       "title": "$TiddlerSearchResult",
@@ -368,8 +368,8 @@
         "$Template"
       ],
       "type": "html/template",
-      "created": "2024-11-03T20:36:53.3650856Z",
-      "updated": "2024-10-04T19:45:16.2169485Z"
+      "created": "2024-11-03T20:36:53.365Z",
+      "updated": "2024-10-04T19:45:16.217Z"
     },
     {
       "title": "$TiddlerTrashed",
@@ -379,18 +379,18 @@
         "$Template"
       ],
       "type": "html/template",
-      "created": "2024-11-03T20:36:53.3659518Z",
-      "updated": "2024-10-30T07:58:23.5248196Z"
+      "created": "2024-11-03T20:36:53.366Z",
+      "updated": "2024-10-30T07:58:23.525Z"
     },
     {
       "title": "$TiddlerTypes",
-      "text": "* x-twikki: TWikki Data\n* plain: Plain Text\n* html: HTML\n* html/template: HTML Template\n* css: StyleSheet\n* script/js: JavaScript\n* markdown: Markdown\n* macro: Macro\n* list: List\n* keyval: Key Values\n* table: Tabular Data\n* json: JSON Data\n",
+      "text": "* x-twikki: TWikki Data\n* plain: Plain Text\n* html: HTML\n* html/template: HTML Template\n* css: StyleSheet\n* script/js: JavaScript\n* markdown: Markdown\n* macro: Macro\n* list: List\n* keyval: Key Values\n* table: Tabular Data\n* json: JSON Data",
       "tags": [
         "$Shadow"
       ],
       "type": "keyval",
-      "created": "2024-11-03T20:36:53.3679929Z",
-      "updated": "2024-11-08T11:51:29.4319050Z"
+      "created": "2024-11-03T20:36:53.368Z",
+      "updated": "2024-11-08T11:51:29.432Z"
     },
     {
       "title": "$TitleBar",
@@ -399,19 +399,19 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3694933Z",
-      "updated": "2024-11-20T14:10:19.5832260Z"
+      "created": "2024-11-03T20:36:53.369Z",
+      "updated": "2024-11-20T14:10:19.583Z"
     },
     {
       "title": "$TWikkiVersion",
-      "text": "0.15.2",
+      "text": "0.16.0",
       "tags": [
         "$Shadow",
         "$NoEdit"
       ],
       "type": "plain",
-      "created": "2024-11-03T20:36:53.3722371Z",
-      "updated": "2024-11-27T22:05:43.7866448Z"
+      "created": "2024-11-03T20:36:53.372Z",
+      "updated": "2026-05-26T12:46:45.434Z"
     },
     {
       "title": "$Workspaces",
@@ -420,8 +420,8 @@
         "$Shadow"
       ],
       "type": "x-twikki",
-      "created": "2024-11-03T20:36:53.3393484Z",
-      "updated": "2024-11-07T15:13:14.8565303Z"
+      "created": "2024-11-03T20:36:53.339Z",
+      "updated": "2024-11-07T15:13:14.857Z"
     }
   ]
 }

@@ -10,11 +10,11 @@
     },
     {
       "title": "$GeneralSettings",
-      "text": "{\n  \"backup\": {\n    \"Gist\": {\n      \"accessToken\": \"***\",\n      \"accessToken~\": \"GitHub Personal Access Token (classic) with the gist scope (secret, max:100)\",\n      \"gistId\": \"***\",\n      \"gistId~\": \"Id of the gist to back up to; created automatically on first push (string)\"\n    },\n    \"backupInSeconds\": 60,\n    \"backupInSeconds~\": \"Time in seconds between autobackups (number)\"\n  },\n  \"layout\": {\n    \"mode\": \"tabs\",\n    \"mode~\": \"Mode (option:tabs,river)\"\n  }\n}",
+      "text": "{\n  \"backup\": {\n    \"Gist\": {\n      \"accessToken\": \"***\",\n      \"accessToken~\": \"GitHub Personal Access Token (classic) with the gist scope (secret, max:100)\",\n      \"gistId\": \"***\",\n      \"gistId~\": \"Id of the gist to back up to; created automatically on first push (string)\"\n    },\n    \"backupInSeconds\": 60,\n    \"backupInSeconds~\": \"Time in seconds between autobackups (number)\"\n  },\n  \"layout\": {\n    \"mode\": \"river\",\n    \"mode~\": \"How open notes are displayed: tabs (one note at a time) or river (all stacked) (option:tabs,river)\"\n  },\n  \"themes\": {\n    \"importUrl\": \"https://gist.githubusercontent.com/cawoodm/c43037e0370393ef2928848fee64e95d/raw/themes.json\",\n    \"importUrl~\": \"URL of the themes manifest JSON imported by the Theme Importer (string)\"\n  }\n}",
       "tags": [],
       "type": "json",
       "created": "2026-05-31T17:39:56.575Z",
-      "updated": "2026-05-31T17:39:56.590Z"
+      "updated": "2026-05-31T18:00:09.880Z"
     },
     {
       "title": "$Website",
@@ -34,11 +34,11 @@
     },
     {
       "title": "Concepts",
-      "text": "## Types of Tiddlers\nThe `type` field of a tiddler determines what it's content means and how it is displayed.\n\n* System tiddlers:\n  * In general tiddler titles beginning with `$` are considered SystemTiddlers and hidden by default.\n  * Tiddlers tagged with *$Shadow* are also hidden from normal searches\n  * To view hidden tiddlers just prefix your search with `$`\n* Rendering is based on the tiddler type:\n  * `css`, `html/template` or `scripts/js` are displayed as code with highlighting\n  * `x-twikki` or `markdown` are rendered as markdown and intended for reading\n  *  `list`, `keyval` or `table` are rendered as markdown and intended for storing structured data\n  * `json` is rendered as JSON and intended for storing data/objects\n* Behaviour can be based on type or name:\n  * Type:\n    * Code tiddlers (`scripts/js`) are executed with eval() in the global context\n  * Name:\n    * The [[$Theme]] tiddler is a list of StyleSheets which are applied as CSS\n    * The [[$CorePackages]] tiddler is a list of packages which are imported as tiddlers\n    * The [[$TiddlerDisplay]] tiddler is an HTML template for customizing how tiddlers are displayed\n  \n* $Shadow tiddlers are included in source, expected to be there and we cannot start without them\n* Packages specified in [[$CorePackages]] are loaded from URLs when we start\n  * Core: Adds basic useful functionality\n  * Website: provides helpful content and functionality for the TWikki website\n  * Onboarding: The onboarding package helps users learn TWikki\n* Tiddlers imported via a package are not automatically saved to your localStorage when you save\n  * If you edit and save them then they will be\n  * Once you save them, they will not be overwritten from the package until you delete them",
+      "text": "## Types of Tiddlers\nThe `type` field of a tiddler determines what it's content means and how it is displayed.\n\n* System tiddlers:\n  * In general tiddler titles beginning with `$` are considered SystemTiddlers and hidden by default.\n  * To view hidden tiddlers just prefix your search with `$`\n* Rendering is based on the tiddler type:\n  * `css`, `html/template` or `scripts/js` are displayed as code with highlighting\n  * `x-twikki` or `markdown` are rendered as markdown and intended for reading\n  *  `list`, `keyval` or `table` are rendered as markdown and intended for storing structured data\n  * `json` is rendered as JSON and intended for storing data/objects\n* Behaviour can be based on type or name:\n  * Type:\n    * Code tiddlers (`scripts/js`) are executed with eval() in the global context\n  * Name:\n    * The [[$Theme]] tiddler is a list of StyleSheets which are applied as CSS\n    * The [[$CorePackages]] tiddler is a list of packages which are imported as tiddlers\n    * The [[$TiddlerDisplay]] tiddler is an HTML template for customizing how tiddlers are displayed\n  \n* $Shadow tiddlers are included in source, expected to be there and we cannot start without them\n* Packages specified in [[$CorePackages]] are loaded from URLs when we start\n  * Core: Adds basic useful functionality\n  * Website: provides helpful content and functionality for the TWikki website\n  * Onboarding: The onboarding package helps users learn TWikki\n* Tiddlers imported via a package are not automatically saved to your localStorage when you save\n  * If you edit and save them then they will be\n  * Once you save them, they will not be overwritten from the package until you delete them",
       "tags": [],
       "type": "x-twikki",
       "created": "2024-11-08T10:20:43.460Z",
-      "updated": "2024-11-08T11:51:29.431Z"
+      "updated": "2026-05-31T17:53:44.458Z"
     },
     {
       "title": "DataList",

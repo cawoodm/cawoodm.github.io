@@ -1,24 +1,12 @@
 {
   "tiddlers": [
     {
-      "title": "AuroraStyleSheet",
-      "text": ":root {\n  --colbg1: #0e1626;\n  --colbg2: #18233a;\n  --colbg3: #1f2d49;\n  --colbgi: #0b1220;\n  --colfg:  #dce6f5;\n  --colfgi: #eaf2ff;\n  --col0:   #02060d;\n  --col1:   #6f8bb5;\n  --col3:   #2a9d8f;\n  --col4:   #33507f;\n  --col6:   #5fe1c6;\n  --notify-rgba: 47, 157, 143;\n  --rad1: 14px;\n  --rad2: 14px;\n  --rad3: 14px;\n  --rad4: 14px;\n}\n\n* {\n  font-family: \"Segoe UI\", system-ui, sans-serif;\n}\n\nbody {\n  background:\n    radial-gradient(900px 500px at 100% -10%, rgba(95, 225, 198, 0.10), transparent 60%),\n    radial-gradient(700px 500px at -10% 0%, rgba(51, 80, 127, 0.35), transparent 55%),\n    var(--colbg1);\n}\n\ndiv#header {\n  background: linear-gradient(135deg, #1f2d49, #142038);\n  border: 1px solid #33507f;\n  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);\n}\n\ndiv#sidebar {\n  background: rgba(31, 45, 73, 0.6);\n  border: 1px solid #2c4474;\n}\n\ndiv.tiddler {\n  background: linear-gradient(180deg, #1a2740, #162033);\n  outline: none;\n  border: 1px solid #2c4474;\n  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);\n}\n\ndiv.tiddler div.title {\n  background: transparent;\n  color: #bfe9df;\n  letter-spacing: 0.5px;\n}\n\na:not([class]) {\n  color: #5fe1c6;\n}\n\nbutton {\n  background: #21507a;\n  color: #dce6f5;\n}\n\ncode {\n  color: #9af0dc;\n}",
-      "tags": [
-        "$StyleSheet"
-      ],
-      "type": "css",
-      "created": "2026-05-30T05:48:10.184Z",
-      "updated": "2026-05-30T05:48:10.188Z"
-    },
-    {
       "title": "AuroraTheme",
-      "text": "* [[$StyleSheetCore]]\n* [[$ThemeBase]]\n* [[AuroraStyleSheet]]",
-      "tags": [
-        "$Theme"
-      ],
+      "text": "A nice theme\n\n## AuroraTheme\n```tiddler\ntags: $Theme\n\n* [[$StyleSheetCore]]\n* [[$ThemeBase]]\n* [[AuroraStyleSheet]]\n```\n\n## AuroraStyleSheet\n```css\n:root {\n  --colbg1: #0e1626;\n  --colbg2: #18233a;\n  --colbg3: #1f2d49;\n  --colbgi: #0b1220;\n  --colfg:  #dce6f5;\n  --colfgi: #eaf2ff;\n  --col0:   #02060d;\n  --col1:   #6f8bb5;\n  --col3:   #2a9d8f;\n  --col4:   #33507f;\n  --col6:   #5fe1c6;\n  --notify-rgba: 47, 157, 143;\n  --rad1: 14px;\n  --rad2: 14px;\n  --rad3: 14px;\n  --rad4: 14px;\n}\n\n* {\n  font-family: \"Segoe UI\", system-ui, sans-serif;\n}\n\nbody {\n  background:\n    radial-gradient(900px 500px at 100% -10%, rgba(95, 225, 198, 0.10), transparent 60%),\n    radial-gradient(700px 500px at -10% 0%, rgba(51, 80, 127, 0.35), transparent 55%),\n    var(--colbg1);\n}\n\ndiv#header {\n  background: linear-gradient(135deg, #1f2d49, #142038);\n  border: 1px solid #33507f;\n  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);\n}\n\ndiv#sidebar {\n  background: rgba(31, 45, 73, 0.6);\n  border: 1px solid #2c4474;\n}\n\ndiv.tiddler {\n  background: linear-gradient(180deg, #1a2740, #162033);\n  outline: none;\n  border: 1px solid #2c4474;\n  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);\n}\n\ndiv.tiddler div.title {\n  background: transparent;\n  color: #bfe9df;\n  letter-spacing: 0.5px;\n}\n\na:not([class]) {\n  color: #5fe1c6;\n}\n\nbutton {\n  background: #21507a;\n  color: #dce6f5;\n}\n\ncode {\n  color: #9af0dc;\n}\n```",
+      "tags": [],
       "type": "x-twikki",
       "created": "2026-05-30T05:48:13.424Z",
-      "updated": "2026-05-30T05:48:13.427Z"
+      "updated": "2026-05-31T18:03:44.774Z"
     },
     {
       "title": "BroadsheetStyleSheet",

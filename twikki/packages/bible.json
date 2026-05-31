@@ -1,0 +1,666 @@
+{
+  "tiddlers": [
+    {
+      "title": "1Ch",
+      "text": "<<tiddler [[VerseFET3]] with:\"1st Chronicles\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:27.998Z",
+      "updated": "2026-05-31T16:07:27.998Z"
+    },
+    {
+      "title": "1Cr",
+      "text": "<<tiddler [[VerseFET3]] with:\"1 Corinthians\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.003Z",
+      "updated": "2026-05-31T16:07:28.004Z"
+    },
+    {
+      "title": "1Jo",
+      "text": "<<tiddler [[VerseFET3]] with:\"1 John\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.006Z",
+      "updated": "2026-05-31T16:07:28.006Z"
+    },
+    {
+      "title": "1Ki",
+      "text": "<<tiddler [[VerseFET3]] with:\"1st Kings\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.007Z",
+      "updated": "2026-05-31T16:07:28.007Z"
+    },
+    {
+      "title": "1Pe",
+      "text": "<<tiddler [[VerseFET3]] with:\"1 Peter\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.011Z",
+      "updated": "2026-05-31T16:07:28.011Z"
+    },
+    {
+      "title": "1Sa",
+      "text": "<<tiddler [[VerseFET3]] with:\"1st Samuel\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.012Z",
+      "updated": "2026-05-31T16:07:28.012Z"
+    },
+    {
+      "title": "1Th",
+      "text": "<<tiddler [[VerseFET3]] with:\"1 Thessalonians\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.017Z",
+      "updated": "2026-05-31T16:07:28.018Z"
+    },
+    {
+      "title": "1Ti",
+      "text": "<<tiddler [[VerseFET3]] with:\"1 Timothy\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.019Z",
+      "updated": "2026-05-31T16:07:28.019Z"
+    },
+    {
+      "title": "2Ch",
+      "text": "<<tiddler [[VerseFET3]] with:\"2nd Chronicles\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.019Z",
+      "updated": "2026-05-31T16:07:28.020Z"
+    },
+    {
+      "title": "2Cr",
+      "text": "<<tiddler [[VerseFET3]] with:\"2 Corinthians\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.026Z",
+      "updated": "2026-05-31T16:07:28.026Z"
+    },
+    {
+      "title": "2Jo",
+      "text": "<<tiddler [[VerseFET3]] with:\"2 John\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.027Z",
+      "updated": "2026-05-31T16:07:28.028Z"
+    },
+    {
+      "title": "2Ki",
+      "text": "<<tiddler [[VerseFET3]] with:\"2nd Kings\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.028Z",
+      "updated": "2026-05-31T16:07:28.028Z"
+    },
+    {
+      "title": "2Pe",
+      "text": "<<tiddler [[VerseFET3]] with:\"2 Peter\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.033Z",
+      "updated": "2026-05-31T16:07:28.034Z"
+    },
+    {
+      "title": "2Sa",
+      "text": "<<tiddler [[VerseFET3]] with:\"2nd Samuel\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.034Z",
+      "updated": "2026-05-31T16:07:28.035Z"
+    },
+    {
+      "title": "2Th",
+      "text": "<<tiddler [[VerseFET3]] with:\"2 Thessalonians\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.039Z",
+      "updated": "2026-05-31T16:07:28.039Z"
+    },
+    {
+      "title": "2Ti",
+      "text": "<<tiddler [[VerseFET3]] with:\"2 Timothy\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.039Z",
+      "updated": "2026-05-31T16:07:28.039Z"
+    },
+    {
+      "title": "3Jo",
+      "text": "<<tiddler [[VerseFET3]] with:\"3 John\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.040Z",
+      "updated": "2026-05-31T16:07:28.040Z"
+    },
+    {
+      "title": "Act",
+      "text": "<<tiddler [[VerseFET3]] with:\"Acts\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.040Z",
+      "updated": "2026-05-31T16:07:28.041Z"
+    },
+    {
+      "title": "Amo",
+      "text": "<<tiddler [[VerseFET3]] with:\"Amos\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.045Z",
+      "updated": "2026-05-31T16:07:28.045Z"
+    },
+    {
+      "title": "Col",
+      "text": "<<tiddler [[VerseFET3]] with:\"Colossians\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.046Z",
+      "updated": "2026-05-31T16:07:28.046Z"
+    },
+    {
+      "title": "Dan",
+      "text": "<<tiddler [[VerseFET3]] with:\"Daniel\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.046Z",
+      "updated": "2026-05-31T16:07:28.046Z"
+    },
+    {
+      "title": "Deu",
+      "text": "<<tiddler [[VerseFET3]] with:\"Deuteronomy\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.049Z",
+      "updated": "2026-05-31T16:07:28.049Z"
+    },
+    {
+      "title": "Ecc",
+      "text": "<<tiddler [[VerseFET3]] with:\"Ecclesiastes\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.053Z",
+      "updated": "2026-05-31T16:07:28.053Z"
+    },
+    {
+      "title": "Eph",
+      "text": "<<tiddler [[VerseFET3]] with:\"Ephesians\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.055Z",
+      "updated": "2026-05-31T16:07:28.055Z"
+    },
+    {
+      "title": "Est",
+      "text": "<<tiddler [[VerseFET3]] with:\"Esther\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.056Z",
+      "updated": "2026-05-31T16:07:28.056Z"
+    },
+    {
+      "title": "Exd",
+      "text": "<<tiddler [[VerseFET3]] with:\"Exodus\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.057Z",
+      "updated": "2026-05-31T16:07:28.057Z"
+    },
+    {
+      "title": "Eze",
+      "text": "<<tiddler [[VerseFET3]] with:\"Ezekiel\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.062Z",
+      "updated": "2026-05-31T16:07:28.063Z"
+    },
+    {
+      "title": "Ezr",
+      "text": "<<tiddler [[VerseFET3]] with:\"Ezra\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.068Z",
+      "updated": "2026-05-31T16:07:28.068Z"
+    },
+    {
+      "title": "Gal",
+      "text": "<<tiddler [[VerseFET3]] with:\"Galatians\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.070Z",
+      "updated": "2026-05-31T16:07:28.070Z"
+    },
+    {
+      "title": "Gen",
+      "text": "<<tiddler [[VerseFET3]] with:\"Genesis\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.071Z",
+      "updated": "2026-05-31T16:07:28.071Z"
+    },
+    {
+      "title": "Hab",
+      "text": "<<tiddler [[VerseFET3]] with:\"Habakkuk\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.077Z",
+      "updated": "2026-05-31T16:07:28.077Z"
+    },
+    {
+      "title": "Hag",
+      "text": "<<tiddler [[VerseFET3]] with:\"Haggai\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.078Z",
+      "updated": "2026-05-31T16:07:28.078Z"
+    },
+    {
+      "title": "Hbr",
+      "text": "<<tiddler [[VerseFET3]] with:\"Hebrews\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.078Z",
+      "updated": "2026-05-31T16:07:28.078Z"
+    },
+    {
+      "title": "Hsa",
+      "text": "<<tiddler [[VerseFET3]] with:\"Hosea\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.080Z",
+      "updated": "2026-05-31T16:07:28.080Z"
+    },
+    {
+      "title": "Isa",
+      "text": "<<tiddler [[VerseFET3]] with:\"Isaiah\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.082Z",
+      "updated": "2026-05-31T16:07:28.082Z"
+    },
+    {
+      "title": "Jam",
+      "text": "<<tiddler [[VerseFET3]] with:\"James\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.089Z",
+      "updated": "2026-05-31T16:07:28.089Z"
+    },
+    {
+      "title": "Jdg",
+      "text": "<<tiddler [[VerseFET3]] with:\"Judges\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.089Z",
+      "updated": "2026-05-31T16:07:28.090Z"
+    },
+    {
+      "title": "Jer",
+      "text": "<<tiddler [[VerseFET3]] with:\"Jeremiah\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.092Z",
+      "updated": "2026-05-31T16:07:28.092Z"
+    },
+    {
+      "title": "Jhn",
+      "text": "<<tiddler [[VerseFET3]] with:\"John\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.098Z",
+      "updated": "2026-05-31T16:07:28.098Z"
+    },
+    {
+      "title": "JOB",
+      "text": "<<tiddler [[VerseFET3]] with:\"Job\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.088Z",
+      "updated": "2026-05-31T16:07:28.088Z"
+    },
+    {
+      "title": "Joe",
+      "text": "<<tiddler [[VerseFET3]] with:\"Joel\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.106Z",
+      "updated": "2026-05-31T16:07:28.106Z"
+    },
+    {
+      "title": "Jon",
+      "text": "<<tiddler [[VerseFET3]] with:\"Jonah\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.107Z",
+      "updated": "2026-05-31T16:07:28.107Z"
+    },
+    {
+      "title": "Jos",
+      "text": "<<tiddler [[VerseFET3]] with:\"Joshua\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.107Z",
+      "updated": "2026-05-31T16:07:28.108Z"
+    },
+    {
+      "title": "Jud",
+      "text": "<<tiddler [[VerseFET3]] with:\"Jude\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.110Z",
+      "updated": "2026-05-31T16:07:28.111Z"
+    },
+    {
+      "title": "Lam",
+      "text": "<<tiddler [[VerseFET3]] with:\"Lamentations\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.113Z",
+      "updated": "2026-05-31T16:07:28.113Z"
+    },
+    {
+      "title": "Lev",
+      "text": "<<tiddler [[VerseFET3]] with:\"Leviticus\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.114Z",
+      "updated": "2026-05-31T16:07:28.115Z"
+    },
+    {
+      "title": "Luk",
+      "text": "<<tiddler [[VerseFET3]] with:\"Luke\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.118Z",
+      "updated": "2026-05-31T16:07:28.118Z"
+    },
+    {
+      "title": "Mal",
+      "text": "<<tiddler [[VerseFET3]] with:\"Malachi\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.122Z",
+      "updated": "2026-05-31T16:07:28.123Z"
+    },
+    {
+      "title": "Mar",
+      "text": "<<tiddler [[VerseFET3]] with:\"Mark\">>",
+      "tags": [
+        "links",
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.123Z",
+      "updated": "2026-05-31T16:07:28.123Z"
+    },
+    {
+      "title": "Mat",
+      "text": "<script>\nvar chnum = store.getValue(tiddler,\"chaptersnumber\")\n</script>\n<<forEachTiddler\n where\n 'tiddler.title.contains(\"Mat\")'\n      write\n'(index < chnum) ? \"[[Mat Chapter \"+(index+1)+\"]]\\n\" : \"\"'\n>>",
+      "tags": [
+        "links",
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.126Z",
+      "updated": "2026-05-31T16:07:28.126Z"
+    },
+    {
+      "title": "Mic",
+      "text": "<<tiddler [[VerseFET3]] with:\"Micah\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.131Z",
+      "updated": "2026-05-31T16:07:28.131Z"
+    },
+    {
+      "title": "Nah",
+      "text": "<<tiddler [[VerseFET3]] with:\"Nahum\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.132Z",
+      "updated": "2026-05-31T16:07:28.132Z"
+    },
+    {
+      "title": "Neh",
+      "text": "<<tiddler [[VerseFET3]] with:\"Nehemiah\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.133Z",
+      "updated": "2026-05-31T16:07:28.133Z"
+    },
+    {
+      "title": "Num",
+      "text": "<<tiddler [[VerseFET3]] with:\"Numbers\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.135Z",
+      "updated": "2026-05-31T16:07:28.136Z"
+    },
+    {
+      "title": "Oba",
+      "text": "<<tiddler [[VerseFET3]] with:\"Obadiah\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.141Z",
+      "updated": "2026-05-31T16:07:28.141Z"
+    },
+    {
+      "title": "Phl",
+      "text": "<<tiddler [[VerseFET3]] with:\"Philippians\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.143Z",
+      "updated": "2026-05-31T16:07:28.143Z"
+    },
+    {
+      "title": "Phm",
+      "text": "<<tiddler [[VerseFET3]] with:\"Philemon\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.143Z",
+      "updated": "2026-05-31T16:07:28.143Z"
+    },
+    {
+      "title": "Pro",
+      "text": "<<tiddler [[VerseFET3]] with:\"Proverbs\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.144Z",
+      "updated": "2026-05-31T16:07:28.144Z"
+    },
+    {
+      "title": "Psa",
+      "text": "<<tiddler [[VerseFET3]] with:\"Psalms\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.147Z",
+      "updated": "2026-05-31T16:07:28.147Z"
+    },
+    {
+      "title": "Rev",
+      "text": "<<tiddler [[VerseFET3]] with:\"Revelation\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.157Z",
+      "updated": "2026-05-31T16:07:28.157Z"
+    },
+    {
+      "title": "Rom",
+      "text": "<<tiddler [[VerseFET3]] with:\"Romans\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.159Z",
+      "updated": "2026-05-31T16:07:28.160Z"
+    },
+    {
+      "title": "Rth",
+      "text": "<<tiddler [[VerseFET3]] with:\"Ruth\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.162Z",
+      "updated": "2026-05-31T16:07:28.162Z"
+    },
+    {
+      "title": "Sgs",
+      "text": "<<tiddler [[VerseFET3]] with:\"Song of Songs\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.163Z",
+      "updated": "2026-05-31T16:07:28.163Z"
+    },
+    {
+      "title": "Tts",
+      "text": "<<tiddler [[VerseFET3]] with:\"Titus\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.164Z",
+      "updated": "2026-05-31T16:07:28.164Z"
+    },
+    {
+      "title": "Zec",
+      "text": "<<tiddler [[VerseFET3]] with:\"Zechariah\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.165Z",
+      "updated": "2026-05-31T16:07:28.165Z"
+    },
+    {
+      "title": "Zep",
+      "text": "<<tiddler [[VerseFET3]] with:\"Zephaniah\">>",
+      "tags": [
+        "book"
+      ],
+      "type": "x-twikki",
+      "created": "2026-05-31T16:07:28.166Z",
+      "updated": "2026-05-31T16:07:28.166Z"
+    }
+  ]
+}

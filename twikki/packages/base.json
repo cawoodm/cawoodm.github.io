@@ -229,15 +229,15 @@
     },
     {
       "title": "ObsidianThemeDark",
-      "text": "A modern dark theme with a violet accent (the TWikki default).\n\n# ObsidianThemeDark\ntags: $Theme,$ThemeDark\n* [[$StyleSheetCore]]\n* [[ObsidianThemeDark/ObsidianStyleSheetDark]]\n* [[$ThemeBase]]\n* [[$StyleSheetUser]]\n\n# ObsidianStyleSheetDark\ntags: $StyleSheet\n```css\n/* ============================================================\n   Obsidian — a modern dark theme (the new TWikki default)\n   Dark, dense, muted, with a violet accent. Defines the look\n   purely by assigning the shared design tokens, so every\n   component (which reads the tokens) recolours automatically.\n   ============================================================ */\n:root {\n  /* Backgrounds (layered, darkest = sidebar) */\n  --colbg1: #1e1e1f; /* main pane behind notes */\n  --colbg2: #262629; /* note cards, dialogs, popovers */\n  --colbg3: #181819; /* sidebar, tab strip, raised chrome */\n  --colbgi: #1a1a1c; /* form inputs */\n\n  /* Foreground */\n  --colfg:  #dcddde; /* body text */\n  --colfgi: #e9eaec; /* input text */\n\n  /* Neutrals & accents */\n  --col0: #000000;   /* shadows */\n  --col1: #9a9ba0;   /* muted text, icons */\n  --col3: #7c6fd6;   /* filled controls (buttons, th) */\n  --col4: #34343a;   /* hairline borders */\n  --col6: #a78bfa;   /* links, hover accent */\n\n  --notify-rgba: 124, 111, 214;\n\n  --rad1: 6px;\n  --rad2: 6px;\n  --rad3: 6px;\n  --rad4: 6px;\n\n  /* Layout tokens */\n  --sidebar-w: 280px;\n  --accent: #a78bfa;\n  --accent-2: #7c6fd6;\n  --tab-bg: #181819;        /* inactive tab — matches sidebar */\n  --tab-active-bg: #1e1e1f; /* active tab — matches main pane */\n}\n```",
+      "text": "A modern dark theme with a violet accent (the TWikki default).\n\n# ObsidianThemeDark\ntags: $Theme,$ThemeDark\n* [[$StyleSheetCore]]\n* [[ObsidianThemeDark::ObsidianStyleSheetDark]]\n* [[$ThemeBase]]\n* [[$StyleSheetUser]]\n\n# ObsidianStyleSheetDark\ntags: $StyleSheet\n```css\n/* ============================================================\n   Obsidian — a modern dark theme (the new TWikki default)\n   Dark, dense, muted, with a violet accent. Defines the look\n   purely by assigning the shared design tokens, so every\n   component (which reads the tokens) recolours automatically.\n   ============================================================ */\n:root {\n  /* Backgrounds (layered, darkest = sidebar) */\n  --colbg1: #1e1e1f; /* main pane behind notes */\n  --colbg2: #262629; /* note cards, dialogs, popovers */\n  --colbg3: #181819; /* sidebar, tab strip, raised chrome */\n  --colbgi: #1a1a1c; /* form inputs */\n\n  /* Foreground */\n  --colfg:  #dcddde; /* body text */\n  --colfgi: #e9eaec; /* input text */\n\n  /* Neutrals & accents */\n  --col0: #000000;   /* shadows */\n  --col1: #9a9ba0;   /* muted text, icons */\n  --col3: #7c6fd6;   /* filled controls (buttons, th) */\n  --col4: #34343a;   /* hairline borders */\n  --col6: #a78bfa;   /* links, hover accent */\n\n  --notify-rgba: 124, 111, 214;\n\n  --rad1: 6px;\n  --rad2: 6px;\n  --rad3: 6px;\n  --rad4: 6px;\n\n  /* Layout tokens */\n  --sidebar-w: 280px;\n  --accent: #a78bfa;\n  --accent-2: #7c6fd6;\n  --tab-bg: #181819;        /* inactive tab — matches sidebar */\n  --tab-active-bg: #1e1e1f; /* active tab — matches main pane */\n}\n```",
       "tags": [
         "$NoEdit",
         "$Theme",
         "$ThemeDark"
       ],
       "type": "x-twikki",
-      "created": "2026-05-31T16:47:11.529Z",
-      "updated": "2026-06-01T12:40:15.254Z"
+      "created": "2026-06-02T10:37:55.339Z",
+      "updated": "2026-06-02T10:37:55.340Z"
     },
     {
       "title": "SelectorWidget",

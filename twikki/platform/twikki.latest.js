@@ -1,7 +1,7 @@
 (function() {
 
   const NAME = 'twikki';
-  const VERSION = '0.19.0';
+  const VERSION = '0.21.0';
   // Default base URL the platform loads its core modules and packages from.
   // Mirrors $GeneralSettings.urls.moduleUrl — kept as a constant because baseUrl
   // is needed to fetch the very modules that carry $GeneralSettings (bootstrap
@@ -203,11 +203,23 @@
       document.title = renderTiddler('$SiteTitle');
       tw.extend = {tiddlerDetails: {
         metaInfo(t) {
-          return tw.core.markdown.render([
-            `${t.package ? '[pck:' + t.package + '](#msg:search:$pck:' + t.package + ')' : ''}`,
-            `${t.doNotSave ? 'doNotSave ✅' : ''}`,
-            `${t.isRawShadow ? 'isRawShadow ✅' : ''}`,
-          ].join(' '));
+          // The package is a picker (see $PickerPlugin): clicking it lists every
+          // tiddler in that package (built lazily from data-source="package");
+          // picking one opens it. Raw HTML — the picker needs real markup.
+          const parts = [];
+          if (t.package) {
+            const arg = String(t.package).replace(/"/g, '&quot;');
+            const label = tw.core.common.escapeHtml(t.package);
+            parts.push(
+              `<span class="picker pck-picker" data-event="tiddler.show" data-source="package" data-source-arg="${arg}">` +
+                `<button class="picker-trigger pck-pill">pck:${label}</button>` +
+                `<div class="picker-menu" hidden></div>` +
+              `</span>`,
+            );
+          }
+          if (t.doNotSave) parts.push('doNotSave ✅');
+          if (t.isRawShadow) parts.push('isRawShadow ✅');
+          return parts.join(' ');
         },
       }};
 
@@ -224,6 +236,7 @@
         getSection,
         getTiddlerList,
         getTiddlersByTag,
+        getTiddlersByPackage,
         getTiddlerTextList,
         getTiddlerTextRaw,
         getJSONObject,
@@ -271,6 +284,8 @@
       tw.macros = {
         core: {
           showTiddlerList,
+          // <<Tag Foo>> — render tag "Foo" as a picker listing all tiddlers tagged Foo.
+          Tag: tag => tagPickerHtml(String(tag ?? '')),
           disabled: (...rest) => ('This macro is disabled!' + JSON.stringify(rest)),
         },
       };
@@ -567,21 +582,32 @@
     }
   }
   function makeTiddlerTagLinks(tags) {
-    return tw.core.markdown.render(tags.map(t => {
-      return `[${t}](#msg:ui.open.all:{tag:'${t}',title:'*'})`;
-    /* let link = `msg:ui.open.all:{tag:'${t}'}`;
-    return `<a href="#${escapeHtml(link)}">${escapeHtml(t)}</a>`;*/
-    }).join(', '));
+    return tags.map(tagPickerHtml).join('');
+  }
+  // A single tag rendered as a picker (see $PickerPlugin): clicking it lists every
+  // tiddler carrying that tag (built lazily from data-source="tag"); picking one
+  // opens it. Used by the tag row at the bottom of notes and the <<Tag>> macro.
+  function tagPickerHtml(tag) {
+    if (!tag) return '';
+    let label = tw.core.common.escapeHtml(tag);
+    let arg = label.replace(/"/g, '&quot;');
+    return `<span class="picker tag-picker" data-event="tiddler.show" data-source="tag" data-source-arg="${arg}">` +
+      `  <button class="picker-trigger pck-pill">${label}</button>` +
+      '  <span class="picker-menu" hidden></span>' +
+      '</span>';
   }
   function renderTiddler(title) {
     return renderTWikki({text: getTiddlerTextRaw(title), title});
   }
   function renderTWikki({text, title, validation}) {
-    let result = text;
+    // Hide fenced/inline code from the wikitext transforms below so their
+    // contents render verbatim; restored before markdown parsing.
+    const {masked, restore} = maskCodeRegions(text);
+    let result = masked;
     try {
     // TODO: Label this tiddler to update when one of these macros change!
 
-      getMacros(text).forEach(m => {
+      getMacros(result).forEach(m => {
         let macroNameOrig = m[1];
         let macroName = macroNameOrig;
         const macroCommand = new RegExp(`(?<!\`)<<${macroNameOrig}`);
@@ -661,10 +687,28 @@
       if (validation) throw e;
       return `<span class="error">ERROR: renderTWikki '${title}' Failed: ${e.message}</span>`;
     }
-    return result;
+    return restore(result);
   }
   function replaceFrom(text, index, search, replace) {
     return text.substring(0, index) + text.substring(index).replace(search, replace);
+  }
+  // Mask fenced code blocks (```...```) and inline code spans (`...`) so the
+  // macro/inclusion/wikilink transforms in renderTWikki leave their contents
+  // verbatim; markdown-it renders the restored code literally. Sentinels use
+  // the Unicode Private-Use Area so they contain no `[[`/`{{`/`<<` delimiters
+  // and can never collide with real content (or stray digits) on restore.
+  function maskCodeRegions(text) {
+    const store = []; // holds masked code regions
+    const stash = m => {
+      const token = `${store.length}`;
+      store.push(m);
+      return token;
+    };
+    // Fenced blocks first (they may contain inline backticks), then inline spans.
+    let masked = text.replace(/```[\s\S]*?```/g, stash);
+    masked = masked.replace(/`[^`\n]*`/g, stash);
+    const restore = s => s.replace(/(\d+)/g, (_, i) => store[Number(i)]);
+    return {masked, restore};
   }
   function getMacros(text) {
     return Array.from(text.matchAll(reMacros));
@@ -938,20 +982,20 @@
   }
 
   /* TODO: Move to $GeneralCoreMacros.js */
-  function showAllTiddlers({tag, title, pck}) {
+  function showAllTiddlers({tag, title, pck}={}) {
     if (!title) title = '!^\\$';
     tiddlerList({title, tag, pck})
       .map(t => t.title)
       .forEach(showTiddler);
     renderAllTiddlers();
   }
-  function closeAllTiddlers({tag = '', title = '', pck}) {
+  function closeAllTiddlers({tag = '', title = '', pck}={}) {
     if (!title) title = '!^\\$';
     tiddlerList({title, tag, pck})
       .map(t => t.title)
       .forEach(hideTiddler);
   }
-  function tiddlerList({title, tag, pck}) {
+  function tiddlerList({title, tag, pck}={}) {
     return tw.tiddlers.all
       .filter(titleMatch(title))
       .filter(tagMatch(tag))
@@ -1145,6 +1189,9 @@
   function getJSONObject(title) {
     return JSON.parse(getTiddlerTextRaw(title));
   }
+  function getTiddlersByPackage(pck) {
+    return tw.tiddlers.all.filter(t => t.package === pck);
+  }
   function getTiddlersByTag(tag) {
     return tw.tiddlers.all.filter(t => t.tags.includes(tag));
   }
@@ -1172,6 +1219,7 @@
   function tiddlerCodeBlocks(t) {
     if (!t || t.tags?.includes('$CodeDisabled')) return [];
     if (t.type === 'script/js') return [{text: t.text || '', title: t.title}];
+    if (!t.tags?.includes('$Plugin')) return []; // Disable execution of inline code blocks for non-Plugins
     if (!t.text || !t.text.includes('# ')) return []; // fast path: no h1 sections
     const parsed = tw.core.sections.parseSections(t.text);
     return parsed.order

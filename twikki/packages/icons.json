@@ -143,6 +143,22 @@
       "type": "x-twikki",
       "created": "2024-11-08T10:20:43.523Z",
       "updated": "2024-11-20T10:04:07.657Z"
+    },
+    {
+      "title": "$IconTheme",
+      "text": "<svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" fill-rule=\"evenodd\" aria-hidden=\"true\"><path d=\"M12 3a9 9 0 1 0 0 18 9 9 0 1 0 0-18zM12 5a7 7 0 0 1 0 14z\"/></svg>",
+      "tags": [],
+      "type": "x-twikki",
+      "created": "2026-06-04T10:03:05.159Z",
+      "updated": "2026-06-04T10:03:18.818Z"
+    },
+    {
+      "title": "$IconWorkspace",
+      "text": "<svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\" aria-hidden=\"true\"><path d=\"M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z\"/></svg>",
+      "tags": [],
+      "type": "x-twikki",
+      "created": "2026-06-04T10:02:07.010Z",
+      "updated": "2026-06-04T10:02:07.273Z"
     }
   ]
 }

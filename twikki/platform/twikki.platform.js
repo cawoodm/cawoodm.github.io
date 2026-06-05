@@ -1,12 +1,7 @@
 (function() {
 
   const NAME = 'twikki';
-  const VERSION = '0.21.0';
-  // Default base URL the platform loads its core modules and packages from.
-  // Mirrors $GeneralSettings.urls.moduleUrl — kept as a constant because baseUrl
-  // is needed to fetch the very modules that carry $GeneralSettings (bootstrap
-  // chicken-and-egg), so the setting cannot be read before this point.
-  const MODULE_URL = 'https://cawoodm.github.io/twikki';
+  const VERSION = '0.22.0';
 
   overrides();
 
@@ -50,6 +45,18 @@
     return localStorage.setItem(key, value);
   }
 
+  // Generic file drag/drop: plugins claim dropped files by filename glob via
+  // tw.run.registerDropHandler('*.workspace.json', (text, file) => {...}).
+  // The most specific (longest) matching pattern wins.
+  const dropHandlers = [];
+  let dragDepth = 0; // counter avoids overlay flicker when dragging over child elements
+  function globToRegex(pattern) {
+    return new RegExp('^' + pattern.replace(/[.]/g, '\\$&').replace(/\*/g, '.*') + '$', 'i');
+  }
+  function registerDropHandler(pattern, handler) {
+    dropHandlers.push({pattern, rx: globToRegex(pattern), handler});
+  }
+
   window.twikki = {
     name: NAME,
     version: VERSION,
@@ -82,7 +89,7 @@
       console.debug(`TWikki (v${VERSION}) starting...`);
       document.title = `TWikki v${VERSION}`;
 
-      baseUrl = MODULE_URL;
+      baseUrl = window.MODULE_URL || 'https://cawoodm.github.io/twikki';
       // Local dev: serve modules/packages from the dev server, not the published copy
       if (document.location.host.match(/^(localhost)|(\d+\.\d+\.\d+\.\d+):\d+$/)) baseUrl = document.location.origin;
 
@@ -255,6 +262,7 @@
         renderAllTiddlers,
         sendCommand,
         reload,
+        registerDropHandler,
         tiddler: {
           getJSONObject,
           updateText: updateTiddlerText,
@@ -813,7 +821,6 @@
     save();
   }
   function setDirty(dirty) {
-  // TODO: Update UI/CSS
     if (dirty) {
       tw.ui.isDirty = true;
       window.addEventListener('beforeunload', preventBrowserClose);
@@ -821,6 +828,7 @@
       tw.ui.isDirty = false;
       window.removeEventListener('beforeunload', preventBrowserClose);
     }
+    tw.events.send('dirty.changed', dirty);
   }
   function preventBrowserClose(event) {
     event.preventDefault();
@@ -1345,6 +1353,8 @@
     // Edit Mode
     tw.core.dom.$('new-save')?.addEventListener('click', formDone);
     tw.core.dom.$('new-cancel')?.addEventListener('click', formCancel);
+    // Escape behaves like Cancel ('cancel' only fires for user-agent dismissal, not .close())
+    tw.core.dom.$('new-dialog').addEventListener('cancel', formCancel);
 
     document.addEventListener('click', event => {
       let el = event.target;
@@ -1398,6 +1408,56 @@
       tw.ui.notify('Unhandled: ' + event.message, 'E', event.error.stack);
       console.error('Unhandled:', event.message, event);
     });
+
+    // Generic file drag/drop → registered drop handlers (tw.run.registerDropHandler)
+    const hasFiles = e => Array.from(e.dataTransfer?.types || []).includes('Files');
+    document.addEventListener('dragenter', e => {
+      if (!hasFiles(e)) return;
+      dragDepth++;
+      showDropOverlay();
+    });
+    document.addEventListener('dragover', e => {
+      if (hasFiles(e)) e.preventDefault(); // required to enable drop
+    });
+    document.addEventListener('dragleave', e => {
+      if (hasFiles(e) && --dragDepth <= 0) hideDropOverlay();
+    });
+    document.addEventListener('drop', handleDrop);
+  }
+
+  function handleDrop(event) {
+    const files = Array.from(event.dataTransfer?.files || []);
+    if (!files.length) return;
+    event.preventDefault();
+    dragDepth = 0;
+    hideDropOverlay();
+    // Most specific pattern wins: '*.workspace.json' (longer) beats '*.json'
+    const sorted = [...dropHandlers].sort((a, b) => b.pattern.length - a.pattern.length);
+    files.forEach(file => {
+      const match = sorted.find(h => h.rx.test(file.name));
+      if (!match) return tw.ui.notify(`No handler for '${file.name}'`, 'W');
+      const reader = new FileReader();
+      reader.onload = () => match.handler(reader.result, file);
+      reader.readAsText(file);
+    });
+  }
+  function showDropOverlay() {
+    let el = document.getElementById('drop-overlay');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'drop-overlay';
+      el.textContent = '⤓ Drop a file to import';
+      // Inline styles keep the overlay self-contained (no CSS-tiddler dependency);
+      // pointer-events:none so it never intercepts the drop or fires dragleave itself.
+      el.style.cssText = 'position:fixed;inset:0;z-index:9999;display:flex;align-items:center;'
+        + 'justify-content:center;background:rgba(0,0,0,0.5);color:#fff;font-size:2em;pointer-events:none;';
+      document.body.appendChild(el);
+    }
+    el.style.display = 'flex';
+  }
+  function hideDropOverlay() {
+    const el = document.getElementById('drop-overlay');
+    if (el) el.style.display = 'none';
   }
 
   function formHotkeys(methods) {

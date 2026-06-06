@@ -12,13 +12,13 @@
     },
     {
       "title": "$TiddlerDisplay",
-      "text": "<div class=\"tiddler shadow{{=isRawShadow}}\" data-tiddler-id=\"{{=id}}\" data-tiddler-title=\"$currentTiddler\" tabindex=\"0\">\n  <div class=\"title\" title=\"{{=type}}\">\n    {{=title}}\n    <button class=\"icon\" title=\"close\" data-msg=\"tiddler.close\" data-param=\"$currentTiddler\">{{$IconCancel}}</button>\n    {{!editDisabled}}\n    {{!isSection}}\n    <button class=\"icon\" title=\"edit\" {{=editDisabled}} data-msg=\"tiddler.edit\" data-param=\"$currentTiddler\">{{$IconEdit}}</button>\n    <button class=\"icon\" title=\"delete\"{{=editDisabled}} data-msg=\"tiddler.delete\" data-param=\"$currentTiddler\">{{$IconDelete}}</button>\n    {{/!isSection}}\n    {{!notSection}}\n    <button class=\"icon\" title=\"Edit parent note\" data-msg=\"section.edit\" data-param=\"$currentTiddler\">{{$IconEdit}}</button>\n    {{/!notSection}}\n    {{/!editDisabled}}\n    <<favorites.toggle>>\n  </div>\n  <div class=\"modified\">{{=modified}}</div>\n  <div class=\"text\">{{=fullText}}</div>\n  <div class=\"tags\">{{=tagLinks}}</div>\n  <div class=\"meta\">{{=metaInfo}}</div>\n</div>",
+      "text": "<div class=\"tiddler shadow{{=isRawShadow}}\" data-tiddler-id=\"{{=id}}\" data-tiddler-title=\"$currentTiddler\" tabindex=\"0\">\n  <div class=\"title\" title=\"{{=type}}\">\n    {{=title}}\n    <button class=\"icon\" title=\"close\" data-msg=\"tiddler.close\" data-params=\"$currentTiddler\">{{$IconCancel}}</button>\n    {{!editDisabled}}\n    {{!isSection}}\n    <button class=\"icon\" title=\"edit\" {{=editDisabled}} data-msg=\"tiddler.edit\" data-params=\"$currentTiddler\">{{$IconEdit}}</button>\n    <button class=\"icon\" title=\"delete\"{{=editDisabled}} data-msg=\"tiddler.delete\" data-params=\"$currentTiddler\">{{$IconDelete}}</button>\n    {{/!isSection}}\n    {{!notSection}}\n    <button class=\"icon\" title=\"Edit parent note\" data-msg=\"section.edit\" data-params=\"$currentTiddler\">{{$IconEdit}}</button>\n    {{/!notSection}}\n    {{/!editDisabled}}\n    <<favorites.toggle>>\n  </div>\n  <div class=\"modified\">{{=modified}}</div>\n  <div class=\"text\">{{=fullText}}</div>\n  <div class=\"tags\">{{=tagLinks}}</div>\n  <div class=\"meta\">{{=metaInfo}}</div>\n</div>",
       "tags": [
         "$Template"
       ],
       "type": "html/template",
       "created": "2026-06-02T15:59:42.901Z",
-      "updated": "2026-06-02T15:59:42.913Z"
+      "updated": "2026-06-06T12:10:08.248Z"
     },
     {
       "title": "$TiddlerManagerPlugin",

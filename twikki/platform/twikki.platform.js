@@ -1,7 +1,7 @@
 (function() {
 
   const NAME = 'twikki';
-  const VERSION = '0.22.0';
+  const VERSION = '0.23.0';
 
   overrides();
 
@@ -85,14 +85,7 @@
           return write(key, value);
         },
       };
-
-      console.debug(`TWikki (v${VERSION}) starting...`);
-      document.title = `TWikki v${VERSION}`;
-
-      baseUrl = window.MODULE_URL || 'https://cawoodm.github.io/twikki';
-      // Local dev: serve modules/packages from the dev server, not the published copy
-      if (document.location.host.match(/^(localhost)|(\d+\.\d+\.\d+\.\d+):\d+$/)) baseUrl = document.location.origin;
-
+      
       tw.logging = {
         logFilter: new RegExp(qs.logfilter || '.', 'i'),
         debugMode: qs.debug,
@@ -103,7 +96,14 @@
         },
       };
 
-      console.debug('Looking for local TWikki.Core modules...');
+      dp(`TWikki (v${VERSION}) starting...`);
+      document.title = `TWikki v${VERSION}`;
+
+      baseUrl = window.MODULE_URL || 'https://cawoodm.github.io/twikki';
+      // Local dev: serve modules/packages from the dev server, not the published copy
+      if (document.location.host.match(/^(localhost)|(\d+\.\d+\.\d+\.\d+):\d+$/)) baseUrl = document.location.origin;
+
+      dp('Looking for local TWikki.Core modules...');
 
       let modulesToLoad = [
         '/core.js',
@@ -118,9 +118,13 @@
         '/core.notifications.js', 
         '/core.templater.js',
         '/core.search.js',
-        '/core.markdown.js',
       ];
-      let modulesLoaded = await Promise.all(modulesToLoad.map(loadCoreModule));
+      // Platform and core modules ship together: when the platform version changes,
+      //   cached modules may be incompatible with the new platform, so re-download them all once.
+      const modulesStale = read('/modules.version') !== VERSION;
+      let modulesLoaded = await Promise.all(modulesToLoad.map(m => loadCoreModule(m, modulesStale)));
+      write('/modules.version', VERSION);
+      if (modulesStale) console.log(`Modules updated to ${VERSION}`);
       tw.modules = modulesToLoad.map((p, i) => ({name: p, res: modulesLoaded[i]}));
 
     },
@@ -131,7 +135,7 @@
       tw.modules
         .forEach(pck => {
           if (pck.res.type === 'code') {
-            console.debug('Installing code module', pck.name);
+            dp('Installing code module', pck.name);
             if (!qs.trace) {
               // Normally we try/catch modules to provide user-friendly feedback...
               try {
@@ -152,9 +156,9 @@
               eval('tw.core.' + p[1] + '={};');
               Object.assign(eval('tw.' + pck.meta.name), pck.meta.exports);
             }
-            console.debug(`Loaded ${pck.meta.name} (v${pck.meta.version})`);
+            dp(`Loaded ${pck.meta.name} (v${pck.meta.version})`);
           } else if (pck.res.type === 'list') {
-            console.debug('Loading moduled list ', pck.name); // What is a moduled list? Example?
+            dp('Loading moduled list ', pck.name); // What is a moduled list? Example?
             pck.res.tiddlers.forEach(t => {
               t.doNotSave = true; // Don't save unless edited
               t.isRawShadow = true; // TODO: What does this mean exactly?
@@ -163,7 +167,7 @@
               if (tiddlerExists)
               })*/
             tw.tiddlers.all = tw.tiddlers.all.concat(pck.res.tiddlers);
-            console.debug(`Loaded ${pck.res.tiddlers.length} core/shadow tiddlers from ${pck.name})`);
+            dp(`Loaded ${pck.res.tiddlers.length} core/shadow tiddlers from ${pck.name})`);
           } else {
             console.warn(`Skipping unknown module type '${pck.res.type}' in module '${pck.name}'!`);
           }
@@ -183,11 +187,11 @@
 
       wireUpEvents();
 
-      console.debug(`${tw.modules.length} modules loaded. Running modules...`);
+      dp(`${tw.modules.length} modules loaded. Running modules...`);
       tw.modules
         .filter(pck => pck.meta?.run)
         .forEach(pck => {
-          console.debug(`Running module '${pck.name}'...`);
+          dp(`Running module '${pck.name}'...`);
           if (!qs.trace) {
             // Normally we try/catch modules to provide user-friendly feedback...
             try {
@@ -204,7 +208,7 @@
             pck.meta.run();
           }
         });
-      console.debug('Modules run');
+      dp('Modules run');
       if (handleModuleErrors(errMsgs)) return;
 
       document.title = renderTiddler('$SiteTitle');
@@ -271,7 +275,7 @@
       // ----------
       // Legacy Aliases
       tw.util = {tagMatch, titleMatch, titleIs, tiddlerValidation, tiddlerExists};
-      tw.lib = {markdown: tw.core.markdown.render};
+      tw.lib = {markdown: renderMarkdown};
       Object.assign(tw.ui, tw.core.ui);
       tw.ui.notify = tw.core.notifications.notify;
       tw.call = call;
@@ -299,7 +303,7 @@
       };
       tw.plugins = {};
 
-      console.debug(`*** TWikki v${VERSION}`);
+      dp(`*** TWikki v${VERSION}`);
       if (handleModuleErrors(errMsgs)) return;
 
       // TODO: Load External Scripts and Stylesheets
@@ -502,7 +506,12 @@
         Object.keys(namespace).forEach(p => {
           let plugin = namespace[p];
           dp('Initializing plugin', plugin.name, plugin.version);
-          plugin.init();
+          try {
+            plugin.init();
+          } catch(e) {
+            tw.ui.notify(`Plugin "${p}" failed to initialize: ${e.message}`, 'E');
+            plugin.disabled = true;
+          }
         });
       });
   }
@@ -512,6 +521,7 @@
         let namespace = tw.plugins[n];
         Object.keys(namespace).forEach(p => {
           let plugin = namespace[p];
+          if (plugin.disabled) return console.warn(`Plugin "${p}" disabled.`);
           dp('Running plugin', plugin.name, plugin.version);
           plugin.start();
         });
@@ -574,13 +584,30 @@
     return res;
   }
 
+  // Markdown rendering is pluggable: whoever subscribes to the 'markdown.render'
+  // event provides the renderer ($BaseMarkdownPlugin ships markdown-it; a user
+  // package can replace it via tw.events.override('markdown.render', fn)).
+  // With no renderer installed (e.g. ?safemode) we fall back to plain text.
+  function renderMarkdown(text) {
+    const results = tw.events.send('markdown.render', text);
+    if (results?.length > 1 && !renderMarkdown.warned) {
+      console.warn(`${results.length} 'markdown.render' handlers subscribed (first one wins) — replacements should use tw.events.override()!`);
+      renderMarkdown.warned = true;
+    }
+    return results?.[0] ?? renderPlainText(text);
+  }
+  function renderPlainText(text) {
+    return String(text ?? '').split(/\n{2,}/)
+      .map(p => `<p>${tw.core.common.escapeHtml(p).replace(/\n/g, '<br>')}</p>`)
+      .join('');
+  }
   function makeTiddlerText({title, text, type}) {
     const markdownTypes = ['markdown', 'keyval', 'list', 'table'];
     const codeTypes = ['macro', 'script/js', 'css', 'json', 'html/template'];
     if (type === 'x-twikki') {
-      return tw.core.markdown.render(renderTWikki({text, title}));
+      return renderMarkdown(renderTWikki({text, title}));
     } else if (markdownTypes.includes(type)) {
-      return tw.core.markdown.render(text);
+      return renderMarkdown(text);
     } else if (codeTypes.includes(type)) {
       return `<pre><code>${tw.core.common.escapeHtml(text)}</code></pre>`;
     } else if (type === 'html') {
@@ -1304,23 +1331,23 @@
     scrollToTiddler(link);
     location.hash = '';
   }
-  function sendCommand(cmd, param, params, currentTiddlerTitle) {
-  // "foo.bar:etc etc" => events.send('foo.bar', ['etc', 'etc'])
+  function sendCommand(cmd, params, currentTiddlerTitle) {
+  // "foo.bar:{json}"            => events.send('foo.bar', {…})
+  // "foo.bar:pck:icons title:x" => events.send('foo.bar', {pck: 'icons', title: 'x'})
+  // "foo.bar:My Note"           => events.send('foo.bar', 'My Note') (bare strings stay raw)
     let cmds = cmd.match(reCommand);
     if (!cmds) throw new Error(`Invalid command '${cmd}' does not match ${reCommand}/!`);
     let msg = cmds[1];
     if (!params) params = cmds.length > 2 ? cmds[2] : null;
     tw.logging.break('command');
-    if (typeof param === 'undefined' || param === null) {
+    if (typeof params === 'string') {
       params = tw.events.decode(params);
-      if (params) params = params.replaceAll('$currentTiddler', currentTiddlerTitle);
-      if (params?.match(/^\{\{\{/)) try {params = eval(params);} catch {dp('events.send received invalid JS payload: ' + params);}
-      else if (params?.match(/^[\[\{]/)) try {params = JSON.parse(params);} catch {dp('events.send received invalid JSON payload: ' + params);}
-      else params = tw.core.params.parseParams(params);
-    } else if (typeof param === 'string')
-      params = tw.events.decode(param).replaceAll('$currentTiddler', currentTiddlerTitle);
-    else
-      params = param;
+      params = params.replaceAll('$currentTiddler', currentTiddlerTitle);
+      if (params.match(/^\{\{\{/)) try {params = eval(params);} catch {console.warn('events.send received invalid JS payload: ' + params);}
+      else if (params.match(/^[\[\{"]/)) try {params = JSON.parse(params);} catch {console.warn('events.send received invalid JSON payload: ' + params);}
+      else if (params.match(/^[a-z0-9_]+:/i)) try {params = tw.core.params.parseParams(params)}catch{}; // named params => object
+      // else: bare string stays a raw string (':' is not a valid title char, so titles never hit the named branch)
+    }
     dp('sendCommand', msg, 'params=', params);
     let result = tw.events.send(msg, params); // scroll-on-show is handled by the tiddler.show subscriber
     location.hash = '';
@@ -1373,14 +1400,14 @@
       let src = tw.core.dom.nearestElementWithAttribute(el, 'data-msg');
       if (!src) return;
       let msg = src.getAttribute('data-msg');
-      let param = src.getAttribute('data-param');
+      if (src.hasAttribute('data-param')) console.warn('data-param is no longer supported, use data-params', src);
       let params = src.getAttribute('data-params');
       if (!msg && isCommand(link)) msg = isCommand(link);
       if (!msg) return;
       if (src.getAttribute('data-default') !== 'true') event.preventDefault();
       let currentTiddlerTitle = tw.core.dom.nearestAttribute(el, 'data-tiddler-title', '.tiddler');
       if (msg) {
-        let result = sendCommand(msg, param, params, currentTiddlerTitle);
+        let result = sendCommand(msg, params, currentTiddlerTitle);
         let targetId = src.getAttribute('data-target');
         if (!targetId) return result;
         // Display results
@@ -1474,9 +1501,9 @@
   }
 
   /* END TWikki */
-  async function loadCoreModule(moduleName) {
+  async function loadCoreModule(moduleName, force = false) {
     let res = readObject('/modules' + moduleName);
-    if (!res?.code || qs.reload || qs.update) res = await fetchModule(moduleName);
+    if (!res?.code || force || qs.reload || qs.update) res = await fetchModule(moduleName);
     writeObject('/modules' + moduleName, res);
     return res;
   }
@@ -1484,7 +1511,7 @@
     if (!baseUrl) throw new Error('NO_MODULE_URL: Unable to determine URL to load module from!');
     let moduleUrl = baseUrl + '/modules' + moduleName;
     let res = {};
-    console.debug(`Downloading module from '${moduleUrl}'...`);
+    dp(`Downloading module from '${moduleUrl}'...`);
     let result = {name: moduleName}; try {result = await fetch(moduleUrl);} catch {}
     if (!result.ok) throw new Error(`Unable to download module from '${moduleUrl}' HTTP status: ${result.statusCode}`);
     if (result.headers.get('Content-Type')?.match(/\/javascript/)) {
@@ -1492,7 +1519,7 @@
       res.type = 'code';
     } else if (result.headers.get('Content-Type')?.match(/application\/json/)) {
       try {
-        console.debug(`Reading moduled list '${moduleName}'...`);
+        dp(`Reading moduled list '${moduleName}'...`);
         res = JSON.parse(await result.text());
         res.type = 'list';
       } catch (e){

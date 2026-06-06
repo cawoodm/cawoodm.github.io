@@ -27,6 +27,16 @@
       "updated": "2024-09-18T07:54:56.000Z"
     },
     {
+      "title": "MyParamsTestPlugin",
+      "text": "# Examples\n* `<<foo.hello John Smith>>`: <<foo.hello John Smith>>\n* `<<foo.test 1 true \"Car Wash\">>`: <<foo.test 1 true \"Car Wash\">>\n* `<<foo.object name:\"John Smith\" age:22>>`: <<foo.object name:\"John Smith\" age:22>>\n* `<<foo.object {\"name\":\"John Smith\", age:22}>>`: <<foo.object {\"name\":\"John Smith\", age:22}>>\n\n# Code\n```javascript\ntw.extensions.registerMacro('foo', 'hello', (firstName, lastName) => {\n  return `Hello ${firstName + ' ' + lastName}`;\n}, {version: '1.0.0'});\n\ntw.extensions.registerMacro('foo', 'test', (age, boolean, string) => {\n  return `Age: ${age + 1} (${typeof age}), Boolean: ${boolean} (${typeof boolean}), String: ${string} (${typeof string})`;\n}, {version: '1.0.0'});\n\ntw.extensions.registerMacro('foo', 'object', ({name, age}) => {\n  return `Age: ${age + 1} (${typeof age}), Name: ${name} (${typeof name})`;\n}, {version: '1.0.0'});\n\n\n```",
+      "tags": [
+        "$Plugin"
+      ],
+      "type": "x-twikki",
+      "created": "2026-06-06T13:04:35.464Z",
+      "updated": "2026-06-06T13:04:47.231Z"
+    },
+    {
       "title": "TODO",
       "text": "## Search\n* Highlight search term\n\n## Code Blocks\n* Probably shouldn't be running them automatically\n\n## Links\n* Plugin to auto link CamelCase tiddlers if they exist\n* Browser history (back)\n\n## Tabs:\n* Favories view of favorite tiddlers\n* History view of recently viewed tiddlers\n* Recent view of recently edited tiddlers\n\n# Toolbars\n* Close other tiddlers (fullscreen icon)\n* favorites.toggle macro should Add to Favorites and toggle visibility of icon ⭐",
       "tags": [],

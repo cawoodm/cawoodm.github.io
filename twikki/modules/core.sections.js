@@ -27,7 +27,8 @@
 
   // Meta
   const name = 'core.sections';
-  const version = '0.0.1';
+  const version = '0.24.0';
+  const platform = '0.24.0'; // built for platform ^0.24.0
 
   // Fence info-string → tiddler type. Unknown info-strings are used verbatim.
   const FENCE_TYPES = {
@@ -49,7 +50,7 @@
 
   const run = () => {};
 
-  return {name, version, exports, run};
+  return {name, version, platform, exports, run};
 
   function fenceToType(info) {
     let key = String(info || '').trim().toLowerCase();
@@ -101,13 +102,19 @@
   // A section is a mini-tiddler: optional leading `key: value` meta lines, then a
   // body. A body that is a single fenced block becomes typed (fence stripped);
   // otherwise type falls back to an explicit `type:` meta or null (inherit parent).
+  // Example:
+  // # Meta
+  //
+  // * tags: tag1, tag2
+  // * field: value
+  // * field2: value
   function parseSection(name, lines) {
     let tags = [];
     const meta = {};
     let i = 0;
     while (i < lines.length && lines[i].trim() === '') i++; // skip blank lines after heading
-    while (i < lines.length && /^[a-z]+: /.test(lines[i])) {
-      const line = lines[i];
+    while (i < lines.length && /^([\-\*] )?[a-z]+: /.test(lines[i])) {
+      const line = lines[i].replace(/^[\-\*] /, '');
       const colon = line.indexOf(':');
       const field = line.slice(0, colon).trim();
       let value = line.slice(colon + 1).trim();

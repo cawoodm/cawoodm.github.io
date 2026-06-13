@@ -2,21 +2,33 @@
   "tiddlers": [
     {
       "title": "$BackupReminderPlugin",
-      "text": "(function(){\n  // Friendly reminder to backup!\n  let secs = parseInt(tw.call('getJSONObject', '$GeneralSettings')?.backup?.backupInSeconds || 1800, 10);\n  setInterval(() => {\n    tw.ui.notify('Remember to backup', 'I');\n    clearTimeout(tw.tmp.notifyId); // User must click it away\n  }, secs * 1000);\n})();",
+      "text": "(function () {\n  const meta = {\n    name: 'BackupReminder',\n    version: '1.0.0',\n    platform: '0.24.0',\n    description: 'Periodic notification reminding the user to back up.',\n  };\n\n  return {\n    meta,\n    init() {\n      // Friendly reminder to backup!\n      let secs = parseInt(tw.call('getJSONObject', '$GeneralSettings')?.backup?.backupInSeconds || 1800, 10);\n      setInterval(() => {\n        tw.ui.notify('Remember to backup', 'I');\n      }, secs * 1000);\n    },\n  };\n})();",
       "tags": [
         "$Plugin"
       ],
       "type": "script/js",
-      "created": "2024-11-08T10:20:43.527Z",
-      "updated": "2026-06-01T13:05:11.115Z"
+      "created": "2026-06-12T12:35:23.668Z",
+      "updated": "2026-06-12T20:11:54.080Z"
+    },
+    {
+      "title": "CloseOthersPlugin",
+      "text": "/**\n * ## Description\n * Registers a command palette command (Ctrl/Cmd+K) that closes every open\n * note except the *active* one — the note you last opened / navigated to.\n *\n * Finding the active note:\n *   - We subscribe to `tiddler.show` (the event fired whenever a note is opened\n *     or re-shown) and remember its title on `tw.tmp.activeNote`. This beats the\n *     \"last in tw.tiddlers.visible\" heuristic, which misses re-showing a note\n *     that is already open (showTiddler doesn't reorder the visible list).\n *   - Tabs layout: `tw.tabs.active` (the selected tab) takes precedence.\n *   - Fallback: the most recently opened note (last in `tw.tiddlers.visible`).\n */\n(function () {\n  const meta = {\n    name: 'CloseOthers',\n    version: '1.0.0',\n    platform: '0.24.0',\n    description: 'Command palette action to close every open note except the active one.',\n  };\n\n  function recordActiveNote(title) {\n    if (typeof title === 'string') tw.tmp.activeNote = title;\n  }\n\n  function activeNote() {\n    let open = tw.tiddlers.visible;\n    let active = (tw.tabs && tw.tabs.active) || tw.tmp.activeNote;\n    if (active && open.includes(active)) return active;\n    return open[open.length - 1] || null; // fallback: most recently opened\n  }\n\n  function closeAllButActive() {\n    let open = tw.tiddlers.visible;\n    if (open.length <= 1) return tw.ui.notify('Nothing to close', 'I');\n    let keep = activeNote();\n    // filter() snapshots before we close — tw.tiddlers.visible mutates as each closes.\n    open.filter(title => title !== keep).forEach(title => tw.events.send('tiddler.close', title));\n    // Re-show the kept note: it's already open, so showTiddler early-returns into\n    // scrollToTiddler() (and refocuses its tab in tabs mode).\n    if (keep) tw.events.send('tiddler.show', keep);\n    tw.ui.notify(`Closed ${open.length - 1} note(s), kept '${keep}'`, 'D');\n  }\n\n  return {\n    meta,\n    init() {\n      tw.tmp = tw.tmp || {};\n\n      // Remember the most recently shown note. Deduped across soft reloads by the\n      // handler name; the title lives on tw.tmp (not this closure) so a re-eval keeps\n      // reading the value the live handler writes.\n      tw.events.subscribe('tiddler.show', recordActiveNote);\n\n      tw.extensions.registerCommand({\n        label: 'Close all but active note',\n        run: closeAllButActive, // TODO: This should be pub/sub: event: 'tiddlers.closeAllButActive'\n      });\n    },\n  };\n})();",
+      "tags": [
+        "$Plugin"
+      ],
+      "type": "script/js",
+      "created": "2026-06-12T12:35:34.282Z",
+      "updated": "2026-06-12T20:11:54.080Z"
     },
     {
       "title": "MarcHacks",
       "text": "tw.macros.marc = {\n  loadThemeButton(filter, force = true) {\n    if (!filter) filter = 'default';\n    return tw.ui.button(`Load Theme: ${filter}`, 'package.reload.url', {url: './packages/themes.json', name: 'test', filter, force});\n  },\n};\ntw.events.subscribe('script.loaded', (name) => {\n  if (name !== 'highlight-core') return;\n  tw.core.dom.addScript('highlight-lang-powershell', '//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/powershell.min.js');\n}, 'marc.addLanguages');\n\ntw.tiddlers.all.filter(t => t.type === 'x-twiki').forEach(t => (t.type = 'x-twikki'));\n\n// We need a <<button name:\"Delete Something\" msg:\"tiddlers.delet\" params:\"tag:Marc\">>\n\n// Some Snippets\nif (0) {\n  // Find duplicate tiddlers\n  tw.tiddlers.all.filter(td => tw.tiddlers.all.filter(t => t.title === td.title).length > 1).map(t => t.title);\n\n  // Delete duplicate tiddlers\n  tw.tiddlers.all.filter(td => tw.tiddlers.all.filter(t => t.title === td.title).length > 1).map(t => t.title).forEach(t => (tw.run.deleteTiddler(t, true)));\n\n  // Delete tiddlers from a package\n  tw.tiddlers.all.filter(t => t.package === 'base').map(t => t.title).forEach(t => (tw.run.deleteTiddler(t, true)));\n\n}",
-      "tags": [],
+      "tags": [
+        "$Script"
+      ],
       "type": "script/js",
       "created": "2024-11-08T10:20:43.530Z",
-      "updated": "2026-05-26T13:49:17.469Z"
+      "updated": "2026-06-11T15:55:06.924Z"
     },
     {
       "title": "MarcSettings",
@@ -27,22 +39,12 @@
       "updated": "2024-09-18T07:54:56.000Z"
     },
     {
-      "title": "MyParamsTestPlugin",
-      "text": "# Examples\n* `<<foo.hello John Smith>>`: <<foo.hello John Smith>>\n* `<<foo.test 1 true \"Car Wash\">>`: <<foo.test 1 true \"Car Wash\">>\n* `<<foo.object name:\"John Smith\" age:22>>`: <<foo.object name:\"John Smith\" age:22>>\n* `<<foo.object {\"name\":\"John Smith\", age:22}>>`: <<foo.object {\"name\":\"John Smith\", age:22}>>\n\n# Code\n```javascript\ntw.extensions.registerMacro('foo', 'hello', (firstName, lastName) => {\n  return `Hello ${firstName + ' ' + lastName}`;\n}, {version: '1.0.0'});\n\ntw.extensions.registerMacro('foo', 'test', (age, boolean, string) => {\n  return `Age: ${age + 1} (${typeof age}), Boolean: ${boolean} (${typeof boolean}), String: ${string} (${typeof string})`;\n}, {version: '1.0.0'});\n\ntw.extensions.registerMacro('foo', 'object', ({name, age}) => {\n  return `Age: ${age + 1} (${typeof age}), Name: ${name} (${typeof name})`;\n}, {version: '1.0.0'});\n\n\n```",
-      "tags": [
-        "$Plugin"
-      ],
-      "type": "x-twikki",
-      "created": "2026-06-06T13:04:35.464Z",
-      "updated": "2026-06-06T13:04:47.231Z"
-    },
-    {
       "title": "TODO",
-      "text": "## Search\n* Highlight search term\n\n## Code Blocks\n* Probably shouldn't be running them automatically\n\n## Links\n* Plugin to auto link CamelCase tiddlers if they exist\n* Browser history (back)\n\n## Tabs:\n* Favories view of favorite tiddlers\n* History view of recently viewed tiddlers\n* Recent view of recently edited tiddlers\n\n# Toolbars\n* Close other tiddlers (fullscreen icon)\n* favorites.toggle macro should Add to Favorites and toggle visibility of icon ⭐",
+      "text": "# Roadmap\n\n## Macros\n\n- Create a `<<macros>>` widget\n\n# Bugs\n\n# Keybindings\n\n- Ctrl+F (or suitable hotkey) to focus tiddler search\n\n# Plugins\n\n- When editing a plugin the verification is done against the old version of the plugin/macro and may give false warnings\n\n# Lists\n\nMake lists sortable via drag & drop so users can easily change their toolbar in [[$TitleBar]]\n\n# Search\n\n- In normal search with no results, show how many hidden tiddlers were found and a small link to show them by prepending $ to the search test\n- Link to open all results\n\n# Settings\n\n- Make autoSave an option\n- Tabs in Settings dialog are very ugly\n\n# Docs\n\n- Website: Commands tiddler is linked but doesn't exist\n- When rendering multi-part tiddlers, the `tags: $StyleSheet` section should display as pills with the `<<Tag>>` macro\n- We need a Tag picker widget for editing tiddlers\n\n## Links\n\n- AllTagsLinked should use tag pills\n- Plugin to auto link CamelCase tiddlers if they exist\n- Browser history (back)\n\n## Explorer\n\n- Favorites view of favorite tiddlers\n- History view of recently viewed tiddlers\n- Recent view of recently edited tiddlers\n\n## Toolbars\n\n- favorites.toggle macro should Add to Favorites and toggle visibility of icon ⭐\n\n## Platform — `src/platform/`\n\n- `twikki.platform.js:100` — Load registered scripts/css here like our highlighter core, css and languages\n- `twikki.platform.js:266` — `isRawShadow = true` — what does this mean exactly?\n- `twikki.platform.js:416` — Clear `events.clearAll()`\n- `twikki.platform.js:464` — `<<packages.import url:... force:true save:true>>`\n- `twikki.platform.js:473` — Split URL and check `update`/`force`/`save` options\n- `twikki.compat-dialog.js:157` — Possible bug: does it read the URL the user entered?\n\n## Core modules — `src/modules/`\n\n- `core.js:38` — Should have subscribe to listen and override to handle\n- `core.workspaces.js:81` — Save if dirty prompt\n- `core.params.js:74` — Support unquoted eval with spaces: `{1 + 'a'}`\n- `core.params.js:75` — Support quotes inside eval: `{fcn('a')}`\n- `core.params.js:76` — Support quoted booleans/numbers `'\"true\" \"1\"'` → `[\"true\", \"1\"]`\n- `core.notifications.js:63` — Keep array of `tw.tmp.notifyMsgs = [{msg, expires}]`\n- `core.search.js:77` — Apply `tw.templates.TiddlerSearchResult`\n- `core.store.js:91` — Better local backups/versioning\n- `core.packaging.js:28` — Replace `notify` with `throw new Error()`\n- `core.packaging.js:63` — Not good as it generates events during boot\n- `core.tiddlers.js:202` — Case-sensitive and allows duplicates like `AAA` + `aaa`\n- `core.tiddlers.js:236` — If it's a code tiddler run it (if `!Disabled`) and show error in red\n- `core.tiddlers.js:479` — Rename `$CodeDisabled` → `$Disabled` — the tag now gates more than code\n- `core.ui.js:352` — **BUG**: Doesn't display tiddler after creation\n- `core.ui.js:421` — Try / catch / return error `<span class=\"error\">`\n- `core.ui.js:475` — Return an element here we could bind a real event and payload to\n- `core.render.js:77` — Label this tiddler to update when one of these macros change\n- `core.render.js:117` — Inclusions (pass `{{DataTiddler}}` as string/array/object) would be cool\n- `core.render.js:140` — Support async macros\n- `core.render.js:161` — Support raw/wikified `{{=}}` inclusions\n- `core.render.js:192` — Auto-link CamelCase words? except `~CamelCasedTilde`?\n- `core.render.js:215` — If `$TiddlerDisplay` breaks TW is unusable!\n\n## Base plugins — `src/packages/base/`\n\n- `$SynchDataPlugin.js:35` — Pull force, clearing local\n- `$SynchDataPlugin.js:36` — Selective Synch: Include/Exclude Tags/Packages\n- `$SynchDataPlugin.js:105` — **BUG**: Deleted local shadow tiddler is pulled in from remote\n- `$SynchDataPlugin.js:356` — Delete all local and pull (restore)\n\n## Demo / marc / tests\n\n- `demo/$FavoritesPlugin.js:38` — How to find the current tiddler/element?\n- `demo/$FavoritesPlugin.js:65` — How to add `button:yellow svg {fill: yellow;}` to theme?\n- `marc/CloseOthersPlugin.js:59` — Should be pub/sub: `event: 'tiddlers.closeAllButActive'`\n- `tests/$TestFrameworkPlugin.js:82` — `expect.all(id => target.find...)`\n- `tests/$TestFrameworkPlugin.js:100` — Save `currentTiddler` and `visibleTiddlers`",
       "tags": [],
       "type": "x-twikki",
-      "created": "2024-11-08T10:20:43.532Z",
-      "updated": "2026-06-02T14:34:07.827Z"
+      "created": "2026-06-13T12:16:48.973Z",
+      "updated": "2026-06-13T12:44:58.534Z"
     }
   ]
 }

@@ -3,10 +3,12 @@
     {
       "title": "$OnboardingMacros",
       "text": "tw.macros.welcome = {\n  Start() {\n    tw.core.dom.$('header').style.display = 'none';\n    tw.core.dom.$('sidebar').style.display = 'none';\n    tw.run.showTiddler('Welcome');\n  },\n  Step1() {\n    tw.run.showTiddler('Congratulations');\n    tw.run.closeTiddler('Welcome');\n  },\n  Step2() {\n    tw.core.dom.$('header').style.display = '';\n    tw.core.dom.$('sidebar').style.display = '';\n    tw.run.closeTiddler('Congratulations');\n    tw.run.showTiddler('Help');\n  },\n  Step2Button() {\n    return tw.ui.button('Click Me!', 'welcome.step2', 1);\n  },\n};\n\nif (!tw.store.get('welcomeShown')) {\n  // Only run once (localStorage)\n  tw.events.send('ui.close.all');\n  tw.macros.welcome.Start();\n  tw.store.set('welcomeShown', 1);\n}\nif (!tw.tmp.onboardingEvents) {\n  tw.events.subscribe('welcome.step2', tw.macros.welcome.Step2);\n}",
-      "tags": [],
+      "tags": [
+        "$Script"
+      ],
       "type": "script/js",
       "created": "2024-11-08T10:20:43.536Z",
-      "updated": "2024-11-08T11:29:43.114Z"
+      "updated": "2026-06-11T15:55:06.925Z"
     },
     {
       "title": "Congratulations",

@@ -1,6 +1,6 @@
 (function () {
   const NAME = 'twikki';
-  const VERSION = '0.25.0';
+  const VERSION = '0.26.0';
 
   overrides();
 
@@ -51,6 +51,7 @@
         .forEach(q => (qs[q] = true)); // Empty params are switches => convert to true
 
       tw.core = {};
+      tw.extensions = {};
       tw.modules = [];
       tw.tmp = {};
       tw.templates = {};

@@ -20,7 +20,7 @@
 (function (tw) {
   const name = 'core.ui';
   const version = '0.25.0';
-  const platform = '0.24.0'; // built for platform ^0.24.0
+  const platform = '0.26.0'; // built for platform ^0.26.0
 
   // Events are alphanumeric with "." e.g. 'foo.bar' (lowercase only)
   const reEventName = /[a-z0-9\.]+/g;
@@ -71,7 +71,7 @@
       return [...Object.values(this.byLabel), ...dynamic];
     },
   };
-  tw.extensions = {
+  Object.assign(tw.extensions, {
     registerMacro(namespace, name, fcn, options) {
       if (!tw.macros[namespace]) tw.macros[namespace] = {};
       tw.macros[namespace][name] = fcn;
@@ -94,7 +94,20 @@
       if (i >= 0) tw.commands.providers[i] = entry;
       else tw.commands.providers.push(entry);
     },
-  };
+    // Register a tiddler type so the new/edit dialog's type picker offers it.
+    // `key` is the type string stored on tiddlers (e.g. 'csv'); `label` is the
+    // human-readable name shown in the picker. Last-write-wins on duplicate
+    // keys. In-memory only — the type vanishes if the registering plugin is
+    // uninstalled/disabled, and it does not persist to localStorage (unlike
+    // an edit to the $TiddlerTypes shadow tiddler).
+    registerType(key, label) {
+      if (!key) return console.warn('registerType: key required');
+      tw.types[key] = label || key;
+    },
+  });
+  // `||` guard makes it idempotent across soft reloads (which re-eval modules
+  // and would otherwise wipe plugin registrations that already happened).
+  tw.types = tw.types || {};
   tw.macros = {
     core: {
       showTiddlerList: (...args) => tw.core.tiddlers.showTiddlerList(...args),
@@ -303,12 +316,16 @@
     focusElement.setSelectionRange(0, 0);
     focusElement.scrollTop = 0;
     setDirty(true);
-    tw.core.dom.$('new-types').innerHTML = tw.core.tiddlers
-      .getKeyValuesArray('$TiddlerTypes')
-      .map(t => {
-        return `<option value="${t.key}">${t.value}</option>`;
-      })
-      .filter(tw.core.common.notEmpty)
+    // Merge $TiddlerTypes shadow (built-in types) with tw.types
+    // (plugin-registered types via tw.extensions.registerType). Plugin entries
+    // override shadow entries on key collision (last-wins).
+    const shadow = tw.core.tiddlers.getKeyValuesArray('$TiddlerTypes').reduce((acc, t) => {
+      acc[t.key] = t.value;
+      return acc;
+    }, {});
+    const merged = {...shadow, ...tw.types};
+    tw.core.dom.$('new-types').innerHTML = Object.entries(merged)
+      .map(([key, label]) => `<option value="${key}">${label}</option>`)
       .join('\n');
   }
 
@@ -355,12 +372,32 @@
         // Message already displayed in renderTWikki/executeText
       }
     }
-    if (oldTitle && existingTiddler) {
-      tw.core.tiddlers.updateTiddler(oldTitle, t, true, forceSave);
-      tw.events.send('tiddler.edited', t.title); // rerenderTiddler()
-    } else {
-      tw.core.tiddlers.addTiddler(t, true);
-      tw.events.send('tiddler.created', t.title); // renderNewTiddler()
+    try {
+      if (oldTitle && existingTiddler) {
+        tw.core.tiddlers.updateTiddler(oldTitle, t, true, forceSave);
+        tw.events.send('tiddler.edited', t.title); // rerenderTiddler()
+      } else {
+        tw.core.tiddlers.addTiddler(t, true);
+        tw.events.send('tiddler.created', t.title); // renderNewTiddler()
+      }
+    } catch (e) {
+      // validateTiddlerText (and the registered validator stack) throw here.
+      // Identity errors from add/updateTiddler ('existent'/'non-existent'/
+      // 'existing') aren't force-saveable — just notify. Validator throws
+      // (and Readonly, which forceSave bypasses) get the same force-save
+      // prompt as renderTWikki errors above.
+      if (/existent|existing/.test(e.message)) return tw.ui.notify(e.message, 'W');
+      if (confirm(e.message + '\nDo you want to force save?')) {
+        if (oldTitle && existingTiddler) {
+          tw.core.tiddlers.updateTiddler(oldTitle, t, true, true);
+          tw.events.send('tiddler.edited', t.title);
+        } else {
+          tw.core.tiddlers.addTiddler(t, true, true);
+          tw.events.send('tiddler.created', t.title);
+        }
+      } else {
+        return tw.ui.notify(e.message, 'W');
+      }
     }
     tw.core.dom.$('new-dialog').close();
 
@@ -368,14 +405,6 @@
     tw.core.render.renderAllTiddlers();
     setDirty(true);
     tw.core.store.save();
-    // A $Plugin tiddler was edited — validateTiddlerText skipped the eval because the live
-    // instance still owns its event subscriptions / DOM bindings. Offer a hard reload so the
-    // new plugin code actually takes effect.
-    if (tw.tmp.pluginEdited) {
-      tw.tmp.pluginEdited = false;
-      if (confirm(`Plugin '${t.title}' was edited. Reload now to apply changes?`))
-        tw.events.send('reboot.hard');
-    }
   }
 
   // Edit button on a section card: close the section view and open its parent
@@ -416,23 +445,22 @@
 
   function tiddlerUpdated(title) {
     let t = tw.core.tiddlers.getTiddler(title);
-    let codeBlocks = tw.core.tiddlers.tiddlerCodeBlocks(t);
-    if (codeBlocks.length)
-      // TODO: Try, catch, return error <span class="error">
-      return codeBlocks.forEach(b => tw.run.executeCodeTiddler(b.text, b.title));
     if (['$SiteTitle', '$SiteSubTitle', '$TitleBar'].includes(title))
       tw.core.dom.$$('*[tiddler-include]')?.forEach(tw.core.render.tiddlerSpanInclude);
-    else if (tw.core.tiddlers.tiddlerIsATemplate(t)) tw.core.render.loadTemplates();
-    else if (tw.core.tiddlers.isPackageList(t))
+    else if (tw.core.tiddlers.isPackageList(t)) {
       if (confirm('Would you like to reload?')) {
         tw.core.store.save();
         tw.events.send('reboot.hard');
       }
-    if (title === '$MainLayout')
-      if (confirm('Would you like to reload?')) {
-        tw.core.store.save();
+    } else if (tw.core.tiddlers.isRunnableTiddler(t)) {
+      tw.core.store.save();
+      if (confirm(`Code '${t.title}' was edited. Reload now to apply changes?`))
         tw.events.send('reboot.hard');
-      }
+    } else if (tw.core.tiddlers.tiddlerIsATemplate(t)) {
+      tw.core.store.save();
+      if (confirm(`Template '${t.title}' was edited. Reload now to apply changes?`))
+        tw.events.send('reboot.hard');
+    }
   }
 
   /* ---------- Layout ---------- */

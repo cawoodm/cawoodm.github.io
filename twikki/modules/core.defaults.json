@@ -35,13 +35,13 @@
     },
     {
       "title": "$CorePackages",
-      "text": "- /packages/base.json force",
+      "text": "- /twikki/packages/base.json force",
       "tags": [
         "$Shadow"
       ],
       "type": "list",
       "created": "2024-11-03T20:36:53.291Z",
-      "updated": "2026-06-13T11:26:57.405Z"
+      "updated": "2026-06-15T19:24:05.117Z"
     },
     {
       "title": "$CoreThemeAppearance",
@@ -112,13 +112,13 @@
     },
     {
       "title": "$ExtensionPackages",
-      "text": "- /packages/icons.json force\n- /packages/demo.json force\n- /packages/website.json nooverwrite\n- /packages/themes.json force",
+      "text": "- /packages/twikki/icons.json force\n- /packages/twikki/demo.json force\n- /packages/twikki/website.json force\n- /packages/twikki/themes.json force",
       "tags": [
         "$Shadow"
       ],
       "type": "list",
       "created": "2026-05-30T05:48:40.869Z",
-      "updated": "2026-06-13T11:26:57.406Z"
+      "updated": "2026-06-15T19:24:34.261Z"
     },
     {
       "title": "$GeneralSettings",

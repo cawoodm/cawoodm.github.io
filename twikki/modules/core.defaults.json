@@ -471,14 +471,14 @@
     },
     {
       "title": "$TWikkiVersion",
-      "text": "0.25.0",
+      "text": "0.26.0",
       "tags": [
         "$Shadow",
         "$NoEdit"
       ],
       "type": "plain",
       "created": "2026-06-13T10:58:08.875Z",
-      "updated": "2026-06-13T11:26:57.407Z"
+      "updated": "2026-06-15T19:19:57.200Z"
     },
     {
       "title": "$Workspaces",

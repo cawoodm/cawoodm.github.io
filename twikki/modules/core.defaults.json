@@ -313,6 +313,26 @@
       "updated": "2024-10-04T19:45:16.214Z"
     },
     {
+      "title": "$IconTheme",
+      "text": "Theme",
+      "tags": [
+        "$Shadow"
+      ],
+      "type": "x-twikki",
+      "created": "2026-06-16T19:42:03.430Z",
+      "updated": "2026-06-16T19:42:03.715Z"
+    },
+    {
+      "title": "$IconWorkspace",
+      "text": "Workspace",
+      "tags": [
+        "$Shadow"
+      ],
+      "type": "x-twikki",
+      "created": "2026-06-16T19:41:33.139Z",
+      "updated": "2026-06-16T19:41:54.043Z"
+    },
+    {
       "title": "$Layout",
       "text": "[[$MainLayout]]",
       "tags": [

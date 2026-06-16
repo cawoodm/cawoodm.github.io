@@ -167,14 +167,14 @@
     },
     {
       "title": "$PackageWidgets",
-      "text": "tw.extensions.registerMacro(\n  'packages',\n  'import',\n  ({name, url, filter, overWrite, doNotSave}) => {\n    if (!name) throw new Error('ERROR: No name supplied to packages.import macro!');\n    if (!url) throw new Error('ERROR: No url supplied to packages.import macro!');\n    return tw.ui.button(`Import: ${name} ${filter ? ' (' + filter + ')' : ''}`, 'package.reload.url', {url, name, overWrite, doNotSave});\n  },\n  {\n    description: 'Button importing a package from a URL.',\n    example: '<<packages.import name:website url:./packages/website.json>>',\n  },\n);\ntw.extensions.registerMacro(\n  'packages',\n  'importBin',\n  ({name, url, filter, overWrite, doNotSave}) => {\n    if (!name) throw new Error('ERROR: No name supplied to packages.importBin macro!');\n    if (!url) throw new Error('ERROR: No url supplied to packages.importBin macro!');\n    return tw.ui.button(`Import: ${name} ${filter ? ' (' + filter + ')' : ''}`, ' ', {url, name, overWrite, doNotSave});\n  },\n  {\n    description: 'Button importing a binary package from a URL.',\n    example: '<<packages.importBin name:icons url:./packages/icons.json>>',\n  },\n);\n\n// Command palette: prompt for a package URL, then import it (reloads the UI on success).\ntw.extensions.registerCommand({\n  label: 'Import package from URL…',\n  run: () => {\n    const url = prompt('Package URL to import:');\n    if (!url) return;\n    const name = (url.split('/').pop() || '').replace(/\\.json$/i, '');\n    tw.events.send('package.reload.url', {url, name});\n  },\n});",
+      "text": "tw.extensions.registerMacro(\n  'packages',\n  'import',\n  ({name, url, filter, overWrite, doNotSave}) => {\n    if (!name) throw new Error('ERROR: No name supplied to packages.import macro!');\n    if (!url) throw new Error('ERROR: No url supplied to packages.import macro!');\n    return tw.ui.button(`Import: ${name} ${filter ? ' (' + filter + ')' : ''}`, 'package.reload.url', {url, name, overWrite, doNotSave});\n  },\n  {\n    description: 'Button importing a package from a URL.',\n    example: '<<packages.import name:website url:packages/website.json>>',\n  },\n);\n\n// Command palette: prompt for a package URL, then import it (reloads the UI on success).\ntw.extensions.registerCommand({\n  label: 'Import package from URL…',\n  run: () => {\n    const url = prompt('Package URL to import:');\n    if (!url) return;\n    const name = (url.split('/').pop() || '').replace(/\\.json$/i, '');\n    tw.events.send('package.reload.url', {url, name});\n  },\n});",
       "tags": [
         "$NoEdit",
         "$Script"
       ],
       "type": "script/js",
-      "created": "2026-06-16T10:04:00.662Z",
-      "updated": "2026-06-16T10:04:00.686Z"
+      "created": "2026-06-16T12:48:08.999Z",
+      "updated": "2026-06-16T20:29:51.614Z"
     },
     {
       "title": "$PluginsWidget",

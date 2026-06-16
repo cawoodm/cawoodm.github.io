@@ -35,13 +35,13 @@
     },
     {
       "title": "$CorePackages",
-      "text": "- /twikki/packages/base.json force",
+      "text": "- packages/base.json force",
       "tags": [
         "$Shadow"
       ],
       "type": "list",
       "created": "2024-11-03T20:36:53.291Z",
-      "updated": "2026-06-15T19:24:05.117Z"
+      "updated": "2026-06-16T06:23:24.608Z"
     },
     {
       "title": "$CoreThemeAppearance",
@@ -112,17 +112,17 @@
     },
     {
       "title": "$ExtensionPackages",
-      "text": "- /packages/twikki/icons.json force\n- /packages/twikki/demo.json force\n- /packages/twikki/website.json force\n- /packages/twikki/themes.json force",
+      "text": "- packages/icons.json force\n- packages/demo.json force\n- packages/website.json force\n- packages/themes.json force",
       "tags": [
         "$Shadow"
       ],
       "type": "list",
       "created": "2026-05-30T05:48:40.869Z",
-      "updated": "2026-06-15T19:24:34.261Z"
+      "updated": "2026-06-16T06:26:01.127Z"
     },
     {
       "title": "$GeneralSettings",
-      "text": "{\n  \"backup\": {\n    \"Gist\": {\n      \"accessToken\": \"***\",\n      \"accessToken~\": \"GitHub Personal Access Token (classic) with the gist scope (secret, max:100)\",\n      \"gistId\": \"***\",\n      \"gistId~\": \"Id of the gist to back up to\"\n    },\n    \"backupInSeconds\": 600,\n    \"backupInSeconds~\": \"Time in seconds between auto-backups (number)\"\n  },\n  \"synch\": {\n    \"Gist\": {\n      \"accessToken\": \"***\",\n      \"accessToken~\": \"GitHub Personal Access Token (classic) with the gist scope (secret, max:100)\",\n      \"gistId\": \"***\",\n      \"gistId~\": \"Id of the gist to synch up to\"\n    },\n    \"synchInSeconds\": 60,\n    \"synchInSeconds~\": \"Time in seconds between auto-synch (number)\"\n  },\n  \"layout\": {\n    \"mode\": \"river\",\n    \"mode~\": \"How open notes are displayed: tabs (one note at a time) or river (all stacked) (option:tabs,river)\"\n  },\n  \"urls\": {\n    \"moduleUrl\": \"https://cawoodm.github.io/twikki\",\n    \"moduleUrl~\": \"Base URL the platform loads its core modules and packages from (string)\",\n    \"themeUrl\": \"https://gist.githubusercontent.com/cawoodm/c43037e0370393ef2928848fee64e95d/raw/themes.json\",\n    \"themeUrl~\": \"URL of the themes manifest JSON imported by the Theme Importer (string)\"\n  },\n  \"search\": {\n    \"includeTags\": \"\",\n    \"includeTags~\": \"Only show tiddlers with these tags in search (comma-separated; empty = all) (text)\",\n    \"excludeTags\": \"$NoSearch, $Theme, $StyleSheet, $Template\",\n    \"excludeTags~\": \"Hide tiddlers with these tags from search; applied after the include list (comma-separated) (text)\"\n  }\n}",
+      "text": "{\n  \"backup\": {\n    \"Gist\": {\n      \"accessToken\": \"\",\n      \"accessToken~\": \"GitHub Personal Access Token (classic) with the gist scope (secret, max:100)\",\n      \"gistId\": \"\",\n      \"gistId~\": \"Id of the gist to back up to\"\n    },\n    \"backupInSeconds\": 600,\n    \"backupInSeconds~\": \"Time in seconds between auto-backups (number)\"\n  },\n  \"synch\": {\n    \"Gist\": {\n      \"accessToken\": \"\",\n      \"accessToken~\": \"GitHub Personal Access Token (classic) with the gist scope (secret, max:100)\",\n      \"gistId\": \"\",\n      \"gistId~\": \"Id of the gist to synch up to\"\n    },\n    \"synchInSeconds\": 60,\n    \"synchInSeconds~\": \"Time in seconds between auto-synch (number)\"\n  },\n  \"layout\": {\n    \"mode\": \"river\",\n    \"mode~\": \"How open notes are displayed: tabs (one note at a time) or river (all stacked) (option:tabs,river)\"\n  },\n  \"urls\": {\n    \"moduleUrl\": \"https://cawoodm.github.io/twikki\",\n    \"moduleUrl~\": \"Base URL the platform loads its core modules and packages from (string)\",\n    \"themeUrl\": \"https://gist.githubusercontent.com/cawoodm/c43037e0370393ef2928848fee64e95d/raw/themes.json\",\n    \"themeUrl~\": \"URL of the themes manifest JSON imported by the Theme Importer (string)\"\n  },\n  \"search\": {\n    \"includeTags\": \"\",\n    \"includeTags~\": \"Only show tiddlers with these tags in search (comma-separated; empty = all) (text)\",\n    \"excludeTags\": \"$NoSearch, $Theme, $StyleSheet, $Template\",\n    \"excludeTags~\": \"Hide tiddlers with these tags from search; applied after the include list (comma-separated) (text)\"\n  }\n}",
       "tags": [
         "$Shadow",
         "$NoSynch",
@@ -130,7 +130,7 @@
       ],
       "type": "json",
       "created": "2026-06-01T08:15:13.045Z",
-      "updated": "2026-06-03T16:29:16.323Z"
+      "updated": "2026-06-16T07:53:45.615Z"
     },
     {
       "title": "$IconBackup",

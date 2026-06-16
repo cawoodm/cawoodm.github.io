@@ -41,6 +41,38 @@
     window.dispatchEvent(new CustomEvent('twikki.boot.progress', {detail: evt}));
   }
 
+  // Resolve `path` against `base` using the browser's URL parser (same algorithm
+  // as <a href>/<script src>), so we never homegrow path-joining edge cases —
+  // missing/extra slashes, deep pathnames, percent-encoding, `..` segments.
+  // `path` may already be fully qualified (`http(s)://…`) → returned verbatim.
+  // `base` may be omitted; in that case we fall through the same chain
+  // fetchModules uses to determine the platform's own baseUrl. Exposed on
+  // `tw.core` from init() so plugins can call it as `tw.core.buildUrl(...)`.
+  /* BEGIN buildUrl helper — extracted by tests/unit/build-url.test.js. Keep pure
+     (no closure refs beyond `tw`, `window`); tests stub those globally. */
+  function buildUrl(path, base) {
+    if (/^https?:\/\//.test(path)) return path;
+    if (!base) {
+      base = tw.storage.get('/moduleUrl') || window.MODULE_URL;
+      if (!base) {
+        // Derive the base from window.location.href. The URL spec treats the
+        // last path segment as a FILE unless the URL ends with '/', so when
+        // the app is served at e.g. http://host/twikki (server rewrites to
+        // /twikki/index.html, no trailing slash in the bar), new URL('./',…)
+        // would resolve to the parent and modules would load from /modules
+        // instead of /twikki/modules. Normalize: if the last segment has no
+        // extension AND no trailing slash, treat it as a directory.
+        let href = window.location.href.split(/[?#]/)[0];
+        const lastSeg = href.substring(href.lastIndexOf('/') + 1);
+        if (lastSeg && !lastSeg.includes('.')) href += '/';
+        base = new URL('./', href).toString();
+      }
+    }
+    if (!base.endsWith('/')) base += '/';
+    return new URL(path, base).toString();
+  }
+  /* END buildUrl helper */
+
   window.twikki = {
     name: NAME,
     version: VERSION,
@@ -51,6 +83,7 @@
         .forEach(q => (qs[q] = true)); // Empty params are switches => convert to true
 
       tw.core = {};
+      tw.core.buildUrl = buildUrl;
       tw.extensions = {};
       tw.modules = [];
       tw.tmp = {};
@@ -118,10 +151,9 @@
   }
 
   async function fetchModules() {
-    let customModuleUrl = tw.storage.get('/moduleUrl');
-
-    baseUrl =
-      customModuleUrl || window.MODULE_URL || window.location.origin + window.location.pathname;
+    // Single source of truth for resolving the platform's base — same chain
+    // tw.core.buildUrl uses when called without an explicit base.
+    baseUrl = tw.core.buildUrl('./');
 
     dp('Looking for local TWikki.Core modules...');
 
@@ -411,6 +443,7 @@
 
   /* Boot lifecycle */
   function rebootHard() {
+    location.hash = ''; // Prevent infinite loop of msg:... commands
     window.location.reload();
   }
 
@@ -457,8 +490,7 @@
   async function loadPackages(packages) {
     for (let p of packages) {
       let params = p.split(' ');
-      let url = params[0];
-      if (!url.match(/^https?:/)) url = baseUrl + url;
+      let url = tw.core.buildUrl(params[0], baseUrl);
       let name = url.match(/([^.\/]+)\.json$/)?.[1];
       let overWrite = false; // Overwrite after prompt
       let noOverWrite = false;
@@ -878,7 +910,8 @@
   }
   async function fetchModule(baseUrl, moduleName) {
     if (!baseUrl) throw new Error('NO_MODULE_URL: Unable to determine URL to load module from!');
-    let moduleUrl = baseUrl + '/modules' + moduleName;
+    // moduleName already starts with '/', so 'modules' + moduleName → 'modules/core.tiddlers.js'
+    let moduleUrl = tw.core.buildUrl('modules' + moduleName, baseUrl);
     let res = {};
     dp(`Downloading module from '${moduleUrl}'...`);
     let result = {name: moduleName};

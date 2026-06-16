@@ -7,8 +7,7 @@
  * repoints `tw.workspace`; `workspace.load` hard-reboots so the UI reloads
  * from the new store. Falls back to 'default' if the saved name is unknown.
  */
-(function(tw) {
-
+(function (tw) {
   const name = 'core.workspaces';
   const version = '0.25.0';
   const platform = '0.26.0'; // built for platform ^0.26.0
@@ -16,22 +15,24 @@
   // Init
   if (!tw.store.global.get('workspaces')) tw.store.global.set('workspaces', ['default']);
   if (!tw.store.global.get('workspace')) tw.store.global.set('workspace', 'default');
-  tw.workspace = tw.store.global.get('workspace');
+  bootstrapFromQuery();
+  tw.workspace = sessionStorage.getItem('workspace') || tw.store.global.get('workspace') || 'default';
   try {
     workspaceSwitch(tw.workspace);
   } catch {
     console.warn(`Unknown 'workspace ${tw.workspace}', switching to default`);
+    sessionStorage.removeItem('workspace');
     workspaceSwitch();
   }
 
   // Run
   const run = () => {
-    tw.events.subscribe('workspace.switch', workspaceSwitch);
-    tw.events.subscribe('workspace.load', workspaceLoad);
-    tw.events.subscribe('workspace.create', workspaceCreate);
-    tw.events.subscribe('workspace.delete', workspaceDelete);
-    tw.events.subscribe('workspace.delete.ui', workspaceDeleteUI);
-    tw.events.subscribe('workspace.clone', workspaceCloneUI);
+    tw.events.subscribe('workspace.switch', workspaceSwitch, name);
+    tw.events.subscribe('workspace.load', workspaceLoad, name);
+    tw.events.subscribe('workspace.create', workspaceCreate, name);
+    tw.events.subscribe('workspace.delete', workspaceDelete, name);
+    tw.events.subscribe('workspace.delete.ui', workspaceDeleteUI, name);
+    tw.events.subscribe('workspace.clone', workspaceCloneUI, name);
   };
 
   // Exports
@@ -56,7 +57,7 @@
   }
 
   function workspaceCreate(name, clone) {
-  // Remember current workspace (if any)
+    // Remember current workspace (if any)
     let currentWorkspace = tw.store.global.get('workspace');
     // Check it doesn't already exist
     let workspaces = tw.store.global.get('workspaces');
@@ -66,7 +67,7 @@
     workspaces.push(name);
     tw.store.global.set('workspaces', workspaces);
     if (clone) {
-    // Copy all data across
+      // Copy all data across
       workspaceMigrate(currentWorkspace, name, {
         tiddlers: tw.store.get('tiddlers'),
         'tiddlers-visible': tw.store.get('tiddlers-visible'),
@@ -78,13 +79,15 @@
    * Switch Workspace without reloading UI
    */
   function workspaceSwitch(name) {
-  // TODO: Save if dirty prompt
+    // TODO: Save if dirty prompt
     let workspaces = tw.store.global.get('workspaces');
     let index = name ? workspaces.indexOf(name) : 0;
     if (index < 0) throw new Error(`workspaceSwitch Failed: Workspace '${name}' not found!`);
     name = workspaces[index];
     // Repoint the active workspace — tw.store (core.store) scopes by tw.workspace
     tw.store.global.set('workspace', name);
+    // Per-tab anchor — survives `?ws=` strip and in-app hash mutation
+    sessionStorage.setItem('workspace', name);
     tw.workspace = name;
   }
   /**
@@ -114,5 +117,30 @@
       tw.store.set(k, source[k]);
     });
     if (current) workspaceSwitch(current);
+  }
+
+  // `?ws=<name>` is a one-shot bootstrap: when present and known, the name is
+  // written into sessionStorage and the URL is reloaded without the query.
+  // From then on the session anchors this tab's workspace — immune to in-app
+  // hash mutation. Unknown names are left in the URL with a warning so the
+  // user can see what they typed; the fallback chain picks the default.
+  function bootstrapFromQuery() {
+    const params = new URLSearchParams(location.search);
+    const wsFromQuery = params.get('ws');
+    if (!wsFromQuery) return;
+    const known = (tw.store.global.get('workspaces') || []).indexOf(wsFromQuery) >= 0;
+    if (!known) {
+      console.warn(`Unknown 'workspace ${wsFromQuery}' from ?ws=, ignoring`);
+      return;
+    }
+    sessionStorage.setItem('workspace', wsFromQuery);
+    params.delete('ws');
+    const cleanSearch = params.toString();
+    const cleanUrl = location.pathname + (cleanSearch ? '?' + cleanSearch : '') + location.hash;
+    try {
+      location.replace(cleanUrl);
+    } catch {
+      // file:// or strict sandbox — fall through; the session anchor still works
+    }
   }
 });

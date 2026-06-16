@@ -72,10 +72,13 @@
     },
   };
   Object.assign(tw.extensions, {
-    registerMacro(namespace, name, fcn, options) {
+    // Register a macro callable from tiddler text as <<ns.name args>>. `meta`
+    // attaches docs that <<macros>> reads to build its reference table:
+    //   {description, example?, version?}
+    registerMacro(namespace, name, fcn, meta) {
       if (!tw.macros[namespace]) tw.macros[namespace] = {};
       tw.macros[namespace][name] = fcn;
-      if (options) Object.assign(tw.macros[namespace][name], options);
+      if (meta) Object.assign(tw.macros[namespace][name], meta);
     },
     // Register a command (or array of commands) for the command palette.
     // Shape: {label, event?, payload?, run?}. Deduped by label (last-wins) so
@@ -108,20 +111,19 @@
   // `||` guard makes it idempotent across soft reloads (which re-eval modules
   // and would otherwise wipe plugin registrations that already happened).
   tw.types = tw.types || {};
-  tw.macros = {
-    core: {
-      showTiddlerList: (...args) => tw.core.tiddlers.showTiddlerList(...args),
-      // <<Tag Foo>> — render tag "Foo" as a picker listing all tiddlers tagged Foo.
-      Tag: tag => tw.core.render.tagPickerHtml(String(tag ?? '')),
-      // Plain tags input for the edit form. The base package's TagInput
-      // ($GeneralWidgets) overrides this with an autocomplete version; this
-      // fallback keeps the edit form usable with ZERO plugins/scripts loaded
-      // (?safemode — the no-plugin invariant requires tags to stay editable,
-      // e.g. to add $CodeDisabled to a broken plugin).
-      TagInput: ({id}) => `<input id="${id}" placeholder="Tags"/>`,
-      disabled: (...rest) => 'This macro is disabled!' + JSON.stringify(rest),
-    },
-  };
+  tw.macros = tw.macros || {};
+  tw.extensions.registerMacro('core', 'Tag', tag => tw.core.render.tagPickerHtml(String(tag ?? '')), {
+    description: 'Render a tag as a picker listing every tiddler with that tag.',
+    example: '<<Tag $Plugin>>',
+  });
+  // Plain tags input for the edit form. The base package's TagInput ($GeneralWidgets)
+  // overrides this with an autocomplete version; this fallback keeps the edit form
+  // usable with ZERO plugins/scripts loaded (?safemode — the no-plugin invariant
+  // requires tags to stay editable, e.g. to add $CodeDisabled to a broken plugin).
+  tw.extensions.registerMacro('core', 'TagInput', ({id}) => `<input id="${id}" placeholder="Tags"/>`, {
+    description: 'Tags input for the edit form (no-plugin fallback; overridden with autocomplete by the base package).',
+    example: '<<TagInput id:my-tags>>',
+  });
 
   // Run
   const run = () => {
@@ -197,8 +199,6 @@
       let src = tw.core.dom.nearestElementWithAttribute(el, 'data-msg');
       if (!src) return;
       let msg = src.getAttribute('data-msg');
-      if (src.hasAttribute('data-param'))
-        console.warn('data-param is no longer supported, use data-params', src);
       let params = src.getAttribute('data-params');
       if (!msg && isCommand(link)) msg = isCommand(link);
       if (!msg) return;
@@ -225,9 +225,7 @@
     });
     document.addEventListener('dblclick', event => {
       let el = event.target;
-      let t =
-        tw.core.dom.nearestAttribute(el, 'data-tiddler-title', '.tiddler') ||
-        tw.core.dom.nearestAttribute(el, 'tiddler-include', '[tiddler-include]');
+      let t = tw.core.dom.nearestAttribute(el, 'data-tiddler-title', '.tiddler') || tw.core.dom.nearestAttribute(el, 'tiddler-include', '[tiddler-include]');
       if (!t) return;
       formEditTiddler(t);
     });
@@ -268,6 +266,7 @@
     location.hash = '';
     return result;
   }
+  // Commands sent via #anchor
   function handleHashLink(hash) {
     if (!hash) return;
     let link = decodeURI(hash?.replace(/^#/, ''));
@@ -438,15 +437,12 @@
   }
 
   function tiddlerDeleted(t) {
-    if (tw.core.tiddlers.isRunnableTiddler(t))
-      if (confirm('Code tiddler deleted - would you like to reload?'))
-        tw.events.send('reboot.hard');
+    if (tw.core.tiddlers.isRunnableTiddler(t)) if (confirm('Code tiddler deleted - would you like to reload?')) tw.events.send('reboot.hard');
   }
 
   function tiddlerUpdated(title) {
     let t = tw.core.tiddlers.getTiddler(title);
-    if (['$SiteTitle', '$SiteSubTitle', '$TitleBar'].includes(title))
-      tw.core.dom.$$('*[tiddler-include]')?.forEach(tw.core.render.tiddlerSpanInclude);
+    if (['$SiteTitle', '$SiteSubTitle', '$TitleBar'].includes(title)) tw.core.dom.$$('*[tiddler-include]')?.forEach(tw.core.render.tiddlerSpanInclude);
     else if (tw.core.tiddlers.isPackageList(t)) {
       if (confirm('Would you like to reload?')) {
         tw.core.store.save();
@@ -454,12 +450,10 @@
       }
     } else if (tw.core.tiddlers.isRunnableTiddler(t)) {
       tw.core.store.save();
-      if (confirm(`Code '${t.title}' was edited. Reload now to apply changes?`))
-        tw.events.send('reboot.hard');
+      if (confirm(`Code '${t.title}' was edited. Reload now to apply changes?`)) tw.events.send('reboot.hard');
     } else if (tw.core.tiddlers.tiddlerIsATemplate(t)) {
       tw.core.store.save();
-      if (confirm(`Template '${t.title}' was edited. Reload now to apply changes?`))
-        tw.events.send('reboot.hard');
+      if (confirm(`Template '${t.title}' was edited. Reload now to apply changes?`)) tw.events.send('reboot.hard');
     }
   }
 
@@ -483,9 +477,7 @@
 
   // `$Layout` holds `[[LayoutTiddler]]`; strip the link brackets to get the title.
   function currentLayoutTitle() {
-    return (
-      (tw.run.getTiddler('$Layout')?.text || '').replace(/[\[\]]/g, '').trim() || '$MainLayout'
-    );
+    return (tw.run.getTiddler('$Layout')?.text || '').replace(/[\[\]]/g, '').trim() || '$MainLayout';
   }
 
   // Which layout a theme wants: its `# MainLayout` section names a shared layout
@@ -544,10 +536,7 @@
     let api = {el, content, toolbar, close, setContent: h => (content.innerHTML = h)};
 
     buttons.forEach(b => {
-      toolbar.insertAdjacentHTML(
-        'beforeend',
-        button(b.text, b.msg || '', b.payload, b.id || '', b.attr || '', b.className || ''),
-      );
+      toolbar.insertAdjacentHTML('beforeend', button(b.text, b.msg || '', b.payload, b.id || '', b.attr || '', b.className || ''));
       let btnEl = toolbar.lastElementChild;
       btnEl.addEventListener('click', ev => {
         // msg dispatch (if any) is handled by the document-level data-msg listener

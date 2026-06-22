@@ -11,8 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked@14.1.3/marked.min.js"></script>
-    <script type="module" crossorigin src="/fintool/assets/index-DHYujIOb.js"></script>
-    <link rel="stylesheet" crossorigin href="/fintool/assets/index-CtSUUMy-.css">
+    <script type="module" crossorigin src="/fintool/assets/index-BOaozgvu.js"></script>
+    <link rel="stylesheet" crossorigin href="/fintool/assets/index-DslUSIjx.css">
   </head>
   <body>
     <header class="topbar">
@@ -31,6 +31,18 @@
           <option value="last6mo">Last 6 months</option>
           <option value="last24mo">Last 24 months</option>
           <option value="all">All time</option>
+        </select>
+      </label>
+      <label class="date-range-wrap"
+        >Category
+        <select id="global-category" class="date-range">
+          <option value="">All</option>
+        </select>
+      </label>
+      <label class="date-range-wrap"
+        >SubCategory
+        <select id="global-subcategory" class="date-range">
+          <option value="">All</option>
         </select>
       </label>
       <button
@@ -105,6 +117,13 @@
       <section class="panel" id="tab-categories">
         <div class="toolbar">
           <label
+            >Chart
+            <select id="cat-dimension">
+              <option value="category" selected>Category</option>
+              <option value="subCategory">Subcategory</option>
+            </select></label
+          >
+          <label
             >From
             <select id="cat-from"></select
           ></label>
@@ -112,20 +131,14 @@
             >To
             <select id="cat-to"></select
           ></label>
-          <label
-            >SubCategory
-            <select id="cat-subcategory">
-              <option value="">All</option>
-            </select></label
-          >
         </div>
         <div class="chart-grid">
           <div class="chart-card">
-            <h3>Expenses by category</h3>
+            <h3 id="chart-pie-title">Expenses by category</h3>
             <canvas id="chart-pie"></canvas>
           </div>
           <div class="chart-card">
-            <h3>Category spend per month</h3>
+            <h3 id="chart-stack-title">Category spend per month</h3>
             <canvas id="chart-stack"></canvas>
           </div>
         </div>
@@ -155,18 +168,6 @@
           <label
             >Source
             <select id="pay-source">
-              <option value="">All</option>
-            </select></label
-          >
-          <label
-            >Category
-            <select id="pay-category">
-              <option value="">All</option>
-            </select></label
-          >
-          <label
-            >SubCategory
-            <select id="pay-subcategory">
               <option value="">All</option>
             </select></label
           >

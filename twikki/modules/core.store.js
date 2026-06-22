@@ -15,9 +15,7 @@
 (function (tw) {
   const name = 'core.store';
   const version = '0.1.0';
-  const platform = '0.26.0'; // built for platform ^0.26.0
-
-  const autoSave = true;
+  const platform = '0.27.0'; // built for platform ^0.27.0
 
   tw.store = {
     get(key) {
@@ -54,7 +52,7 @@
   // Exports
   const exports = {
     save,
-    saveSilent,
+    autoSave,
     saveAll,
     saveVisible,
     loadStore,
@@ -63,6 +61,7 @@
 
   Object.assign(tw.run, {
     save,
+    autoSave,
     saveAll,
     saveVisible,
   });
@@ -78,13 +77,20 @@
   }
 
   /* Persisting tw.tiddlers */
-  function save() {
-    if (!autoSave) return;
-    saveAll({});
+  function isAutoSave() {
+    return tw.core.common.getSetting('data.autoSave', true) !== false;
   }
-  function saveSilent() {
-    if (!autoSave) return;
-    saveAll({silent: true});
+  // autoSave() — persist ONLY if the user has Auto Save on. For automatic,
+  // opt-out-able saves (a normal edit, delete, trash op, import).
+  function autoSave() {
+    if (!isAutoSave()) return;
+    saveAll();
+  }
+  // save() — ALWAYS persist, ignoring the Auto Save setting. For
+  // "we really need this on disk": before a reboot, a restore, a settings
+  // change.
+  function save() {
+    saveAll();
   }
   function saveAll() {
     const oldTiddlers = tw.store.get('tiddlers');
@@ -107,16 +113,12 @@
   function loadStore(store) {
     if (!store) store = tw.store;
     tw.tiddlers.all = storeLoadTiddlers('tiddlers');
-    tw.shadowTiddlers
-      .filter(t => !tw.util.tiddlerExists(t.title))
-      .forEach(t => tw.run.addTiddlerHard(t));
+    tw.shadowTiddlers.filter(t => !tw.util.tiddlerExists(t.title)).forEach(t => tw.run.addTiddlerHard(t));
     if (!tw.tiddlers.all.length) {
       tw.tiddlers.all = [];
       store.set('tiddlers', []);
     }
-    tw.tiddlers.visible = store.get('tiddlers-visible')?.length
-      ? store.get('tiddlers-visible')
-      : [];
+    tw.tiddlers.visible = store.get('tiddlers-visible')?.length ? store.get('tiddlers-visible') : [];
 
     tw.tiddlers.trashed = storeLoadTiddlers('tiddlers-trashed', false);
 

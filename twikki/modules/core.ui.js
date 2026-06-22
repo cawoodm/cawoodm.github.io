@@ -20,7 +20,7 @@
 (function (tw) {
   const name = 'core.ui';
   const version = '0.25.0';
-  const platform = '0.26.0'; // built for platform ^0.26.0
+  const platform = '0.27.0'; // built for platform ^0.27.0
 
   // Events are alphanumeric with "." e.g. 'foo.bar' (lowercase only)
   const reEventName = /[a-z0-9\.]+/g;
@@ -118,8 +118,9 @@
   });
   // Plain tags input for the edit form. The base package's TagInput ($GeneralWidgets)
   // overrides this with an autocomplete version; this fallback keeps the edit form
-  // usable with ZERO plugins/scripts loaded (?safemode — the no-plugin invariant
-  // requires tags to stay editable, e.g. to add $CodeDisabled to a broken plugin).
+  // usable with ZERO plugins/scripts loaded — the no-plugin invariant requires tags
+  // to stay editable, e.g. to add $CodeDisabled to a broken plugin. (Note ?safemode
+  // still loads the base package, so there the autocomplete version wins.)
   tw.extensions.registerMacro('core', 'TagInput', ({id}) => `<input id="${id}" placeholder="Tags"/>`, {
     description: 'Tags input for the edit form (no-plugin fallback; overridden with autocomplete by the base package).',
     example: '<<TagInput id:my-tags>>',
@@ -137,8 +138,7 @@
     wireUp('ui.open.all', tw.core.tiddlers.showAllTiddlers);
     wireUp('ui.close.all', tw.core.tiddlers.closeAllTiddlers);
     wireUp('save', tw.core.store.save);
-    wireUp('save.silent', tw.core.store.saveSilent);
-    wireUp('save.all', tw.core.store.saveAll);
+    wireUp('save.auto', tw.core.store.autoSave);
 
     wireUp('tiddler.new', formNewTiddler);
     wireUp('tiddler.edit', formEditTiddler);
@@ -364,7 +364,6 @@
       if (confirm(e.message + '\nDo you want to force save?')) {
         // Ignore error and proceed
         forceSave = true;
-        // TODO: BUG: Doesn't display tiddler after creation
       } else {
         return;
         // Message already displayed in renderTWikki/executeText
@@ -402,7 +401,7 @@
     tw.events.send('tiddler.updated', t.title); // tiddlerUpdated()
     tw.core.render.renderAllTiddlers();
     setDirty(true);
-    tw.core.store.save();
+    tw.core.store.autoSave();
   }
 
   // Edit button on a section card: close the section view and open its parent
@@ -433,6 +432,7 @@
   /* ---------- Tiddler lifecycle reactions ---------- */
   function renderNewTiddler(title) {
     tw.core.tiddlers.showTiddler(title);
+    if (tw.tabs) tw.tabs.activate(title); // tabs mode: focus the new note (river mode no-ops)
   }
 
   function tiddlerDeleted(t) {
@@ -448,11 +448,15 @@
         tw.events.send('reboot.hard');
       }
     } else if (tw.core.tiddlers.isRunnableTiddler(t)) {
-      tw.core.store.save();
-      if (confirm(`Code '${t.title}' was edited. Reload now to apply changes?`)) tw.events.send('reboot.hard');
+      if (confirm(`Code '${t.title}' was edited. Reload now to apply changes?`)) {
+        tw.core.store.save();
+        tw.events.send('reboot.hard');
+      }
     } else if (tw.core.tiddlers.tiddlerIsATemplate(t)) {
-      tw.core.store.save();
-      if (confirm(`Template '${t.title}' was edited. Reload now to apply changes?`)) tw.events.send('reboot.hard');
+      if (confirm(`Template '${t.title}' was edited. Reload now to apply changes?`)) {
+        tw.core.store.save();
+        tw.events.send('reboot.hard');
+      }
     }
   }
 

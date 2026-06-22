@@ -4,14 +4,15 @@
  * `{{T}}`, links `[[T]]`) via renderTWikki, element creation from templates
  * (createTiddlerElement + tw.templates via loadTemplates), markdown dispatch
  * (renderMarkdown → the overridable 'markdown.render' event, falling back to
- * escaped plain text under ?safemode), and the DOM inclusion attributes
+ * escaped plain text when no handler is subscribed — e.g. zero plugins; note
+ * ?safemode still loads $BaseMarkdownPlugin), and the DOM inclusion attributes
  * (`tiddler-include`, `macro`). Consumes core.templater and core.params;
  * resolves tiddler text through core.tiddlers.
  */
 (function (tw) {
   const name = 'core.render';
   const version = '0.1.0';
-  const platform = '0.26.0'; // built for platform ^0.26.0
+  const platform = '0.27.0'; // built for platform ^0.27.0
 
   // A reference is a title, optionally followed by ::Section, so links/inclusions
   // can address into a tiddler: [[Title::Section]] / {{Title::Section}}. ':' is
@@ -380,7 +381,8 @@
   // Markdown rendering is pluggable: whoever subscribes to the 'markdown.render'
   // event provides the renderer ($BaseMarkdownPlugin ships markdown-it; a user
   // package can replace it via tw.events.override('markdown.render', fn)).
-  // With no renderer installed (e.g. ?safemode) we fall back to plain text.
+  // With no renderer installed (zero plugins, or $BaseMarkdownPlugin disabled —
+  // not ?safemode, which still loads it) we fall back to plain text.
   function renderMarkdown(text) {
     const results = tw.events.send('markdown.render', text);
     if (results?.length > 1 && !renderMarkdown.warned) {

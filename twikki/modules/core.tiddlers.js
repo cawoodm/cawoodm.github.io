@@ -11,15 +11,14 @@
 (function (tw) {
   const name = 'core.tiddlers';
   const version = '0.1.0';
-  const platform = '0.26.0'; // built for platform ^0.26.0
+  const platform = '0.27.0'; // built for platform ^0.27.0
 
   // The section delimiter: a reference may address into a tiddler's sections as
   // `Title::Section`. ':' is NOT a valid title character, so the '::' in a
   // reference is unambiguous (see splitSectionRef — the single place that knows
   // the delimiter width).
   const SECTION_DELIM = '::';
-  const reTiddlerTitle =
-    /[a-z0-9_\-\.\(\)\s\$\ud83c\ud000-\udfff\ud83d\ud000-\udfff\ud83e\ud000-\udfff]+/gi;
+  const reTiddlerTitle = /[a-z0-9_\-\.\(\)\s\$\ud83c\ud000-\udfff\ud83d\ud000-\udfff\ud83e\ud000-\udfff]+/gi;
   const reTiddlerTitleComplete = RegExp.compose(/^reTiddlerTitle$/gi, {reTiddlerTitle});
   const reInclusionParams = /\##([\$0-9a-z]+)\#([^\#]+)?#/gi;
 
@@ -30,6 +29,7 @@
     addTiddlerHard,
     updateTiddler,
     updateTiddlerHard,
+    updateTiddlerSilent,
     updateTiddlerText,
     deleteTiddler,
     getTiddler,
@@ -84,6 +84,7 @@
   Object.assign(tw.run, {
     updateTiddler,
     updateTiddlerHard,
+    updateTiddlerSilent,
     addTiddler,
     addTiddlerHard,
     deleteTiddler,
@@ -124,8 +125,7 @@
   function addTiddler(newTiddler, userEdit, forceSave) {
     if (userEdit) {
       const existingTiddler = getTiddler(newTiddler.title, false);
-      if (existingTiddler)
-        throw new Error(`Unable to add (overwrite) existent tiddler '${newTiddler.title}'!`);
+      if (existingTiddler) throw new Error(`Unable to add (overwrite) existent tiddler '${newTiddler.title}'!`);
       if (!newTiddler.created) newTiddler.created = newTiddler.updated || new Date(); // $Shadow tiddlers need this when saved
       delete newTiddler.doesNotExist;
       delete newTiddler.isRawShadow;
@@ -140,23 +140,27 @@
 
   function updateTiddler(currentTitle, newTiddler, userEdit, forceSave) {
     const existingTiddler = getTiddler(currentTitle, true);
-    if (!existingTiddler)
-      throw new Error(`Unable to update non-existent tiddler '${currentTitle}'!`);
-    if (newTiddler.title !== currentTitle && getTiddler(newTiddler.title))
-      throw new Error(`Cannot overwrite existing tiddler '${newTiddler.title}!`);
-    if (!forceSave && userEdit && existingTiddler.tags.includes('$NoEdit'))
-      throw new Error(`Readonly tiddler '${currentTitle}' cannot be updated!`);
+    if (!existingTiddler) throw new Error(`Unable to update non-existent tiddler '${currentTitle}'!`);
+    if (newTiddler.title !== currentTitle && getTiddler(newTiddler.title)) throw new Error(`Cannot overwrite existing tiddler '${newTiddler.title}!`);
+    if (!forceSave && userEdit && existingTiddler.tags.includes('$NoEdit')) throw new Error(`Readonly tiddler '${currentTitle}' cannot be updated!`);
     if (userEdit) delete existingTiddler.doNotSave;
     if (!forceSave && userEdit) validateTiddlerText(newTiddler);
     delete newTiddler.isRawShadow;
     updateTiddlerHard(currentTitle, newTiddler);
     // Move to top of story
-    if (userEdit)
-      replaceInArray(tw.tiddlers.visible, title => title === currentTitle, newTiddler.title);
+    if (userEdit) replaceInArray(tw.tiddlers.visible, title => title === currentTitle, newTiddler.title);
     tw.events.send('tiddler.modified', newTiddler.title);
   }
   function updateTiddlerHard(currentTitle, newTiddler) {
     upsertInArray(tw.tiddlers.all, titleIs(currentTitle), newTiddler);
+  }
+  // Like updateTiddlerHard (raw upsert: no validation, no $NoEdit guard, no story
+  // reorder, no rerender) but DOES flag the store dirty, so the unsaved-changes
+  // indicator reflects the edit and it persists on the next save. For programmatic
+  // metadata edits (e.g. toggling a plugin's $CodeDisabled tag).
+  function updateTiddlerSilent(currentTitle, newTiddler) {
+    updateTiddlerHard(currentTitle, newTiddler);
+    tw.run.setDirty?.(true); // setDirty lives in core.ui (loads later); call lazily
   }
   function updateTiddlerText(title, text) {
     let t = getTiddler(title);
@@ -167,19 +171,9 @@
     let t = getTiddler(title);
     if (!automation && !confirm('Sure you want to delete me?')) return;
     const shadowTiddler = tw.shadowTiddlers.find(titleIs(title));
-    if (
-      shadowTiddler &&
-      !automation &&
-      !confirm('Deleting a shadow tiddler will simply restore the default content OK?')
-    )
-      return;
+    if (shadowTiddler && !automation && !confirm('Deleting a shadow tiddler will simply restore the default content OK?')) return;
     if (!t) return hideTiddler(title);
-    if (
-      t.tags.includes('$NoEdit') &&
-      !automation &&
-      !confirm('This tiddler is marked as read-only. Deleting it may cause issues. Really delete?')
-    )
-      return;
+    if (t.tags.includes('$NoEdit') && !automation && !confirm('This tiddler is marked as read-only. Deleting it may cause issues. Really delete?')) return;
     let tiddler = removeFromArray(tw.tiddlers.all, titleIs(title))?.[0];
     if (shadowTiddler) addTiddler({...shadowTiddler});
     if (shadowTiddler && !automation) tw.core.render.rerenderTiddler(title);
@@ -192,7 +186,7 @@
       tw.events.send('tiddler.removed', title);
       return;
     } else tw.events.send('tiddler.deleted', title);
-    tw.core.store.save();
+    tw.core.store.autoSave();
   }
 
   function tiddlerToggleTag(title, tag) {
@@ -272,9 +266,7 @@
       .forEach(hideTiddler);
   }
   function showTiddlerList(list, title = 'unknown') {
-    return tw.lib.markdown(
-      tw.core.render.renderTWikki({text: list.map(t => `* [[${t.title}]]`).join('\n'), title}),
-    );
+    return tw.lib.markdown(tw.core.render.renderTWikki({text: list.map(t => `* [[${t.title}]]`).join('\n'), title}));
   }
 
   /* Array helpers */
@@ -422,8 +414,7 @@
   function tagMatch(tag) {
     if (!tag || tag === '*') return () => true;
     let re = new RegExp(tag.match(/^!/) ? tag.substr(1) : tag);
-    return t =>
-      tag.match(/^!/) ? !t.tags.find(tag => tag.match(re)) : t.tags.find(tag => tag.match(re));
+    return t => (tag.match(/^!/) ? !t.tags.find(tag => tag.match(re)) : t.tags.find(tag => tag.match(re)));
   }
   function isPackageList(t) {
     return ['$CorePackages', '$ExtensionPackages'].includes(t.title);
@@ -465,10 +456,10 @@
     }
   }
   function registerValidator({name, match, validate}) {
-    if (!name || typeof match !== 'function' || typeof validate !== 'function')
-      throw new Error('registerValidator: {name, match, validate} required');
+    if (!name || typeof match !== 'function' || typeof validate !== 'function') throw new Error('registerValidator: {name, match, validate} required');
     const i = validators.findIndex(v => v.name === name);
-    if (i >= 0) validators[i] = {name, match, validate}; // idempotent on soft reload
+    if (i >= 0)
+      validators[i] = {name, match, validate}; // idempotent on soft reload
     else validators.push({name, match, validate});
   }
   function jsonValidator(text) {

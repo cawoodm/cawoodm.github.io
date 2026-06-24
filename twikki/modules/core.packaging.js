@@ -8,8 +8,8 @@
  */
 (function (tw) {
   const name = 'core.packaging';
-  const version = '0.27.0';
-  const platform = '0.27.0'; // built for platform ^0.27.0
+  const version = '0.28.0';
+  const platform = '0.28.0'; // built for platform ^0.28.0
 
   // Tags that represent local user state rather than package content. When a
   // forced package load overwrites an existing tiddler, these are carried over
@@ -25,6 +25,24 @@
     reloadPackageFromUrl,
     loadList,
   };
+
+  /* BEGIN offlineFallback helper
+   * Pure decision used when a package fetch fails. Given whether the browser is
+   * online and whether a cached copy of this package already lives in the store
+   * (its tiddlers were loaded on a previous, online boot), decide how to react:
+   *   - 'use-cache'  : offline AND we have a cached copy → keep the cached
+   *                    tiddlers, notify informationally, do NOT re-throw. This is
+   *                    what makes a force-loaded package offline-tolerant.
+   *   - 'fail'       : online (a genuine network/HTTP error) OR offline with no
+   *                    cached copy to fall back on → surface the error as before.
+   * Kept free of closure refs (only its args) so it can be unit-tested by
+   * sentinel extraction, mirroring the buildUrl helper in the platform.
+   */
+  function offlineFallback({online, hadCachedCopy}) {
+    if (!online && hadCachedCopy) return 'use-cache';
+    return 'fail';
+  }
+  /* END offlineFallback helper */
 
   // The import button macro and command palette entry (moved here from the old
   // $PackageWidgets.js). Both dispatch `package.reload.url`, which this plugin
@@ -69,6 +87,17 @@
       let obj = await httpGetJSON(url, name, {});
       return {name, url, tiddlers: Array.isArray(obj.tiddlers) ? obj.tiddlers : []};
     } catch (e) {
+      // Offline tolerance: if the network is down (or the fetch threw) and a
+      // copy of this package was already merged into the store on a previous
+      // online boot, keep using that cached copy rather than surfacing a scary
+      // error. Returns a {cached:true} marker so loadPackageFromURL leaves the
+      // existing tiddlers untouched. See the offlineFallback helper above.
+      const online = typeof navigator === 'undefined' || navigator.onLine !== false;
+      const hadCachedCopy = !!(name && tw.tiddlers?.all?.some(t => t.package === name));
+      if (offlineFallback({online, hadCachedCopy}) === 'use-cache') {
+        tw.ui.notify(`Offline: using cached copy of package '${name}'`, 'I');
+        return {name, url, cached: true, tiddlers: null};
+      }
       // TODO: Replace notify with throw new Error()
       tw.ui.notify(`Failed to load tiddler package '${name}' from ${url} (see console log)`, 'E', e.stack);
       return null;
@@ -79,6 +108,9 @@
   async function loadPackageFromURL({url, name = '', filter = '', overWrite = false, doNotSave = false, noOverWrite = false}) {
     let pck = await fetchPackage({url, name});
     if (!pck) return 0; // fetchPackage already notified
+    // Offline fallback: the fetch failed but a cached copy is already in the
+    // store. Leave those tiddlers in place (no merge, no prune) and report 0.
+    if (pck.cached) return 0;
     return loadList(pck.tiddlers, {name, overWrite, filter, doNotSave, noOverWrite}); // tw.events.send('package.loaded');
   }
 
@@ -109,8 +141,13 @@
 
     list.forEach(t => {
       if (selectedTitles && !selectedTitles.has(t.title)) return; // deselected in the import dialog
-      t.updated = new Date(t.updated);
-      t.created = new Date(t.created);
+      // created falls back to the stable `updated` (not the wall clock) so a
+      // default tiddler that ships no `created` resolves to the same value on
+      // every client — otherwise each boot/import invents a fresh `created` and
+      // the sync churns it. Computed before `updated` is reparsed so it reads the
+      // original value. See core.tiddlers.js (addTiddler) for the same pattern.
+      t.created = new Date(t.created || t.updated || new Date());
+      t.updated = new Date(t.updated || new Date());
       let issues = tw.util.tiddlerValidation(t);
       if (issues.length) return tw.ui.notify(`Tiddler '${t.title}' is invalid: ` + issues.join('<br>'));
       if (filter && !filter.test(t.title)) return dp('Skipping import of tiddler', t.title);

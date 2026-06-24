@@ -8,13 +8,14 @@
  */
 (function (tw) {
   const name = 'core.dom';
-  const version = '0.27.0';
-  const platform = '0.27.0'; // built for platform ^0.27.0
+  const version = '0.28.0';
+  const platform = '0.28.0'; // built for platform ^0.28.0
   const exports = {};
 
   // Exports
   exports.addStyleSheet = addStyleSheet;
   exports.addScript = addScript;
+  exports.loadScript = loadScript;
   exports.disableStyleSheet = disableStyleSheet;
   exports.enableStyleSheet = enableStyleSheet;
   exports.$ = $;
@@ -27,6 +28,16 @@
   exports.offOwner = offOwner;
 
   const tracked = [];
+
+  // Memoised library registry: tw.lib.require('hljs', loader) runs `loader`
+  // at most once across the whole session (and across soft reloads) and hands
+  // every caller the same promise, so multiple plugins can share one load.
+  const _libs = new Map();
+  tw.lib = tw.lib || {};
+  tw.lib.require = (name, loader) => {
+    if (!_libs.has(name)) _libs.set(name, Promise.resolve().then(loader));
+    return _libs.get(name);
+  };
 
   return {name, version, platform, exports};
 
@@ -71,6 +82,31 @@
     script.onload = () => tw.events.send('script.loaded', title);
     script.src = url;
     document.head.appendChild(script);
+  }
+  // Promise-returning, idempotent <script> loader. Dedups by title via a
+  // data-lib attribute so a soft reload re-evaluating plugin code never adds a
+  // second tag — the first load's promise is cached on the element and reused.
+  // Wires onerror (rejection) which addScript never did, and supports optional
+  // Subresource Integrity. Resolves to window[global] when `global` is given.
+  function loadScript(title, url, {integrity, global} = {}) {
+    let el = document.querySelector(`script[data-lib="${title}"]`);
+    if (el?._p) return el._p;
+    el = document.createElement('script');
+    el.dataset.lib = title;
+    el.src = url;
+    if (integrity) {
+      el.integrity = integrity;
+      el.crossOrigin = 'anonymous';
+    }
+    el._p = new Promise((resolve, reject) => {
+      el.onload = () => {
+        tw.events.send('script.loaded', title);
+        resolve(global ? window[global] : undefined);
+      };
+      el.onerror = () => reject(new Error(`Failed to load '${title}' from ${url}`));
+    });
+    document.head.appendChild(el);
+    return el._p;
   }
   // Toggle via the `media` attribute, NOT `.disabled`. Setting link.disabled=true
   // BEFORE the (CDN) sheet has loaded does not propagate to the freshly-loaded

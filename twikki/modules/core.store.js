@@ -14,8 +14,8 @@
  */
 (function (tw) {
   const name = 'core.store';
-  const version = '0.1.0';
-  const platform = '0.27.0'; // built for platform ^0.27.0
+  const version = '0.2.0';
+  const platform = '0.28.0'; // built for platform ^0.28.0
 
   tw.store = {
     get(key) {
@@ -126,7 +126,10 @@
       let result = store.get(key) || [];
       result.forEach(t => {
         if (validate && !tiddlerIsValid(t)) return;
-        t.created = new Date(t.created || new Date());
+        // created falls back to the stable `updated` (not the wall clock) so a
+        // tiddler that was stored without a `created` resolves to the same value
+        // on every client — preventing per-boot `created` churn in synced repos.
+        t.created = new Date(t.created || t.updated || new Date());
         t.updated = new Date(t.updated || new Date());
       });
       return result.filter(t => !!t.title);

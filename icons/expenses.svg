@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <radialGradient id="g-goal-a" cx="0.35" cy="0.35" r="0.75">
+      <stop offset="0" stop-color="#ffc2cf"/>
+      <stop offset="1" stop-color="#e8536f"/>
+    </radialGradient>
+  </defs>
+  <circle cx="22" cy="22" r="16" fill="url(#g-goal-a)"/>
+  <circle cx="22" cy="22" r="10.5" fill="none" stroke="#8f1f36" stroke-width="2.4" opacity="0.55"/>
+  <circle cx="22" cy="22" r="5" fill="#8f1f36" opacity="0.55"/>
+  <path d="M30 8l6 2-2 6-8 8-6-6z" fill="#fff1f3" stroke="#8f1f36" stroke-width="1.6" stroke-linejoin="round" opacity="0.9"/>
+  <rect x="8" y="34" width="4" height="8" rx="1" fill="#8f1f36" opacity="0.5"/>
+  <rect x="14" y="30" width="4" height="12" rx="1" fill="#8f1f36" opacity="0.5"/>
+  <rect x="20" y="33" width="4" height="9" rx="1" fill="#8f1f36" opacity="0.5"/>
+</svg>

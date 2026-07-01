@@ -1,108 +1,148 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-	 
-	<!-- Latest compiled and minified CSS -->
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
-
-	<!-- Optional theme -->
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-	
-	<link rel="stylesheet" href="//getbootstrap.com/docs/3.3/examples/jumbotron-narrow/jumbotron-narrow.css"/>
-
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Marc Cawood</title>
+    <meta
+      name="description"
+      content="Personal projects by Marc Cawood — local-first browser apps, wikis, and games."
+    />
+    <link rel="icon" href="icon.png" />
+    <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
-    <div class="container">
-      <div class="header clearfix">
+    <header class="site-header">
+      <div class="wrap">
+        <a class="brand" href="/">Marc <span>Cawood</span></a>
         <nav>
-          <ul class="nav nav-pills pull-right">
-            <li role="presentation" class="active"><a href="/">Home</a></li>
-            <li role="presentation"><a href="//github.com/cawoodm">GitHub</a></li>
-            <li role="presentation"><a href="javascript:alert('cawoodm at google mail')">Contact</a></li>
-          </ul>
+          <a href="//github.com/cawoodm">GitHub</a>
+          <a href="//www.linkedin.com/in/marc-cawood-83923283/">LinkedIn</a>
         </nav>
-        <h3 class="text-muted">MarcWood</h3>
       </div>
-	  
-	  
-	  <!--<div class="row">
-			<div class="col-sm-6 col-lg-3">
-				This is part of our grid.
-			</div>
-			<div class="col-sm-6 col-lg-3">
-				This is part of our grid.
-			</div>
-			<div class="col-sm-6 col-lg-3">
-        This is part of our grid.
-			</div>    
-			<div class="col-sm-6 col-lg-3">
-        This is part of our grid.
-			</div>    
-		</div>-->
-    
-    <div class="jumbotron">
-      
-      <h1>Awesome!</h1>
-      <p class="lead">Look at how amazing this page looks just because it has great CSS.
-        There's no functionality here, everything is fake but it looks sweet. Compare that with my projects below which are great
-				but don't look pretty.</p>
-        <p><a class="btn btn-lg btn-success" href="//cawoodm.blogspot.com/" role="button">To the Blog!</a></p>
-				
-      </div>
-      
-      <div class="row marketing">
-        <div class="col-lg-6">
-          
-          <h3>General Devlopment</h3>
-          
-          <h4><a href="//github.com/cawoodm/powowshell">PowowShell</a></h4> 
-          <p>PowerShell is the shell of the future for Windows environments but also for MacOS and Linux. PowowShell is my work in making a Visual Designer (<a href="./powowshell/ide/">prototype</a>) for Data Flow Pipelines (ETL) using PowerShell.</p>
-          
-          <h4><a href="//github.com/cawoodm/wget-gui">WGET GUI</a></h4>
-          <p>When you need to process large text files fast you need AWK. This tool let's you create and run AWK programs from the comfort of a GUI.</p>
-          
-          <h4>TiddlyWiki</h4>
-          <p>TiddlyWiki Classic, though dated, is 7 kinds of awesomeness packed into one html file. Check out my <a href="tiddlywiki.html">demo</a> or download <a href="//classic.tiddlywiki.com">your own copy</a> and get started today.</p>
-          
-          <h4><a href="//github.com/cawoodm/awkgui">AWK GUI</a></h4>
-          <p>When you need to process large text files fast you need AWK. This tool let's you create and run AWK programs from the comfort of a GUI.</p>
-					
+    </header>
+
+    <main class="wrap">
+      <section class="hero">
+        <p class="eyebrow">Full-stack developer &amp; tinkerer</p>
+        <h1>I build small tools that run entirely in your browser.</h1>
+        <p class="lead">
+          No servers, no signup, no lock-in — local-first apps, wikis, and the
+          occasional game.
+        </p>
+      </section>
+
+      <section class="projects">
+        <div class="section-heading">
+          <h2>Recent projects</h2>
         </div>
-        
-        <div class="col-lg-6">
 
-          <h3>Games</h3>
+        <div class="grid">
+          <article class="card" style="--accent: #4fd1a3">
+            <div class="card-icon"><img src="icons/twikki.svg" alt="" /></div>
+            <h3><a href="twikki/">TWikki</a></h3>
+            <p class="tag">Offline-first wiki</p>
+            <p class="desc">
+              A cloud-native, extensible wiki inspired by TiddlyWiki —
+              auto-saves to your browser and syncs across devices via GitHub.
+            </p>
+            <a class="card-link" href="twikki/">Open TWikki →</a>
+          </article>
 
-          <h4><a href="//cawoodm.github.io/rockdodger">Rock Dodger</a></h4>
-          <p>An side-view HTML5 game for mobile devices with my own game engine designed by Billy. <a href="//github.com/cawoodm/rockdodger">Source code.</a></p>
-          
-          <h4><a href="//cawoodm.github.io/applebees">Apple-Beeezz</a></h4>
-          <p>An top-view HTML5 collect and shoot game for mobile devices with my own game engine designed by Billy. <a href="//github.com/cawoodm/applebees">Source code.</a></p>
-          
-          <h4><a href="//cawoodm.github.io/tie-flighter">Tie Flighter</a></h4>
-          <p>An HTML5 game for mobile devices with the <a href="//www.pixijs.com/">PIXI.js</a> game engine with a Star Wars theme. <a href="//github.com/cawoodm/tie-flighter">Source code.</a></p>
-          
-          <h4><a href="//cawoodm.github.io/get-lost">Get LOST Hombre!</a></h4>
-          <p>An HTML5 game for mobile devices for the <a href="//js13kgames.com/">JS13K</a> game dev competition. <a href="//github.com/cawoodm/get-lost-hombre">Source code.</a></p>
-          
-          <h4><a href="//cawoodm.github.io/tennis">Pong Tennis</a></h4>
-          <p>An HTML5 game of tennis. <a href="//github.com/cawoodm/tennis">Source code.</a></p>
+          <article class="card" style="--accent: #f0a13a">
+            <div class="card-icon"><img src="icons/cmsfree.svg" alt="" /></div>
+            <h3><a href="cmsfree-example/">CMSFree</a></h3>
+            <p class="tag">Backend-less CMS</p>
+            <p class="desc">
+              Edit a static site right in the browser and publish plain HTML —
+              no server, no database. This is a live example site built with it.
+            </p>
+            <a class="card-link" href="cmsfree-example/">View example site →</a>
+          </article>
+
+          <article class="card" style="--accent: #3bc274">
+            <div class="card-icon"><img src="icons/fintool.svg" alt="" /></div>
+            <h3><a href="fintool/">FinTool</a></h3>
+            <p class="tag">Personal finance</p>
+            <p class="desc">
+              Drop in CSVs of income, categories and payments to get charts,
+              tables, and a chat tab that talks to your own data via Claude.
+            </p>
+            <a class="card-link" href="fintool/">Open FinTool →</a>
+          </article>
+
+          <article class="card" style="--accent: #3ba3d6">
+            <div class="card-icon">
+              <img src="icons/easydbaccess.svg" alt="" />
+            </div>
+            <h3><a href="easydbaccess/">easyDBAccess</a></h3>
+            <p class="tag">In-browser database</p>
+            <p class="desc">
+              Drag in a CSV or JSON file and get a real, sortable, filterable
+              table — windowed, plugin-extensible, and synced via a Gist or your
+              own tiny server.
+            </p>
+            <a class="card-link" href="easydbaccess/">Open easyDBAccess →</a>
+          </article>
+
+          <article class="card" style="--accent: #9a7ae0">
+            <div class="card-icon">
+              <img src="icons/minnidbmax.svg" alt="" />
+            </div>
+            <h3><a href="minnidbmax/">MinniDBMax</a></h3>
+            <p class="tag">In-browser database</p>
+            <p class="desc">
+              The original windowed in-browser database with CSV/JSON import and
+              export — now succeeded by easyDBAccess.
+            </p>
+            <a class="card-link" href="minnidbmax/">Open MinniDBMax →</a>
+          </article>
+
+          <article class="card" style="--accent: #e8536f">
+            <div class="card-icon"><img src="icons/expenses.svg" alt="" /></div>
+            <h3><a href="expenses/">Goal Tracker</a></h3>
+            <p class="tag">Finance goals</p>
+            <p class="desc">
+              An Ionic app for tracking savings goals alongside everyday
+              expenses, side by side.
+            </p>
+            <a class="card-link" href="expenses/">Open Goal Tracker →</a>
+          </article>
         </div>
-      </div>
+      </section>
 
-      <footer class="footer">
-        <p>&copy; 2016 Not Really, Inc.</p>
-      </footer>
+      <section class="archive">
+        <div class="section-heading">
+          <h2>Games</h2>
+        </div>
+        <ul class="archive-list">
+          <li><a href="//github.com/cawoodm/mineblast">Mineblast</a></li>
+          <li><a href="rockdodger/">Rock Dodger</a></li>
+          <li><a href="applebees/">Apple-Beeezz</a></li>
+          <li><a href="tie-flighter/">Tie Flighter</a></li>
+          <li><a href="get-lost/">Get LOST Hombre!</a></li>
+          <li><a href="tennis/">Pong Tennis</a></li>
+          <li><a href="solitaire/">Solitaire</a></li>
+          <li><a href="js13k2018/">JS13K 2018 — Offline Pizza</a></li>
+        </ul>
+      </section>
 
-    </div> <!-- /container -->
+      <section class="archive">
+        <div class="section-heading">
+          <h2>Archived &amp; legacy</h2>
+        </div>
+        <ul class="archive-list">
+          <li><a href="//github.com/cawoodm/powowshell">PowowShell</a></li>
+          <li><a href="tiddlywiki.html">TiddlyWiki demo</a></li>
+          <li><a href="fish-reader/">Fish Reader</a></li>
+          <li><a href="canvas-particles/">Canvas Particles</a></li>
+        </ul>
+      </section>
+    </main>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<!-- Latest compiled and minified JavaScript -->
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-
+    <footer class="site-footer wrap">
+      <span>&copy; 2026 Marc Cawood</span>
+      <a href="//github.com/cawoodm">github.com/cawoodm</a>
+    </footer>
   </body>
 </html>

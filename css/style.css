@@ -1,0 +1,226 @@
+:root {
+  --bg: #0b0f14;
+  --surface: #12181f;
+  --surface-2: #171f28;
+  --border: #232c37;
+  --text: #cdd6e0;
+  --muted: #7c8896;
+  --accent: #4fd1c5;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html { color-scheme: dark; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  line-height: 1.55;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(11, 15, 20, 0.85);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.brand {
+  color: var(--text);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.brand span { color: var(--accent); }
+.brand:hover { text-decoration: none; }
+
+.site-header nav { display: flex; gap: 22px; }
+.site-header nav a {
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.site-header nav a:hover { color: var(--text); text-decoration: none; }
+
+/* Hero */
+.hero {
+  padding: 72px 0 48px;
+}
+
+.eyebrow {
+  font-family: var(--mono);
+  color: var(--accent);
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 14px;
+}
+
+.hero h1 {
+  font-size: clamp(1.8rem, 4vw, 2.7rem);
+  line-height: 1.25;
+  margin: 0 0 16px;
+  max-width: 18ch;
+}
+
+.hero p.lead {
+  color: var(--muted);
+  max-width: 60ch;
+  font-size: 1.05rem;
+  margin: 0;
+}
+
+/* Section headings */
+.section-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin: 0 0 24px;
+}
+
+.section-heading h2 {
+  font-size: 1.3rem;
+  margin: 0;
+}
+
+.section-heading .count {
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+section.projects { padding: 24px 0 16px; }
+
+/* Cards */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  --accent: #4fd1c5;
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+  background: var(--accent);
+  opacity: 0.85;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 28px -14px var(--accent);
+}
+
+.card-icon {
+  width: 48px;
+  height: 48px;
+}
+.card-icon img { width: 100%; height: 100%; display: block; }
+
+.card h3 {
+  margin: 4px 0 0;
+  font-size: 1.08rem;
+}
+
+.card h3 a { color: var(--text); }
+.card h3 a:hover { color: var(--accent); text-decoration: none; }
+
+.card .tag {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0;
+}
+
+.card p.desc {
+  color: var(--muted);
+  font-size: 0.92rem;
+  margin: 0;
+  flex: 1;
+}
+
+.card .card-link {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* More projects */
+.archive {
+  padding: 40px 0 8px;
+}
+
+.archive-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.archive-list li { color: var(--muted); }
+.archive-list a { color: var(--text); }
+.archive-list a:hover { color: var(--accent); }
+
+/* Footer */
+.site-footer {
+  margin-top: 64px;
+  border-top: 1px solid var(--border);
+  padding: 28px 0 48px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.site-footer a { color: var(--muted); }
+.site-footer a:hover { color: var(--accent); }
+
+@media (max-width: 560px) {
+  .site-header nav { gap: 14px; }
+  .hero { padding: 48px 0 32px; }
+}

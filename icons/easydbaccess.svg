@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <defs>
+    <linearGradient id="g-edb-a" x1="8" y1="8" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#9fdcff"/>
+      <stop offset="1" stop-color="#2f97d6"/>
+    </linearGradient>
+    <linearGradient id="g-edb-b" x1="8" y1="8" x2="40" y2="16" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#e4f6ff"/>
+      <stop offset="1" stop-color="#bfe9ff"/>
+    </linearGradient>
+  </defs>
+  <path d="M8 14c0-3.3 7.2-6 16-6s16 2.7 16 6v20c0 3.3-7.2 6-16 6s-16-2.7-16-6V14z" fill="url(#g-edb-a)"/>
+  <ellipse cx="24" cy="14" rx="16" ry="6" fill="url(#g-edb-b)"/>
+  <g stroke="#0e4e73" stroke-width="1.6" opacity="0.6">
+    <line x1="14" y1="22" x2="34" y2="22"/>
+    <line x1="14" y1="27" x2="34" y2="27"/>
+    <line x1="14" y1="32" x2="34" y2="32"/>
+    <line x1="21" y1="19" x2="21" y2="35"/>
+    <line x1="28" y1="19" x2="28" y2="35"/>
+  </g>
+</svg>

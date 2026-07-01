@@ -24,6 +24,7 @@
     <meta name="mobile-web-app-status-bar-style" content="black-translucent" />
     <link rel="icon" type="image/x-icon" href="./favicon.ico" />
     <link rel="manifest" href="./manifest.webmanifest" />
+    <script type="module" crossorigin src="/twikki/assets/index-BXUxmQ-N.js"></script>
   </head>
   <body>
     <div class="no-boot" style="font-family: Verdana, Geneva, Tahoma, sans-serif; color: maroon">
@@ -39,7 +40,6 @@
         <summary>🪁</summary>
         <p>Looks like Twikki didn't load, try one of the following:</p>
         <ul>
-          <li><a href="?reload">Reload</a>: Will load the latest modules</li>
           <li><a href="?safemode">Safe mode</a>: Skips all extension packages and non-base plugins</li>
           <li><a href="?trace">Trace</a>: Shows more accurate stack traces in the console</li>
           <li><a href="?debug&logfilter=.">Debug</a>: Shows debug notifications and full detailed logs in the console</li>
@@ -47,22 +47,8 @@
       </details>
       <script>
         // Optionally set to override:
-        // window.MODULE_URL = 'https://yourserver.com';
-      </script>
-      <script src="platform/twikki.platform.js"></script>
-      <script>
-        window.addEventListener('load', async () => {
-          // window.addEventListener('twikki.boot.progress', e => console.log(e.detail));
-          await window.twikki.init();
-          await window.twikki.start();
-          // Register the service worker for offline support. Generated into the
-          // published build by workbox-cli (see ci/publish.ps1); absent under
-          // `npm run dev`, where the fetch simply 404s and registration is skipped.
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('./sw.js').catch(() => {});
-          }
-        });
-      </script>
+        // window.BASE_URL = 'https://yourserver.com';
+      </script>
     </div>
   </body>
 </html>

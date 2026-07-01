@@ -2,13 +2,13 @@
   "tiddlers": [
     {
       "title": "$BackupReminderPlugin",
-      "text": "(function () {\n  const meta = {\n    name: 'BackupReminder',\n    version: '1.0.1',\n    platform: '0.27.0',\n    description: 'Periodic notification reminding the user to back up.',\n  };\n\n  let timerId = null;\n\n  return {\n    meta,\n    init() {\n      const secs = parseInt(tw.call('getJSONObject', '$GeneralSettings')?.backup?.backupInSeconds || 1800, 10);\n      timerId = setInterval(() => {\n        tw.ui.notify('Remember to backup', 'I');\n      }, secs * 1000);\n    },\n    unload() {\n      if (timerId !== null) {\n        clearInterval(timerId);\n        timerId = null;\n      }\n    },\n  };\n})();",
+      "text": "(function () {\n  const meta = {\n    name: 'BackupReminder',\n    version: '1.0.1',\n    platform: '0.27.0',\n    description: 'Periodic notification reminding the user to back up.',\n  };\n\n  let timerId = null;\n\n  return {\n    meta,\n    init() {\n      const secs = parseInt(tw.core.common.getSetting('backup.backupInSeconds', 1800), 10) || 1800;\n      timerId = setInterval(() => {\n        tw.ui.notify('Remember to backup', 'I');\n      }, secs * 1000);\n    },\n    unload() {\n      if (timerId !== null) {\n        clearInterval(timerId);\n        timerId = null;\n      }\n    },\n  };\n})();",
       "tags": [
         "$Plugin"
       ],
       "type": "script/js",
-      "created": "2026-06-18T12:50:36.259Z",
-      "updated": "2026-06-18T13:12:14.110Z"
+      "created": "2026-06-29T19:24:04.412Z",
+      "updated": "2026-06-29T19:40:20.326Z"
     },
     {
       "title": "$TitleBar",
@@ -61,6 +61,16 @@
       "type": "x-twikki",
       "created": "2026-06-13T12:16:48.973Z",
       "updated": "2026-06-20T11:22:17.062Z"
+    },
+    {
+      "title": "$MigrateStorageKeys",
+      "text": "# Description\n\nOne-shot migration of **legacy bare global storage keys** into the `/ws/` root.\n\ncore.store used to store globals under bare keys (`/workspaces`, `/workspace`,\n`/settings.json`, `/secrets`, `/baseUrl`, …). The current scheme prefixes every global\nwith `/ws/` so a `/ws/*` backend (e.g. FileSystemStorage) carries them along with the\nworkspace data. After that change an existing **localStorage / IndexedDB** install can't\nfind its globals: the workspace list reads empty and resets to `['default']`, the wiki\nboots into an empty `default` workspace, and `?ws=<name>` is rejected as \"unknown\" (your\n`ws_<name>` data is still on disk — it's just unreachable, because workspace resolution is\nlist-driven).\n\nRun this once to relocate those keys. It is **idempotent** (once moved the legacy source\nis gone) and leaves control keys (`/twikki.*`, `/modules/*`) and already-migrated `/ws/*`\nkeys untouched. The wiki **reloads** afterwards so the restored globals take effect — any\n`?ws=<name>` in the URL is honoured on the reload.\n\n<<button \"Migrate legacy storage keys\" migratekeys.run>>\n\n# Meta\n\n<<pluginMeta MigrateStorageKeys>>\n\n# Code\n\n```javascript\n(function () {\n  const meta = {\n    name: 'MigrateStorageKeys',\n    version: '1.0.0',\n    platform: '0.28.0',\n    description: 'Migrate legacy bare global storage keys (/workspaces, …) into the /ws/ root. Run on demand from the button.',\n  };\n\n  // Single-segment, device-LOCAL control keys that look like globals but must NOT\n  // move (the boot-script slot, its dismiss dates, the legacy module cache).\n  const isControlKey = k => k.startsWith('/twikki.') || k.startsWith('/modules/');\n\n  // A legacy global is one top-level segment (`/workspaces`) — as opposed to a\n  // current global (`/ws/workspaces`) or workspace-scoped data (`/ws/<name>/<key>`),\n  // both of which start with `/ws/` and so never match.\n  const isLegacyGlobal = k => /^\\/[^/]+$/.test(k) && !isControlKey(k);\n\n  // Relocate every legacy global to its `/ws/`-prefixed counterpart, letting the\n  // legacy value win over any default-init the core wrote this boot, then drop the\n  // source. Returns the number of keys moved.\n  function migrate() {\n    let moved = 0;\n    for (const k of tw.storage.keys('/')) {\n      if (!isLegacyGlobal(k)) continue;\n      const raw = tw.storage.getRaw(k);\n      if (raw === null) continue;\n      const target = '/ws' + k; // `/workspaces` → `/ws/workspaces`\n      tw.storage.setRaw(target, raw);\n      tw.storage.remove(k);\n      moved++;\n      dp(`MigrateStorageKeys: ${k} → ${target}`);\n    }\n    return moved;\n  }\n\n  function run() {\n    const moved = migrate();\n    if (!moved) return tw.ui.notify('No legacy storage keys found — nothing to migrate.', 'I');\n    // reboot.hard flushes pending writes before reloading (see rebootHard), so the\n    // relocations commit and there is no migrate→reboot loop. The reload preserves\n    // any `?ws=<name>` query, which now resolves against the restored list.\n    tw.ui.notify(`Migrated ${moved} legacy storage key(s) to the /ws/ root. Reloading…`, 'S');\n    tw.events.send('reboot.hard');\n  }\n\n  return {\n    meta,\n    init() {\n      tw.events.subscribe('migratekeys.run', run, 'MigrateStorageKeys');\n    },\n  };\n})();\n```",
+      "tags": [
+        "$Plugin"
+      ],
+      "type": "x-twikki",
+      "created": "2026-06-29T19:40:20.327Z",
+      "updated": "2026-06-29T19:40:20.340Z"
     }
   ]
 }

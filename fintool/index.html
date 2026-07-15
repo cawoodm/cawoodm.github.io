@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>FinTool — Personal Finance (v0.10.0)</title>
+    <title>FinTool — Personal Finance (v0.11.0)</title>
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%232563eb'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='system-ui' font-size='18' font-weight='700' fill='white'%3E%E2%82%A3%3C/text%3E%3C/svg%3E"
@@ -11,8 +11,8 @@
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/marked@14.1.3/marked.min.js"></script>
-    <script type="module" crossorigin src="/fintool/assets/index-DuQRlLiK.js"></script>
-    <link rel="stylesheet" crossorigin href="/fintool/assets/index-DHbdBac5.css">
+    <script type="module" crossorigin src="/fintool/assets/index-Bq5-Q7NZ.js"></script>
+    <link rel="stylesheet" crossorigin href="/fintool/assets/index-BBdWLarM.css">
   </head>
   <body>
     <header class="topbar">
@@ -24,37 +24,33 @@
         <button class="tab" data-tab="payments">Payments</button>
         <button class="tab" data-tab="chat">Chat</button>
       </nav>
-      <label class="date-range-wrap"
-        >Range
-        <select id="date-range" class="date-range">
-          <option value="last12mo" selected>Last 12 months</option>
-          <option value="last6mo">Last 6 months</option>
-          <option value="last24mo">Last 24 months</option>
-          <option value="all">All time</option>
-        </select>
+      <label class="date-range-wrap" title="Date range">
+        <input type="month" id="date-from" class="date-range" aria-label="From month" />
+        –
+        <input type="month" id="date-to" class="date-range" aria-label="To month" />
       </label>
-      <span class="date-range-wrap"
-        >Category
+      <span class="date-range-wrap" title="Category">
         <span class="ms" id="ms-category">
           <button
             type="button"
             class="date-range ms-toggle"
             aria-haspopup="true"
             aria-expanded="false"
+            aria-label="Category filter"
           >
             <span class="ms-summary">All</span><span class="ms-caret">▾</span>
           </button>
           <span class="ms-panel" hidden></span>
         </span>
       </span>
-      <span class="date-range-wrap"
-        >SubCategory
+      <span class="date-range-wrap" title="SubCategory">
         <span class="ms" id="ms-subcategory">
           <button
             type="button"
             class="date-range ms-toggle"
             aria-haspopup="true"
             aria-expanded="false"
+            aria-label="SubCategory filter"
           >
             <span class="ms-summary">All</span><span class="ms-caret">▾</span>
           </button>

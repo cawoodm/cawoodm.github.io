@@ -3028,7 +3028,7 @@ ${k.slice(0,5).join(`
       </button>
     `}render(){return z(aa||(aa=Tp([`
       <header>
-        <strong>easyDBAccess <span class="version">v0.0.76</span></strong>
+        <strong>easyDBAccess <span class="version">v0.0.77</span></strong>
         `,`
         `,`
       </header>
@@ -3251,4 +3251,4 @@ ${k.slice(0,5).join(`
         }
       }
     `];fn([Zn("new-table-dialog")],Kt.prototype,"dialog",2);fn([Zn("csv-paste-dialog")],Kt.prototype,"csvPasteDialog",2);fn([Zn("plugin-manager-dialog")],Kt.prototype,"pluginManagerDialog",2);fn([Zn("input.search")],Kt.prototype,"searchInput",2);fn([H()],Kt.prototype,"footerButtons",2);fn([H()],Kt.prototype,"headerButtons",2);fn([H()],Kt.prototype,"searchQuery",2);fn([H()],Kt.prototype,"searchOpen",2);Kt=fn([et("app-shell")],Kt);function la(e){const t=e.dataTransfer;return t?t.types&&Array.from(t.types).includes("Files")?!0:(t.files?.length??0)>0:!1}typeof location<"u"&&new URLSearchParams(location.search).get("test")==="1"&&Promise.all([ye(),Ll(()=>Promise.resolve().then(()=>nl),[])]).then(([e,t])=>{Object.assign(window,{__easydb:e,__autoSyncTick:()=>t.tick(e.api)}),document.dispatchEvent(new CustomEvent("easydb:test-ready"))});
-//# sourceMappingURL=index-8G6JOBjZ.js.map
+//# sourceMappingURL=index-CqiYyIHA.js.map

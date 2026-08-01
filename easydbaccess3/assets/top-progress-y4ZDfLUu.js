@@ -1,4 +1,4 @@
-import{i as c,b as o,a as b,r as d,t as f}from"./index-B_GjqZqj.js";var u=Object.defineProperty,v=Object.getOwnPropertyDescriptor,l=(e,t,r,a)=>{for(var i=a>1?void 0:a?v(t,r):t,h=e.length-1,p;h>=0;h--)(p=e[h])&&(i=(a?p(t,r,i):p(i))||i);return a&&i&&u(t,r,i),i};let n=null;function g(){return n||(n=document.createElement("top-progress"),document.body.appendChild(n)),n}let s=class extends c{constructor(){super(...arguments),this.visible=!1,this.frac=null,this.label="",this.active=new Set}static begin(e=""){return g().begin(e)}begin(e){const t=Symbol("progress");return this.active.add(t),this.label=e,this.frac=null,this.visible=!0,{fraction:r=>{this.active.has(t)&&(this.frac=r)},done:()=>{this.active.delete(t),this.active.size===0&&(this.visible=!1,this.frac=null,this.label="")}}}render(){if(!this.visible)return o``;const e=this.frac!=null;return o`<div
+import{i as c,b as o,a as b,r as d,t as f}from"./index-BfaqhnSo.js";var u=Object.defineProperty,v=Object.getOwnPropertyDescriptor,l=(e,t,r,a)=>{for(var i=a>1?void 0:a?v(t,r):t,h=e.length-1,p;h>=0;h--)(p=e[h])&&(i=(a?p(t,r,i):p(i))||i);return a&&i&&u(t,r,i),i};let n=null;function g(){return n||(n=document.createElement("top-progress"),document.body.appendChild(n)),n}let s=class extends c{constructor(){super(...arguments),this.visible=!1,this.frac=null,this.label="",this.active=new Set}static begin(e=""){return g().begin(e)}begin(e){const t=Symbol("progress");return this.active.add(t),this.label=e,this.frac=null,this.visible=!0,{fraction:r=>{this.active.has(t)&&(this.frac=r)},done:()=>{this.active.delete(t),this.active.size===0&&(this.visible=!1,this.frac=null,this.label="")}}}render(){if(!this.visible)return o``;const e=this.frac!=null;return o`<div
       class="track"
       role="progressbar"
       aria-label=${this.label||"Loading"}
@@ -48,4 +48,4 @@ import{i as c,b as o,a as b,r as d,t as f}from"./index-B_GjqZqj.js";var u=Object
       }
     }
   `;l([d()],s.prototype,"visible",2);l([d()],s.prototype,"frac",2);l([d()],s.prototype,"label",2);s=l([f("top-progress")],s);export{s as TopProgress};
-//# sourceMappingURL=top-progress-DQRlUVu8.js.map
+//# sourceMappingURL=top-progress-y4ZDfLUu.js.map

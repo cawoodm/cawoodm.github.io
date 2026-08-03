@@ -2,3 +2,9 @@
 package-lock.json
 spec/
 .vite
+.wrangler
+.env
+.env.*
+.dev.vars
+.dev.vars.*
+dist/

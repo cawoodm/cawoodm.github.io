@@ -1,0 +1,24 @@
+# Fallback only. The deploy assets directory is ./dist (see wrangler.jsonc), and
+# .assetsignore is read from the assets directory, so this file does nothing on a
+# normal deploy — build-assets.mjs is the real gate. It still applies if anything
+# is ever pointed back at the repo root, which is how the 38 MiB .git pack once
+# broke the 25 MiB per-asset limit.
+#
+# Patterns are deliberately slash-free. An allowlist does NOT work here: gitignore
+# rules say a file under an excluded directory cannot be re-included, so "/*" plus
+# "!/index.html" silently drops every subdirectory.
+.git
+.vite
+.wrangler
+node_modules
+dist
+.env
+.dev.vars
+.bashrc_private
+wrangler.jsonc
+build-assets.mjs
+.nojekyll
+bootstrap4.html
+month.html
+powershell.exceptions.ps1
+tiddlywiki.html

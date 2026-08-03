@@ -1,6 +1,11 @@
 {
-  "name": "cawoodm",
+  // Must match the Worker name in Cloudflare, or a deploy silently creates a
+  // second Worker instead of updating site.cawoodm.workers.dev.
+  "name": "site",
   "compatibility_date": "2026-08-03",
+  // Runs in Workers Builds too, because CI deploys with `wrangler deploy`.
+  // Without it there is no dist/ in CI and no assets get uploaded.
+  "build": { "command": "node build-assets.mjs" },
   // Never "./": wrangler writes .wrangler/state into the directory it watches,
   // which makes `wrangler dev` reload forever. Built by build-assets.mjs.
   "assets": {

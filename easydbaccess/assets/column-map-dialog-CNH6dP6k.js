@@ -1,8 +1,6 @@
-import{i as m,m as u,g as f,c as g,A as h,b as c,d as b,a as v,r as p,t as w}from"./index-KUsedxV1.js";var $=Object.defineProperty,y=Object.getOwnPropertyDescriptor,d=(e,i,t,s)=>{for(var o=s>1?void 0:s?y(i,t):i,r=e.length-1,l;r>=0;r--)(l=e[r])&&(o=(s?l(i,t,o):l(o))||o);return s&&o&&$(i,t,o),o};const n="";function x(e,i,t,s){return(a.instance??C()).open(e,i,t,s)}function C(){const e=document.createElement("column-map-dialog");return document.body.appendChild(e),e}let a=class extends m{constructor(){super(...arguments),this.mapping=[],this.header=[],this.sample=[],this.tableName="",this.targetCols=[],this.dialogEl=null,this.resolveFn=null,this.onCancel=e=>{e.preventDefault(),this.finish(null)},this.submit=e=>{e.preventDefault(),!(this.duplicates().size>0)&&this.finish([...this.mapping])}}connectedCallback(){super.connectedCallback(),a.instance=this}disconnectedCallback(){super.disconnectedCallback(),a.instance===this&&(a.instance=null)}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&u(this.dialogEl,e)}open(e,i,t,s){return this.header=e,this.targetCols=i,this.tableName=t,this.sample=s??[],this.mapping=f(e,i),new Promise(o=>{this.resolveFn=o,this.updateComplete.then(()=>this.dialogEl?.showModal())})}duplicates(){const e=new Set,i=new Set;for(const t of this.mapping)t!==n&&(e.has(t)&&i.add(t),e.add(t));return i}finish(e){this.dialogEl?.close();const i=this.resolveFn;this.resolveFn=null,queueMicrotask(()=>i?.(e))}setTarget(e,i){this.mapping=this.mapping.map((t,s)=>s===e?i:t)}render(){const e=this.duplicates(),i=this.mapping.filter(t=>t!==n).length;return c`
+import{i as m,m as u,g as f,c as g,A as h,b as c,d as b,a as v,r as p,t as w}from"./index-CvDnG-hB.js";var $=Object.defineProperty,y=Object.getOwnPropertyDescriptor,d=(e,i,t,s)=>{for(var o=s>1?void 0:s?y(i,t):i,r=e.length-1,l;r>=0;r--)(l=e[r])&&(o=(s?l(i,t,o):l(o))||o);return s&&o&&$(i,t,o),o};const n="";function x(e,i,t,s){return(a.instance??C()).open(e,i,t,s)}function C(){const e=document.createElement("column-map-dialog");return document.body.appendChild(e),e}let a=class extends m{constructor(){super(...arguments),this.mapping=[],this.header=[],this.sample=[],this.tableName="",this.targetCols=[],this.dialogEl=null,this.resolveFn=null,this.onCancel=e=>{e.preventDefault(),this.finish(null)},this.submit=e=>{e.preventDefault(),!(this.duplicates().size>0)&&this.finish([...this.mapping])}}connectedCallback(){super.connectedCallback(),a.instance=this}disconnectedCallback(){super.disconnectedCallback(),a.instance===this&&(a.instance=null)}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&u(this.dialogEl,e)}open(e,i,t,s){return this.header=e,this.targetCols=i,this.tableName=t,this.sample=s??[],this.mapping=f(e,i),new Promise(o=>{this.resolveFn=o,this.updateComplete.then(()=>this.dialogEl?.showModal())})}duplicates(){const e=new Set,i=new Set;for(const t of this.mapping)t!==n&&(e.has(t)&&i.add(t),e.add(t));return i}finish(e){this.dialogEl?.close();const i=this.resolveFn;this.resolveFn=null,queueMicrotask(()=>i?.(e))}setTarget(e,i){this.mapping=this.mapping.map((t,s)=>s===e?i:t)}render(){const e=this.duplicates(),i=this.mapping.filter(t=>t!==n).length;return c`
       <dialog @cancel=${this.onCancel} @keydown=${g}>
-        <button type="button" class="close-x" title="Close" @click=${()=>this.finish(null)}>
-          ×
-        </button>
+        <button type="button" class="close-x" title="Close" @click=${()=>this.finish(null)}>×</button>
         <form @submit=${this.submit}>
           <div class="dialog-header">
             <h2>Map columns — ${this.tableName}</h2>
@@ -13,9 +11,8 @@ import{i as m,m as u,g as f,c as g,A as h,b as c,d as b,a as v,r as p,t as w}fro
           </div>
           <div class="dialog-body">
             <p class="intro">
-              Choose which column of <strong>${this.tableName}</strong> each column of the file
-              feeds. Columns are matched by name where possible, else by position. Pick
-              <strong>— skip —</strong> to leave a column out.
+              Choose which column of <strong>${this.tableName}</strong> each column of the file feeds. Columns are matched by name where possible, else by position. Pick <strong>— skip —</strong> to
+              leave a column out.
             </p>
             <div class="grid">
               <div class="head">From the file</div>
@@ -34,17 +31,11 @@ import{i as m,m as u,g as f,c as g,A as h,b as c,d as b,a as v,r as p,t as w}fro
                     @change=${l=>this.setTarget(s,l.target.value)}
                   >
                     <option value=${n} ?selected=${o===n}>— skip —</option>
-                    ${this.targetCols.map(l=>c`
-                        <option value=${l.field} ?selected=${l.field===o}>
-                          ${l.label||l.field}
-                        </option>
-                      `)}
+                    ${this.targetCols.map(l=>c` <option value=${l.field} ?selected=${l.field===o}>${l.label||l.field}</option> `)}
                   </select>
                 `})}
             </div>
-            <p class="err">
-              ${e.size>0?`Two columns point at the same target: ${[...e].join(", ")}.`:i===0?"Every column is skipped — the append would add empty rows.":h}
-            </p>
+            <p class="err">${e.size>0?`Two columns point at the same target: ${[...e].join(", ")}.`:i===0?"Every column is skipped — the append would add empty rows.":h}</p>
           </div>
         </form>
       </dialog>
@@ -127,4 +118,4 @@ import{i as m,m as u,g as f,c as g,A as h,b as c,d as b,a as v,r as p,t as w}fro
         min-height: 1.1em;
       }
     `];d([p()],a.prototype,"mapping",2);d([p()],a.prototype,"header",2);d([p()],a.prototype,"sample",2);d([p()],a.prototype,"tableName",2);a=d([w("column-map-dialog")],a);export{a as ColumnMapDialog,x as mapColumnsToTable};
-//# sourceMappingURL=column-map-dialog-wwwknisz.js.map
+//# sourceMappingURL=column-map-dialog-CNH6dP6k.js.map

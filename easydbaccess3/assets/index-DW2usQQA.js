@@ -1,0 +1,5850 @@
+(function(){const t=document.createElement("link").relList;if(t&&t.supports&&t.supports("modulepreload"))return;for(const i of document.querySelectorAll('link[rel="modulepreload"]'))r(i);new MutationObserver(i=>{for(const s of i)if(s.type==="childList")for(const o of s.addedNodes)o.tagName==="LINK"&&o.rel==="modulepreload"&&r(o)}).observe(document,{childList:!0,subtree:!0});function n(i){const s={};return i.integrity&&(s.integrity=i.integrity),i.referrerPolicy&&(s.referrerPolicy=i.referrerPolicy),i.crossOrigin==="use-credentials"?s.credentials="include":i.crossOrigin==="anonymous"?s.credentials="omit":s.credentials="same-origin",s}function r(i){if(i.ep)return;i.ep=!0;const s=n(i);fetch(i.href,s)}})();const db="modulepreload",hb=function(e){return"/easydbaccess3/"+e},Eu={},Ie=function(t,n,r){let i=Promise.resolve();if(n&&n.length>0){let o=function(d){return Promise.all(d.map(f=>Promise.resolve(f).then(p=>({status:"fulfilled",value:p}),p=>({status:"rejected",reason:p}))))};document.getElementsByTagName("link");const a=document.querySelector("meta[property=csp-nonce]"),c=a?.nonce||a?.getAttribute("nonce");i=o(n.map(d=>{if(d=hb(d),d in Eu)return;Eu[d]=!0;const f=d.endsWith(".css"),p=f?'[rel="stylesheet"]':"";if(document.querySelector(`link[href="${d}"]${p}`))return;const b=document.createElement("link");if(b.rel=f?"stylesheet":db,f||(b.as="script"),b.crossOrigin="",b.href=d,c&&b.setAttribute("nonce",c),document.head.appendChild(b),f)return new Promise((y,$)=>{b.addEventListener("load",y),b.addEventListener("error",()=>$(new Error(`Unable to preload CSS for ${d}`)))})}))}function s(o){const a=new Event("vite:preloadError",{cancelable:!0});if(a.payload=o,window.dispatchEvent(a),!a.defaultPrevented)throw o}return i.then(o=>{for(const a of o||[])a.status==="rejected"&&s(a.reason);return t().catch(s)})};/**
+ * @license
+ * Copyright 2019 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const ks=globalThis,El=ks.ShadowRoot&&(ks.ShadyCSS===void 0||ks.ShadyCSS.nativeShadow)&&"adoptedStyleSheets"in Document.prototype&&"replace"in CSSStyleSheet.prototype,_l=Symbol(),_u=new WeakMap;let Uh=class{constructor(t,n,r){if(this._$cssResult$=!0,r!==_l)throw Error("CSSResult is not constructable. Use `unsafeCSS` or `css` instead.");this.cssText=t,this.t=n}get styleSheet(){let t=this.o;const n=this.t;if(El&&t===void 0){const r=n!==void 0&&n.length===1;r&&(t=_u.get(n)),t===void 0&&((this.o=t=new CSSStyleSheet).replaceSync(this.cssText),r&&_u.set(n,t))}return t}toString(){return this.cssText}};const fb=e=>new Uh(typeof e=="string"?e:e+"",void 0,_l),Se=(e,...t)=>{const n=e.length===1?e[0]:t.reduce((r,i,s)=>r+(o=>{if(o._$cssResult$===!0)return o.cssText;if(typeof o=="number")return o;throw Error("Value passed to 'css' function must be a 'css' function result: "+o+". Use 'unsafeCSS' to pass non-literal values, but take care to ensure page security.")})(i)+e[s+1],e[0]);return new Uh(n,e,_l)},pb=(e,t)=>{if(El)e.adoptedStyleSheets=t.map(n=>n instanceof CSSStyleSheet?n:n.styleSheet);else for(const n of t){const r=document.createElement("style"),i=ks.litNonce;i!==void 0&&r.setAttribute("nonce",i),r.textContent=n.cssText,e.appendChild(r)}},Tu=El?e=>e:e=>e instanceof CSSStyleSheet?(t=>{let n="";for(const r of t.cssRules)n+=r.cssText;return fb(n)})(e):e;/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const{is:mb,defineProperty:gb,getOwnPropertyDescriptor:bb,getOwnPropertyNames:wb,getOwnPropertySymbols:yb,getPrototypeOf:vb}=Object,eo=globalThis,Iu=eo.trustedTypes,kb=Iu?Iu.emptyScript:"",$b=eo.reactiveElementPolyfillSupport,ri=(e,t)=>e,Os={toAttribute(e,t){switch(t){case Boolean:e=e?kb:null;break;case Object:case Array:e=e==null?e:JSON.stringify(e)}return e},fromAttribute(e,t){let n=e;switch(t){case Boolean:n=e!==null;break;case Number:n=e===null?null:Number(e);break;case Object:case Array:try{n=JSON.parse(e)}catch{n=null}}return n}},Tl=(e,t)=>!mb(e,t),Au={attribute:!0,type:String,converter:Os,reflect:!1,useDefault:!1,hasChanged:Tl};Symbol.metadata??=Symbol("metadata"),eo.litPropertyMetadata??=new WeakMap;let tr=class extends HTMLElement{static addInitializer(t){this._$Ei(),(this.l??=[]).push(t)}static get observedAttributes(){return this.finalize(),this._$Eh&&[...this._$Eh.keys()]}static createProperty(t,n=Au){if(n.state&&(n.attribute=!1),this._$Ei(),this.prototype.hasOwnProperty(t)&&((n=Object.create(n)).wrapped=!0),this.elementProperties.set(t,n),!n.noAccessor){const r=Symbol(),i=this.getPropertyDescriptor(t,r,n);i!==void 0&&gb(this.prototype,t,i)}}static getPropertyDescriptor(t,n,r){const{get:i,set:s}=bb(this.prototype,t)??{get(){return this[n]},set(o){this[n]=o}};return{get:i,set(o){const a=i?.call(this);s?.call(this,o),this.requestUpdate(t,a,r)},configurable:!0,enumerable:!0}}static getPropertyOptions(t){return this.elementProperties.get(t)??Au}static _$Ei(){if(this.hasOwnProperty(ri("elementProperties")))return;const t=vb(this);t.finalize(),t.l!==void 0&&(this.l=[...t.l]),this.elementProperties=new Map(t.elementProperties)}static finalize(){if(this.hasOwnProperty(ri("finalized")))return;if(this.finalized=!0,this._$Ei(),this.hasOwnProperty(ri("properties"))){const n=this.properties,r=[...wb(n),...yb(n)];for(const i of r)this.createProperty(i,n[i])}const t=this[Symbol.metadata];if(t!==null){const n=litPropertyMetadata.get(t);if(n!==void 0)for(const[r,i]of n)this.elementProperties.set(r,i)}this._$Eh=new Map;for(const[n,r]of this.elementProperties){const i=this._$Eu(n,r);i!==void 0&&this._$Eh.set(i,n)}this.elementStyles=this.finalizeStyles(this.styles)}static finalizeStyles(t){const n=[];if(Array.isArray(t)){const r=new Set(t.flat(1/0).reverse());for(const i of r)n.unshift(Tu(i))}else t!==void 0&&n.push(Tu(t));return n}static _$Eu(t,n){const r=n.attribute;return r===!1?void 0:typeof r=="string"?r:typeof t=="string"?t.toLowerCase():void 0}constructor(){super(),this._$Ep=void 0,this.isUpdatePending=!1,this.hasUpdated=!1,this._$Em=null,this._$Ev()}_$Ev(){this._$ES=new Promise(t=>this.enableUpdating=t),this._$AL=new Map,this._$E_(),this.requestUpdate(),this.constructor.l?.forEach(t=>t(this))}addController(t){(this._$EO??=new Set).add(t),this.renderRoot!==void 0&&this.isConnected&&t.hostConnected?.()}removeController(t){this._$EO?.delete(t)}_$E_(){const t=new Map,n=this.constructor.elementProperties;for(const r of n.keys())this.hasOwnProperty(r)&&(t.set(r,this[r]),delete this[r]);t.size>0&&(this._$Ep=t)}createRenderRoot(){const t=this.shadowRoot??this.attachShadow(this.constructor.shadowRootOptions);return pb(t,this.constructor.elementStyles),t}connectedCallback(){this.renderRoot??=this.createRenderRoot(),this.enableUpdating(!0),this._$EO?.forEach(t=>t.hostConnected?.())}enableUpdating(t){}disconnectedCallback(){this._$EO?.forEach(t=>t.hostDisconnected?.())}attributeChangedCallback(t,n,r){this._$AK(t,r)}_$ET(t,n){const r=this.constructor.elementProperties.get(t),i=this.constructor._$Eu(t,r);if(i!==void 0&&r.reflect===!0){const s=(r.converter?.toAttribute!==void 0?r.converter:Os).toAttribute(n,r.type);this._$Em=t,s==null?this.removeAttribute(i):this.setAttribute(i,s),this._$Em=null}}_$AK(t,n){const r=this.constructor,i=r._$Eh.get(t);if(i!==void 0&&this._$Em!==i){const s=r.getPropertyOptions(i),o=typeof s.converter=="function"?{fromAttribute:s.converter}:s.converter?.fromAttribute!==void 0?s.converter:Os;this._$Em=i;const a=o.fromAttribute(n,s.type);this[i]=a??this._$Ej?.get(i)??a,this._$Em=null}}requestUpdate(t,n,r,i=!1,s){if(t!==void 0){const o=this.constructor;if(i===!1&&(s=this[t]),r??=o.getPropertyOptions(t),!((r.hasChanged??Tl)(s,n)||r.useDefault&&r.reflect&&s===this._$Ej?.get(t)&&!this.hasAttribute(o._$Eu(t,r))))return;this.C(t,n,r)}this.isUpdatePending===!1&&(this._$ES=this._$EP())}C(t,n,{useDefault:r,reflect:i,wrapped:s},o){r&&!(this._$Ej??=new Map).has(t)&&(this._$Ej.set(t,o??n??this[t]),s!==!0||o!==void 0)||(this._$AL.has(t)||(this.hasUpdated||r||(n=void 0),this._$AL.set(t,n)),i===!0&&this._$Em!==t&&(this._$Eq??=new Set).add(t))}async _$EP(){this.isUpdatePending=!0;try{await this._$ES}catch(n){Promise.reject(n)}const t=this.scheduleUpdate();return t!=null&&await t,!this.isUpdatePending}scheduleUpdate(){return this.performUpdate()}performUpdate(){if(!this.isUpdatePending)return;if(!this.hasUpdated){if(this.renderRoot??=this.createRenderRoot(),this._$Ep){for(const[i,s]of this._$Ep)this[i]=s;this._$Ep=void 0}const r=this.constructor.elementProperties;if(r.size>0)for(const[i,s]of r){const{wrapped:o}=s,a=this[i];o!==!0||this._$AL.has(i)||a===void 0||this.C(i,void 0,s,a)}}let t=!1;const n=this._$AL;try{t=this.shouldUpdate(n),t?(this.willUpdate(n),this._$EO?.forEach(r=>r.hostUpdate?.()),this.update(n)):this._$EM()}catch(r){throw t=!1,this._$EM(),r}t&&this._$AE(n)}willUpdate(t){}_$AE(t){this._$EO?.forEach(n=>n.hostUpdated?.()),this.hasUpdated||(this.hasUpdated=!0,this.firstUpdated(t)),this.updated(t)}_$EM(){this._$AL=new Map,this.isUpdatePending=!1}get updateComplete(){return this.getUpdateComplete()}getUpdateComplete(){return this._$ES}shouldUpdate(t){return!0}update(t){this._$Eq&&=this._$Eq.forEach(n=>this._$ET(n,this[n])),this._$EM()}updated(t){}firstUpdated(t){}};tr.elementStyles=[],tr.shadowRootOptions={mode:"open"},tr[ri("elementProperties")]=new Map,tr[ri("finalized")]=new Map,$b?.({ReactiveElement:tr}),(eo.reactiveElementVersions??=[]).push("2.1.2");/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const Il=globalThis,Ru=e=>e,Ls=Il.trustedTypes,Ou=Ls?Ls.createPolicy("lit-html",{createHTML:e=>e}):void 0,Bh="$lit$",cn=`lit$${Math.random().toFixed(9).slice(2)}$`,qh="?"+cn,xb=`<${qh}>`,Pn=document,li=()=>Pn.createComment(""),ci=e=>e===null||typeof e!="object"&&typeof e!="function",Al=Array.isArray,Sb=e=>Al(e)||typeof e?.[Symbol.iterator]=="function",Ca=`[ 	
+\f\r]`,Wr=/<(?:(!--|\/[^a-zA-Z])|(\/?[a-zA-Z][^>\s]*)|(\/?$))/g,Lu=/-->/g,Du=/>/g,Tn=RegExp(`>|${Ca}(?:([^\\s"'>=/]+)(${Ca}*=${Ca}*(?:[^ 	
+\f\r"'\`<>=]|("|')|))|$)`,"g"),Mu=/'/g,Pu=/"/g,Hh=/^(?:script|style|textarea|title)$/i,Vh=e=>(t,...n)=>({_$litType$:e,strings:t,values:n}),v=Vh(1),Cb=Vh(2),zn=Symbol.for("lit-noChange"),X=Symbol.for("lit-nothing"),zu=new WeakMap,Ln=Pn.createTreeWalker(Pn,129);function Kh(e,t){if(!Al(e)||!e.hasOwnProperty("raw"))throw Error("invalid template strings array");return Ou!==void 0?Ou.createHTML(t):t}const Eb=(e,t)=>{const n=e.length-1,r=[];let i,s=t===2?"<svg>":t===3?"<math>":"",o=Wr;for(let a=0;a<n;a++){const c=e[a];let d,f,p=-1,b=0;for(;b<c.length&&(o.lastIndex=b,f=o.exec(c),f!==null);)b=o.lastIndex,o===Wr?f[1]==="!--"?o=Lu:f[1]!==void 0?o=Du:f[2]!==void 0?(Hh.test(f[2])&&(i=RegExp("</"+f[2],"g")),o=Tn):f[3]!==void 0&&(o=Tn):o===Tn?f[0]===">"?(o=i??Wr,p=-1):f[1]===void 0?p=-2:(p=o.lastIndex-f[2].length,d=f[1],o=f[3]===void 0?Tn:f[3]==='"'?Pu:Mu):o===Pu||o===Mu?o=Tn:o===Lu||o===Du?o=Wr:(o=Tn,i=void 0);const y=o===Tn&&e[a+1].startsWith("/>")?" ":"";s+=o===Wr?c+xb:p>=0?(r.push(d),c.slice(0,p)+Bh+c.slice(p)+cn+y):c+cn+(p===-2?a:y)}return[Kh(e,s+(e[n]||"<?>")+(t===2?"</svg>":t===3?"</math>":"")),r]};class ui{constructor({strings:t,_$litType$:n},r){let i;this.parts=[];let s=0,o=0;const a=t.length-1,c=this.parts,[d,f]=Eb(t,n);if(this.el=ui.createElement(d,r),Ln.currentNode=this.el.content,n===2||n===3){const p=this.el.content.firstChild;p.replaceWith(...p.childNodes)}for(;(i=Ln.nextNode())!==null&&c.length<a;){if(i.nodeType===1){if(i.hasAttributes())for(const p of i.getAttributeNames())if(p.endsWith(Bh)){const b=f[o++],y=i.getAttribute(p).split(cn),$=/([.?@])?(.*)/.exec(b);c.push({type:1,index:s,name:$[2],strings:y,ctor:$[1]==="."?Tb:$[1]==="?"?Ib:$[1]==="@"?Ab:to}),i.removeAttribute(p)}else p.startsWith(cn)&&(c.push({type:6,index:s}),i.removeAttribute(p));if(Hh.test(i.tagName)){const p=i.textContent.split(cn),b=p.length-1;if(b>0){i.textContent=Ls?Ls.emptyScript:"";for(let y=0;y<b;y++)i.append(p[y],li()),Ln.nextNode(),c.push({type:2,index:++s});i.append(p[b],li())}}}else if(i.nodeType===8)if(i.data===qh)c.push({type:2,index:s});else{let p=-1;for(;(p=i.data.indexOf(cn,p+1))!==-1;)c.push({type:7,index:s}),p+=cn.length-1}s++}}static createElement(t,n){const r=Pn.createElement("template");return r.innerHTML=t,r}}function ur(e,t,n=e,r){if(t===zn)return t;let i=r!==void 0?n._$Co?.[r]:n._$Cl;const s=ci(t)?void 0:t._$litDirective$;return i?.constructor!==s&&(i?._$AO?.(!1),s===void 0?i=void 0:(i=new s(e),i._$AT(e,n,r)),r!==void 0?(n._$Co??=[])[r]=i:n._$Cl=i),i!==void 0&&(t=ur(e,i._$AS(e,t.values),i,r)),t}class _b{constructor(t,n){this._$AV=[],this._$AN=void 0,this._$AD=t,this._$AM=n}get parentNode(){return this._$AM.parentNode}get _$AU(){return this._$AM._$AU}u(t){const{el:{content:n},parts:r}=this._$AD,i=(t?.creationScope??Pn).importNode(n,!0);Ln.currentNode=i;let s=Ln.nextNode(),o=0,a=0,c=r[0];for(;c!==void 0;){if(o===c.index){let d;c.type===2?d=new vi(s,s.nextSibling,this,t):c.type===1?d=new c.ctor(s,c.name,c.strings,this,t):c.type===6&&(d=new Rb(s,this,t)),this._$AV.push(d),c=r[++a]}o!==c?.index&&(s=Ln.nextNode(),o++)}return Ln.currentNode=Pn,i}p(t){let n=0;for(const r of this._$AV)r!==void 0&&(r.strings!==void 0?(r._$AI(t,r,n),n+=r.strings.length-2):r._$AI(t[n])),n++}}class vi{get _$AU(){return this._$AM?._$AU??this._$Cv}constructor(t,n,r,i){this.type=2,this._$AH=X,this._$AN=void 0,this._$AA=t,this._$AB=n,this._$AM=r,this.options=i,this._$Cv=i?.isConnected??!0}get parentNode(){let t=this._$AA.parentNode;const n=this._$AM;return n!==void 0&&t?.nodeType===11&&(t=n.parentNode),t}get startNode(){return this._$AA}get endNode(){return this._$AB}_$AI(t,n=this){t=ur(this,t,n),ci(t)?t===X||t==null||t===""?(this._$AH!==X&&this._$AR(),this._$AH=X):t!==this._$AH&&t!==zn&&this._(t):t._$litType$!==void 0?this.$(t):t.nodeType!==void 0?this.T(t):Sb(t)?this.k(t):this._(t)}O(t){return this._$AA.parentNode.insertBefore(t,this._$AB)}T(t){this._$AH!==t&&(this._$AR(),this._$AH=this.O(t))}_(t){this._$AH!==X&&ci(this._$AH)?this._$AA.nextSibling.data=t:this.T(Pn.createTextNode(t)),this._$AH=t}$(t){const{values:n,_$litType$:r}=t,i=typeof r=="number"?this._$AC(t):(r.el===void 0&&(r.el=ui.createElement(Kh(r.h,r.h[0]),this.options)),r);if(this._$AH?._$AD===i)this._$AH.p(n);else{const s=new _b(i,this),o=s.u(this.options);s.p(n),this.T(o),this._$AH=s}}_$AC(t){let n=zu.get(t.strings);return n===void 0&&zu.set(t.strings,n=new ui(t)),n}k(t){Al(this._$AH)||(this._$AH=[],this._$AR());const n=this._$AH;let r,i=0;for(const s of t)i===n.length?n.push(r=new vi(this.O(li()),this.O(li()),this,this.options)):r=n[i],r._$AI(s),i++;i<n.length&&(this._$AR(r&&r._$AB.nextSibling,i),n.length=i)}_$AR(t=this._$AA.nextSibling,n){for(this._$AP?.(!1,!0,n);t!==this._$AB;){const r=Ru(t).nextSibling;Ru(t).remove(),t=r}}setConnected(t){this._$AM===void 0&&(this._$Cv=t,this._$AP?.(t))}}class to{get tagName(){return this.element.tagName}get _$AU(){return this._$AM._$AU}constructor(t,n,r,i,s){this.type=1,this._$AH=X,this._$AN=void 0,this.element=t,this.name=n,this._$AM=i,this.options=s,r.length>2||r[0]!==""||r[1]!==""?(this._$AH=Array(r.length-1).fill(new String),this.strings=r):this._$AH=X}_$AI(t,n=this,r,i){const s=this.strings;let o=!1;if(s===void 0)t=ur(this,t,n,0),o=!ci(t)||t!==this._$AH&&t!==zn,o&&(this._$AH=t);else{const a=t;let c,d;for(t=s[0],c=0;c<s.length-1;c++)d=ur(this,a[r+c],n,c),d===zn&&(d=this._$AH[c]),o||=!ci(d)||d!==this._$AH[c],d===X?t=X:t!==X&&(t+=(d??"")+s[c+1]),this._$AH[c]=d}o&&!i&&this.j(t)}j(t){t===X?this.element.removeAttribute(this.name):this.element.setAttribute(this.name,t??"")}}class Tb extends to{constructor(){super(...arguments),this.type=3}j(t){this.element[this.name]=t===X?void 0:t}}class Ib extends to{constructor(){super(...arguments),this.type=4}j(t){this.element.toggleAttribute(this.name,!!t&&t!==X)}}class Ab extends to{constructor(t,n,r,i,s){super(t,n,r,i,s),this.type=5}_$AI(t,n=this){if((t=ur(this,t,n,0)??X)===zn)return;const r=this._$AH,i=t===X&&r!==X||t.capture!==r.capture||t.once!==r.once||t.passive!==r.passive,s=t!==X&&(r===X||i);i&&this.element.removeEventListener(this.name,this,r),s&&this.element.addEventListener(this.name,this,t),this._$AH=t}handleEvent(t){typeof this._$AH=="function"?this._$AH.call(this.options?.host??this.element,t):this._$AH.handleEvent(t)}}class Rb{constructor(t,n,r){this.element=t,this.type=6,this._$AN=void 0,this._$AM=n,this.options=r}get _$AU(){return this._$AM._$AU}_$AI(t){ur(this,t)}}const Ob=Il.litHtmlPolyfillSupport;Ob?.(ui,vi),(Il.litHtmlVersions??=[]).push("3.3.3");const Lb=(e,t,n)=>{const r=n?.renderBefore??t;let i=r._$litPart$;if(i===void 0){const s=n?.renderBefore??null;r._$litPart$=i=new vi(t.insertBefore(li(),s),s,void 0,n??{})}return i._$AI(e),i};/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const Rl=globalThis;let $e=class extends tr{constructor(){super(...arguments),this.renderOptions={host:this},this._$Do=void 0}createRenderRoot(){const t=super.createRenderRoot();return this.renderOptions.renderBefore??=t.firstChild,t}update(t){const n=this.render();this.hasUpdated||(this.renderOptions.isConnected=this.isConnected),super.update(t),this._$Do=Lb(n,this.renderRoot,this.renderOptions)}connectedCallback(){super.connectedCallback(),this._$Do?.setConnected(!0)}disconnectedCallback(){super.disconnectedCallback(),this._$Do?.setConnected(!1)}render(){return zn}};$e._$litElement$=!0,$e.finalized=!0,Rl.litElementHydrateSupport?.({LitElement:$e});const Db=Rl.litElementPolyfillSupport;Db?.({LitElement:$e});(Rl.litElementVersions??=[]).push("4.2.2");/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const Re=e=>(t,n)=>{n!==void 0?n.addInitializer(()=>{customElements.define(e,t)}):customElements.define(e,t)};/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const Mb={attribute:!0,type:String,converter:Os,reflect:!1,hasChanged:Tl},Pb=(e=Mb,t,n)=>{const{kind:r,metadata:i}=n;let s=globalThis.litPropertyMetadata.get(i);if(s===void 0&&globalThis.litPropertyMetadata.set(i,s=new Map),r==="setter"&&((e=Object.create(e)).wrapped=!0),s.set(n.name,e),r==="accessor"){const{name:o}=n;return{set(a){const c=t.get.call(this);t.set.call(this,a),this.requestUpdate(o,c,e,!0,a)},init(a){return a!==void 0&&this.C(o,void 0,e,a),a}}}if(r==="setter"){const{name:o}=n;return function(a){const c=this[o];t.call(this,a),this.requestUpdate(o,c,e,!0,a)}}throw Error("Unsupported decorator location: "+r)};function Ye(e){return(t,n)=>typeof n=="object"?Pb(e,t,n):((r,i,s)=>{const o=i.hasOwnProperty(s);return i.constructor.createProperty(s,r),o?Object.getOwnPropertyDescriptor(i,s):void 0})(e,t,n)}/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */function j(e){return Ye({...e,state:!0,attribute:!1})}/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const zb=(e,t,n)=>(n.configurable=!0,n.enumerable=!0,Reflect.decorate&&typeof t!="object"&&Object.defineProperty(e,t,n),n);/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */function Kt(e,t){return(n,r,i)=>{const s=o=>o.renderRoot?.querySelector(e)??null;return zb(n,r,{get(){return s(this)}})}}/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const Nb={CHILD:2},Wh=e=>(...t)=>({_$litDirective$:e,values:t});class jb{constructor(t){}get _$AU(){return this._$AM._$AU}_$AT(t,n,r){this._$Ct=t,this._$AM=n,this._$Ci=r}_$AS(t,n){return this.update(t,n)}update(t,n){return this.render(...n)}}/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */class Ds extends jb{constructor(t){if(super(t),this.it=X,t.type!==Nb.CHILD)throw Error(this.constructor.directiveName+"() can only be used in child bindings")}render(t){if(t===X||t==null)return this._t=void 0,this.it=t;if(t===zn)return t;if(typeof t!="string")throw Error(this.constructor.directiveName+"() called with a non-string value");if(t===this.it)return this._t;this.it=t;const n=[t];return n.raw=n,this._t={_$litType$:this.constructor.resultType,strings:n,values:[]}}}Ds.directiveName="unsafeHTML",Ds.resultType=1;const ar=Wh(Ds);/**
+ * @license
+ * Copyright 2017 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */class Ha extends Ds{}Ha.directiveName="unsafeSVG",Ha.resultType=2;const Ol=Wh(Ha),mt=Se`
+  :host {
+    display: contents;
+  }
+  dialog {
+    position: relative;
+    border: 0;
+    border-radius: var(--dlg-radius, 0.5rem);
+    padding: 0;
+    /* Canvas is the UA default for <dialog> — naming it keeps the current
+       look while giving a themer one property to override. */
+    background: var(--dlg-surface, Canvas);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+    font-family: var(--dlg-font, system-ui, sans-serif);
+    overflow: hidden;
+    max-height: 92vh;
+  }
+  dialog::backdrop {
+    background: var(--dlg-backdrop, rgba(15, 23, 42, 0.4));
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    max-height: 92vh;
+  }
+  .dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.7rem 1.25rem;
+    background: var(--dlg-header-bg, #1f2937);
+    color: var(--dlg-header-fg, white);
+    border-bottom: 1px solid #111827;
+    /* Whole bar is the drag handle (draggable.ts wires pointer events);
+       cursor is set inline by the helper as it toggles between grab and
+       grabbing. */
+  }
+  .dialog-header h2 {
+    margin: 0;
+    font-size: 1.05rem;
+    color: var(--dlg-header-fg, white);
+  }
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: 2.5rem; /* leave room for the close-x in the corner */
+  }
+  .dialog-body {
+    padding: 1.1rem 1.25rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow: auto;
+  }
+  button.close-x {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.6rem;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    color: #cbd5e1;
+    font-size: 1.1rem;
+    padding: 0.15rem 0.3rem;
+    line-height: 1;
+    border-radius: 0.2rem;
+  }
+  button.close-x:hover {
+    color: var(--dlg-header-fg, white);
+    background: rgba(255, 255, 255, 0.12);
+  }
+  button.primary {
+    background: var(--dlg-accent, #3b82f6);
+    color: var(--dlg-accent-fg, white);
+    border: 0;
+    padding: 0.45rem 0.9rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font: inherit;
+  }
+  button.primary:hover {
+    background: var(--dlg-accent-hover, #2563eb);
+  }
+  button.ghost {
+    background: transparent;
+    border: 1px solid var(--dlg-border, #d1d5db);
+    padding: 0.45rem 0.9rem;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font: inherit;
+  }
+  /* Inside the dark header the default ghost (gray-300 on white) doesn't
+     have enough contrast, so bump the border + text to a lighter slate. */
+  .header-actions button.ghost {
+    background: transparent;
+    border: 1px solid #6b7280;
+    color: #e5e7eb;
+  }
+  .header-actions button.ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: #9ca3af;
+    color: var(--dlg-header-fg, white);
+  }
+  /* Phones: every OPEN dialog goes full-screen, edge to edge. The important
+     flag plus inset:0 override each dialog's own min/max-width and any inline
+     drag position (draggable.ts sets position:fixed + left/top). The dialog
+     becomes a flex column so the body fills the remaining height and scrolls,
+     keeping the header (and its actions) pinned at the top.
+
+     CRITICAL: scope to dialog[open]. A bare dialog{display:flex !important}
+     would override the UA dialog:not([open]){display:none}, leaving a CLOSED
+     dialog visible and blocking the whole UI (it never goes away). */
+  @media (max-width: 640px) {
+    dialog[open] {
+      position: fixed !important;
+      inset: 0 !important;
+      width: auto !important;
+      height: auto !important;
+      min-width: 0 !important;
+      max-width: none !important;
+      max-height: none !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      display: flex !important;
+      flex-direction: column;
+    }
+    dialog[open] form {
+      max-height: none;
+      flex: 1;
+      min-height: 0;
+    }
+    dialog[open] .dialog-body {
+      flex: 1;
+      min-height: 0;
+    }
+  }
+`;function gt(e){if(e.key!=="Enter"||!e.ctrlKey&&!e.metaKey)return;const t=e.currentTarget;if(!(t instanceof HTMLElement))return;const n=t.querySelector("form");n&&(e.preventDefault(),n.requestSubmit())}const Nu=new WeakSet;function bt(e,t){if(Nu.has(t))return;Nu.add(t);let n=0,r=0,i=0,s=0,o=!1;t.style.cursor="grab",t.style.touchAction="none",t.style.userSelect="none",t.addEventListener("pointerdown",c=>{if(c.target.closest("button, input, textarea, select, a, label"))return;o=!0,n=c.clientX,r=c.clientY;const f=e.getBoundingClientRect();i=f.left,s=f.top,t.setPointerCapture(c.pointerId),t.style.cursor="grabbing"}),t.addEventListener("pointermove",c=>{if(!o)return;const d=c.clientX-n,f=c.clientY-r,p=-e.offsetWidth+80,b=window.innerWidth-80,y=0,$=window.innerHeight-40,k=Math.max(p,Math.min(b,i+d)),C=Math.max(y,Math.min($,s+f));e.style.position="fixed",e.style.left=`${k}px`,e.style.top=`${C}px`,e.style.margin="0"});const a=c=>{if(o){o=!1;try{t.releasePointerCapture(c.pointerId)}catch{}t.style.cursor="grab"}};t.addEventListener("pointerup",a),t.addEventListener("pointercancel",a)}var Fb=function(e,t,n,r){var i=arguments.length,s=i<3?t:r===null?r=Object.getOwnPropertyDescriptor(t,n):r,o;if(typeof Reflect=="object"&&typeof Reflect.decorate=="function")s=Reflect.decorate(e,t,n,r);else for(var a=e.length-1;a>=0;a--)(o=e[a])&&(s=(i<3?o(s):i>3?o(t,n,s):o(t,n))||s);return i>3&&s&&Object.defineProperty(t,n,s),s};class lt extends $e{constructor(){super(...arguments),this.current=null,this.queue=[],this.dialogEl=null,this.onCancel=t=>{t.preventDefault();const n=this.current;n&&(n.kind==="alert"?this.closeAndResolve(void 0):this.closeAndResolve(null))},this.submitPrompt=t=>{t.preventDefault(),this.current?.kind==="prompt"&&this.closeAndResolve(this.current.value)},this.submitChoice=t=>{if(t.preventDefault(),this.current?.kind!=="choice")return;const n=this.current.options[0];n!==void 0&&this.closeAndResolve(n)},this.submitAlert=t=>{t.preventDefault(),this.closeAndResolve(void 0)},this.cancelPrompt=()=>this.closeAndResolve(null),this.onCloseX=()=>{this.dialogEl&&!this.dialogEl.dispatchEvent(new Event("cancel",{cancelable:!0}))||this.onCancel(new Event("cancel",{cancelable:!0}))}}static{this.instance=null}static{this.styles=[mt,Se`
+      dialog {
+        min-width: 360px;
+        max-width: 520px;
+      }
+      /* Shorter, looser body for the simple alert/prompt/choice modes. */
+      .dialog-body {
+        gap: 0.85rem;
+      }
+      p.message {
+        margin: 0;
+        color: var(--dlg-text, #374151);
+        white-space: pre-wrap;
+        font-size: 0.95rem;
+      }
+      input[type='text'] {
+        font: inherit;
+        padding: 0.45rem 0.55rem;
+        border: 1px solid var(--dlg-border, #d1d5db);
+        border-radius: 0.25rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .choices {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      button.choice {
+        background: var(--dlg-surface, Canvas);
+        border: 1px solid var(--dlg-border, #d1d5db);
+        padding: 0.5rem 0.75rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        font: inherit;
+        text-align: left;
+      }
+      button.choice:hover {
+        background: #f3f4f6;
+        border-color: #9ca3af;
+      }
+      button.choice.primary {
+        background: var(--dlg-accent, #3b82f6);
+        color: var(--dlg-accent-fg, white);
+        border: 0;
+        text-align: left;
+      }
+      button.choice.primary:hover {
+        background: var(--dlg-accent-hover, #2563eb);
+      }
+      button.choice.primary:focus-visible {
+        outline: 2px solid #1d4ed8;
+        outline-offset: 2px;
+      }
+    `]}connectedCallback(){super.connectedCallback(),lt.instance=this}disconnectedCallback(){super.disconnectedCallback(),lt.instance===this&&(lt.instance=null)}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null}updated(){if(!this.dialogEl)return;const t=this.shadowRoot?.querySelector(".dialog-header");t&&bt(this.dialogEl,t)}alert(t,n="Notice"){return this.enqueue(r=>{this.current={kind:"alert",title:n,message:t,resolve:r}})}async confirm(t,n="Confirm"){return await this.choice(t,["Yes","No"],n)==="Yes"}prompt(t,n="",r="Input"){return this.enqueue(i=>{this.current={kind:"prompt",title:r,message:t,value:n,resolve:i}})}choice(t,n,r="Choose"){return this.enqueue(i=>{this.current={kind:"choice",title:r,message:t,options:n,resolve:i}})}enqueue(t){return new Promise(n=>{const r=()=>{t(n),this.updateComplete.then(()=>this.dialogEl?.showModal())};this.current?this.queue.push(r):r()})}closeAndResolve(t){const n=this.current;n&&(this.dialogEl?.close(),this.current=null,queueMicrotask(()=>{n.kind==="alert"?n.resolve():n.resolve(t);const r=this.queue.shift();r&&r()}))}render(){const t=this.current;return v`
+      <dialog @cancel=${this.onCancel} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${this.onCloseX}>×</button>
+        ${t?this.renderBody(t):X}
+      </dialog>
+    `}renderBody(t){switch(t.kind){case"alert":return v`
+          <form @submit=${this.submitAlert}>
+            <div class="dialog-header">
+              <h2>${t.title}</h2>
+              <div class="header-actions">
+                <button type="submit" class="primary">OK</button>
+              </div>
+            </div>
+            <div class="dialog-body">
+              <p class="message">${t.message}</p>
+            </div>
+          </form>
+        `;case"prompt":return v`
+          <form @submit=${this.submitPrompt}>
+            <div class="dialog-header">
+              <h2>${t.title}</h2>
+              <div class="header-actions">
+                <button type="button" class="ghost" @click=${this.cancelPrompt}>Cancel</button>
+                <button type="submit" class="primary">OK</button>
+              </div>
+            </div>
+            <div class="dialog-body">
+              <p class="message">${t.message}</p>
+              <input
+                type="text"
+                autofocus
+                .value=${t.value}
+                @input=${n=>{this.current?.kind==="prompt"&&(this.current={...this.current,value:n.target.value})}}
+              />
+            </div>
+          </form>
+        `;case"choice":return v`
+          <form @submit=${this.submitChoice}>
+            <div class="dialog-header">
+              <h2>${t.title}</h2>
+              <div class="header-actions">
+                <button type="button" class="ghost" @click=${()=>this.closeAndResolve(null)}>Cancel</button>
+              </div>
+            </div>
+            <div class="dialog-body">
+              ${t.message?v`<p class="message">${t.message}</p>`:X}
+              <div class="choices">
+                ${t.options.map((n,r)=>r===0?v`<button type="submit" class="choice primary" autofocus>${n}</button>`:v`<button type="button" class="choice" @click=${()=>this.closeAndResolve(n)}>${n}</button>`)}
+              </div>
+            </div>
+          </form>
+        `}}}Fb([j()],lt.prototype,"current",void 0);function Ub(e="host-dialogs"){customElements.get(e)||customElements.define(e,lt)}const Bb=Se`
+  .mi {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.15rem;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+    vertical-align: middle;
+  }
+  .mi.sm {
+    font-size: 1rem;
+  }
+  .mi.lg {
+    font-size: 1.4rem;
+  }
+`,ju=/(https?:\/\/[^\s)]+)/g;function qb(e){const t=[];let n=0,r;for(ju.lastIndex=0;(r=ju.exec(e))!==null;)r.index>n&&t.push(e.slice(n,r.index)),t.push({url:r[0]}),n=r.index+r[0].length;return n===0?e:(n<e.length&&t.push(e.slice(n)),t.map(i=>typeof i=="string"?i:v`<a href=${i.url} target="_blank" rel="noopener noreferrer">${i.url}</a>`))}var Hb=function(e,t,n,r){var i=arguments.length,s=i<3?t:r===null?r=Object.getOwnPropertyDescriptor(t,n):r,o;if(typeof Reflect=="object"&&typeof Reflect.decorate=="function")s=Reflect.decorate(e,t,n,r);else for(var a=e.length-1;a>=0;a--)(o=e[a])&&(s=(i<3?o(s):i>3?o(t,n,s):o(t,n))||s);return i>3&&s&&Object.defineProperty(t,n,s),s};class Mn extends $e{constructor(){super(...arguments),this.toasts=[],this.nextId=1}static{this.instance=null}static{this.styles=[Bb,Se`
+      :host {
+        position: fixed;
+        /* Clears the host app's header bar; easyDBAccess's is 56px tall. */
+        top: var(--toast-top, 56px);
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 200000;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        pointer-events: none;
+        max-width: 90vw;
+      }
+      .toast {
+        min-width: 260px;
+        max-width: 480px;
+        background: var(--toast-surface, Canvas);
+        border-radius: var(--toast-radius, 0.35rem);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+        padding: 0.55rem 0.75rem;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 0.55rem;
+        align-items: center;
+        pointer-events: auto;
+        border-left: 4px solid #6b7280;
+        animation: slide-in 160ms ease-out;
+      }
+      .toast.success {
+        border-left-color: var(--toast-success, #16a34a);
+      }
+      .toast.error {
+        border-left-color: var(--toast-error, #dc2626);
+      }
+      .toast.warning {
+        border-left-color: var(--toast-warning, #d97706);
+      }
+      .toast.info {
+        border-left-color: var(--toast-info, #2563eb);
+      }
+      .toast .mi.lg {
+        font-size: 1.4rem;
+      }
+      .toast.success .mi {
+        color: var(--toast-success, #16a34a);
+      }
+      .toast.error .mi {
+        color: var(--toast-error, #dc2626);
+      }
+      .toast.warning .mi {
+        color: var(--toast-warning, #d97706);
+      }
+      .toast.info .mi {
+        color: var(--toast-info, #2563eb);
+      }
+      .body {
+        line-height: 1.3;
+        font-size: 0.9rem;
+      }
+      .body strong {
+        display: block;
+        font-size: 0.9rem;
+        margin-bottom: 0.1rem;
+      }
+      .body a {
+        color: var(--toast-info, #2563eb);
+        text-decoration: underline;
+        word-break: break-all;
+      }
+      button.close {
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        color: #6b7280;
+        padding: 0 0.15rem;
+        line-height: 1;
+        font-size: 1rem;
+      }
+      button.close:hover {
+        color: #111;
+      }
+      @keyframes slide-in {
+        from {
+          opacity: 0;
+          transform: translateY(-8px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    `]}connectedCallback(){super.connectedCallback(),Mn.instance=this}disconnectedCallback(){super.disconnectedCallback(),Mn.instance===this&&(Mn.instance=null)}show(t,n){const r={id:this.nextId++,kind:n?.kind??"info",message:t,...n?.title?{title:n.title}:{}};this.toasts=[...this.toasts,r];const i=n?.durationMs??(r.kind==="error"||r.kind==="warning"?7e3:4e3);r.timer=window.setTimeout(()=>this.dismiss(r.id),i)}dismiss(t){const n=this.toasts.find(r=>r.id===t);n?.timer!=null&&window.clearTimeout(n.timer),this.toasts=this.toasts.filter(r=>r.id!==t)}render(){return v`
+      ${this.toasts.map(t=>v`
+          <div class="toast ${t.kind}" role="status">
+            <span class="mi lg">${Vb(t.kind)}</span>
+            <span class="body"> ${t.title?v`<strong>${t.title}</strong>`:""}${qb(t.message)} </span>
+            <button class="close" title="Dismiss" @click=${()=>this.dismiss(t.id)}>
+              <span class="mi">close</span>
+            </button>
+          </div>
+        `)}
+    `}}Hb([j()],Mn.prototype,"toasts",void 0);function Vb(e){switch(e){case"success":return"check_circle";case"error":return"error";case"warning":return"warning";default:return"info"}}function Kb(e="toast-host"){customElements.get(e)||customElements.define(e,Mn)}var Wb=typeof globalThis<"u"?globalThis:typeof window<"u"?window:typeof global<"u"?global:typeof self<"u"?self:{};function Gb(e){return e&&e.__esModule&&Object.prototype.hasOwnProperty.call(e,"default")?e.default:e}function ET(e){if(Object.prototype.hasOwnProperty.call(e,"__esModule"))return e;var t=e.default;if(typeof t=="function"){var n=function r(){return this instanceof r?Reflect.construct(t,arguments,this.constructor):t.apply(this,arguments)};n.prototype=t.prototype}else n={};return Object.defineProperty(n,"__esModule",{value:!0}),Object.keys(e).forEach(function(r){var i=Object.getOwnPropertyDescriptor(e,r);Object.defineProperty(n,r,i.get?i:{enumerable:!0,get:function(){return e[r]}})}),n}var $s={exports:{}},Yb=$s.exports,Fu;function Qb(){return Fu||(Fu=1,(function(e,t){(function(n,r){e.exports=r()})(Yb,function(){var n=function(l,u){return(n=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(h,m){h.__proto__=m}||function(h,m){for(var g in m)Object.prototype.hasOwnProperty.call(m,g)&&(h[g]=m[g])})(l,u)},r=function(){return(r=Object.assign||function(l){for(var u,h=1,m=arguments.length;h<m;h++)for(var g in u=arguments[h])Object.prototype.hasOwnProperty.call(u,g)&&(l[g]=u[g]);return l}).apply(this,arguments)};function i(l,u,h){for(var m,g=0,w=u.length;g<w;g++)!m&&g in u||((m=m||Array.prototype.slice.call(u,0,g))[g]=u[g]);return l.concat(m||Array.prototype.slice.call(u))}var s=typeof globalThis<"u"?globalThis:typeof self<"u"?self:typeof window<"u"?window:Wb,o=Object.keys,a=Array.isArray;function c(l,u){return typeof u!="object"||o(u).forEach(function(h){l[h]=u[h]}),l}typeof Promise>"u"||s.Promise||(s.Promise=Promise);var d=Object.getPrototypeOf,f={}.hasOwnProperty;function p(l,u){return f.call(l,u)}function b(l,u){typeof u=="function"&&(u=u(d(l))),(typeof Reflect>"u"?o:Reflect.ownKeys)(u).forEach(function(h){$(l,h,u[h])})}var y=Object.defineProperty;function $(l,u,h,m){y(l,u,c(h&&p(h,"get")&&typeof h.get=="function"?{get:h.get,set:h.set,configurable:!0}:{value:h,configurable:!0,writable:!0},m))}function k(l){return{from:function(u){return l.prototype=Object.create(u.prototype),$(l.prototype,"constructor",l),{extend:b.bind(null,l.prototype)}}}}var C=Object.getOwnPropertyDescriptor,_=[].slice;function T(l,u,h){return _.call(l,u,h)}function Y(l,u){return u(l)}function D(l){if(!l)throw new Error("Assertion Failed")}function ne(l){s.setImmediate?setImmediate(l):setTimeout(l,0)}function W(l,u){if(typeof u=="string"&&p(l,u))return l[u];if(!u)return l;if(typeof u!="string"){for(var h=[],m=0,g=u.length;m<g;++m){var w=W(l,u[m]);h.push(w)}return h}var x=u.indexOf(".");if(x!==-1){var S=l[u.substr(0,x)];return S==null?void 0:W(S,u.substr(x+1))}}function I(l,u,h){if(l&&u!==void 0&&!("isFrozen"in Object&&Object.isFrozen(l)))if(typeof u!="string"&&"length"in u){D(typeof h!="string"&&"length"in h);for(var m=0,g=u.length;m<g;++m)I(l,u[m],h[m])}else{var w,x,S=u.indexOf(".");S!==-1?(w=u.substr(0,S),(x=u.substr(S+1))===""?h===void 0?a(l)&&!isNaN(parseInt(w))?l.splice(w,1):delete l[w]:l[w]=h:I(S=!(S=l[w])||!p(l,w)?l[w]={}:S,x,h)):h===void 0?a(l)&&!isNaN(parseInt(u))?l.splice(u,1):delete l[u]:l[u]=h}}function V(l){var u,h={};for(u in l)p(l,u)&&(h[u]=l[u]);return h}var K=[].concat;function ie(l){return K.apply([],l)}var Gt="BigUint64Array,BigInt64Array,Array,Boolean,String,Date,RegExp,Blob,File,FileList,FileSystemFileHandle,FileSystemDirectoryHandle,ArrayBuffer,DataView,Uint8ClampedArray,ImageBitmap,ImageData,Map,Set,CryptoKey".split(",").concat(ie([8,16,32,64].map(function(l){return["Int","Uint","Float"].map(function(u){return u+l+"Array"})}))).filter(function(l){return s[l]}),de=new Set(Gt.map(function(l){return s[l]})),H=null;function te(l){return H=new WeakMap,l=(function u(h){if(!h||typeof h!="object")return h;var m=H.get(h);if(m)return m;if(a(h)){m=[],H.set(h,m);for(var g=0,w=h.length;g<w;++g)m.push(u(h[g]))}else if(de.has(h.constructor))m=h;else{var x,S=d(h);for(x in m=S===Object.prototype?{}:Object.create(S),H.set(h,m),h)p(h,x)&&(m[x]=u(h[x]))}return m})(l),H=null,l}var q={}.toString;function Q(l){return q.call(l).slice(8,-1)}var ae=typeof Symbol<"u"?Symbol.iterator:"@@iterator",we=typeof ae=="symbol"?function(l){var u;return l!=null&&(u=l[ae])&&u.apply(l)}:function(){return null};function xe(l,u){return u=l.indexOf(u),0<=u&&l.splice(u,1),0<=u}var De={};function pe(l){var u,h,m,g;if(arguments.length===1){if(a(l))return l.slice();if(this===De&&typeof l=="string")return[l];if(g=we(l)){for(h=[];!(m=g.next()).done;)h.push(m.value);return h}if(l==null)return[l];if(typeof(u=l.length)!="number")return[l];for(h=new Array(u);u--;)h[u]=l[u];return h}for(u=arguments.length,h=new Array(u);u--;)h[u]=arguments[u];return h}var yt=typeof Symbol<"u"?function(l){return l[Symbol.toStringTag]==="AsyncFunction"}:function(){return!1},Mr=["Unknown","Constraint","Data","TransactionInactive","ReadOnly","Version","NotFound","InvalidState","InvalidAccess","Abort","Timeout","QuotaExceeded","Syntax","DataClone"],_t=["Modify","Bulk","OpenFailed","VersionChange","Schema","Upgrade","InvalidTable","MissingAPI","NoSuchDatabase","InvalidArgument","SubTransaction","Unsupported","Internal","DatabaseClosed","PrematureCommit","ForeignAwait"].concat(Mr),Dt={VersionChanged:"Database version changed by other database connection",DatabaseClosed:"Database has been closed",Abort:"Transaction aborted",TransactionInactive:"Transaction has already completed or failed",MissingAPI:"IndexedDB API missing. Please visit https://tinyurl.com/y2uuvskb"};function He(l,u){this.name=l,this.message=u}function me(l,u){return l+". Errors: "+Object.keys(u).map(function(h){return u[h].toString()}).filter(function(h,m,g){return g.indexOf(h)===m}).join(`
+`)}function ze(l,u,h,m){this.failures=u,this.failedKeys=m,this.successCount=h,this.message=me(l,u)}function bn(l,u){this.name="BulkError",this.failures=Object.keys(u).map(function(h){return u[h]}),this.failuresByPos=u,this.message=me(l,this.failures)}k(He).from(Error).extend({toString:function(){return this.name+": "+this.message}}),k(ze).from(He),k(bn).from(He);var Wn=_t.reduce(function(l,u){return l[u]=u+"Error",l},{}),Dg=He,fe=_t.reduce(function(l,u){var h=u+"Error";function m(g,w){this.name=h,g?typeof g=="string"?(this.message="".concat(g).concat(w?`
+ `+w:""),this.inner=w||null):typeof g=="object"&&(this.message="".concat(g.name," ").concat(g.message),this.inner=g):(this.message=Dt[u]||h,this.inner=null)}return k(m).from(Dg),l[u]=m,l},{});fe.Syntax=SyntaxError,fe.Type=TypeError,fe.Range=RangeError;var Kc=Mr.reduce(function(l,u){return l[u+"Error"]=fe[u],l},{}),Li=_t.reduce(function(l,u){return["Syntax","Type","Range"].indexOf(u)===-1&&(l[u+"Error"]=fe[u]),l},{});function Te(){}function Lr(l){return l}function Mg(l,u){return l==null||l===Lr?u:function(h){return u(l(h))}}function wn(l,u){return function(){l.apply(this,arguments),u.apply(this,arguments)}}function Pg(l,u){return l===Te?u:function(){var h=l.apply(this,arguments);h!==void 0&&(arguments[0]=h);var m=this.onsuccess,g=this.onerror;this.onsuccess=null,this.onerror=null;var w=u.apply(this,arguments);return m&&(this.onsuccess=this.onsuccess?wn(m,this.onsuccess):m),g&&(this.onerror=this.onerror?wn(g,this.onerror):g),w!==void 0?w:h}}function zg(l,u){return l===Te?u:function(){l.apply(this,arguments);var h=this.onsuccess,m=this.onerror;this.onsuccess=this.onerror=null,u.apply(this,arguments),h&&(this.onsuccess=this.onsuccess?wn(h,this.onsuccess):h),m&&(this.onerror=this.onerror?wn(m,this.onerror):m)}}function Ng(l,u){return l===Te?u:function(h){var m=l.apply(this,arguments);c(h,m);var g=this.onsuccess,w=this.onerror;return this.onsuccess=null,this.onerror=null,h=u.apply(this,arguments),g&&(this.onsuccess=this.onsuccess?wn(g,this.onsuccess):g),w&&(this.onerror=this.onerror?wn(w,this.onerror):w),m===void 0?h===void 0?void 0:h:c(m,h)}}function jg(l,u){return l===Te?u:function(){return u.apply(this,arguments)!==!1&&l.apply(this,arguments)}}function qo(l,u){return l===Te?u:function(){var h=l.apply(this,arguments);if(h&&typeof h.then=="function"){for(var m=this,g=arguments.length,w=new Array(g);g--;)w[g]=arguments[g];return h.then(function(){return u.apply(m,w)})}return u.apply(this,arguments)}}Li.ModifyError=ze,Li.DexieError=He,Li.BulkError=bn;var Ut=typeof location<"u"&&/^(http|https):\/\/(localhost|127\.0\.0\.1)/.test(location.href);function Wc(l){Ut=l}var Dr={},Gc=100,Gt=typeof Promise>"u"?[]:(function(){var l=Promise.resolve();if(typeof crypto>"u"||!crypto.subtle)return[l,d(l),l];var u=crypto.subtle.digest("SHA-512",new Uint8Array([0]));return[u,d(u),l]})(),Mr=Gt[0],_t=Gt[1],Gt=Gt[2],_t=_t&&_t.then,yn=Mr&&Mr.constructor,Ho=!!Gt,Pr=function(l,u){zr.push([l,u]),Di&&(queueMicrotask(Ug),Di=!1)},Vo=!0,Di=!0,vn=[],Mi=[],Ko=Lr,en={id:"global",global:!0,ref:0,unhandleds:[],onunhandled:Te,pgp:!1,env:{},finalize:Te},he=en,zr=[],kn=0,Pi=[];function ce(l){if(typeof this!="object")throw new TypeError("Promises must be constructed via new");this._listeners=[],this._lib=!1;var u=this._PSD=he;if(typeof l!="function"){if(l!==Dr)throw new TypeError("Not a function");return this._state=arguments[1],this._value=arguments[2],void(this._state===!1&&Go(this,this._value))}this._state=null,this._value=null,++u.ref,(function h(m,g){try{g(function(w){if(m._state===null){if(w===m)throw new TypeError("A promise cannot be resolved with itself.");var x=m._lib&&Gn();w&&typeof w.then=="function"?h(m,function(S,A){w instanceof ce?w._then(S,A):w.then(S,A)}):(m._state=!0,m._value=w,Qc(m)),x&&Yn()}},Go.bind(null,m))}catch(w){Go(m,w)}})(this,l)}var Wo={get:function(){var l=he,u=Fi;function h(m,g){var w=this,x=!l.global&&(l!==he||u!==Fi),S=x&&!nn(),A=new ce(function(O,P){Yo(w,new Yc(Xc(m,l,x,S),Xc(g,l,x,S),O,P,l))});return this._consoleTask&&(A._consoleTask=this._consoleTask),A}return h.prototype=Dr,h},set:function(l){$(this,"then",l&&l.prototype===Dr?Wo:{get:function(){return l},set:Wo.set})}};function Yc(l,u,h,m,g){this.onFulfilled=typeof l=="function"?l:null,this.onRejected=typeof u=="function"?u:null,this.resolve=h,this.reject=m,this.psd=g}function Go(l,u){var h,m;Mi.push(u),l._state===null&&(h=l._lib&&Gn(),u=Ko(u),l._state=!1,l._value=u,m=l,vn.some(function(g){return g._value===m._value})||vn.push(m),Qc(l),h&&Yn())}function Qc(l){var u=l._listeners;l._listeners=[];for(var h=0,m=u.length;h<m;++h)Yo(l,u[h]);var g=l._PSD;--g.ref||g.finalize(),kn===0&&(++kn,Pr(function(){--kn==0&&Qo()},[]))}function Yo(l,u){if(l._state!==null){var h=l._state?u.onFulfilled:u.onRejected;if(h===null)return(l._state?u.resolve:u.reject)(l._value);++u.psd.ref,++kn,Pr(Fg,[h,l,u])}else l._listeners.push(u)}function Fg(l,u,h){try{var m,g=u._value;!u._state&&Mi.length&&(Mi=[]),m=Ut&&u._consoleTask?u._consoleTask.run(function(){return l(g)}):l(g),u._state||Mi.indexOf(g)!==-1||(function(w){for(var x=vn.length;x;)if(vn[--x]._value===w._value)return vn.splice(x,1)})(u),h.resolve(m)}catch(w){h.reject(w)}finally{--kn==0&&Qo(),--h.psd.ref||h.psd.finalize()}}function Ug(){$n(en,function(){Gn()&&Yn()})}function Gn(){var l=Vo;return Di=Vo=!1,l}function Yn(){var l,u,h;do for(;0<zr.length;)for(l=zr,zr=[],h=l.length,u=0;u<h;++u){var m=l[u];m[0].apply(null,m[1])}while(0<zr.length);Di=Vo=!0}function Qo(){var l=vn;vn=[],l.forEach(function(m){m._PSD.onunhandled.call(null,m._value,m)});for(var u=Pi.slice(0),h=u.length;h;)u[--h]()}function zi(l){return new ce(Dr,!1,l)}function Me(l,u){var h=he;return function(){var m=Gn(),g=he;try{return rn(h,!0),l.apply(this,arguments)}catch(w){u&&u(w)}finally{rn(g,!1),m&&Yn()}}}b(ce.prototype,{then:Wo,_then:function(l,u){Yo(this,new Yc(null,null,l,u,he))},catch:function(l){if(arguments.length===1)return this.then(null,l);var u=l,h=arguments[1];return typeof u=="function"?this.then(null,function(m){return(m instanceof u?h:zi)(m)}):this.then(null,function(m){return(m&&m.name===u?h:zi)(m)})},finally:function(l){return this.then(function(u){return ce.resolve(l()).then(function(){return u})},function(u){return ce.resolve(l()).then(function(){return zi(u)})})},timeout:function(l,u){var h=this;return l<1/0?new ce(function(m,g){var w=setTimeout(function(){return g(new fe.Timeout(u))},l);h.then(m,g).finally(clearTimeout.bind(null,w))}):this}}),typeof Symbol<"u"&&Symbol.toStringTag&&$(ce.prototype,Symbol.toStringTag,"Dexie.Promise"),en.env=Jc(),b(ce,{all:function(){var l=pe.apply(null,arguments).map(Ui);return new ce(function(u,h){l.length===0&&u([]);var m=l.length;l.forEach(function(g,w){return ce.resolve(g).then(function(x){l[w]=x,--m||u(l)},h)})})},resolve:function(l){return l instanceof ce?l:l&&typeof l.then=="function"?new ce(function(u,h){l.then(u,h)}):new ce(Dr,!0,l)},reject:zi,race:function(){var l=pe.apply(null,arguments).map(Ui);return new ce(function(u,h){l.map(function(m){return ce.resolve(m).then(u,h)})})},PSD:{get:function(){return he},set:function(l){return he=l}},totalEchoes:{get:function(){return Fi}},newPSD:tn,usePSD:$n,scheduler:{get:function(){return Pr},set:function(l){Pr=l}},rejectionMapper:{get:function(){return Ko},set:function(l){Ko=l}},follow:function(l,u){return new ce(function(h,m){return tn(function(g,w){var x=he;x.unhandleds=[],x.onunhandled=w,x.finalize=wn(function(){var S,A=this;S=function(){A.unhandleds.length===0?g():w(A.unhandleds[0])},Pi.push(function O(){S(),Pi.splice(Pi.indexOf(O),1)}),++kn,Pr(function(){--kn==0&&Qo()},[])},x.finalize),l()},u,h,m)})}}),yn&&(yn.allSettled&&$(ce,"allSettled",function(){var l=pe.apply(null,arguments).map(Ui);return new ce(function(u){l.length===0&&u([]);var h=l.length,m=new Array(h);l.forEach(function(g,w){return ce.resolve(g).then(function(x){return m[w]={status:"fulfilled",value:x}},function(x){return m[w]={status:"rejected",reason:x}}).then(function(){return--h||u(m)})})})}),yn.any&&typeof AggregateError<"u"&&$(ce,"any",function(){var l=pe.apply(null,arguments).map(Ui);return new ce(function(u,h){l.length===0&&h(new AggregateError([]));var m=l.length,g=new Array(m);l.forEach(function(w,x){return ce.resolve(w).then(function(S){return u(S)},function(S){g[x]=S,--m||h(new AggregateError(g))})})})}),yn.withResolvers&&(ce.withResolvers=yn.withResolvers));var Ve={awaits:0,echoes:0,id:0},Bg=0,Ni=[],ji=0,Fi=0,qg=0;function tn(l,u,h,m){var g=he,w=Object.create(g);return w.parent=g,w.ref=0,w.global=!1,w.id=++qg,en.env,w.env=Ho?{Promise:ce,PromiseProp:{value:ce,configurable:!0,writable:!0},all:ce.all,race:ce.race,allSettled:ce.allSettled,any:ce.any,resolve:ce.resolve,reject:ce.reject}:{},u&&c(w,u),++g.ref,w.finalize=function(){--this.parent.ref||this.parent.finalize()},m=$n(w,l,h,m),w.ref===0&&w.finalize(),m}function Qn(){return Ve.id||(Ve.id=++Bg),++Ve.awaits,Ve.echoes+=Gc,Ve.id}function nn(){return!!Ve.awaits&&(--Ve.awaits==0&&(Ve.id=0),Ve.echoes=Ve.awaits*Gc,!0)}function Ui(l){return Ve.echoes&&l&&l.constructor===yn?(Qn(),l.then(function(u){return nn(),u},function(u){return nn(),je(u)})):l}function Hg(){var l=Ni[Ni.length-1];Ni.pop(),rn(l,!1)}function rn(l,u){var h,m=he;(u?!Ve.echoes||ji++&&l===he:!ji||--ji&&l===he)||queueMicrotask(u?function(g){++Fi,Ve.echoes&&--Ve.echoes!=0||(Ve.echoes=Ve.awaits=Ve.id=0),Ni.push(he),rn(g,!0)}.bind(null,l):Hg),l!==he&&(he=l,m===en&&(en.env=Jc()),Ho&&(h=en.env.Promise,u=l.env,(m.global||l.global)&&(Object.defineProperty(s,"Promise",u.PromiseProp),h.all=u.all,h.race=u.race,h.resolve=u.resolve,h.reject=u.reject,u.allSettled&&(h.allSettled=u.allSettled),u.any&&(h.any=u.any))))}function Jc(){var l=s.Promise;return Ho?{Promise:l,PromiseProp:Object.getOwnPropertyDescriptor(s,"Promise"),all:l.all,race:l.race,allSettled:l.allSettled,any:l.any,resolve:l.resolve,reject:l.reject}:{}}function $n(l,u,h,m,g){var w=he;try{return rn(l,!0),u(h,m,g)}finally{rn(w,!1)}}function Xc(l,u,h,m){return typeof l!="function"?l:function(){var g=he;h&&Qn(),rn(u,!0);try{return l.apply(this,arguments)}finally{rn(g,!1),m&&queueMicrotask(nn)}}}function Jo(l){Promise===yn&&Ve.echoes===0?ji===0?l():enqueueNativeMicroTask(l):setTimeout(l,0)}(""+_t).indexOf("[native code]")===-1&&(Qn=nn=Te);var je=ce.reject,xn="￿",Wt="Invalid key provided. Keys must be of type string, number, Date or Array<string | number | Date>.",Zc="String expected.",Jn=[],Bi="__dbnames",Xo="readonly",Zo="readwrite";function Sn(l,u){return l?u?function(){return l.apply(this,arguments)&&u.apply(this,arguments)}:l:u}var eu={type:3,lower:-1/0,lowerOpen:!1,upper:[[]],upperOpen:!1};function qi(l){return typeof l!="string"||/\./.test(l)?function(u){return u}:function(u){return u[l]===void 0&&l in u&&delete(u=te(u))[l],u}}function tu(){throw fe.Type()}function Ce(l,u){try{var h=nu(l),m=nu(u);if(h!==m)return h==="Array"?1:m==="Array"?-1:h==="binary"?1:m==="binary"?-1:h==="string"?1:m==="string"?-1:h==="Date"?1:m!=="Date"?NaN:-1;switch(h){case"number":case"Date":case"string":return u<l?1:l<u?-1:0;case"binary":return(function(g,w){for(var x=g.length,S=w.length,A=x<S?x:S,O=0;O<A;++O)if(g[O]!==w[O])return g[O]<w[O]?-1:1;return x===S?0:x<S?-1:1})(ru(l),ru(u));case"Array":return(function(g,w){for(var x=g.length,S=w.length,A=x<S?x:S,O=0;O<A;++O){var P=Ce(g[O],w[O]);if(P!==0)return P}return x===S?0:x<S?-1:1})(l,u)}}catch{}return NaN}function nu(l){var u=typeof l;return u!="object"?u:ArrayBuffer.isView(l)?"binary":(l=Q(l),l==="ArrayBuffer"?"binary":l)}function ru(l){return l instanceof Uint8Array?l:ArrayBuffer.isView(l)?new Uint8Array(l.buffer,l.byteOffset,l.byteLength):new Uint8Array(l)}var iu=(Le.prototype._trans=function(l,u,h){var m=this._tx||he.trans,g=this.name,w=Ut&&typeof console<"u"&&console.createTask&&console.createTask("Dexie: ".concat(l==="readonly"?"read":"write"," ").concat(this.name));function x(O,P,E){if(!E.schema[g])throw new fe.NotFound("Table "+g+" not part of transaction");return u(E.idbtrans,E)}var S=Gn();try{var A=m&&m.db._novip===this.db._novip?m===he.trans?m._promise(l,x,h):tn(function(){return m._promise(l,x,h)},{trans:m,transless:he.transless||he}):(function O(P,E,N,R){if(P.idbdb&&(P._state.openComplete||he.letThrough||P._vip)){var M=P._createTransaction(E,N,P._dbSchema);try{M.create(),P._state.PR1398_maxLoop=3}catch(z){return z.name===Wn.InvalidState&&P.isOpen()&&0<--P._state.PR1398_maxLoop?(console.warn("Dexie: Need to reopen db"),P.close({disableAutoOpen:!1}),P.open().then(function(){return O(P,E,N,R)})):je(z)}return M._promise(E,function(z,L){return tn(function(){return he.trans=M,R(z,L,M)})}).then(function(z){if(E==="readwrite")try{M.idbtrans.commit()}catch{}return E==="readonly"?z:M._completion.then(function(){return z})})}if(P._state.openComplete)return je(new fe.DatabaseClosed(P._state.dbOpenError));if(!P._state.isBeingOpened){if(!P._state.autoOpen)return je(new fe.DatabaseClosed);P.open().catch(Te)}return P._state.dbReadyPromise.then(function(){return O(P,E,N,R)})})(this.db,l,[this.name],x);return w&&(A._consoleTask=w,A=A.catch(function(O){return console.trace(O),je(O)})),A}finally{S&&Yn()}},Le.prototype.get=function(l,u){var h=this;return l&&l.constructor===Object?this.where(l).first(u):l==null?je(new fe.Type("Invalid argument to Table.get()")):this._trans("readonly",function(m){return h.core.get({trans:m,key:l}).then(function(g){return h.hook.reading.fire(g)})}).then(u)},Le.prototype.where=function(l){if(typeof l=="string")return new this.db.WhereClause(this,l);if(a(l))return new this.db.WhereClause(this,"[".concat(l.join("+"),"]"));var u=o(l);if(u.length===1)return this.where(u[0]).equals(l[u[0]]);var h=this.schema.indexes.concat(this.schema.primKey).filter(function(S){if(S.compound&&u.every(function(O){return 0<=S.keyPath.indexOf(O)})){for(var A=0;A<u.length;++A)if(u.indexOf(S.keyPath[A])===-1)return!1;return!0}return!1}).sort(function(S,A){return S.keyPath.length-A.keyPath.length})[0];if(h&&this.db._maxKey!==xn){var w=h.keyPath.slice(0,u.length);return this.where(w).equals(w.map(function(A){return l[A]}))}!h&&Ut&&console.warn("The query ".concat(JSON.stringify(l)," on ").concat(this.name," would benefit from a ")+"compound index [".concat(u.join("+"),"]"));var m=this.schema.idxByName;function g(S,A){return Ce(S,A)===0}var x=u.reduce(function(E,A){var O=E[0],P=E[1],E=m[A],N=l[A];return[O||E,O||!E?Sn(P,E&&E.multi?function(R){return R=W(R,A),a(R)&&R.some(function(M){return g(N,M)})}:function(R){return g(N,W(R,A))}):P]},[null,null]),w=x[0],x=x[1];return w?this.where(w.name).equals(l[w.keyPath]).filter(x):h?this.filter(x):this.where(u).equals("")},Le.prototype.filter=function(l){return this.toCollection().and(l)},Le.prototype.count=function(l){return this.toCollection().count(l)},Le.prototype.offset=function(l){return this.toCollection().offset(l)},Le.prototype.limit=function(l){return this.toCollection().limit(l)},Le.prototype.each=function(l){return this.toCollection().each(l)},Le.prototype.toArray=function(l){return this.toCollection().toArray(l)},Le.prototype.toCollection=function(){return new this.db.Collection(new this.db.WhereClause(this))},Le.prototype.orderBy=function(l){return new this.db.Collection(new this.db.WhereClause(this,a(l)?"[".concat(l.join("+"),"]"):l))},Le.prototype.reverse=function(){return this.toCollection().reverse()},Le.prototype.mapToClass=function(l){var u,h=this.db,m=this.name;function g(){return u!==null&&u.apply(this,arguments)||this}(this.schema.mappedClass=l).prototype instanceof tu&&((function(A,O){if(typeof O!="function"&&O!==null)throw new TypeError("Class extends value "+String(O)+" is not a constructor or null");function P(){this.constructor=A}n(A,O),A.prototype=O===null?Object.create(O):(P.prototype=O.prototype,new P)})(g,u=l),Object.defineProperty(g.prototype,"db",{get:function(){return h},enumerable:!1,configurable:!0}),g.prototype.table=function(){return m},l=g);for(var w=new Set,x=l.prototype;x;x=d(x))Object.getOwnPropertyNames(x).forEach(function(A){return w.add(A)});function S(A){if(!A)return A;var O,P=Object.create(l.prototype);for(O in A)if(!w.has(O))try{P[O]=A[O]}catch{}return P}return this.schema.readHook&&this.hook.reading.unsubscribe(this.schema.readHook),this.schema.readHook=S,this.hook("reading",S),l},Le.prototype.defineClass=function(){return this.mapToClass(function(l){c(this,l)})},Le.prototype.add=function(l,u){var h=this,m=this.schema.primKey,g=m.auto,w=m.keyPath,x=l;return w&&g&&(x=qi(w)(l)),this._trans("readwrite",function(S){return h.core.mutate({trans:S,type:"add",keys:u!=null?[u]:null,values:[x]})}).then(function(S){return S.numFailures?ce.reject(S.failures[0]):S.lastResult}).then(function(S){if(w)try{I(l,w,S)}catch{}return S})},Le.prototype.update=function(l,u){return typeof l!="object"||a(l)?this.where(":id").equals(l).modify(u):(l=W(l,this.schema.primKey.keyPath),l===void 0?je(new fe.InvalidArgument("Given object does not contain its primary key")):this.where(":id").equals(l).modify(u))},Le.prototype.put=function(l,u){var h=this,m=this.schema.primKey,g=m.auto,w=m.keyPath,x=l;return w&&g&&(x=qi(w)(l)),this._trans("readwrite",function(S){return h.core.mutate({trans:S,type:"put",values:[x],keys:u!=null?[u]:null})}).then(function(S){return S.numFailures?ce.reject(S.failures[0]):S.lastResult}).then(function(S){if(w)try{I(l,w,S)}catch{}return S})},Le.prototype.delete=function(l){var u=this;return this._trans("readwrite",function(h){return u.core.mutate({trans:h,type:"delete",keys:[l]})}).then(function(h){return h.numFailures?ce.reject(h.failures[0]):void 0})},Le.prototype.clear=function(){var l=this;return this._trans("readwrite",function(u){return l.core.mutate({trans:u,type:"deleteRange",range:eu})}).then(function(u){return u.numFailures?ce.reject(u.failures[0]):void 0})},Le.prototype.bulkGet=function(l){var u=this;return this._trans("readonly",function(h){return u.core.getMany({keys:l,trans:h}).then(function(m){return m.map(function(g){return u.hook.reading.fire(g)})})})},Le.prototype.bulkAdd=function(l,u,h){var m=this,g=Array.isArray(u)?u:void 0,w=(h=h||(g?void 0:u))?h.allKeys:void 0;return this._trans("readwrite",function(x){var O=m.schema.primKey,S=O.auto,O=O.keyPath;if(O&&g)throw new fe.InvalidArgument("bulkAdd(): keys argument invalid on tables with inbound keys");if(g&&g.length!==l.length)throw new fe.InvalidArgument("Arguments objects and keys must have the same length");var A=l.length,O=O&&S?l.map(qi(O)):l;return m.core.mutate({trans:x,type:"add",keys:g,values:O,wantResults:w}).then(function(M){var E=M.numFailures,N=M.results,R=M.lastResult,M=M.failures;if(E===0)return w?N:R;throw new bn("".concat(m.name,".bulkAdd(): ").concat(E," of ").concat(A," operations failed"),M)})})},Le.prototype.bulkPut=function(l,u,h){var m=this,g=Array.isArray(u)?u:void 0,w=(h=h||(g?void 0:u))?h.allKeys:void 0;return this._trans("readwrite",function(x){var O=m.schema.primKey,S=O.auto,O=O.keyPath;if(O&&g)throw new fe.InvalidArgument("bulkPut(): keys argument invalid on tables with inbound keys");if(g&&g.length!==l.length)throw new fe.InvalidArgument("Arguments objects and keys must have the same length");var A=l.length,O=O&&S?l.map(qi(O)):l;return m.core.mutate({trans:x,type:"put",keys:g,values:O,wantResults:w}).then(function(M){var E=M.numFailures,N=M.results,R=M.lastResult,M=M.failures;if(E===0)return w?N:R;throw new bn("".concat(m.name,".bulkPut(): ").concat(E," of ").concat(A," operations failed"),M)})})},Le.prototype.bulkUpdate=function(l){var u=this,h=this.core,m=l.map(function(x){return x.key}),g=l.map(function(x){return x.changes}),w=[];return this._trans("readwrite",function(x){return h.getMany({trans:x,keys:m,cache:"clone"}).then(function(S){var A=[],O=[];l.forEach(function(E,N){var R=E.key,M=E.changes,z=S[N];if(z){for(var L=0,F=Object.keys(M);L<F.length;L++){var U=F[L],B=M[U];if(U===u.schema.primKey.keyPath){if(Ce(B,R)!==0)throw new fe.Constraint("Cannot update primary key in bulkUpdate()")}else I(z,U,B)}w.push(N),A.push(R),O.push(z)}});var P=A.length;return h.mutate({trans:x,type:"put",keys:A,values:O,updates:{keys:m,changeSpecs:g}}).then(function(E){var N=E.numFailures,R=E.failures;if(N===0)return P;for(var M=0,z=Object.keys(R);M<z.length;M++){var L,F=z[M],U=w[Number(F)];U!=null&&(L=R[F],delete R[F],R[U]=L)}throw new bn("".concat(u.name,".bulkUpdate(): ").concat(N," of ").concat(P," operations failed"),R)})})})},Le.prototype.bulkDelete=function(l){var u=this,h=l.length;return this._trans("readwrite",function(m){return u.core.mutate({trans:m,type:"delete",keys:l})}).then(function(x){var g=x.numFailures,w=x.lastResult,x=x.failures;if(g===0)return w;throw new bn("".concat(u.name,".bulkDelete(): ").concat(g," of ").concat(h," operations failed"),x)})},Le);function Le(){}function Nr(l){function u(x,S){if(S){for(var A=arguments.length,O=new Array(A-1);--A;)O[A-1]=arguments[A];return h[x].subscribe.apply(null,O),l}if(typeof x=="string")return h[x]}var h={};u.addEventType=w;for(var m=1,g=arguments.length;m<g;++m)w(arguments[m]);return u;function w(x,S,A){if(typeof x!="object"){var O;S=S||jg;var P={subscribers:[],fire:A=A||Te,subscribe:function(E){P.subscribers.indexOf(E)===-1&&(P.subscribers.push(E),P.fire=S(P.fire,E))},unsubscribe:function(E){P.subscribers=P.subscribers.filter(function(N){return N!==E}),P.fire=P.subscribers.reduce(S,A)}};return h[x]=u[x]=P}o(O=x).forEach(function(E){var N=O[E];if(a(N))w(E,O[E][0],O[E][1]);else{if(N!=="asap")throw new fe.InvalidArgument("Invalid event config");var R=w(E,Lr,function(){for(var M=arguments.length,z=new Array(M);M--;)z[M]=arguments[M];R.subscribers.forEach(function(L){ne(function(){L.apply(null,z)})})})}})}}function jr(l,u){return k(u).from({prototype:l}),u}function Xn(l,u){return!(l.filter||l.algorithm||l.or)&&(u?l.justLimit:!l.replayFilter)}function ea(l,u){l.filter=Sn(l.filter,u)}function ta(l,u,h){var m=l.replayFilter;l.replayFilter=m?function(){return Sn(m(),u())}:u,l.justLimit=h&&!m}function Hi(l,u){if(l.isPrimKey)return u.primaryKey;var h=u.getIndexByKeyPath(l.index);if(!h)throw new fe.Schema("KeyPath "+l.index+" on object store "+u.name+" is not indexed");return h}function su(l,u,h){var m=Hi(l,u.schema);return u.openCursor({trans:h,values:!l.keysOnly,reverse:l.dir==="prev",unique:!!l.unique,query:{index:m,range:l.range}})}function Vi(l,u,h,m){var g=l.replayFilter?Sn(l.filter,l.replayFilter()):l.filter;if(l.or){var w={},x=function(S,A,O){var P,E;g&&!g(A,O,function(N){return A.stop(N)},function(N){return A.fail(N)})||((E=""+(P=A.primaryKey))=="[object ArrayBuffer]"&&(E=""+new Uint8Array(P)),p(w,E)||(w[E]=!0,u(S,A,O)))};return Promise.all([l.or._iterate(x,h),ou(su(l,m,h),l.algorithm,x,!l.keysOnly&&l.valueMapper)])}return ou(su(l,m,h),Sn(l.algorithm,g),u,!l.keysOnly&&l.valueMapper)}function ou(l,u,h,m){var g=Me(m?function(w,x,S){return h(m(w),x,S)}:h);return l.then(function(w){if(w)return w.start(function(){var x=function(){return w.continue()};u&&!u(w,function(S){return x=S},function(S){w.stop(S),x=Te},function(S){w.fail(S),x=Te})||g(w.value,w,function(S){return x=S}),x()})})}var Gt=Symbol(),Fr=(au.prototype.execute=function(l){if(this.add!==void 0){var u=this.add;if(a(u))return i(i([],a(l)?l:[],!0),u).sort();if(typeof u=="number")return(Number(l)||0)+u;if(typeof u=="bigint")try{return BigInt(l)+u}catch{return BigInt(0)+u}throw new TypeError("Invalid term ".concat(u))}if(this.remove!==void 0){var h=this.remove;if(a(h))return a(l)?l.filter(function(m){return!h.includes(m)}).sort():[];if(typeof h=="number")return Number(l)-h;if(typeof h=="bigint")try{return BigInt(l)-h}catch{return BigInt(0)-h}throw new TypeError("Invalid subtrahend ".concat(h))}return u=(u=this.replacePrefix)===null||u===void 0?void 0:u[0],u&&typeof l=="string"&&l.startsWith(u)?this.replacePrefix[1]+l.substring(u.length):l},au);function au(l){Object.assign(this,l)}var Vg=(Ee.prototype._read=function(l,u){var h=this._ctx;return h.error?h.table._trans(null,je.bind(null,h.error)):h.table._trans("readonly",l).then(u)},Ee.prototype._write=function(l){var u=this._ctx;return u.error?u.table._trans(null,je.bind(null,u.error)):u.table._trans("readwrite",l,"locked")},Ee.prototype._addAlgorithm=function(l){var u=this._ctx;u.algorithm=Sn(u.algorithm,l)},Ee.prototype._iterate=function(l,u){return Vi(this._ctx,l,u,this._ctx.table.core)},Ee.prototype.clone=function(l){var u=Object.create(this.constructor.prototype),h=Object.create(this._ctx);return l&&c(h,l),u._ctx=h,u},Ee.prototype.raw=function(){return this._ctx.valueMapper=null,this},Ee.prototype.each=function(l){var u=this._ctx;return this._read(function(h){return Vi(u,l,h,u.table.core)})},Ee.prototype.count=function(l){var u=this;return this._read(function(h){var m=u._ctx,g=m.table.core;if(Xn(m,!0))return g.count({trans:h,query:{index:Hi(m,g.schema),range:m.range}}).then(function(x){return Math.min(x,m.limit)});var w=0;return Vi(m,function(){return++w,!1},h,g).then(function(){return w})}).then(l)},Ee.prototype.sortBy=function(l,u){var h=l.split(".").reverse(),m=h[0],g=h.length-1;function w(A,O){return O?w(A[h[O]],O-1):A[m]}var x=this._ctx.dir==="next"?1:-1;function S(A,O){return Ce(w(A,g),w(O,g))*x}return this.toArray(function(A){return A.sort(S)}).then(u)},Ee.prototype.toArray=function(l){var u=this;return this._read(function(h){var m=u._ctx;if(m.dir==="next"&&Xn(m,!0)&&0<m.limit){var g=m.valueMapper,w=Hi(m,m.table.core.schema);return m.table.core.query({trans:h,limit:m.limit,values:!0,query:{index:w,range:m.range}}).then(function(S){return S=S.result,g?S.map(g):S})}var x=[];return Vi(m,function(S){return x.push(S)},h,m.table.core).then(function(){return x})},l)},Ee.prototype.offset=function(l){var u=this._ctx;return l<=0||(u.offset+=l,Xn(u)?ta(u,function(){var h=l;return function(m,g){return h===0||(h===1?--h:g(function(){m.advance(h),h=0}),!1)}}):ta(u,function(){var h=l;return function(){return--h<0}})),this},Ee.prototype.limit=function(l){return this._ctx.limit=Math.min(this._ctx.limit,l),ta(this._ctx,function(){var u=l;return function(h,m,g){return--u<=0&&m(g),0<=u}},!0),this},Ee.prototype.until=function(l,u){return ea(this._ctx,function(h,m,g){return!l(h.value)||(m(g),u)}),this},Ee.prototype.first=function(l){return this.limit(1).toArray(function(u){return u[0]}).then(l)},Ee.prototype.last=function(l){return this.reverse().first(l)},Ee.prototype.filter=function(l){var u;return ea(this._ctx,function(h){return l(h.value)}),(u=this._ctx).isMatch=Sn(u.isMatch,l),this},Ee.prototype.and=function(l){return this.filter(l)},Ee.prototype.or=function(l){return new this.db.WhereClause(this._ctx.table,l,this)},Ee.prototype.reverse=function(){return this._ctx.dir=this._ctx.dir==="prev"?"next":"prev",this._ondirectionchange&&this._ondirectionchange(this._ctx.dir),this},Ee.prototype.desc=function(){return this.reverse()},Ee.prototype.eachKey=function(l){var u=this._ctx;return u.keysOnly=!u.isMatch,this.each(function(h,m){l(m.key,m)})},Ee.prototype.eachUniqueKey=function(l){return this._ctx.unique="unique",this.eachKey(l)},Ee.prototype.eachPrimaryKey=function(l){var u=this._ctx;return u.keysOnly=!u.isMatch,this.each(function(h,m){l(m.primaryKey,m)})},Ee.prototype.keys=function(l){var u=this._ctx;u.keysOnly=!u.isMatch;var h=[];return this.each(function(m,g){h.push(g.key)}).then(function(){return h}).then(l)},Ee.prototype.primaryKeys=function(l){var u=this._ctx;if(u.dir==="next"&&Xn(u,!0)&&0<u.limit)return this._read(function(m){var g=Hi(u,u.table.core.schema);return u.table.core.query({trans:m,values:!1,limit:u.limit,query:{index:g,range:u.range}})}).then(function(m){return m.result}).then(l);u.keysOnly=!u.isMatch;var h=[];return this.each(function(m,g){h.push(g.primaryKey)}).then(function(){return h}).then(l)},Ee.prototype.uniqueKeys=function(l){return this._ctx.unique="unique",this.keys(l)},Ee.prototype.firstKey=function(l){return this.limit(1).keys(function(u){return u[0]}).then(l)},Ee.prototype.lastKey=function(l){return this.reverse().firstKey(l)},Ee.prototype.distinct=function(){var l=this._ctx,l=l.index&&l.table.schema.idxByName[l.index];if(!l||!l.multi)return this;var u={};return ea(this._ctx,function(g){var m=g.primaryKey.toString(),g=p(u,m);return u[m]=!0,!g}),this},Ee.prototype.modify=function(l){var u=this,h=this._ctx;return this._write(function(m){var g,w,x;x=typeof l=="function"?l:(g=o(l),w=g.length,function(L){for(var F=!1,U=0;U<w;++U){var B=g[U],G=l[B],Z=W(L,B);G instanceof Fr?(I(L,B,G.execute(Z)),F=!0):Z!==G&&(I(L,B,G),F=!0)}return F});var S=h.table.core,E=S.schema.primaryKey,A=E.outbound,O=E.extractKey,P=200,E=u.db._options.modifyChunkSize;E&&(P=typeof E=="object"?E[S.name]||E["*"]||200:E);function N(L,B){var U=B.failures,B=B.numFailures;M+=L-B;for(var G=0,Z=o(U);G<Z.length;G++){var oe=Z[G];R.push(U[oe])}}var R=[],M=0,z=[];return u.clone().primaryKeys().then(function(L){function F(B){var G=Math.min(P,L.length-B);return S.getMany({trans:m,keys:L.slice(B,B+G),cache:"immutable"}).then(function(Z){for(var oe=[],ee=[],re=A?[]:null,le=[],se=0;se<G;++se){var ue=Z[se],be={value:te(ue),primKey:L[B+se]};x.call(be,be.value,be)!==!1&&(be.value==null?le.push(L[B+se]):A||Ce(O(ue),O(be.value))===0?(ee.push(be.value),A&&re.push(L[B+se])):(le.push(L[B+se]),oe.push(be.value)))}return Promise.resolve(0<oe.length&&S.mutate({trans:m,type:"add",values:oe}).then(function(ve){for(var ke in ve.failures)le.splice(parseInt(ke),1);N(oe.length,ve)})).then(function(){return(0<ee.length||U&&typeof l=="object")&&S.mutate({trans:m,type:"put",keys:re,values:ee,criteria:U,changeSpec:typeof l!="function"&&l,isAdditionalChunk:0<B}).then(function(ve){return N(ee.length,ve)})}).then(function(){return(0<le.length||U&&l===na)&&S.mutate({trans:m,type:"delete",keys:le,criteria:U,isAdditionalChunk:0<B}).then(function(ve){return N(le.length,ve)})}).then(function(){return L.length>B+G&&F(B+P)})})}var U=Xn(h)&&h.limit===1/0&&(typeof l!="function"||l===na)&&{index:h.index,range:h.range};return F(0).then(function(){if(0<R.length)throw new ze("Error modifying one or more objects",R,M,z);return L.length})})})},Ee.prototype.delete=function(){var l=this._ctx,u=l.range;return Xn(l)&&(l.isPrimKey||u.type===3)?this._write(function(h){var m=l.table.core.schema.primaryKey,g=u;return l.table.core.count({trans:h,query:{index:m,range:g}}).then(function(w){return l.table.core.mutate({trans:h,type:"deleteRange",range:g}).then(function(x){var S=x.failures;if(x.lastResult,x.results,x=x.numFailures,x)throw new ze("Could not delete some values",Object.keys(S).map(function(A){return S[A]}),w-x);return w-x})})}):this.modify(na)},Ee);function Ee(){}var na=function(l,u){return u.value=null};function Kg(l,u){return l<u?-1:l===u?0:1}function Wg(l,u){return u<l?-1:l===u?0:1}function vt(l,u,h){return l=l instanceof cu?new l.Collection(l):l,l._ctx.error=new(h||TypeError)(u),l}function Zn(l){return new l.Collection(l,function(){return lu("")}).limit(0)}function Ki(l,u,h,m){var g,w,x,S,A,O,P,E=h.length;if(!h.every(function(M){return typeof M=="string"}))return vt(l,Zc);function N(M){g=M==="next"?function(L){return L.toUpperCase()}:function(L){return L.toLowerCase()},w=M==="next"?function(L){return L.toLowerCase()}:function(L){return L.toUpperCase()},x=M==="next"?Kg:Wg;var z=h.map(function(L){return{lower:w(L),upper:g(L)}}).sort(function(L,F){return x(L.lower,F.lower)});S=z.map(function(L){return L.upper}),A=z.map(function(L){return L.lower}),P=(O=M)==="next"?"":m}N("next"),l=new l.Collection(l,function(){return sn(S[0],A[E-1]+m)}),l._ondirectionchange=function(M){N(M)};var R=0;return l._addAlgorithm(function(M,z,L){var F=M.key;if(typeof F!="string")return!1;var U=w(F);if(u(U,A,R))return!0;for(var B=null,G=R;G<E;++G){var Z=(function(oe,ee,re,le,se,ue){for(var be=Math.min(oe.length,le.length),ve=-1,ke=0;ke<be;++ke){var kt=ee[ke];if(kt!==le[ke])return se(oe[ke],re[ke])<0?oe.substr(0,ke)+re[ke]+re.substr(ke+1):se(oe[ke],le[ke])<0?oe.substr(0,ke)+le[ke]+re.substr(ke+1):0<=ve?oe.substr(0,ve)+ee[ve]+re.substr(ve+1):null;se(oe[ke],kt)<0&&(ve=ke)}return be<le.length&&ue==="next"?oe+re.substr(oe.length):be<oe.length&&ue==="prev"?oe.substr(0,re.length):ve<0?null:oe.substr(0,ve)+le[ve]+re.substr(ve+1)})(F,U,S[G],A[G],x,O);Z===null&&B===null?R=G+1:(B===null||0<x(B,Z))&&(B=Z)}return z(B!==null?function(){M.continue(B+P)}:L),!1}),l}function sn(l,u,h,m){return{type:2,lower:l,upper:u,lowerOpen:h,upperOpen:m}}function lu(l){return{type:1,lower:l,upper:l}}var cu=(Object.defineProperty(Ke.prototype,"Collection",{get:function(){return this._ctx.table.db.Collection},enumerable:!1,configurable:!0}),Ke.prototype.between=function(l,u,h,m){h=h!==!1,m=m===!0;try{return 0<this._cmp(l,u)||this._cmp(l,u)===0&&(h||m)&&(!h||!m)?Zn(this):new this.Collection(this,function(){return sn(l,u,!h,!m)})}catch{return vt(this,Wt)}},Ke.prototype.equals=function(l){return l==null?vt(this,Wt):new this.Collection(this,function(){return lu(l)})},Ke.prototype.above=function(l){return l==null?vt(this,Wt):new this.Collection(this,function(){return sn(l,void 0,!0)})},Ke.prototype.aboveOrEqual=function(l){return l==null?vt(this,Wt):new this.Collection(this,function(){return sn(l,void 0,!1)})},Ke.prototype.below=function(l){return l==null?vt(this,Wt):new this.Collection(this,function(){return sn(void 0,l,!1,!0)})},Ke.prototype.belowOrEqual=function(l){return l==null?vt(this,Wt):new this.Collection(this,function(){return sn(void 0,l)})},Ke.prototype.startsWith=function(l){return typeof l!="string"?vt(this,Zc):this.between(l,l+xn,!0,!0)},Ke.prototype.startsWithIgnoreCase=function(l){return l===""?this.startsWith(l):Ki(this,function(u,h){return u.indexOf(h[0])===0},[l],xn)},Ke.prototype.equalsIgnoreCase=function(l){return Ki(this,function(u,h){return u===h[0]},[l],"")},Ke.prototype.anyOfIgnoreCase=function(){var l=pe.apply(De,arguments);return l.length===0?Zn(this):Ki(this,function(u,h){return h.indexOf(u)!==-1},l,"")},Ke.prototype.startsWithAnyOfIgnoreCase=function(){var l=pe.apply(De,arguments);return l.length===0?Zn(this):Ki(this,function(u,h){return h.some(function(m){return u.indexOf(m)===0})},l,xn)},Ke.prototype.anyOf=function(){var l=this,u=pe.apply(De,arguments),h=this._cmp;try{u.sort(h)}catch{return vt(this,Wt)}if(u.length===0)return Zn(this);var m=new this.Collection(this,function(){return sn(u[0],u[u.length-1])});m._ondirectionchange=function(w){h=w==="next"?l._ascending:l._descending,u.sort(h)};var g=0;return m._addAlgorithm(function(w,x,S){for(var A=w.key;0<h(A,u[g]);)if(++g===u.length)return x(S),!1;return h(A,u[g])===0||(x(function(){w.continue(u[g])}),!1)}),m},Ke.prototype.notEqual=function(l){return this.inAnyRange([[-1/0,l],[l,this.db._maxKey]],{includeLowers:!1,includeUppers:!1})},Ke.prototype.noneOf=function(){var l=pe.apply(De,arguments);if(l.length===0)return new this.Collection(this);try{l.sort(this._ascending)}catch{return vt(this,Wt)}var u=l.reduce(function(h,m){return h?h.concat([[h[h.length-1][1],m]]):[[-1/0,m]]},null);return u.push([l[l.length-1],this.db._maxKey]),this.inAnyRange(u,{includeLowers:!1,includeUppers:!1})},Ke.prototype.inAnyRange=function(F,u){var h=this,m=this._cmp,g=this._ascending,w=this._descending,x=this._min,S=this._max;if(F.length===0)return Zn(this);if(!F.every(function(U){return U[0]!==void 0&&U[1]!==void 0&&g(U[0],U[1])<=0}))return vt(this,"First argument to inAnyRange() must be an Array of two-value Arrays [lower,upper] where upper must not be lower than lower",fe.InvalidArgument);var A=!u||u.includeLowers!==!1,O=u&&u.includeUppers===!0,P,E=g;function N(U,B){return E(U[0],B[0])}try{(P=F.reduce(function(U,B){for(var G=0,Z=U.length;G<Z;++G){var oe=U[G];if(m(B[0],oe[1])<0&&0<m(B[1],oe[0])){oe[0]=x(oe[0],B[0]),oe[1]=S(oe[1],B[1]);break}}return G===Z&&U.push(B),U},[])).sort(N)}catch{return vt(this,Wt)}var R=0,M=O?function(U){return 0<g(U,P[R][1])}:function(U){return 0<=g(U,P[R][1])},z=A?function(U){return 0<w(U,P[R][0])}:function(U){return 0<=w(U,P[R][0])},L=M,F=new this.Collection(this,function(){return sn(P[0][0],P[P.length-1][1],!A,!O)});return F._ondirectionchange=function(U){E=U==="next"?(L=M,g):(L=z,w),P.sort(N)},F._addAlgorithm(function(U,B,G){for(var Z,oe=U.key;L(oe);)if(++R===P.length)return B(G),!1;return!M(Z=oe)&&!z(Z)||(h._cmp(oe,P[R][1])===0||h._cmp(oe,P[R][0])===0||B(function(){E===g?U.continue(P[R][0]):U.continue(P[R][1])}),!1)}),F},Ke.prototype.startsWithAnyOf=function(){var l=pe.apply(De,arguments);return l.every(function(u){return typeof u=="string"})?l.length===0?Zn(this):this.inAnyRange(l.map(function(u){return[u,u+xn]})):vt(this,"startsWithAnyOf() only works with strings")},Ke);function Ke(){}function Bt(l){return Me(function(u){return Ur(u),l(u.target.error),!1})}function Ur(l){l.stopPropagation&&l.stopPropagation(),l.preventDefault&&l.preventDefault()}var Br="storagemutated",ra="x-storagemutated-1",on=Nr(null,Br),Gg=(qt.prototype._lock=function(){return D(!he.global),++this._reculock,this._reculock!==1||he.global||(he.lockOwnerFor=this),this},qt.prototype._unlock=function(){if(D(!he.global),--this._reculock==0)for(he.global||(he.lockOwnerFor=null);0<this._blockedFuncs.length&&!this._locked();){var l=this._blockedFuncs.shift();try{$n(l[1],l[0])}catch{}}return this},qt.prototype._locked=function(){return this._reculock&&he.lockOwnerFor!==this},qt.prototype.create=function(l){var u=this;if(!this.mode)return this;var h=this.db.idbdb,m=this.db._state.dbOpenError;if(D(!this.idbtrans),!l&&!h)switch(m&&m.name){case"DatabaseClosedError":throw new fe.DatabaseClosed(m);case"MissingAPIError":throw new fe.MissingAPI(m.message,m);default:throw new fe.OpenFailed(m)}if(!this.active)throw new fe.TransactionInactive;return D(this._completion._state===null),(l=this.idbtrans=l||(this.db.core||h).transaction(this.storeNames,this.mode,{durability:this.chromeTransactionDurability})).onerror=Me(function(g){Ur(g),u._reject(l.error)}),l.onabort=Me(function(g){Ur(g),u.active&&u._reject(new fe.Abort(l.error)),u.active=!1,u.on("abort").fire(g)}),l.oncomplete=Me(function(){u.active=!1,u._resolve(),"mutatedParts"in l&&on.storagemutated.fire(l.mutatedParts)}),this},qt.prototype._promise=function(l,u,h){var m=this;if(l==="readwrite"&&this.mode!=="readwrite")return je(new fe.ReadOnly("Transaction is readonly"));if(!this.active)return je(new fe.TransactionInactive);if(this._locked())return new ce(function(w,x){m._blockedFuncs.push([function(){m._promise(l,u,h).then(w,x)},he])});if(h)return tn(function(){var w=new ce(function(x,S){m._lock();var A=u(x,S,m);A&&A.then&&A.then(x,S)});return w.finally(function(){return m._unlock()}),w._lib=!0,w});var g=new ce(function(w,x){var S=u(w,x,m);S&&S.then&&S.then(w,x)});return g._lib=!0,g},qt.prototype._root=function(){return this.parent?this.parent._root():this},qt.prototype.waitFor=function(l){var u,h=this._root(),m=ce.resolve(l);h._waitingFor?h._waitingFor=h._waitingFor.then(function(){return m}):(h._waitingFor=m,h._waitingQueue=[],u=h.idbtrans.objectStore(h.storeNames[0]),(function w(){for(++h._spinCount;h._waitingQueue.length;)h._waitingQueue.shift()();h._waitingFor&&(u.get(-1/0).onsuccess=w)})());var g=h._waitingFor;return new ce(function(w,x){m.then(function(S){return h._waitingQueue.push(Me(w.bind(null,S)))},function(S){return h._waitingQueue.push(Me(x.bind(null,S)))}).finally(function(){h._waitingFor===g&&(h._waitingFor=null)})})},qt.prototype.abort=function(){this.active&&(this.active=!1,this.idbtrans&&this.idbtrans.abort(),this._reject(new fe.Abort))},qt.prototype.table=function(l){var u=this._memoizedTables||(this._memoizedTables={});if(p(u,l))return u[l];var h=this.schema[l];if(!h)throw new fe.NotFound("Table "+l+" not part of transaction");return h=new this.db.Table(l,h,this),h.core=this.db.core.table(l),u[l]=h},qt);function qt(){}function ia(l,u,h,m,g,w,x){return{name:l,keyPath:u,unique:h,multi:m,auto:g,compound:w,src:(h&&!x?"&":"")+(m?"*":"")+(g?"++":"")+uu(u)}}function uu(l){return typeof l=="string"?l:l?"["+[].join.call(l,"+")+"]":""}function sa(l,u,h){return{name:l,primKey:u,indexes:h,mappedClass:null,idxByName:(m=function(g){return[g.name,g]},h.reduce(function(g,w,x){return x=m(w,x),x&&(g[x[0]]=x[1]),g},{}))};var m}var qr=function(l){try{return l.only([[]]),qr=function(){return[[]]},[[]]}catch{return qr=function(){return xn},xn}};function oa(l){return l==null?function(){}:typeof l=="string"?(u=l).split(".").length===1?function(h){return h[u]}:function(h){return W(h,u)}:function(h){return W(h,l)};var u}function du(l){return[].slice.call(l)}var Yg=0;function Hr(l){return l==null?":id":typeof l=="string"?l:"[".concat(l.join("+"),"]")}function Qg(l,u,A){function m(L){if(L.type===3)return null;if(L.type===4)throw new Error("Cannot convert never type to IDBKeyRange");var R=L.lower,M=L.upper,z=L.lowerOpen,L=L.upperOpen;return R===void 0?M===void 0?null:u.upperBound(M,!!L):M===void 0?u.lowerBound(R,!!z):u.bound(R,M,!!z,!!L)}function g(N){var R,M=N.name;return{name:M,schema:N,mutate:function(z){var L=z.trans,F=z.type,U=z.keys,B=z.values,G=z.range;return new Promise(function(Z,oe){Z=Me(Z);var ee=L.objectStore(M),re=ee.keyPath==null,le=F==="put"||F==="add";if(!le&&F!=="delete"&&F!=="deleteRange")throw new Error("Invalid operation type: "+F);var se,ue=(U||B||{length:1}).length;if(U&&B&&U.length!==B.length)throw new Error("Given keys array must have same length as given values array.");if(ue===0)return Z({numFailures:0,failures:{},results:[],lastResult:void 0});function be(ot){++kt,Ur(ot)}var ve=[],ke=[],kt=0;if(F==="deleteRange"){if(G.type===4)return Z({numFailures:kt,failures:ke,results:[],lastResult:void 0});G.type===3?ve.push(se=ee.clear()):ve.push(se=ee.delete(m(G)))}else{var re=le?re?[B,U]:[B,null]:[U,null],ge=re[0],tt=re[1];if(le)for(var nt=0;nt<ue;++nt)ve.push(se=tt&&tt[nt]!==void 0?ee[F](ge[nt],tt[nt]):ee[F](ge[nt])),se.onerror=be;else for(nt=0;nt<ue;++nt)ve.push(se=ee[F](ge[nt])),se.onerror=be}function ss(ot){ot=ot.target.result,ve.forEach(function(_n,Sa){return _n.error!=null&&(ke[Sa]=_n.error)}),Z({numFailures:kt,failures:ke,results:F==="delete"?U:ve.map(function(_n){return _n.result}),lastResult:ot})}se.onerror=function(ot){be(ot),ss(ot)},se.onsuccess=ss})},getMany:function(z){var L=z.trans,F=z.keys;return new Promise(function(U,B){U=Me(U);for(var G,Z=L.objectStore(M),oe=F.length,ee=new Array(oe),re=0,le=0,se=function(ve){ve=ve.target,ee[ve._pos]=ve.result,++le===re&&U(ee)},ue=Bt(B),be=0;be<oe;++be)F[be]!=null&&((G=Z.get(F[be]))._pos=be,G.onsuccess=se,G.onerror=ue,++re);re===0&&U(ee)})},get:function(z){var L=z.trans,F=z.key;return new Promise(function(U,B){U=Me(U);var G=L.objectStore(M).get(F);G.onsuccess=function(Z){return U(Z.target.result)},G.onerror=Bt(B)})},query:(R=O,function(z){return new Promise(function(L,F){L=Me(L);var U,B,G,re=z.trans,Z=z.values,oe=z.limit,se=z.query,ee=oe===1/0?void 0:oe,le=se.index,se=se.range,re=re.objectStore(M),le=le.isPrimaryKey?re:re.index(le.name),se=m(se);if(oe===0)return L({result:[]});R?((ee=Z?le.getAll(se,ee):le.getAllKeys(se,ee)).onsuccess=function(ue){return L({result:ue.target.result})},ee.onerror=Bt(F)):(U=0,B=!Z&&"openKeyCursor"in le?le.openKeyCursor(se):le.openCursor(se),G=[],B.onsuccess=function(ue){var be=B.result;return be?(G.push(Z?be.value:be.primaryKey),++U===oe?L({result:G}):void be.continue()):L({result:G})},B.onerror=Bt(F))})}),openCursor:function(z){var L=z.trans,F=z.values,U=z.query,B=z.reverse,G=z.unique;return new Promise(function(Z,oe){Z=Me(Z);var le=U.index,ee=U.range,re=L.objectStore(M),re=le.isPrimaryKey?re:re.index(le.name),le=B?G?"prevunique":"prev":G?"nextunique":"next",se=!F&&"openKeyCursor"in re?re.openKeyCursor(m(ee),le):re.openCursor(m(ee),le);se.onerror=Bt(oe),se.onsuccess=Me(function(ue){var be,ve,ke,kt,ge=se.result;ge?(ge.___id=++Yg,ge.done=!1,be=ge.continue.bind(ge),ve=(ve=ge.continuePrimaryKey)&&ve.bind(ge),ke=ge.advance.bind(ge),kt=function(){throw new Error("Cursor not stopped")},ge.trans=L,ge.stop=ge.continue=ge.continuePrimaryKey=ge.advance=function(){throw new Error("Cursor not started")},ge.fail=Me(oe),ge.next=function(){var tt=this,nt=1;return this.start(function(){return nt--?tt.continue():tt.stop()}).then(function(){return tt})},ge.start=function(tt){function nt(){if(se.result)try{tt()}catch(ot){ge.fail(ot)}else ge.done=!0,ge.start=function(){throw new Error("Cursor behind last entry")},ge.stop()}var ss=new Promise(function(ot,_n){ot=Me(ot),se.onerror=Bt(_n),ge.fail=_n,ge.stop=function(Sa){ge.stop=ge.continue=ge.continuePrimaryKey=ge.advance=kt,ot(Sa)}});return se.onsuccess=Me(function(ot){se.onsuccess=nt,nt()}),ge.continue=be,ge.continuePrimaryKey=ve,ge.advance=ke,nt(),ss},Z(ge)):Z(null)},oe)})},count:function(z){var L=z.query,F=z.trans,U=L.index,B=L.range;return new Promise(function(G,Z){var oe=F.objectStore(M),ee=U.isPrimaryKey?oe:oe.index(U.name),oe=m(B),ee=oe?ee.count(oe):ee.count();ee.onsuccess=Me(function(re){return G(re.target.result)}),ee.onerror=Bt(Z)})}}}var w,x,S,P=(x=A,S=du((w=l).objectStoreNames),{schema:{name:w.name,tables:S.map(function(N){return x.objectStore(N)}).map(function(N){var R=N.keyPath,L=N.autoIncrement,M=a(R),z={},L={name:N.name,primaryKey:{name:null,isPrimaryKey:!0,outbound:R==null,compound:M,keyPath:R,autoIncrement:L,unique:!0,extractKey:oa(R)},indexes:du(N.indexNames).map(function(F){return N.index(F)}).map(function(G){var U=G.name,B=G.unique,Z=G.multiEntry,G=G.keyPath,Z={name:U,compound:a(G),keyPath:G,unique:B,multiEntry:Z,extractKey:oa(G)};return z[Hr(G)]=Z}),getIndexByKeyPath:function(F){return z[Hr(F)]}};return z[":id"]=L.primaryKey,R!=null&&(z[Hr(R)]=L.primaryKey),L})},hasGetAll:0<S.length&&"getAll"in x.objectStore(S[0])&&!(typeof navigator<"u"&&/Safari/.test(navigator.userAgent)&&!/(Chrome\/|Edge\/)/.test(navigator.userAgent)&&[].concat(navigator.userAgent.match(/Safari\/(\d*)/))[1]<604)}),A=P.schema,O=P.hasGetAll,P=A.tables.map(g),E={};return P.forEach(function(N){return E[N.name]=N}),{stack:"dbcore",transaction:l.transaction.bind(l),table:function(N){if(!E[N])throw new Error("Table '".concat(N,"' not found"));return E[N]},MIN_KEY:-1/0,MAX_KEY:qr(u),schema:A}}function Jg(l,u,h,m){var g=h.IDBKeyRange;return h.indexedDB,{dbcore:(m=Qg(u,g,m),l.dbcore.reduce(function(w,x){return x=x.create,r(r({},w),x(w))},m))}}function Wi(l,m){var h=m.db,m=Jg(l._middlewares,h,l._deps,m);l.core=m.dbcore,l.tables.forEach(function(g){var w=g.name;l.core.schema.tables.some(function(x){return x.name===w})&&(g.core=l.core.table(w),l[w]instanceof l.Table&&(l[w].core=g.core))})}function Gi(l,u,h,m){h.forEach(function(g){var w=m[g];u.forEach(function(x){var S=(function A(O,P){return C(O,P)||(O=d(O))&&A(O,P)})(x,g);(!S||"value"in S&&S.value===void 0)&&(x===l.Transaction.prototype||x instanceof l.Transaction?$(x,g,{get:function(){return this.table(g)},set:function(A){y(this,g,{value:A,writable:!0,configurable:!0,enumerable:!0})}}):x[g]=new l.Table(g,w))})})}function aa(l,u){u.forEach(function(h){for(var m in h)h[m]instanceof l.Table&&delete h[m]})}function Xg(l,u){return l._cfg.version-u._cfg.version}function Zg(l,u,h,m){var g=l._dbSchema;h.objectStoreNames.contains("$meta")&&!g.$meta&&(g.$meta=sa("$meta",fu("")[0],[]),l._storeNames.push("$meta"));var w=l._createTransaction("readwrite",l._storeNames,g);w.create(h),w._completion.catch(m);var x=w._reject.bind(w),S=he.transless||he;tn(function(){return he.trans=w,he.transless=S,u!==0?(Wi(l,h),O=u,((A=w).storeNames.includes("$meta")?A.table("$meta").get("version").then(function(P){return P??O}):ce.resolve(O)).then(function(P){return N=P,R=w,M=h,z=[],P=(E=l)._versions,L=E._dbSchema=Qi(0,E.idbdb,M),(P=P.filter(function(F){return F._cfg.version>=N})).length!==0?(P.forEach(function(F){z.push(function(){var U=L,B=F._cfg.dbschema;Ji(E,U,M),Ji(E,B,M),L=E._dbSchema=B;var G=la(U,B);G.add.forEach(function(le){ca(M,le[0],le[1].primKey,le[1].indexes)}),G.change.forEach(function(le){if(le.recreate)throw new fe.Upgrade("Not yet support for changing primary key");var se=M.objectStore(le.name);le.add.forEach(function(ue){return Yi(se,ue)}),le.change.forEach(function(ue){se.deleteIndex(ue.name),Yi(se,ue)}),le.del.forEach(function(ue){return se.deleteIndex(ue)})});var Z=F._cfg.contentUpgrade;if(Z&&F._cfg.version>N){Wi(E,M),R._memoizedTables={};var oe=V(B);G.del.forEach(function(le){oe[le]=U[le]}),aa(E,[E.Transaction.prototype]),Gi(E,[E.Transaction.prototype],o(oe),oe),R.schema=oe;var ee,re=yt(Z);return re&&Qn(),G=ce.follow(function(){var le;(ee=Z(R))&&re&&(le=nn.bind(null,null),ee.then(le,le))}),ee&&typeof ee.then=="function"?ce.resolve(ee):G.then(function(){return ee})}}),z.push(function(U){var B,G,Z=F._cfg.dbschema;B=Z,G=U,[].slice.call(G.db.objectStoreNames).forEach(function(oe){return B[oe]==null&&G.db.deleteObjectStore(oe)}),aa(E,[E.Transaction.prototype]),Gi(E,[E.Transaction.prototype],E._storeNames,E._dbSchema),R.schema=E._dbSchema}),z.push(function(U){E.idbdb.objectStoreNames.contains("$meta")&&(Math.ceil(E.idbdb.version/10)===F._cfg.version?(E.idbdb.deleteObjectStore("$meta"),delete E._dbSchema.$meta,E._storeNames=E._storeNames.filter(function(B){return B!=="$meta"})):U.objectStore("$meta").put(F._cfg.version,"version"))})}),(function F(){return z.length?ce.resolve(z.shift()(R.idbtrans)).then(F):ce.resolve()})().then(function(){hu(L,M)})):ce.resolve();var E,N,R,M,z,L}).catch(x)):(o(g).forEach(function(P){ca(h,P,g[P].primKey,g[P].indexes)}),Wi(l,h),void ce.follow(function(){return l.on.populate.fire(w)}).catch(x));var A,O})}function eb(l,u){hu(l._dbSchema,u),u.db.version%10!=0||u.objectStoreNames.contains("$meta")||u.db.createObjectStore("$meta").add(Math.ceil(u.db.version/10-1),"version");var h=Qi(0,l.idbdb,u);Ji(l,l._dbSchema,u);for(var m=0,g=la(h,l._dbSchema).change;m<g.length;m++){var w=(function(x){if(x.change.length||x.recreate)return console.warn("Unable to patch indexes of table ".concat(x.name," because it has changes on the type of index or primary key.")),{value:void 0};var S=u.objectStore(x.name);x.add.forEach(function(A){Ut&&console.debug("Dexie upgrade patch: Creating missing index ".concat(x.name,".").concat(A.src)),Yi(S,A)})})(g[m]);if(typeof w=="object")return w.value}}function la(l,u){var h,m={del:[],add:[],change:[]};for(h in l)u[h]||m.del.push(h);for(h in u){var g=l[h],w=u[h];if(g){var x={name:h,def:w,recreate:!1,del:[],add:[],change:[]};if(""+(g.primKey.keyPath||"")!=""+(w.primKey.keyPath||"")||g.primKey.auto!==w.primKey.auto)x.recreate=!0,m.change.push(x);else{var S=g.idxByName,A=w.idxByName,O=void 0;for(O in S)A[O]||x.del.push(O);for(O in A){var P=S[O],E=A[O];P?P.src!==E.src&&x.change.push(E):x.add.push(E)}(0<x.del.length||0<x.add.length||0<x.change.length)&&m.change.push(x)}}else m.add.push([h,w])}return m}function ca(l,u,h,m){var g=l.db.createObjectStore(u,h.keyPath?{keyPath:h.keyPath,autoIncrement:h.auto}:{autoIncrement:h.auto});return m.forEach(function(w){return Yi(g,w)}),g}function hu(l,u){o(l).forEach(function(h){u.db.objectStoreNames.contains(h)||(Ut&&console.debug("Dexie: Creating missing table",h),ca(u,h,l[h].primKey,l[h].indexes))})}function Yi(l,u){l.createIndex(u.name,u.keyPath,{unique:u.unique,multiEntry:u.multi})}function Qi(l,u,h){var m={};return T(u.objectStoreNames,0).forEach(function(g){for(var w=h.objectStore(g),x=ia(uu(O=w.keyPath),O||"",!0,!1,!!w.autoIncrement,O&&typeof O!="string",!0),S=[],A=0;A<w.indexNames.length;++A){var P=w.index(w.indexNames[A]),O=P.keyPath,P=ia(P.name,O,!!P.unique,!!P.multiEntry,!1,O&&typeof O!="string",!1);S.push(P)}m[g]=sa(g,x,S)}),m}function Ji(l,u,h){for(var m=h.db.objectStoreNames,g=0;g<m.length;++g){var w=m[g],x=h.objectStore(w);l._hasGetAll="getAll"in x;for(var S=0;S<x.indexNames.length;++S){var A=x.indexNames[S],O=x.index(A).keyPath,P=typeof O=="string"?O:"["+T(O).join("+")+"]";!u[w]||(O=u[w].idxByName[P])&&(O.name=A,delete u[w].idxByName[P],u[w].idxByName[A]=O)}}typeof navigator<"u"&&/Safari/.test(navigator.userAgent)&&!/(Chrome\/|Edge\/)/.test(navigator.userAgent)&&s.WorkerGlobalScope&&s instanceof s.WorkerGlobalScope&&[].concat(navigator.userAgent.match(/Safari\/(\d*)/))[1]<604&&(l._hasGetAll=!1)}function fu(l){return l.split(",").map(function(u,h){var m=(u=u.trim()).replace(/([&*]|\+\+)/g,""),g=/^\[/.test(m)?m.match(/^\[(.*)\]$/)[1].split("+"):m;return ia(m,g||null,/\&/.test(u),/\*/.test(u),/\+\+/.test(u),a(g),h===0)})}var tb=(Xi.prototype._parseStoresSpec=function(l,u){o(l).forEach(function(h){if(l[h]!==null){var m=fu(l[h]),g=m.shift();if(g.unique=!0,g.multi)throw new fe.Schema("Primary key cannot be multi-valued");m.forEach(function(w){if(w.auto)throw new fe.Schema("Only primary key can be marked as autoIncrement (++)");if(!w.keyPath)throw new fe.Schema("Index must have a name and cannot be an empty string")}),u[h]=sa(h,g,m)}})},Xi.prototype.stores=function(h){var u=this.db;this._cfg.storesSource=this._cfg.storesSource?c(this._cfg.storesSource,h):h;var h=u._versions,m={},g={};return h.forEach(function(w){c(m,w._cfg.storesSource),g=w._cfg.dbschema={},w._parseStoresSpec(m,g)}),u._dbSchema=g,aa(u,[u._allTables,u,u.Transaction.prototype]),Gi(u,[u._allTables,u,u.Transaction.prototype,this._cfg.tables],o(g),g),u._storeNames=o(g),this},Xi.prototype.upgrade=function(l){return this._cfg.contentUpgrade=qo(this._cfg.contentUpgrade||Te,l),this},Xi);function Xi(){}function ua(l,u){var h=l._dbNamesDB;return h||(h=l._dbNamesDB=new Yt(Bi,{addons:[],indexedDB:l,IDBKeyRange:u})).version(1).stores({dbnames:"name"}),h.table("dbnames")}function da(l){return l&&typeof l.databases=="function"}function ha(l){return tn(function(){return he.letThrough=!0,l()})}function fa(l){return!("from"in l)}var et=function(l,u){if(!this){var h=new et;return l&&"d"in l&&c(h,l),h}c(this,arguments.length?{d:1,from:l,to:1<arguments.length?u:l}:{d:0})};function Vr(l,u,h){var m=Ce(u,h);if(!isNaN(m)){if(0<m)throw RangeError();if(fa(l))return c(l,{from:u,to:h,d:1});var g=l.l,m=l.r;if(Ce(h,l.from)<0)return g?Vr(g,u,h):l.l={from:u,to:h,d:1,l:null,r:null},mu(l);if(0<Ce(u,l.to))return m?Vr(m,u,h):l.r={from:u,to:h,d:1,l:null,r:null},mu(l);Ce(u,l.from)<0&&(l.from=u,l.l=null,l.d=m?m.d+1:1),0<Ce(h,l.to)&&(l.to=h,l.r=null,l.d=l.l?l.l.d+1:1),h=!l.r,g&&!l.l&&Kr(l,g),m&&h&&Kr(l,m)}}function Kr(l,u){fa(u)||(function h(m,A){var w=A.from,x=A.to,S=A.l,A=A.r;Vr(m,w,x),S&&h(m,S),A&&h(m,A)})(l,u)}function pu(l,u){var h=Zi(u),m=h.next();if(m.done)return!1;for(var g=m.value,w=Zi(l),x=w.next(g.from),S=x.value;!m.done&&!x.done;){if(Ce(S.from,g.to)<=0&&0<=Ce(S.to,g.from))return!0;Ce(g.from,S.from)<0?g=(m=h.next(S.from)).value:S=(x=w.next(g.from)).value}return!1}function Zi(l){var u=fa(l)?null:{s:0,n:l};return{next:function(h){for(var m=0<arguments.length;u;)switch(u.s){case 0:if(u.s=1,m)for(;u.n.l&&Ce(h,u.n.from)<0;)u={up:u,n:u.n.l,s:1};else for(;u.n.l;)u={up:u,n:u.n.l,s:1};case 1:if(u.s=2,!m||Ce(h,u.n.to)<=0)return{value:u.n,done:!1};case 2:if(u.n.r){u.s=3,u={up:u,n:u.n.r,s:0};continue}case 3:u=u.up}return{done:!0}}}}function mu(l){var u,h,m=(((u=l.r)===null||u===void 0?void 0:u.d)||0)-(((h=l.l)===null||h===void 0?void 0:h.d)||0),g=1<m?"r":m<-1?"l":"";g&&(u=g=="r"?"l":"r",h=r({},l),m=l[g],l.from=m.from,l.to=m.to,l[g]=m[g],h[g]=m[u],(l[u]=h).d=gu(h)),l.d=gu(l)}function gu(h){var u=h.r,h=h.l;return(u?h?Math.max(u.d,h.d):u.d:h?h.d:0)+1}function es(l,u){return o(u).forEach(function(h){l[h]?Kr(l[h],u[h]):l[h]=(function m(g){var w,x,S={};for(w in g)p(g,w)&&(x=g[w],S[w]=!x||typeof x!="object"||de.has(x.constructor)?x:m(x));return S})(u[h])}),l}function pa(l,u){return l.all||u.all||Object.keys(l).some(function(h){return u[h]&&pu(u[h],l[h])})}b(et.prototype,((_t={add:function(l){return Kr(this,l),this},addKey:function(l){return Vr(this,l,l),this},addKeys:function(l){var u=this;return l.forEach(function(h){return Vr(u,h,h)}),this},hasKey:function(l){var u=Zi(this).next(l).value;return u&&Ce(u.from,l)<=0&&0<=Ce(u.to,l)}})[ae]=function(){return Zi(this)},_t));var Cn={},ma={},ga=!1;function ts(l){es(ma,l),ga||(ga=!0,setTimeout(function(){ga=!1,ba(ma,!(ma={}))},0))}function ba(l,u){u===void 0&&(u=!1);var h=new Set;if(l.all)for(var m=0,g=Object.values(Cn);m<g.length;m++)bu(x=g[m],l,h,u);else for(var w in l){var x,S=/^idb\:\/\/(.*)\/(.*)\//.exec(w);S&&(w=S[1],S=S[2],(x=Cn["idb://".concat(w,"/").concat(S)])&&bu(x,l,h,u))}h.forEach(function(A){return A()})}function bu(l,u,h,m){for(var g=[],w=0,x=Object.entries(l.queries.query);w<x.length;w++){for(var S=x[w],A=S[0],O=[],P=0,E=S[1];P<E.length;P++){var N=E[P];pa(u,N.obsSet)?N.subscribers.forEach(function(L){return h.add(L)}):m&&O.push(N)}m&&g.push([A,O])}if(m)for(var R=0,M=g;R<M.length;R++){var z=M[R],A=z[0],O=z[1];l.queries.query[A]=O}}function nb(l){var u=l._state,h=l._deps.indexedDB;if(u.isBeingOpened||l.idbdb)return u.dbReadyPromise.then(function(){return u.dbOpenError?je(u.dbOpenError):l});u.isBeingOpened=!0,u.dbOpenError=null,u.openComplete=!1;var m=u.openCanceller,g=Math.round(10*l.verno),w=!1;function x(){if(u.openCanceller!==m)throw new fe.DatabaseClosed("db.open() was cancelled")}function S(){return new ce(function(N,R){if(x(),!h)throw new fe.MissingAPI;var M=l.name,z=u.autoSchema||!g?h.open(M):h.open(M,g);if(!z)throw new fe.MissingAPI;z.onerror=Bt(R),z.onblocked=Me(l._fireOnBlocked),z.onupgradeneeded=Me(function(L){var F;P=z.transaction,u.autoSchema&&!l._options.allowEmptyDB?(z.onerror=Ur,P.abort(),z.result.close(),(F=h.deleteDatabase(M)).onsuccess=F.onerror=Me(function(){R(new fe.NoSuchDatabase("Database ".concat(M," doesnt exist")))})):(P.onerror=Bt(R),L=L.oldVersion>Math.pow(2,62)?0:L.oldVersion,E=L<1,l.idbdb=z.result,w&&eb(l,P),Zg(l,L/10,P,R))},R),z.onsuccess=Me(function(){P=null;var L,F,U,B,G,Z=l.idbdb=z.result,oe=T(Z.objectStoreNames);if(0<oe.length)try{var ee=Z.transaction((B=oe).length===1?B[0]:B,"readonly");if(u.autoSchema)F=Z,U=ee,(L=l).verno=F.version/10,U=L._dbSchema=Qi(0,F,U),L._storeNames=T(F.objectStoreNames,0),Gi(L,[L._allTables],o(U),U);else if(Ji(l,l._dbSchema,ee),((G=la(Qi(0,(G=l).idbdb,ee),G._dbSchema)).add.length||G.change.some(function(re){return re.add.length||re.change.length}))&&!w)return console.warn("Dexie SchemaDiff: Schema was extended without increasing the number passed to db.version(). Dexie will add missing parts and increment native version number to workaround this."),Z.close(),g=Z.version+1,w=!0,N(S());Wi(l,ee)}catch{}Jn.push(l),Z.onversionchange=Me(function(re){u.vcFired=!0,l.on("versionchange").fire(re)}),Z.onclose=Me(function(re){l.on("close").fire(re)}),E&&(G=l._deps,ee=M,Z=G.indexedDB,G=G.IDBKeyRange,da(Z)||ee===Bi||ua(Z,G).put({name:ee}).catch(Te)),N()},R)}).catch(function(N){switch(N?.name){case"UnknownError":if(0<u.PR1398_maxLoop)return u.PR1398_maxLoop--,console.warn("Dexie: Workaround for Chrome UnknownError on open()"),S();break;case"VersionError":if(0<g)return g=0,S()}return ce.reject(N)})}var A,O=u.dbReadyResolve,P=null,E=!1;return ce.race([m,(typeof navigator>"u"?ce.resolve():!navigator.userAgentData&&/Safari\//.test(navigator.userAgent)&&!/Chrom(e|ium)\//.test(navigator.userAgent)&&indexedDB.databases?new Promise(function(N){function R(){return indexedDB.databases().finally(N)}A=setInterval(R,100),R()}).finally(function(){return clearInterval(A)}):Promise.resolve()).then(S)]).then(function(){return x(),u.onReadyBeingFired=[],ce.resolve(ha(function(){return l.on.ready.fire(l.vip)})).then(function N(){if(0<u.onReadyBeingFired.length){var R=u.onReadyBeingFired.reduce(qo,Te);return u.onReadyBeingFired=[],ce.resolve(ha(function(){return R(l.vip)})).then(N)}})}).finally(function(){u.openCanceller===m&&(u.onReadyBeingFired=null,u.isBeingOpened=!1)}).catch(function(N){u.dbOpenError=N;try{P&&P.abort()}catch{}return m===u.openCanceller&&l._close(),je(N)}).finally(function(){u.openComplete=!0,O()}).then(function(){var N;return E&&(N={},l.tables.forEach(function(R){R.schema.indexes.forEach(function(M){M.name&&(N["idb://".concat(l.name,"/").concat(R.name,"/").concat(M.name)]=new et(-1/0,[[[]]]))}),N["idb://".concat(l.name,"/").concat(R.name,"/")]=N["idb://".concat(l.name,"/").concat(R.name,"/:dels")]=new et(-1/0,[[[]]])}),on(Br).fire(N),ba(N,!0)),l})}function wa(l){function u(w){return l.next(w)}var h=g(u),m=g(function(w){return l.throw(w)});function g(w){return function(A){var S=w(A),A=S.value;return S.done?A:A&&typeof A.then=="function"?A.then(h,m):a(A)?Promise.all(A).then(h,m):h(A)}}return g(u)()}function ns(l,u,h){for(var m=a(l)?l.slice():[l],g=0;g<h;++g)m.push(u);return m}var rb={stack:"dbcore",name:"VirtualIndexMiddleware",level:1,create:function(l){return r(r({},l),{table:function(u){var h=l.table(u),m=h.schema,g={},w=[];function x(E,N,R){var M=Hr(E),z=g[M]=g[M]||[],L=E==null?0:typeof E=="string"?1:E.length,F=0<N,F=r(r({},R),{name:F?"".concat(M,"(virtual-from:").concat(R.name,")"):R.name,lowLevelIndex:R,isVirtual:F,keyTail:N,keyLength:L,extractKey:oa(E),unique:!F&&R.unique});return z.push(F),F.isPrimaryKey||w.push(F),1<L&&x(L===2?E[0]:E.slice(0,L-1),N+1,R),z.sort(function(U,B){return U.keyTail-B.keyTail}),F}u=x(m.primaryKey.keyPath,0,m.primaryKey),g[":id"]=[u];for(var S=0,A=m.indexes;S<A.length;S++){var O=A[S];x(O.keyPath,0,O)}function P(E){var N,R=E.query.index;return R.isVirtual?r(r({},E),{query:{index:R.lowLevelIndex,range:(N=E.query.range,R=R.keyTail,{type:N.type===1?2:N.type,lower:ns(N.lower,N.lowerOpen?l.MAX_KEY:l.MIN_KEY,R),lowerOpen:!0,upper:ns(N.upper,N.upperOpen?l.MIN_KEY:l.MAX_KEY,R),upperOpen:!0})}}):E}return r(r({},h),{schema:r(r({},m),{primaryKey:u,indexes:w,getIndexByKeyPath:function(E){return(E=g[Hr(E)])&&E[0]}}),count:function(E){return h.count(P(E))},query:function(E){return h.query(P(E))},openCursor:function(E){var N=E.query.index,R=N.keyTail,M=N.isVirtual,z=N.keyLength;return M?h.openCursor(P(E)).then(function(F){return F&&L(F)}):h.openCursor(E);function L(F){return Object.create(F,{continue:{value:function(U){U!=null?F.continue(ns(U,E.reverse?l.MAX_KEY:l.MIN_KEY,R)):E.unique?F.continue(F.key.slice(0,z).concat(E.reverse?l.MIN_KEY:l.MAX_KEY,R)):F.continue()}},continuePrimaryKey:{value:function(U,B){F.continuePrimaryKey(ns(U,l.MAX_KEY,R),B)}},primaryKey:{get:function(){return F.primaryKey}},key:{get:function(){var U=F.key;return z===1?U[0]:U.slice(0,z)}},value:{get:function(){return F.value}}})}}})}})}};function ya(l,u,h,m){return h=h||{},m=m||"",o(l).forEach(function(g){var w,x,S;p(u,g)?(w=l[g],x=u[g],typeof w=="object"&&typeof x=="object"&&w&&x?(S=Q(w))!==Q(x)?h[m+g]=u[g]:S==="Object"?ya(w,x,h,m+g+"."):w!==x&&(h[m+g]=u[g]):w!==x&&(h[m+g]=u[g])):h[m+g]=void 0}),o(u).forEach(function(g){p(l,g)||(h[m+g]=u[g])}),h}function va(l,u){return u.type==="delete"?u.keys:u.keys||u.values.map(l.extractKey)}var ib={stack:"dbcore",name:"HooksMiddleware",level:2,create:function(l){return r(r({},l),{table:function(u){var h=l.table(u),m=h.schema.primaryKey;return r(r({},h),{mutate:function(g){var w=he.trans,x=w.table(u).hook,S=x.deleting,A=x.creating,O=x.updating;switch(g.type){case"add":if(A.fire===Te)break;return w._promise("readwrite",function(){return P(g)},!0);case"put":if(A.fire===Te&&O.fire===Te)break;return w._promise("readwrite",function(){return P(g)},!0);case"delete":if(S.fire===Te)break;return w._promise("readwrite",function(){return P(g)},!0);case"deleteRange":if(S.fire===Te)break;return w._promise("readwrite",function(){return(function E(N,R,M){return h.query({trans:N,values:!1,query:{index:m,range:R},limit:M}).then(function(z){var L=z.result;return P({type:"delete",keys:L,trans:N}).then(function(F){return 0<F.numFailures?Promise.reject(F.failures[0]):L.length<M?{failures:[],numFailures:0,lastResult:void 0}:E(N,r(r({},R),{lower:L[L.length-1],lowerOpen:!0}),M)})})})(g.trans,g.range,1e4)},!0)}return h.mutate(g);function P(E){var N,R,M,z=he.trans,L=E.keys||va(m,E);if(!L)throw new Error("Keys missing");return(E=E.type==="add"||E.type==="put"?r(r({},E),{keys:L}):r({},E)).type!=="delete"&&(E.values=i([],E.values)),E.keys&&(E.keys=i([],E.keys)),N=h,M=L,((R=E).type==="add"?Promise.resolve([]):N.getMany({trans:R.trans,keys:M,cache:"immutable"})).then(function(F){var U=L.map(function(B,G){var Z,oe,ee,re=F[G],le={onerror:null,onsuccess:null};return E.type==="delete"?S.fire.call(le,B,re,z):E.type==="add"||re===void 0?(Z=A.fire.call(le,B,E.values[G],z),B==null&&Z!=null&&(E.keys[G]=B=Z,m.outbound||I(E.values[G],m.keyPath,B))):(Z=ya(re,E.values[G]),(oe=O.fire.call(le,Z,B,re,z))&&(ee=E.values[G],Object.keys(oe).forEach(function(se){p(ee,se)?ee[se]=oe[se]:I(ee,se,oe[se])}))),le});return h.mutate(E).then(function(B){for(var G=B.failures,Z=B.results,oe=B.numFailures,B=B.lastResult,ee=0;ee<L.length;++ee){var re=(Z||L)[ee],le=U[ee];re==null?le.onerror&&le.onerror(G[ee]):le.onsuccess&&le.onsuccess(E.type==="put"&&F[ee]?E.values[ee]:re)}return{failures:G,results:Z,numFailures:oe,lastResult:B}}).catch(function(B){return U.forEach(function(G){return G.onerror&&G.onerror(B)}),Promise.reject(B)})})}}})}})}};function wu(l,u,h){try{if(!u||u.keys.length<l.length)return null;for(var m=[],g=0,w=0;g<u.keys.length&&w<l.length;++g)Ce(u.keys[g],l[w])===0&&(m.push(h?te(u.values[g]):u.values[g]),++w);return m.length===l.length?m:null}catch{return null}}var sb={stack:"dbcore",level:-1,create:function(l){return{table:function(u){var h=l.table(u);return r(r({},h),{getMany:function(m){if(!m.cache)return h.getMany(m);var g=wu(m.keys,m.trans._cache,m.cache==="clone");return g?ce.resolve(g):h.getMany(m).then(function(w){return m.trans._cache={keys:m.keys,values:m.cache==="clone"?te(w):w},w})},mutate:function(m){return m.type!=="add"&&(m.trans._cache=null),h.mutate(m)}})}}}};function yu(l,u){return l.trans.mode==="readonly"&&!!l.subscr&&!l.trans.explicit&&l.trans.db._options.cache!=="disabled"&&!u.schema.primaryKey.outbound}function vu(l,u){switch(l){case"query":return u.values&&!u.unique;case"get":case"getMany":case"count":case"openCursor":return!1}}var ob={stack:"dbcore",level:0,name:"Observability",create:function(l){var u=l.schema.name,h=new et(l.MIN_KEY,l.MAX_KEY);return r(r({},l),{transaction:function(m,g,w){if(he.subscr&&g!=="readonly")throw new fe.ReadOnly("Readwrite transaction in liveQuery context. Querier source: ".concat(he.querier));return l.transaction(m,g,w)},table:function(m){var g=l.table(m),w=g.schema,x=w.primaryKey,E=w.indexes,S=x.extractKey,A=x.outbound,O=x.autoIncrement&&E.filter(function(R){return R.compound&&R.keyPath.includes(x.keyPath)}),P=r(r({},g),{mutate:function(R){function M(se){return se="idb://".concat(u,"/").concat(m,"/").concat(se),B[se]||(B[se]=new et)}var z,L,F,U=R.trans,B=R.mutatedParts||(R.mutatedParts={}),G=M(""),Z=M(":dels"),oe=R.type,le=R.type==="deleteRange"?[R.range]:R.type==="delete"?[R.keys]:R.values.length<50?[va(x,R).filter(function(se){return se}),R.values]:[],ee=le[0],re=le[1],le=R.trans._cache;return a(ee)?(G.addKeys(ee),(le=oe==="delete"||ee.length===re.length?wu(ee,le):null)||Z.addKeys(ee),(le||re)&&(z=M,L=le,F=re,w.indexes.forEach(function(se){var ue=z(se.name||"");function be(ke){return ke!=null?se.extractKey(ke):null}function ve(ke){return se.multiEntry&&a(ke)?ke.forEach(function(kt){return ue.addKey(kt)}):ue.addKey(ke)}(L||F).forEach(function(ke,tt){var ge=L&&be(L[tt]),tt=F&&be(F[tt]);Ce(ge,tt)!==0&&(ge!=null&&ve(ge),tt!=null&&ve(tt))})}))):ee?(re={from:(re=ee.lower)!==null&&re!==void 0?re:l.MIN_KEY,to:(re=ee.upper)!==null&&re!==void 0?re:l.MAX_KEY},Z.add(re),G.add(re)):(G.add(h),Z.add(h),w.indexes.forEach(function(se){return M(se.name).add(h)})),g.mutate(R).then(function(se){return!ee||R.type!=="add"&&R.type!=="put"||(G.addKeys(se.results),O&&O.forEach(function(ue){for(var be=R.values.map(function(ge){return ue.extractKey(ge)}),ve=ue.keyPath.findIndex(function(ge){return ge===x.keyPath}),ke=0,kt=se.results.length;ke<kt;++ke)be[ke][ve]=se.results[ke];M(ue.name).addKeys(be)})),U.mutatedParts=es(U.mutatedParts||{},B),se})}}),E=function(M){var z=M.query,M=z.index,z=z.range;return[M,new et((M=z.lower)!==null&&M!==void 0?M:l.MIN_KEY,(z=z.upper)!==null&&z!==void 0?z:l.MAX_KEY)]},N={get:function(R){return[x,new et(R.key)]},getMany:function(R){return[x,new et().addKeys(R.keys)]},count:E,query:E,openCursor:E};return o(N).forEach(function(R){P[R]=function(M){var z=he.subscr,L=!!z,F=yu(he,g)&&vu(R,M)?M.obsSet={}:z;if(L){var U=function(re){return re="idb://".concat(u,"/").concat(m,"/").concat(re),F[re]||(F[re]=new et)},B=U(""),G=U(":dels"),z=N[R](M),L=z[0],z=z[1];if((R==="query"&&L.isPrimaryKey&&!M.values?G:U(L.name||"")).add(z),!L.isPrimaryKey){if(R!=="count"){var Z=R==="query"&&A&&M.values&&g.query(r(r({},M),{values:!1}));return g[R].apply(this,arguments).then(function(re){if(R==="query"){if(A&&M.values)return Z.then(function(be){return be=be.result,B.addKeys(be),re});var le=M.values?re.result.map(S):re.result;(M.values?B:G).addKeys(le)}else if(R==="openCursor"){var se=re,ue=M.values;return se&&Object.create(se,{key:{get:function(){return G.addKey(se.primaryKey),se.key}},primaryKey:{get:function(){var be=se.primaryKey;return G.addKey(be),be}},value:{get:function(){return ue&&B.addKey(se.primaryKey),se.value}}})}return re})}G.add(h)}}return g[R].apply(this,arguments)}}),P}})}};function ku(l,u,h){if(h.numFailures===0)return u;if(u.type==="deleteRange")return null;var m=u.keys?u.keys.length:"values"in u&&u.values?u.values.length:1;return h.numFailures===m?null:(u=r({},u),a(u.keys)&&(u.keys=u.keys.filter(function(g,w){return!(w in h.failures)})),"values"in u&&a(u.values)&&(u.values=u.values.filter(function(g,w){return!(w in h.failures)})),u)}function ka(l,u){return h=l,((m=u).lower===void 0||(m.lowerOpen?0<Ce(h,m.lower):0<=Ce(h,m.lower)))&&(l=l,(u=u).upper===void 0||(u.upperOpen?Ce(l,u.upper)<0:Ce(l,u.upper)<=0));var h,m}function $u(l,u,N,m,g,w){if(!N||N.length===0)return l;var x=u.query.index,S=x.multiEntry,A=u.query.range,O=m.schema.primaryKey.extractKey,P=x.extractKey,E=(x.lowLevelIndex||x).extractKey,N=N.reduce(function(R,M){var z=R,L=[];if(M.type==="add"||M.type==="put")for(var F=new et,U=M.values.length-1;0<=U;--U){var B,G=M.values[U],Z=O(G);F.hasKey(Z)||(B=P(G),(S&&a(B)?B.some(function(se){return ka(se,A)}):ka(B,A))&&(F.addKey(Z),L.push(G)))}switch(M.type){case"add":var oe=new et().addKeys(u.values?R.map(function(ue){return O(ue)}):R),z=R.concat(u.values?L.filter(function(ue){return ue=O(ue),!oe.hasKey(ue)&&(oe.addKey(ue),!0)}):L.map(function(ue){return O(ue)}).filter(function(ue){return!oe.hasKey(ue)&&(oe.addKey(ue),!0)}));break;case"put":var ee=new et().addKeys(M.values.map(function(ue){return O(ue)}));z=R.filter(function(ue){return!ee.hasKey(u.values?O(ue):ue)}).concat(u.values?L:L.map(function(ue){return O(ue)}));break;case"delete":var re=new et().addKeys(M.keys);z=R.filter(function(ue){return!re.hasKey(u.values?O(ue):ue)});break;case"deleteRange":var le=M.range;z=R.filter(function(ue){return!ka(O(ue),le)})}return z},l);return N===l?l:(N.sort(function(R,M){return Ce(E(R),E(M))||Ce(O(R),O(M))}),u.limit&&u.limit<1/0&&(N.length>u.limit?N.length=u.limit:l.length===u.limit&&N.length<u.limit&&(g.dirty=!0)),w?Object.freeze(N):N)}function xu(l,u){return Ce(l.lower,u.lower)===0&&Ce(l.upper,u.upper)===0&&!!l.lowerOpen==!!u.lowerOpen&&!!l.upperOpen==!!u.upperOpen}function ab(l,u){return(function(h,m,g,w){if(h===void 0)return m!==void 0?-1:0;if(m===void 0)return 1;if((m=Ce(h,m))===0){if(g&&w)return 0;if(g)return 1;if(w)return-1}return m})(l.lower,u.lower,l.lowerOpen,u.lowerOpen)<=0&&0<=(function(h,m,g,w){if(h===void 0)return m!==void 0?1:0;if(m===void 0)return-1;if((m=Ce(h,m))===0){if(g&&w)return 0;if(g)return-1;if(w)return 1}return m})(l.upper,u.upper,l.upperOpen,u.upperOpen)}function lb(l,u,h,m){l.subscribers.add(h),m.addEventListener("abort",function(){var g,w;l.subscribers.delete(h),l.subscribers.size===0&&(g=l,w=u,setTimeout(function(){g.subscribers.size===0&&xe(w,g)},3e3))})}var cb={stack:"dbcore",level:0,name:"Cache",create:function(l){var u=l.schema.name;return r(r({},l),{transaction:function(h,m,g){var w,x,S=l.transaction(h,m,g);return m==="readwrite"&&(x=(w=new AbortController).signal,g=function(A){return function(){if(w.abort(),m==="readwrite"){for(var O=new Set,P=0,E=h;P<E.length;P++){var N=E[P],R=Cn["idb://".concat(u,"/").concat(N)];if(R){var M=l.table(N),z=R.optimisticOps.filter(function(ue){return ue.trans===S});if(S._explicit&&A&&S.mutatedParts)for(var L=0,F=Object.values(R.queries.query);L<F.length;L++)for(var U=0,B=(oe=F[L]).slice();U<B.length;U++)pa((ee=B[U]).obsSet,S.mutatedParts)&&(xe(oe,ee),ee.subscribers.forEach(function(ue){return O.add(ue)}));else if(0<z.length){R.optimisticOps=R.optimisticOps.filter(function(ue){return ue.trans!==S});for(var G=0,Z=Object.values(R.queries.query);G<Z.length;G++)for(var oe,ee,re,le=0,se=(oe=Z[G]).slice();le<se.length;le++)(ee=se[le]).res!=null&&S.mutatedParts&&(A&&!ee.dirty?(re=Object.isFrozen(ee.res),re=$u(ee.res,ee.req,z,M,ee,re),ee.dirty?(xe(oe,ee),ee.subscribers.forEach(function(ue){return O.add(ue)})):re!==ee.res&&(ee.res=re,ee.promise=ce.resolve({result:re}))):(ee.dirty&&xe(oe,ee),ee.subscribers.forEach(function(ue){return O.add(ue)})))}}}O.forEach(function(ue){return ue()})}}},S.addEventListener("abort",g(!1),{signal:x}),S.addEventListener("error",g(!1),{signal:x}),S.addEventListener("complete",g(!0),{signal:x})),S},table:function(h){var m=l.table(h),g=m.schema.primaryKey;return r(r({},m),{mutate:function(w){var x=he.trans;if(g.outbound||x.db._options.cache==="disabled"||x.explicit||x.idbtrans.mode!=="readwrite")return m.mutate(w);var S=Cn["idb://".concat(u,"/").concat(h)];return S?(x=m.mutate(w),w.type!=="add"&&w.type!=="put"||!(50<=w.values.length||va(g,w).some(function(A){return A==null}))?(S.optimisticOps.push(w),w.mutatedParts&&ts(w.mutatedParts),x.then(function(A){0<A.numFailures&&(xe(S.optimisticOps,w),(A=ku(0,w,A))&&S.optimisticOps.push(A),w.mutatedParts&&ts(w.mutatedParts))}),x.catch(function(){xe(S.optimisticOps,w),w.mutatedParts&&ts(w.mutatedParts)})):x.then(function(A){var O=ku(0,r(r({},w),{values:w.values.map(function(P,E){var N;return A.failures[E]?P:(P=(N=g.keyPath)!==null&&N!==void 0&&N.includes(".")?te(P):r({},P),I(P,g.keyPath,A.results[E]),P)})}),A);S.optimisticOps.push(O),queueMicrotask(function(){return w.mutatedParts&&ts(w.mutatedParts)})}),x):m.mutate(w)},query:function(w){if(!yu(he,m)||!vu("query",w))return m.query(w);var x=((O=he.trans)===null||O===void 0?void 0:O.db._options.cache)==="immutable",E=he,S=E.requery,A=E.signal,O=(function(M,z,L,F){var U=Cn["idb://".concat(M,"/").concat(z)];if(!U)return[];if(!(z=U.queries[L]))return[null,!1,U,null];var B=z[(F.query?F.query.index.name:null)||""];if(!B)return[null,!1,U,null];switch(L){case"query":var G=B.find(function(Z){return Z.req.limit===F.limit&&Z.req.values===F.values&&xu(Z.req.query.range,F.query.range)});return G?[G,!0,U,B]:[B.find(function(Z){return("limit"in Z.req?Z.req.limit:1/0)>=F.limit&&(!F.values||Z.req.values)&&ab(Z.req.query.range,F.query.range)}),!1,U,B];case"count":return G=B.find(function(Z){return xu(Z.req.query.range,F.query.range)}),[G,!!G,U,B]}})(u,h,"query",w),P=O[0],E=O[1],N=O[2],R=O[3];return P&&E?P.obsSet=w.obsSet:(E=m.query(w).then(function(M){var z=M.result;if(P&&(P.res=z),x){for(var L=0,F=z.length;L<F;++L)Object.freeze(z[L]);Object.freeze(z)}else M.result=te(z);return M}).catch(function(M){return R&&P&&xe(R,P),Promise.reject(M)}),P={obsSet:w.obsSet,promise:E,subscribers:new Set,type:"query",req:w,dirty:!1},R?R.push(P):(R=[P],(N=N||(Cn["idb://".concat(u,"/").concat(h)]={queries:{query:{},count:{}},objs:new Map,optimisticOps:[],unsignaledParts:{}})).queries.query[w.query.index.name||""]=R)),lb(P,R,S,A),P.promise.then(function(M){return{result:$u(M.result,w,N?.optimisticOps,m,P,x)}})}})}})}};function rs(l,u){return new Proxy(l,{get:function(h,m,g){return m==="db"?u:Reflect.get(h,m,g)}})}var Yt=(Fe.prototype.version=function(l){if(isNaN(l)||l<.1)throw new fe.Type("Given version is not a positive number");if(l=Math.round(10*l)/10,this.idbdb||this._state.isBeingOpened)throw new fe.Schema("Cannot add version when database is open");this.verno=Math.max(this.verno,l);var u=this._versions,h=u.filter(function(m){return m._cfg.version===l})[0];return h||(h=new this.Version(l),u.push(h),u.sort(Xg),h.stores({}),this._state.autoSchema=!1,h)},Fe.prototype._whenReady=function(l){var u=this;return this.idbdb&&(this._state.openComplete||he.letThrough||this._vip)?l():new ce(function(h,m){if(u._state.openComplete)return m(new fe.DatabaseClosed(u._state.dbOpenError));if(!u._state.isBeingOpened){if(!u._state.autoOpen)return void m(new fe.DatabaseClosed);u.open().catch(Te)}u._state.dbReadyPromise.then(h,m)}).then(l)},Fe.prototype.use=function(l){var u=l.stack,h=l.create,m=l.level,g=l.name;return g&&this.unuse({stack:u,name:g}),l=this._middlewares[u]||(this._middlewares[u]=[]),l.push({stack:u,create:h,level:m??10,name:g}),l.sort(function(w,x){return w.level-x.level}),this},Fe.prototype.unuse=function(l){var u=l.stack,h=l.name,m=l.create;return u&&this._middlewares[u]&&(this._middlewares[u]=this._middlewares[u].filter(function(g){return m?g.create!==m:!!h&&g.name!==h})),this},Fe.prototype.open=function(){var l=this;return $n(en,function(){return nb(l)})},Fe.prototype._close=function(){var l=this._state,u=Jn.indexOf(this);if(0<=u&&Jn.splice(u,1),this.idbdb){try{this.idbdb.close()}catch{}this.idbdb=null}l.isBeingOpened||(l.dbReadyPromise=new ce(function(h){l.dbReadyResolve=h}),l.openCanceller=new ce(function(h,m){l.cancelOpen=m}))},Fe.prototype.close=function(h){var u=(h===void 0?{disableAutoOpen:!0}:h).disableAutoOpen,h=this._state;u?(h.isBeingOpened&&h.cancelOpen(new fe.DatabaseClosed),this._close(),h.autoOpen=!1,h.dbOpenError=new fe.DatabaseClosed):(this._close(),h.autoOpen=this._options.autoOpen||h.isBeingOpened,h.openComplete=!1,h.dbOpenError=null)},Fe.prototype.delete=function(l){var u=this;l===void 0&&(l={disableAutoOpen:!0});var h=0<arguments.length&&typeof arguments[0]!="object",m=this._state;return new ce(function(g,w){function x(){u.close(l);var S=u._deps.indexedDB.deleteDatabase(u.name);S.onsuccess=Me(function(){var A,O,P;A=u._deps,O=u.name,P=A.indexedDB,A=A.IDBKeyRange,da(P)||O===Bi||ua(P,A).delete(O).catch(Te),g()}),S.onerror=Bt(w),S.onblocked=u._fireOnBlocked}if(h)throw new fe.InvalidArgument("Invalid closeOptions argument to db.delete()");m.isBeingOpened?m.dbReadyPromise.then(x):x()})},Fe.prototype.backendDB=function(){return this.idbdb},Fe.prototype.isOpen=function(){return this.idbdb!==null},Fe.prototype.hasBeenClosed=function(){var l=this._state.dbOpenError;return l&&l.name==="DatabaseClosed"},Fe.prototype.hasFailed=function(){return this._state.dbOpenError!==null},Fe.prototype.dynamicallyOpened=function(){return this._state.autoSchema},Object.defineProperty(Fe.prototype,"tables",{get:function(){var l=this;return o(this._allTables).map(function(u){return l._allTables[u]})},enumerable:!1,configurable:!0}),Fe.prototype.transaction=function(){var l=function(u,h,m){var g=arguments.length;if(g<2)throw new fe.InvalidArgument("Too few arguments");for(var w=new Array(g-1);--g;)w[g-1]=arguments[g];return m=w.pop(),[u,ie(w),m]}.apply(this,arguments);return this._transaction.apply(this,l)},Fe.prototype._transaction=function(l,u,h){var m=this,g=he.trans;g&&g.db===this&&l.indexOf("!")===-1||(g=null);var w,x,S=l.indexOf("?")!==-1;l=l.replace("!","").replace("?","");try{if(x=u.map(function(O){if(O=O instanceof m.Table?O.name:O,typeof O!="string")throw new TypeError("Invalid table argument to Dexie.transaction(). Only Table or String are allowed");return O}),l=="r"||l===Xo)w=Xo;else{if(l!="rw"&&l!=Zo)throw new fe.InvalidArgument("Invalid transaction mode: "+l);w=Zo}if(g){if(g.mode===Xo&&w===Zo){if(!S)throw new fe.SubTransaction("Cannot enter a sub-transaction with READWRITE mode when parent transaction is READONLY");g=null}g&&x.forEach(function(O){if(g&&g.storeNames.indexOf(O)===-1){if(!S)throw new fe.SubTransaction("Table "+O+" not included in parent transaction.");g=null}}),S&&g&&!g.active&&(g=null)}}catch(O){return g?g._promise(null,function(P,E){E(O)}):je(O)}var A=function O(P,E,N,R,M){return ce.resolve().then(function(){var z=he.transless||he,L=P._createTransaction(E,N,P._dbSchema,R);if(L.explicit=!0,z={trans:L,transless:z},R)L.idbtrans=R.idbtrans;else try{L.create(),L.idbtrans._explicit=!0,P._state.PR1398_maxLoop=3}catch(B){return B.name===Wn.InvalidState&&P.isOpen()&&0<--P._state.PR1398_maxLoop?(console.warn("Dexie: Need to reopen db"),P.close({disableAutoOpen:!1}),P.open().then(function(){return O(P,E,N,null,M)})):je(B)}var F,U=yt(M);return U&&Qn(),z=ce.follow(function(){var B;(F=M.call(L,L))&&(U?(B=nn.bind(null,null),F.then(B,B)):typeof F.next=="function"&&typeof F.throw=="function"&&(F=wa(F)))},z),(F&&typeof F.then=="function"?ce.resolve(F).then(function(B){return L.active?B:je(new fe.PrematureCommit("Transaction committed too early. See http://bit.ly/2kdckMn"))}):z.then(function(){return F})).then(function(B){return R&&L._resolve(),L._completion.then(function(){return B})}).catch(function(B){return L._reject(B),je(B)})})}.bind(null,this,w,x,g,h);return g?g._promise(w,A,"lock"):he.trans?$n(he.transless,function(){return m._whenReady(A)}):this._whenReady(A)},Fe.prototype.table=function(l){if(!p(this._allTables,l))throw new fe.InvalidTable("Table ".concat(l," does not exist"));return this._allTables[l]},Fe);function Fe(l,u){var h=this;this._middlewares={},this.verno=0;var m=Fe.dependencies;this._options=u=r({addons:Fe.addons,autoOpen:!0,indexedDB:m.indexedDB,IDBKeyRange:m.IDBKeyRange,cache:"cloned"},u),this._deps={indexedDB:u.indexedDB,IDBKeyRange:u.IDBKeyRange},m=u.addons,this._dbSchema={},this._versions=[],this._storeNames=[],this._allTables={},this.idbdb=null,this._novip=this;var g,w,x,S,A,O={dbOpenError:null,isBeingOpened:!1,onReadyBeingFired:null,openComplete:!1,dbReadyResolve:Te,dbReadyPromise:null,cancelOpen:Te,openCanceller:null,autoSchema:!0,PR1398_maxLoop:3,autoOpen:u.autoOpen};O.dbReadyPromise=new ce(function(E){O.dbReadyResolve=E}),O.openCanceller=new ce(function(E,N){O.cancelOpen=N}),this._state=O,this.name=l,this.on=Nr(this,"populate","blocked","versionchange","close",{ready:[qo,Te]}),this.on.ready.subscribe=Y(this.on.ready.subscribe,function(E){return function(N,R){Fe.vip(function(){var M,z=h._state;z.openComplete?(z.dbOpenError||ce.resolve().then(N),R&&E(N)):z.onReadyBeingFired?(z.onReadyBeingFired.push(N),R&&E(N)):(E(N),M=h,R||E(function L(){M.on.ready.unsubscribe(N),M.on.ready.unsubscribe(L)}))})}}),this.Collection=(g=this,jr(Vg.prototype,function(F,L){this.db=g;var R=eu,M=null;if(L)try{R=L()}catch(U){M=U}var z=F._ctx,L=z.table,F=L.hook.reading.fire;this._ctx={table:L,index:z.index,isPrimKey:!z.index||L.schema.primKey.keyPath&&z.index===L.schema.primKey.name,range:R,keysOnly:!1,dir:"next",unique:"",algorithm:null,filter:null,replayFilter:null,justLimit:!0,isMatch:null,offset:0,limit:1/0,error:M,or:z.or,valueMapper:F!==Lr?F:null}})),this.Table=(w=this,jr(iu.prototype,function(E,N,R){this.db=w,this._tx=R,this.name=E,this.schema=N,this.hook=w._allTables[E]?w._allTables[E].hook:Nr(null,{creating:[Pg,Te],reading:[Mg,Lr],updating:[Ng,Te],deleting:[zg,Te]})})),this.Transaction=(x=this,jr(Gg.prototype,function(E,N,R,M,z){var L=this;this.db=x,this.mode=E,this.storeNames=N,this.schema=R,this.chromeTransactionDurability=M,this.idbtrans=null,this.on=Nr(this,"complete","error","abort"),this.parent=z||null,this.active=!0,this._reculock=0,this._blockedFuncs=[],this._resolve=null,this._reject=null,this._waitingFor=null,this._waitingQueue=null,this._spinCount=0,this._completion=new ce(function(F,U){L._resolve=F,L._reject=U}),this._completion.then(function(){L.active=!1,L.on.complete.fire()},function(F){var U=L.active;return L.active=!1,L.on.error.fire(F),L.parent?L.parent._reject(F):U&&L.idbtrans&&L.idbtrans.abort(),je(F)})})),this.Version=(S=this,jr(tb.prototype,function(E){this.db=S,this._cfg={version:E,storesSource:null,dbschema:{},tables:{},contentUpgrade:null}})),this.WhereClause=(A=this,jr(cu.prototype,function(E,N,R){if(this.db=A,this._ctx={table:E,index:N===":id"?null:N,or:R},this._cmp=this._ascending=Ce,this._descending=function(M,z){return Ce(z,M)},this._max=function(M,z){return 0<Ce(M,z)?M:z},this._min=function(M,z){return Ce(M,z)<0?M:z},this._IDBKeyRange=A._deps.IDBKeyRange,!this._IDBKeyRange)throw new fe.MissingAPI})),this.on("versionchange",function(E){0<E.newVersion?console.warn("Another connection wants to upgrade database '".concat(h.name,"'. Closing db now to resume the upgrade.")):console.warn("Another connection wants to delete database '".concat(h.name,"'. Closing db now to resume the delete request.")),h.close({disableAutoOpen:!1})}),this.on("blocked",function(E){!E.newVersion||E.newVersion<E.oldVersion?console.warn("Dexie.delete('".concat(h.name,"') was blocked")):console.warn("Upgrade '".concat(h.name,"' blocked by other connection holding version ").concat(E.oldVersion/10))}),this._maxKey=qr(u.IDBKeyRange),this._createTransaction=function(E,N,R,M){return new h.Transaction(E,N,R,h._options.chromeTransactionDurability,M)},this._fireOnBlocked=function(E){h.on("blocked").fire(E),Jn.filter(function(N){return N.name===h.name&&N!==h&&!N._state.vcFired}).map(function(N){return N.on("versionchange").fire(E)})},this.use(sb),this.use(cb),this.use(ob),this.use(rb),this.use(ib);var P=new Proxy(this,{get:function(E,N,R){if(N==="_vip")return!0;if(N==="table")return function(z){return rs(h.table(z),P)};var M=Reflect.get(E,N,R);return M instanceof iu?rs(M,P):N==="tables"?M.map(function(z){return rs(z,P)}):N==="_createTransaction"?function(){return rs(M.apply(this,arguments),P)}:M}});this.vip=P,m.forEach(function(E){return E(h)})}var is,_t=typeof Symbol<"u"&&"observable"in Symbol?Symbol.observable:"@@observable",ub=($a.prototype.subscribe=function(l,u,h){return this._subscribe(l&&typeof l!="function"?l:{next:l,error:u,complete:h})},$a.prototype[_t]=function(){return this},$a);function $a(l){this._subscribe=l}try{is={indexedDB:s.indexedDB||s.mozIndexedDB||s.webkitIndexedDB||s.msIndexedDB,IDBKeyRange:s.IDBKeyRange||s.webkitIDBKeyRange}}catch{is={indexedDB:null,IDBKeyRange:null}}function Su(l){var u,h=!1,m=new ub(function(g){var w=yt(l),x,S=!1,A={},O={},P={get closed(){return S},unsubscribe:function(){S||(S=!0,x&&x.abort(),E&&on.storagemutated.unsubscribe(R))}};g.start&&g.start(P);var E=!1,N=function(){return Jo(M)},R=function(z){es(A,z),pa(O,A)&&N()},M=function(){var z,L,F;!S&&is.indexedDB&&(A={},z={},x&&x.abort(),x=new AbortController,F=(function(U){var B=Gn();try{w&&Qn();var G=tn(l,U);return G=w?G.finally(nn):G}finally{B&&Yn()}})(L={subscr:z,signal:x.signal,requery:N,querier:l,trans:null}),Promise.resolve(F).then(function(U){h=!0,u=U,S||L.signal.aborted||(A={},(function(B){for(var G in B)if(p(B,G))return;return 1})(O=z)||E||(on(Br,R),E=!0),Jo(function(){return!S&&g.next&&g.next(U)}))},function(U){h=!1,["DatabaseClosedError","AbortError"].includes(U?.name)||S||Jo(function(){S||g.error&&g.error(U)})}))};return setTimeout(N,0),P});return m.hasValue=function(){return h},m.getValue=function(){return u},m}var En=Yt;function xa(l){var u=an;try{an=!0,on.storagemutated.fire(l),ba(l,!0)}finally{an=u}}b(En,r(r({},Li),{delete:function(l){return new En(l,{addons:[]}).delete()},exists:function(l){return new En(l,{addons:[]}).open().then(function(u){return u.close(),!0}).catch("NoSuchDatabaseError",function(){return!1})},getDatabaseNames:function(l){try{return u=En.dependencies,h=u.indexedDB,u=u.IDBKeyRange,(da(h)?Promise.resolve(h.databases()).then(function(m){return m.map(function(g){return g.name}).filter(function(g){return g!==Bi})}):ua(h,u).toCollection().primaryKeys()).then(l)}catch{return je(new fe.MissingAPI)}var u,h},defineClass:function(){return function(l){c(this,l)}},ignoreTransaction:function(l){return he.trans?$n(he.transless,l):l()},vip:ha,async:function(l){return function(){try{var u=wa(l.apply(this,arguments));return u&&typeof u.then=="function"?u:ce.resolve(u)}catch(h){return je(h)}}},spawn:function(l,u,h){try{var m=wa(l.apply(h,u||[]));return m&&typeof m.then=="function"?m:ce.resolve(m)}catch(g){return je(g)}},currentTransaction:{get:function(){return he.trans||null}},waitFor:function(l,u){return u=ce.resolve(typeof l=="function"?En.ignoreTransaction(l):l).timeout(u||6e4),he.trans?he.trans.waitFor(u):u},Promise:ce,debug:{get:function(){return Ut},set:function(l){Wc(l)}},derive:k,extend:c,props:b,override:Y,Events:Nr,on,liveQuery:Su,extendObservabilitySet:es,getByKeyPath:W,setByKeyPath:I,delByKeyPath:function(l,u){typeof u=="string"?I(l,u,void 0):"length"in u&&[].map.call(u,function(h){I(l,h,void 0)})},shallowClone:V,deepClone:te,getObjectDiff:ya,cmp:Ce,asap:ne,minKey:-1/0,addons:[],connections:Jn,errnames:Wn,dependencies:is,cache:Cn,semVer:"4.0.10",version:"4.0.10".split(".").map(function(l){return parseInt(l)}).reduce(function(l,u,h){return l+u/Math.pow(10,2*h)})})),En.maxKey=qr(En.dependencies.IDBKeyRange),typeof dispatchEvent<"u"&&typeof addEventListener<"u"&&(on(Br,function(l){an||(l=new CustomEvent(ra,{detail:l}),an=!0,dispatchEvent(l),an=!1)}),addEventListener(ra,function(l){l=l.detail,an||xa(l)}));var er,an=!1,Cu=function(){};return typeof BroadcastChannel<"u"&&((Cu=function(){(er=new BroadcastChannel(ra)).onmessage=function(l){return l.data&&xa(l.data)}})(),typeof er.unref=="function"&&er.unref(),on(Br,function(l){an||er.postMessage(l)})),typeof addEventListener<"u"&&(addEventListener("pagehide",function(l){if(!Yt.disableBfCache&&l.persisted){Ut&&console.debug("Dexie: handling persisted pagehide"),er?.close();for(var u=0,h=Jn;u<h.length;u++)h[u].close({disableAutoOpen:!1})}}),addEventListener("pageshow",function(l){!Yt.disableBfCache&&l.persisted&&(Ut&&console.debug("Dexie: handling persisted pageshow"),Cu(),xa({all:new et(-1/0,[[]])}))})),ce.rejectionMapper=function(l,u){return!l||l instanceof He||l instanceof TypeError||l instanceof SyntaxError||!l.name||!Kc[l.name]?l:(u=new Kc[l.name](u||l.message,l),"stack"in l&&$(u,"stack",{get:function(){return this.inner.stack}}),u)},Wc(Ut),r(Yt,Object.freeze({__proto__:null,Dexie:Yt,liveQuery:Su,Entity:tu,cmp:Ce,PropModSymbol:Gt,PropModification:Fr,replacePrefix:function(l,u){return new Fr({replacePrefix:[l,u]})},add:function(l){return new Fr({add:l})},remove:function(l){return new Fr({remove:l})},default:Yt,RangeSet:et,mergeRanges:Kr,rangesOverlap:pu}),{default:Yt}),Yt})})($s)),$s.exports}var Jb=Qb();const Va=Gb(Jb),Uu=Symbol.for("Dexie"),Ms=globalThis[Uu]||(globalThis[Uu]=Va);if(Va.semVer!==Ms.semVer)throw new Error(`Two different versions of Dexie loaded in the same app: ${Va.semVer} and ${Ms.semVer}`);const{liveQuery:Ll,mergeRanges:_T,rangesOverlap:TT,RangeSet:IT,cmp:AT,Entity:RT,PropModSymbol:OT,PropModification:LT,replacePrefix:DT,add:MT,remove:PT}=Ms,Xb="easydb";function It(e,t){return`${e}::${t}`}let os=null;function Ps(){if(os)return os;const e=new Ms(Xb);return e.version(1).stores({workspaces:"id",tables:"id, workspaceId, updatedAt",rows:"id, tableId, updatedAt",settings:"key",plugins:"url"}),e.version(2).stores({viewTemplates:"id, workspaceId",viewInstances:"id, workspaceId, tableId"}),e.version(3).stores({settings:"key, workspaceId, name"}).upgrade(async t=>{const n=t.table("settings"),i=(await n.toArray()).filter(a=>a.workspaceId==null);if(i.length===0)return;const s=(await t.table("workspaces").toArray()).map(a=>a.id),o=s.length>0?s:["default"];for(const a of i){for(const c of o)await n.put({key:It(c,a.key),workspaceId:c,name:a.key,value:a.value});await n.delete(a.key)}}),e.on("versionchange",t=>{try{e.close()}catch{}t?.newVersion!=null&&typeof location<"u"&&location.reload()}),e.on("blocked",()=>Zb()),os={raw:e,workspaces:e.table("workspaces"),tables:e.table("tables"),rows:e.table("rows"),settings:e.table("settings"),plugins:e.table("plugins"),viewTemplates:e.table("viewTemplates"),viewInstances:e.table("viewInstances")},os}function Zb(){if(typeof document>"u"||document.getElementById("easydb-upgrade-blocked"))return;const e=document.createElement("div");e.id="easydb-upgrade-blocked",e.setAttribute("role","alertdialog"),e.style.cssText="position:fixed;inset:0;z-index:2147483647;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,0.55);font-family:system-ui,sans-serif;padding:1rem;",e.innerHTML='<div style="max-width:26rem;background:#fff;border-radius:0.6rem;padding:1.5rem 1.75rem;box-shadow:0 20px 50px rgba(0,0,0,0.3);text-align:center;"><h2 style="margin:0 0 0.5rem;font-size:1.1rem;color:#111827;">Update in progress</h2><p style="margin:0 0 1rem;color:#374151;font-size:0.9rem;line-height:1.5;">easyDBAccess needs to upgrade its local database, but an <strong>older version is still open in another tab or window</strong>. Close the other easyDBAccess tabs, then reload.</p><button id="easydb-upgrade-reload" style="font:inherit;background:#3b82f6;color:#fff;border:0;padding:0.5rem 1rem;border-radius:0.3rem;cursor:pointer;">Reload</button></div>',document.body.appendChild(e),e.querySelector("#easydb-upgrade-reload")?.addEventListener("click",()=>location.reload())}function Gr(e){return{async find(t){if(!t||Object.keys(t).length===0)return e.toArray();const n=Object.entries(t);return e.filter(r=>Dl(r,n)).toArray()},async findOne(t){return await e.get(t)??null},async insert(t){return await e.add(t),t},async bulkInsert(t){return t.length===0?[]:(await e.bulkAdd(t),t)},async upsert(t){return await e.put(t),t},async patch(t,n){if(await e.update(t,n)===0)throw new Error(`patch: no doc with id=${t}`);const i=await e.get(t);if(!i)throw new Error(`patch: doc id=${t} vanished after update`);return i},async remove(t){await e.delete(t)},async bulkRemove(t){t.length!==0&&await e.bulkDelete(t)},subscribe(t){const r=Ll(()=>e.toArray()).subscribe({next:i=>t(i)});return()=>r.unsubscribe()}}}function ew(e,t){return{async find(n){const r=e.where("tableId").equals(t);if(!n||Object.keys(n).length===0)return r.toArray();const i=Object.entries(n);return r.filter(s=>Dl(s,i)).toArray()},async findOne(n){const r=await e.get(n);return r&&r.tableId===t?r:null},async insert(n){const r={...n,tableId:t};return await e.add(r),r},async bulkInsert(n){if(n.length===0)return[];const r=n.map(i=>({...i,tableId:t}));return await e.bulkAdd(r),r},async upsert(n){const r={...n,tableId:t};return await e.put(r),r},async patch(n,r){if(await e.update(n,r)===0)throw new Error(`row patch: no row ${n}`);const s=await e.get(n);if(!s)throw new Error(`row patch: row ${n} vanished after update`);return s},async remove(n){await e.delete(n)},async bulkRemove(n){n.length!==0&&await e.bulkDelete(n)},async count(){return e.where("tableId").equals(t).count()},subscribe(n){const i=Ll(()=>e.where("tableId").equals(t).toArray()).subscribe({next:s=>n(s)});return()=>i.unsubscribe()}}}function tw(e,t){const n=i=>({...i,workspaceId:t(),key:It(t(),i.name),name:i.name,value:i.value}),r=()=>e.where("workspaceId").equals(t());return{async find(i){const s=await r().toArray();if(!i||Object.keys(i).length===0)return s;const o=Object.entries(i);return s.filter(a=>Dl(a,o))},async findOne(i){return await e.get(It(t(),i))??null},async insert(i){const s=n(i);return await e.add(s),s},async bulkInsert(i){if(i.length===0)return[];const s=i.map(o=>n(o));return await e.bulkAdd(s),s},async upsert(i){const s=n(i);return await e.put(s),s},async patch(i,s){const o=It(t(),i);if(await e.update(o,s)===0)throw new Error(`setting patch: no setting ${i}`);const c=await e.get(o);if(!c)throw new Error(`setting patch: ${i} vanished after update`);return c},async remove(i){await e.delete(It(t(),i))},async bulkRemove(i){i.length!==0&&await e.bulkDelete(i.map(s=>It(t(),s)))},subscribe(i){const o=Ll(()=>r().toArray()).subscribe({next:a=>i(a)});return()=>o.unsubscribe()}}}function Dl(e,t){for(const[n,r]of t)if(e[n]!==r)return!1;return!0}function nw(e,t){return{workspaces:Gr(e.workspaces),tables:Gr(e.tables),settings:tw(e.settings,t),plugins:Gr(e.plugins),viewTemplates:Gr(e.viewTemplates),viewInstances:Gr(e.viewInstances),rows:n=>ew(e.rows,n)}}function rw(e){const{base:t,providers:n,tableById:r,ctx:i}=e,s=new Map;return{...t,rows(o){const a=r(o),c=a?.source;if(c){const d=n.get(c.type);if(d){const f=JSON.stringify(c),p=s.get(o);if(p&&p.key===f)return p.coll;const b=d.create(a,i);return s.set(o,{key:f,coll:b}),b}}return s.delete(o),t.rows(o)}}}function _e(){return globalThis.crypto?.randomUUID?.()??`${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`}function Ne(e){return e.toLowerCase().trim().replace(/[^a-z0-9_-]+/g,"-").replace(/^-+|-+$/g,"")||"table"}function lr(e){return e.toLowerCase().trim().replace(/[^a-z0-9_]+/g,"_").replace(/^_+|_+$/g,"").replace(/_+/g,"_")||"col"}function fn(e,t){const n=new Set([...e].map(i=>i.toLowerCase())),r=t.trim()||"imported";if(!n.has(r.toLowerCase()))return r;for(let i=2;;i++){const s=`${r}-${i}`;if(!n.has(s.toLowerCase()))return s}}function iw(e){const t=async(r,i)=>(await e.find()).filter(s=>s.workspaceId===r&&s.id!==i).map(s=>s.name),n=(r,i)=>{const s=fn(i,r.name);return s===r.name?r:(console.warn(`[store] "${r.name}" is taken in this workspace — stored as "${s}"`),{...r,name:s,code:Ne(s)})};return{...e,async insert(r){return e.insert(n(r,await t(r.workspaceId,r.id)))},async bulkInsert(r){if(r.length===0)return e.bulkInsert(r);const i=new Set((await e.find()).filter(o=>o.workspaceId===r[0].workspaceId).map(o=>o.name)),s=r.map(o=>{const a=n(o,i);return i.add(a.name),a});return e.bulkInsert(s)},async upsert(r){return e.upsert(n(r,await t(r.workspaceId,r.id)))},async patch(r,i){if(typeof i.name!="string")return e.patch(r,i);const s=await e.findOne(r);if(!s)return e.patch(r,i);const o=fn(await t(s.workspaceId,r),i.name);return o===i.name?e.patch(r,i):(console.warn(`[store] "${i.name}" is taken in this workspace — renamed to "${o}"`),e.patch(r,{...i,name:o,code:Ne(o)}))}}}function Ml(e,t,n,r,i){let s=0,o=!1;const a=()=>{const d=++s;n().then(f=>{o||d!==s||r(f)})};a();const c=e.onChanged((d,f)=>{d===t&&(f&&i&&f!==i||a())});return()=>{o=!0,c()}}function Yr(e,t){const n=r=>e.find(t,r);return{find:r=>n(r),async findOne(r){return await e.findOne(t,r)??null},async insert(r){return await e.insert(t,r),r},async bulkInsert(r){return r.length===0?[]:(await e.bulkInsert(t,r),r)},async upsert(r){return await e.upsert(t,r),r},async patch(r,i){return await e.patch(t,r,i)},async remove(r){await e.remove(t,r)},async bulkRemove(r){r.length!==0&&await e.bulkRemove(t,r)},subscribe(r){return Ml(e,t,()=>n(),r)}}}const Nn=2e4;function sw(e,t){const n=i=>e.find("rows",{...i,tableId:t},Nn),r=e.queryRows?.bind(e);return{find:i=>n(i),...r?{query:i=>r(t,i)}:{},async findOne(i){const s=await e.findOne("rows",i);return s&&s.tableId===t?s:null},async insert(i){const s={...i,tableId:t};return await e.insert("rows",s),s},async bulkInsert(i){if(i.length===0)return[];const s=i.map(o=>({...o,tableId:t}));return await e.bulkInsert("rows",s),s},async upsert(i){const s={...i,tableId:t};return await e.upsert("rows",s),s},async patch(i,s){return await e.patch("rows",i,s)},async remove(i){await e.remove("rows",i)},async bulkRemove(i){i.length!==0&&await e.bulkRemove("rows",i)},subscribe(i){return Ml(e,"rows",()=>n(),i,t)},...e.countRows?{count:()=>e.countRows(t)}:{},watch(i){return i(),e.onChanged((s,o)=>{s==="rows"&&(o&&o!==t||i())})}}}function ow(e,t){const n=i=>({...i,workspaceId:t(),key:It(t(),i.name),name:i.name,value:i.value}),r=i=>e.find("settings",{...i,workspaceId:t()});return{find:i=>r(i),async findOne(i){return await e.findOne("settings",It(t(),i))??null},async insert(i){const s=n(i);return await e.insert("settings",s),s},async bulkInsert(i){if(i.length===0)return[];const s=i.map(o=>n(o));return await e.bulkInsert("settings",s),s},async upsert(i){const s=n(i);return await e.upsert("settings",s),s},async patch(i,s){const o=It(t(),i);return await e.patch("settings",o,s)},async remove(i){await e.remove("settings",It(t(),i))},async bulkRemove(i){i.length!==0&&await e.bulkRemove("settings",i.map(s=>It(t(),s)))},subscribe(i){return Ml(e,"settings",()=>r(),i)}}}function aw(e,t){return{workspaces:Yr(e,"workspaces"),tables:Yr(e,"tables"),settings:ow(e,t),plugins:Yr(e,"plugins"),viewTemplates:Yr(e,"viewTemplates"),viewInstances:Yr(e,"viewInstances"),rows:n=>sw(e,n)}}function lw(){const e=new Map;return{on(t,n){let r=e.get(t);return r||(r=new Set,e.set(t,r)),r.add(n),()=>{r.delete(n)}},emit(t,n){const r=e.get(t);if(r)for(const i of r)try{i(n)}catch(s){console.error(`[event:${String(t)}] listener threw`,s)}}}}const cw=new Set(["html-preview"]);function uw(){return{headerButtons:[],footerButtons:[],tableButtons:[],columnEditorActions:[],importers:[],connectors:[],exporters:[],urlSources:[],dropHandlers:[],cellRenderers:new Map,rowRenderers:new Map,tableRenderers:new Map,visualizations:new Map,rowSources:new Map,settings:new Map,commands:[],commandFallbacks:[]}}function Mt(e,t){return e.push(t),()=>{const n=e.indexOf(t);n>=0&&e.splice(n,1)}}function Ea(e,t,n){return e.set(t,n),()=>{e.get(t)===n&&e.delete(t)}}function dw(e){return{registerHeaderButton:t=>Mt(e.headerButtons,t),registerFooterButton:t=>Mt(e.footerButtons,t),registerTableButton:t=>Mt(e.tableButtons,t),registerColumnEditorAction:t=>Mt(e.columnEditorActions,t),registerImporter:t=>Mt(e.importers,t),registerConnector:t=>Mt(e.connectors,t),registerExporter:t=>Mt(e.exporters,t),registerUrlSource:t=>Mt(e.urlSources,t),registerDropHandler:t=>Mt(e.dropHandlers,t),registerCellRenderer:(t,n)=>Ea(e.cellRenderers,t,n),registerRowRenderer:(t,n)=>Ea(e.rowRenderers,t,n),registerTableRenderer:(t,n)=>Ea(e.tableRenderers,t,n),registerVisualization:t=>(e.visualizations.set(t.id,t),()=>{e.visualizations.get(t.id)===t&&e.visualizations.delete(t.id)}),openNewTableDialog:()=>{document.dispatchEvent(new CustomEvent("easydb:open-new-table"))},openCsvPasteDialog:()=>{document.dispatchEvent(new CustomEvent("easydb:open-csv-paste"))},openPluginManager:()=>{document.dispatchEvent(new CustomEvent("easydb:open-plugin-manager"))},openSettings:()=>{document.dispatchEvent(new CustomEvent("easydb:open-settings"))},registerCommand:t=>Mt(e.commands,t),registerCommandFallback:t=>Mt(e.commandFallbacks,t),openCommandPalette:()=>{document.dispatchEvent(new CustomEvent("easydb:open-command-palette"))},registerSettings:(t,n,r)=>(e.settings.set(t,{name:n,fields:r}),()=>{e.settings.get(t)?.name===n&&e.settings.delete(t)}),dialogs:hw}}const hw={async alert(e,t){const n=lt.instance;if(n)return n.alert(e,t);window.alert(e)},async confirm(e,t){const n=lt.instance;return n?n.confirm(e,t):window.confirm(e)},async prompt(e,t,n){const r=lt.instance;return r?r.prompt(e,t,n):window.prompt(e,t)??null},async choice(e,t,n){const r=lt.instance;if(r)return r.choice(e,t,n);const i=window.prompt(`${e}
+
+Options: ${t.join(", ")}`);return i&&t.includes(i)?i:null},toast(e,t){const n=Mn.instance;n?n.show(e,t):console.log(`[toast:${t?.kind??"info"}]`,t?.title??"",e)}},Pl="/easydbaccess/settings.json",Gh="/easydbaccess/secrets.txt";function ki(e){try{return globalThis.localStorage??null}catch{return null}}function no(e){const t=ki();if(!t)return{};const n=t.getItem(Pl);if(!n)return{};try{const r=JSON.parse(n);return r&&typeof r=="object"?r:{}}catch{return{}}}function zs(e,t){return no()[e]}function fw(e,t,n){const r=ki();if(!r)return;const i=no();i[e]=t,r.setItem(Pl,JSON.stringify(i))}function pw(e,t){const n=ki();if(!n)return;const r=no();e in r&&(delete r[e],n.setItem(Pl,JSON.stringify(r)))}function xs(e,t){return e in no()}function di(e){return ki()?.getItem(Gh)??""}function Yh(e,t){ki()?.setItem(Gh,e)}function dr(e){const t={};for(const n of e.split(/\r?\n/)){const r=n.trim();if(!r||r.startsWith("#"))continue;const i=r.indexOf(":");if(i<0)continue;const s=r.slice(0,i).trim(),o=r.slice(i+1).trim();s&&(t[s]=o)}return t}function zl(e,t){return e.replace(/\$\{secret:([^}]+)\}/g,(n,r)=>{const i=t[r.trim()];return i===void 0?n:i})}function Qh(e){return typeof e=="string"&&e.includes("${secret:")}function Bu(e){return typeof e=="string"&&e.trim()!==""&&!Qh(e)}const mw=/(^|[_:.\-\s])(tokens?|secrets?|passwords?|passwd|pwd|api[_-]?keys?|apikeys?|auth|credentials?|pat)($|[_:.\-\s])/i;function qu(e){return mw.test(e)}function gw(e,t){if((qu(e.name)||t?.(e.name)===!0)&&Bu(e.value))return!0;const r=e.value;return r===null||typeof r!="object"||Array.isArray(r)?!1:Object.entries(r).some(([i,s])=>qu(i)&&Bu(s))}function bw(e,t){const n=[],r=[];for(const i of e)gw(i,t)?r.push(i.name):n.push(i);return{kept:n,withheld:r}}function ww(e,t,n){return typeof t!="string"||t===""||!Qh(e)?!1:zl(e,n)===t}function yw(e){const t=dw(e.registries),n=e.registries.rowSources,r=o=>(n.set(o.type,o),()=>{n.get(o.type)===o&&n.delete(o.type)}),i=kw(e.store,e.registries),s={open(o){return console.warn("[host] windows.open is stubbed until Phase 5",o.id),{id:o.id,close:()=>{},focus:()=>{},setTitle:()=>{},setGeometry:()=>{}}},list:()=>[],find:()=>null};return{store:e.store,events:e.events,ui:t,windows:s,registerRowSource:r,settings:i,backend:{fetch:async(o,a)=>{const c=await vw(e.store),d=a?.body instanceof ArrayBuffer;if(!c||d)return globalThis.fetch(o,a);const f={url:o};return a?.method&&(f.method=a.method),a?.headers&&(f.headers=a.headers),typeof a?.body=="string"&&(f.body=a.body),globalThis.fetch(`${c}/fetch`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(f)})},async saveFile(o,a,c){const d=typeof a=="string"?new Blob([a],{type:c??"application/octet-stream"}):a,f=URL.createObjectURL(d),p=document.createElement("a");p.href=f,p.download=o,p.rel="noopener",document.body.appendChild(p),p.click(),p.remove(),setTimeout(()=>URL.revokeObjectURL(f),1e3)}},workspaceId:()=>e.workspaceId(),selfUrl:()=>e.selfUrl??"(builtin)"}}async function vw(e){const t="server-sync:url";let n=xs(t)?zs(t):void 0;return n===void 0&&(n=(await e.settings.findOne(t))?.value),typeof n!="string"||n.length===0?null:zl(n,dr(di())).replace(/\/+$/,"")}function kw(e,t){const n=(a,c)=>`${a}:${c}`,r=(a,c)=>t.settings.get(a)?.fields.find(d=>d.key===c),i=a=>typeof a=="string"?zl(a,dr(di())):a,s=async a=>xs(a)?zs(a):(await e.settings.findOne(a))?.value,o=async(a,c)=>ww(await s(a),c,dr(di()));return{async get(a,c){const d=n(a,c);let f;if(xs(d))f=zs(d);else{const p=await e.settings.findOne(d);f=p?p.value:r(a,c)?.default}return i(f)},async set(a,c,d,f){const p=n(a,c);if(await o(p,d))return;(f??r(a,c)?.scope??"workspace")==="user"?(fw(p,d),await e.settings.remove(p).catch(()=>{})):(await e.settings.upsert({name:p,value:d}),pw(p))},async placement(a,c){const d=n(a,c);return xs(d)?"user":await e.settings.findOne(d)?"workspace":null}}}function Hu(e,t){return e.has(t)?e.get(t)!=="0":!1}function $w(){if(typeof location>"u")return"off";const e=new URLSearchParams(location.search);return Hu(e,"safemode")?"all-optional":Hu(e,"safemode1")?"url-plugins":"off"}const Tt=$w();function Ns(e){return`builtin:${e}`}function Nl(e){let t;try{t=new URL(e)}catch{return e}const n=t.hostname.toLowerCase();if(n==="github.com"||n==="www.github.com"){const r=t.pathname.split("/").filter(Boolean);if(r.length>=5&&(r[2]==="blob"||r[2]==="raw")){const i=r[0],s=r[1];let o=r.slice(3);return o.length>=3&&o[0]==="refs"&&(o[1]==="heads"||o[1]==="tags")&&(o=o.slice(2)),`https://raw.githubusercontent.com/${[i,s,...o].join("/")}`}}return e}function Jh(e){if(e.length>1024)return!1;const t=e.split(`
+`);return t[0]?.startsWith("version https://git-lfs.github.com/spec/v1")===!0&&t.some(n=>n.startsWith("oid "))&&t.some(n=>n.startsWith("size "))}function Xh(e){const t=Nl(e);let n;try{n=new URL(t)}catch{return null}if(n.hostname.toLowerCase()!=="raw.githubusercontent.com")return null;const r=n.pathname.replace(/^\/+/,"");return r.split("/").filter(Boolean).length<4?null:`https://media.githubusercontent.com/media/${r}`}async function Zh(e,t){const n=Number(e.headers?.get?.("content-length")),r=e.body?.getReader?.();if(r&&Number.isFinite(n)&&n>0){const i=[];let s=0;for(;;){const{done:c,value:d}=await r.read();if(c)break;d&&(i.push(d),s+=d.length,t?.(Math.min(1,s/n)))}const o=new Uint8Array(s);let a=0;for(const c of i)o.set(c,a),a+=c.length;return new TextDecoder().decode(o)}return await e.text()}const xw=50*1024*1024;function Vu(e){try{return new URL(e).host}catch{return e}}function Ht(e){try{const n=new URL(e).pathname.split("/").filter(Boolean).pop();return n&&n.length>0?n:"sample.db.json"}catch{return"sample.db.json"}}async function Sw(e){try{return(await e.text()).replace(/\s+/g," ").trim().slice(0,300)}catch{return""}}function Ku(e){const t=e/1048576;return`${Number.isInteger(t)?t:t.toFixed(1)} MB`}async function Cw(e,t,n={}){const r=Nl(t),i=n.slowMs??2e3;let s=setTimeout(()=>{s=void 0,n.onSlow?.()},i);const o=()=>{s!==void 0&&(clearTimeout(s),s=void 0)},a=n.maxBytes===null?null:n.maxBytes??xw,c=async d=>{let f;try{f=await e.backend.fetch(d)}catch(b){throw new Error(`Could not reach ${Vu(d)} — no response. The server may be down, blocking cross-origin (CORS) requests, or the transfer may have failed (e.g. a very large file). [${b.message}]`,{cause:b})}if(!f.ok){const b=await Sw(f);throw new Error(`HTTP ${f.status} ${f.statusText||""}`.trim()+(b?` — ${b}`:""))}const p=Number(f.headers.get("content-length"));if(a!==null&&Number.isFinite(p)&&p>a)throw f.body?.cancel().catch(()=>{}),new Error(`Response is ${Ku(p)}, over the ${Ku(a)} browser import limit. Set a row limit, import it as a Reference instead of a Copy, take a smaller extract, or connect to a server/Datasette for large datasets.`);try{return await Zh(f,n.onProgress)}catch(b){throw new Error(`Failed reading the response body from ${Vu(d)}: ${b.message}`,{cause:b})}};try{const d=await c(r);if(Jh(d)){const f=Xh(r);if(f)return await c(f)}return d}finally{o()}}async function $i(e,t,n,r={}){const{TopProgress:i}=await Ie(async()=>{const{TopProgress:o}=await import("./top-progress-Vz0ssV8n.js");return{TopProgress:o}},[]),s={handle:null};try{return await Cw(e,t,{onSlow:()=>{s.handle=i.begin(n)},onProgress:o=>s.handle?.fraction(o),...r.maxBytes!==void 0?{maxBytes:r.maxBytes}:{}})}finally{s.handle?.done()}}const ef="Re-Create: columns and rows from the file",tf="Re-Load: replace the rows, keep the columns",nf="Append the rows",rf="A new table",Ew={[ef]:"recreate",[tf]:"reload",[nf]:"append",[rf]:"new"};async function ro(e,t){const n=t.reason??`Import "${t.fileName}" into "${t.tableName}"?`,r=await e.ui.dialogs.choice(n,[ef,tf,nf,rf],t.title);return r?Ew[r]??null:null}function sf(e,t){return e.length!==t.length?!1:e.every((n,r)=>{const i=t[r],s=[i.field,i.label,lr(i.field),lr(i.label??"")],o=n.trim().toLowerCase();return s.some(a=>a.trim().toLowerCase()===o)||lr(n)===i.field})}const _w=/^[+-]?\d+$/;function io(e){const t=e.trim();return _w.test(t)?!Number.isSafeInteger(Number(t)):!1}function so(e){let t="",n=0,r=!1;for(;n<e.length;){const i=e[n];if(r){t+=i,i==="\\"?(n++,n<e.length&&(t+=e[n])):i==='"'&&(r=!1),n++;continue}if(i==='"'){r=!0,t+=i,n++;continue}if(i==="-"||i>="0"&&i<="9"){let s=n;for(e[s]==="-"&&s++;s<e.length&&e[s]>="0"&&e[s]<="9";)s++;const o=s,a=e[s],c=a!=="."&&a!=="e"&&a!=="E",d=e.slice(n,o);c&&io(d)?t+=`"${d}"`:t+=d,n=o;continue}t+=i,n++}return t}const as=e=>e.trim().toLowerCase();function zT(e,t){const n=new Map;for(const s of t)n.set(as(s.field),s.field),n.has(as(s.label))||n.set(as(s.label),s.field);const r=new Set,i=e.map(()=>"");return e.forEach((s,o)=>{const a=n.get(as(s));a&&!r.has(a)&&(i[o]=a,r.add(a))}),e.forEach((s,o)=>{if(i[o])return;const a=t[o]?.field;a&&!r.has(a)&&(i[o]=a,r.add(a))}),i}function Tw(e,t,n,r){const i=new Map(t.map(s=>[s.field,s.type]));return e.map(s=>{const o={};return n.forEach((a,c)=>{if(!a)return;const d=i.get(a);d!==void 0&&(o[a]=r(s[c]??"",d))}),o})}function of(e){const t=e.trim();return t.length>=2&&t.startsWith("[")&&t.endsWith("]")}function Iw(e){if(!of(e))return null;try{const t=JSON.parse(e.trim());return Array.isArray(t)?t:null}catch{return null}}function Aw(e){const t=e.trim();if(!of(t))return null;const n=t.slice(1,-1).trim();if(n==="")return null;const r=[];let i=0;for(;i<n.length;){for(;i<n.length&&/\s/.test(n[i]);)i++;if(n[i]!=="'")return null;i++;let s="",o=!1;for(;i<n.length;){const a=n[i];if(a==="\\"&&n[i+1]==="'"){s+="'",i+=2;continue}if(a==="'"){o=!0,i++;break}s+=a,i++}if(!o)return null;for(r.push(s);i<n.length&&/\s/.test(n[i]);)i++;if(i<n.length){if(n[i]!==",")return null;i++}}return r}function af(e){return Iw(e)??Aw(e)}function ft(e){if(e==null)return[];if(Array.isArray(e))return _a(e);if(typeof e!="string")return _a([e]);const t=af(e);return t?_a(t):Rw(e)}function Wu(e){return ft(e).join(", ")}function jl(e){return Array.isArray(e)?!0:typeof e=="string"&&af(e)!==null}const Gu=5;function lf(e){if(e.length===0)return!1;let t=0;for(const n of e)if(jl(n)){if(t++,t>=Gu)return!0}else t=0;return e.length<Gu&&t===e.length}function _a(e){const t=[];for(const n of e){if(n==null)continue;const r=typeof n=="string"?n.trim():typeof n=="object"?JSON.stringify(n)??"":String(n);r!==""&&t.push(r)}return t}function Rw(e){const t=[];let n="",r=!1,i=!1;const s=()=>{const o=i?n:n.trim();o!==""&&t.push(o),n="",r=!1,i=!1};for(let o=0;o<e.length;o++){const a=e[o];if(a==='"'){if(r&&e[o+1]==='"'){n+='"',o++;continue}r=!r,i=!0;continue}if(a===","&&!r){s();continue}n+=a}return s(),t}function Ow(e){return e==null||String(e).trim()===""}function Hn(e){const t=[];let n="",r=!1,i=!1,s=!1,o=!1,a=!1,c=!1,d=!0,f=!1;const p=()=>{const b=s?n:n.trim();if(r||o){const y={term:b,negate:o};a&&(y.prefix=!0),c&&(y.exact=!0),f&&t.length>0&&(y.and=!0),t.push(y)}f=!1,n="",r=!1,i=!1,s=!1,o=!1,a=!1,c=!1,d=!0};for(let b=0;b<e.length;b++){const y=e[b];if(!i&&/\s/.test(y)){const $=/^\s+(AND|OR)(?=[\s,]|$)/.exec(e.slice(b));if($&&(r||o)){p(),f=$[1]==="AND",b+=$[0].length-1;continue}}if(y==='"'){if(i&&e[b+1]==='"'){n+='"',r=!0,b++;continue}i=!i,s=!0,r=!0,d=!1;continue}if(y===","&&!i){p();continue}if(y==="!"&&!i&&d&&!o&&!a&&!c){o=!0;continue}if(y==="="&&!i&&d&&!a&&!c){c=!0;continue}if(y==="^"&&!i&&d&&!a&&!c){a=!0;continue}d&&!i&&/\s/.test(y)||(d=!1),n+=y,/\s/.test(y)||(r=!0)}return p(),t}function Lw(e){return e.includes(",")||e.includes('"')||e!==e.trim()||e===""||e.startsWith("!")||e.startsWith("^")||e.startsWith("=")||/\s(AND|OR)(?=[\s,]|$)/.test(e)}function dn(e){let t="";return e.forEach((n,r)=>{const i=n.term===""&&n.negate?"":Lw(n.term)?`"${n.term.replace(/"/g,'""')}"`:n.term,s=n.exact?"=":n.prefix?"^":"",o=(n.negate?"!":"")+s+i;r===0?t=o:t+=n.and?` AND ${o}`:`,${o}`}),t}function Dw(e){const t=[];for(const n of e){const r=t[t.length-1];n.and&&r?r.push(n):t.push([n])}return t}function Yu(e,t){const n=String(e??"").toLowerCase(),r=t.term.toLowerCase();return t.exact?n===r:t.prefix?n.startsWith(r):n.includes(r)}function Qu(e,t){return t?t.length===0:Ow(e)}function Ka(e,t,n){const r=t.term;return r.trim()===""||!t.prefix&&!t.exact&&r.toUpperCase()==="NULL"?Qu(e,n):n?n.some(i=>Yu(i,t)):Yu(e,t)}function Mw(e,t,n){return t.every(r=>r.negate?!Ka(e,r,n):Ka(e,r,n))}function hi(e,t,n){const r=Dw(Hn(t));if(r.length===0)return!0;const i=n?.type==="array"?ft(e):null,s=r.filter(a=>a.length===1&&a[0].negate);for(const a of s)if(Ka(e,a[0],i))return!1;const o=r.filter(a=>!(a.length===1&&a[0].negate));return o.length===0?!0:o.some(a=>Mw(e,a,i))}const Pw={id:"csv-import",name:"CSV Import",type:"importer",version:"0.1.0",description:"Drag-and-drop CSV or TSV files to create typed tables.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/csv-import.ts"};function zw(e){e.ui.registerImporter(Uw),Ie(()=>import("./csv-import-options-B98LB2ZN.js"),[]),e.ui.registerHeaderButton({id:"csv-import:paste",label:"Paste CSV",icon:"content_paste",tooltip:"Paste CSV text to create a new table",onClick:()=>e.ui.openCsvPasteDialog()}),e.ui.registerDropHandler(async t=>{const r=Zw(t).filter(ey);if(r.length===0)return!1;if(t.preventDefault(),r.length===1&&await Fw(e,t,r[0]))return!0;const i=r.length===1?`"${r[0].name}"`:`${r.length} files`,s=await e.ui.dialogs.choice(`Import ${i} straight away, or review the columns first (rename, hide, fix duplicate names)?`,[jw,Ju],"Import CSV");if(!s)return!0;const o=s===Ju?async a=>{const{editColumnNames:c}=await Ie(async()=>{const{editColumnNames:d}=await Promise.resolve().then(()=>hS);return{editColumnNames:d}},void 0);return c(a)}:void 0;for(const a of r)await Bw(e,a,o);return!0})}function Wa(e){return e.kind==="file"&&e.file?e.file.name:e.kind==="url"&&e.url?Ht(e.url):"pasted"}function Nw(e){return ql(Wa(e))||"imported"}const jw="Import directly",Ju="Edit columns first";async function Fw(e,t,n){const{tableIdAtNode:r}=await Ie(async()=>{const{tableIdAtNode:a}=await Promise.resolve().then(()=>Ic);return{tableIdAtNode:a}},void 0),i=r(t.target);if(!i)return!1;const s=await e.store.tables.findOne(i);if(!s)return!1;if(s.readonly===!0||s.source!=null)return e.ui.dialogs.toast(`"${s.name}" is read-only, so the file was imported as a new table.`,{kind:"warning",title:"Import CSV"}),!1;const o=await ro(e,{fileName:n.name,tableName:s.name,title:"Import CSV"});return o?o==="new"?!1:(await Fl(e,await n.text(),n.name,cf(i,s.name,o)),!0):!0}function cf(e,t,n){const r={target:{tableId:e,mode:n}};return n==="recreate"||(r.mapFields=async(i,s,o)=>{if(sf(i,s))return s.map(c=>c.field);const{mapColumnsToTable:a}=await Ie(async()=>{const{mapColumnsToTable:c}=await import("./column-map-dialog-rL70ht7J.js");return{mapColumnsToTable:c}},[]);return a(i,s,t,o)}),r}const Uw={id:"csv",label:"CSV / TSV",icon:"table_view",order:10,accept:[".csv",".tsv",".tab","text/csv","text/tab-separated-values"],panel:"csv-import-options",samples:[{label:"Air quality — 2016 readings (CSV)",url:"https://raw.githubusercontent.com/MainakRepositor/Datasets/master/Air%20Quality/real_2016_air.csv"}],supports:{url:!0,file:!0,text:!0,reference:!0,kernel:!0},detect(e){const t=e.kind==="file"?e.file?.name??"":e.url??e.text??"";return/\.(csv|tsv|tab)$/i.test(t)?.95:e.file?.type==="text/csv"?.9:e.kind==="text"?.2:0},async list(e,t){return[{name:Nw(t),rowCount:null,handle:t}]},async*read(e,t){const n=t.handle;let r;n.kind==="file"&&n.file?r=e.maxRows!=null?await df(n.file,e.maxRows):await n.file.text():n.kind==="url"&&n.url?r=await e.fetchText(n.url,`Reading ${Wa(n)}…`):r=n.text??"";const s=(typeof e.panel.separator=="string"?e.panel.separator:void 0)??Hl(Wa(n)),o={...e.maxRows!=null?{maxRows:e.maxRows}:{},...s?{separator:s}:{}},a=e.targetColumns;if(a&&a.length>0){yield{rows:Ul(r,o).rows.map(p=>{const b={};for(let y=0;y<a.length;y++){const $=a[y];b[$.field]=Bl(p[y]??"",$.type)}return b})};return}const c=Cr(r,o);yield{columns:c.columns,rows:c.rows}},reference(e,t){const n=t.handle;if(n.kind!=="url"||!n.url)throw new Error("A reference needs a re-fetchable URL — an upload cannot be referenced.");return{type:"url",config:{url:n.url,format:"csv"}}}};async function Bw(e,t,n){await Fl(e,await t.text(),t.name,n?{editColumns:n}:void 0)}async function Fl(e,t,n,r={}){const i=e.workspaceId();if(!i)throw new Error("csv-import: no active workspace");const s=ql(n||"imported")||"imported",o=r.separator??Hl(n),a=r.target?await e.store.tables.findOne(r.target.tableId):null,c=a??(await e.store.tables.find()).find($=>$.workspaceId===i&&$.name===s);let d,f,p=r.mapFields;if(a&&r.target)f=r.target.mode,d=a.id;else if(c){const $=await ro(e,{fileName:n||s,tableName:c.name,title:"CSV import",reason:`A table named "${s}" already exists in this workspace.`});if(!$)return;f=$,f==="new"?d=_e():(d=c.id,p=cf(c.id,c.name,f).mapFields)}else f="new",d=_e();e.events.emit("import:before",{source:"csv",tableId:d});let b;if(f==="new"||f==="recreate"){const $=Cr(t,{maxRows:r.maxRows,separator:o});let k=$.columns,C=$.rows;if(r.editColumns){const _=await r.editColumns(k);if(_===null)return;C=ty(C,k,_),k=_}if(r.maxRows!=null&&(C=C.slice(0,r.maxRows)),f==="recreate"){const _=e.store.rows(d),T=await _.find();await _.bulkRemove(T.map(Y=>Y.id)),await e.store.tables.patch(d,{columns:k,updatedAt:Date.now()})}else await e.store.tables.insert({id:d,workspaceId:i,name:s,code:lr(s),columns:k,view:"table",...r.origin?{origin:r.origin}:{},updatedAt:Date.now()});b=C.map(_=>({id:_e(),tableId:d,data:_,updatedAt:Date.now()}))}else{const $=c.columns,k=Ul(t,{maxRows:r.maxRows,separator:o}),C=r.maxRows!=null?k.rows.slice(0,r.maxRows):k.rows;let _=$.map(T=>T.field);if(p){const T=await p(k.header,$,k.rows[0]??[]);if(T===null)return;_=T}if(b=Tw(C,$,_,Bl).map(T=>({id:_e(),tableId:d,data:T,updatedAt:Date.now()})),f==="reload"){const T=e.store.rows(d),Y=await T.find();await T.bulkRemove(Y.map(D=>D.id))}}await e.store.rows(d).bulkInsert(b),e.events.emit("import:after",{source:"csv",tableId:d,rowCount:b.length})}function Ul(e,t={}){const n=e.replace(/\uFEFF/,""),r=t.separator??hf(n),i=ff(n,r,uf(t.maxRows));if(i.length===0)return{header:[],rows:[]};const s=i[0],o=i.slice(1).filter(a=>!(a.length===1&&a[0]===""));return{header:s,rows:o}}function uf(e){return e!=null?e+1:void 0}async function df(e,t){const r=new TextDecoder,i=t+1;let s="",o=0,a=!1,c=0;for(;c<e.size;){const d=new Uint8Array(await e.slice(c,c+1048576).arrayBuffer());c+=1048576;const f=r.decode(d,{stream:!0});for(let p=0;p<f.length;p++){const b=f[p];if(b==='"')a=!a;else if(b===`
+`&&!a&&(o+=1,o>=i))return s+f.slice(0,p+1)}s+=f}return s}function Cr(e,t={}){const n=e.replace(/\uFEFF/,""),r=t.separator??hf(n),i=ff(n,r,uf(t.maxRows));if(i.length===0)return{columns:[],rows:[]};const s=i[0],o=i.slice(1).filter(y=>!(y.length===1&&y[0]==="")),a=s.map((y,$)=>Vw(y,$)),c=gf(a.map(y=>y.field)),d=o.map(y=>{const $={};for(let k=0;k<c.length;k++)$[c[k]]=y[k]??"";return $}),f=a.map((y,$)=>y.type?y.type:Kw(d.map(k=>k[c[$]]??"").filter(k=>k.length>0))),p=a.map((y,$)=>{const k=f[$]??"string",C={field:c[$],label:y.label,type:k},_=Hw(k),T=y.renderer??_;return T&&(C.renderer=T),y.default!==void 0&&(C.default=y.default),y.max!=null&&(C.max=y.max),y.unique&&(C.unique=!0),y.notnull&&(C.notnull=!0),y.hidden&&(C.hidden=!0),C}),b=d.map(y=>{const $={};for(let k=0;k<c.length;k++){const C=c[k],_=f[k]??"string";$[C]=Bl(y[C]??"",_)}return $});return{columns:p,rows:b}}const qw=new Set(["string","number","boolean","date","datetime","array"]),Xu={color:"color",image:"image"};function Hw(e){if(e==="date"||e==="datetime"||e==="boolean")return e;if(e==="array")return"tags"}function Vw(e,t){const n=e.trim();if(!n.includes(":"))return{field:lr(n||`col_${t+1}`),label:n||`Column ${t+1}`};const r=n.split(":"),i=lr(r[0]||`col_${t+1}`),s=(r[1]??r[0]??"").trim()||i,o={field:i,label:s},a=(r[2]??"").trim();a&&(qw.has(a)?o.type=a:Xu[a]&&(o.type="string",o.renderer=Xu[a]));const c=(r[3]??"").trim();c&&(o.default=c);const d=(r[4]??"").trim();if(d){const p=Number(d);Number.isFinite(p)&&p>0&&(o.max=p)}const f=(r[5]??"").toLowerCase();return f.includes("u")&&(o.unique=!0),f.includes("n")&&(o.notnull=!0),f.includes("h")&&(o.hidden=!0),o}function hf(e){const t=e.split(/\r?\n/).slice(0,5).join(`
+`),n={",":0,";":0,"	":0};for(const s of t)s in n&&(n[s]+=1);let r=",",i=-1;for(const s of[",",";","	"])(n[s]??0)>i&&(r=s,i=n[s]??0);return r}function ff(e,t,n){const r=[];let i=[],s="",o=!1;for(let a=0;a<e.length;a++){const c=e[a];if(o)c==='"'?e[a+1]==='"'?(s+='"',a++):o=!1:s+=c;else if(c==='"')o=!0;else if(c===t)i.push(s),s="";else if(c===`
+`||c==="\r"){if(c==="\r"&&e[a+1]===`
+`&&a++,i.push(s),r.push(i),i=[],s="",n!=null&&r.length>=n)return r}else s+=c}return(s.length>0||i.length>0)&&(i.push(s),r.push(i)),r}function Kw(e){return e.length===0?"string":lf(e)?"array":e.every(Gw)?"boolean":e.every(Yw)?"number":e.every(Jw)?"datetime":e.every(Qw)?"date":"string"}const Ww=/^(true|false|yes|no|0|1)$/i;function Gw(e){return Ww.test(e.trim())}function Yw(e){const t=e.trim();if(t===""||io(t))return!1;const n=Number(t);return Number.isFinite(n)}function Qw(e){const t=e.trim();return t===""||/^\d+$/.test(t)?!1:!!(/^\d{4}-\d{2}-\d{2}$/.test(t)||/^\d{1,2}[/\-.]\d{1,2}[/\-.]\d{2,4}$/.test(t))}function Jw(e){const t=e.trim();return t===""?!1:!!(/^\d{4}-\d{2}-\d{2}[T ]\d{1,2}:\d{2}(:\d{2})?/.test(t)||/^\d{1,2}[/\-.]\d{1,2}[/\-.]\d{2,4}[T ]\d{1,2}:\d{2}/.test(t))}function Bl(e,t){const n=e.trim();switch(t){case"array":return n===""?null:n;case"number":{if(n==="")return null;if(io(n))return n;const r=Number(n);return Number.isFinite(r)?r:n}case"boolean":return n===""?null:/^(true|yes|1)$/i.test(n);case"date":return pf(n);case"datetime":return Xw(n);default:return e}}function pf(e){if(e==="")return"";if(/^\d{4}-\d{2}-\d{2}$/.test(e))return e;const t=/^(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{2,4})$/.exec(e);if(t){const r=parseInt(t[1],10),i=parseInt(t[2],10),s=t[3];let o=parseInt(s,10);s.length===2&&(o+=2e3);let a,c;return r>12?(a=r,c=i):i>12?(c=r,a=i):(a=r,c=i),`${o.toString().padStart(4,"0")}-${c.toString().padStart(2,"0")}-${a.toString().padStart(2,"0")}`}const n=new Date(e);return Number.isNaN(n.getTime())?e:n.toISOString().slice(0,10)}function Xw(e){if(e==="")return"";const t=e.replace(/\s+/,"T"),n=/^(\d{4}-\d{2}-\d{2})T(\d{1,2}:\d{2})(?::\d{2})?/.exec(t);if(n)return`${n[1]}T${n[2].padStart(5,"0")}`;const r=/^(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{2,4})[T ](\d{1,2}:\d{2})/.exec(e);if(r)return`${pf(`${r[1]}/${r[2]}/${r[3]}`)}T${r[4].padStart(5,"0")}`;const i=new Date(e);if(!Number.isNaN(i.getTime())){const s=i.toISOString();return`${s.slice(0,10)}T${s.slice(11,16)}`}return e}function Zw(e){const t=e.dataTransfer;if(!t)return[];if(t.files&&t.files.length>0)return Array.from(t.files);if(t.items){const n=[];for(const r of Array.from(t.items))if(r.kind==="file"){const i=r.getAsFile();i&&n.push(i)}return n}return[]}const mf=/\.(csv|tsv|tab)$/i;function ql(e){return e.replace(mf,"")}function Hl(e){return/\.(tsv|tab)$/i.test(e)?"	":void 0}function ey(e){return!!(mf.test(e.name)||e.type==="text/csv"||e.type==="application/csv"||e.type==="text/tab-separated-values")}function gf(e){const t=new Map,n=new Set,r=[];for(const i of e){let s=i,o=t.get(i)??0;for(;n.has(s);)o+=1,s=`${i}_${o+1}`;t.set(i,o),n.add(s),r.push(s)}return r}function ty(e,t,n){return e.map(r=>{const i={};for(let s=0;s<t.length;s++)i[n[s].field]=r[t[s].field];return i})}const ny=Object.freeze(Object.defineProperty({__proto__:null,dedupeFields:gf,importCsvText:Fl,init:zw,meta:Pw,parseCsv:Cr,parseCsvRaw:Ul,readCsvHead:df,separatorForName:Hl,stripDelimitedExt:ql},Symbol.toStringTag,{value:"Module"})),ry={id:"csv-export",name:"CSV Export",type:"exporter",version:"0.1.0",description:"CSV serializer for the per-table export menu (see dump-export.ts) and the importer/exporter registry.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/csv-export.ts"},iy={id:"csv",label:"CSV",extension:".csv",async serialize(e,t){return Vl(e,t)}};function sy(e){e.ui.registerExporter(iy)}function Vl(e,t){const n=e.columns.map(s=>s.field),r=e.columns.map(s=>Zu(s.label??s.field)),i=t.map(s=>n.map(o=>Zu(oy(s.data[o]))).join(","));return[r.join(","),...i].join(`\r
+`)}function oy(e){return e==null?"":typeof e=="boolean"?e?"true":"false":typeof e=="number"||typeof e=="string"?String(e):JSON.stringify(e)}function Zu(e){return e===""?"":/[",\r\n]/.test(e)?`"${e.replace(/"/g,'""')}"`:e}const ay=Object.freeze(Object.defineProperty({__proto__:null,init:sy,meta:ry,serializeCsv:Vl},Symbol.toStringTag,{value:"Module"}));var ly=Object.defineProperty,cy=Object.getOwnPropertyDescriptor,mn=(e,t,n,r)=>{for(var i=r>1?void 0:r?cy(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&ly(t,n,i),i};function fi(e,t={}){return(Je.instance??bf()).open(e,t).then(r=>r?.map(i=>i.index)??null)}function uy(e,t={}){return(Je.instance??bf()).open(e,t)}function bf(){const e=document.createElement("table-select-dialog");return document.body.appendChild(e),e}function dy(e){return e==null?"":`${e.toLocaleString()} row${e===1?"":"s"}`}let Je=class extends $e{constructor(){super(...arguments),this.items=[],this.selected=[],this.heading="Select tables",this.message="",this.confirmLabel="Import",this.dialogEl=null,this.modes=[],this.offerViewModes=!1,this.resolveFn=null,this.onCancel=e=>{e.preventDefault(),this.finish(null)},this.submit=e=>{e.preventDefault();const t=[];this.selected.forEach((n,r)=>{if(!n)return;const i=(this.items[r]?.kind??"table")==="view";t.push(i&&this.offerViewModes?{index:r,mode:this.modes[r]??"projection"}:{index:r})}),t.length!==0&&this.finish(t)}}connectedCallback(){super.connectedCallback(),Je.instance=this}disconnectedCallback(){super.disconnectedCallback(),Je.instance===this&&(Je.instance=null)}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e)}open(e,t){return this.items=e,this.selected=e.map(n=>!n.hidden),this.offerViewModes=t.offerViewModes??!1,this.modes=e.map(()=>t.defaultViewMode??"projection"),this.heading=t.title??"Select tables",this.message=t.message??"",this.confirmLabel=t.confirmLabel??"Import",new Promise(n=>{this.resolveFn=n,this.updateComplete.then(()=>this.dialogEl?.showModal())})}finish(e){this.dialogEl?.close();const t=this.resolveFn;this.resolveFn=null,queueMicrotask(()=>t?.(e))}toggle(e){const t=this.selected.slice();t[e]=!t[e],this.selected=t}setAll(e,t){this.selected=this.items.map((n,r)=>t&&(n.kind??"table")!==t?this.selected[r]??!1:e)}setMode(e,t){const n=this.modes.slice();n[e]=t,this.modes=n}indicesOf(e){return this.items.map((t,n)=>(t.kind??"table")===e?n:-1).filter(t=>t>=0)}get sectioned(){return this.items.some(e=>e.kind!==void 0)}get selectedCount(){return this.selected.filter(Boolean).length}renderSection(e,t){const n=this.indicesOf(e);if(n.length===0)return v``;const r=n.filter(i=>this.selected[i]).length;return v`
+      <div class="section">
+        <div class="section-head">
+          <span class="section-title">${t} <span class="section-count">${r}/${n.length}</span></span>
+          <span>
+            <button type="button" @click=${()=>this.setAll(!0,e)}>All</button>
+            &nbsp;·&nbsp;
+            <button type="button" @click=${()=>this.setAll(!1,e)}>None</button>
+          </span>
+        </div>
+        <ul class="tables">
+          ${n.map(i=>this.renderRow(this.items[i],i))}
+        </ul>
+      </div>
+    `}renderRow(e,t){const n=(e.kind??"table")==="view";return v`
+      <li>
+        <input type="checkbox" id=${`tsel-${t}`} .checked=${this.selected[t]??!1} @change=${()=>this.toggle(t)} />
+        <label for=${`tsel-${t}`}>
+          <span class="name">${e.name}</span>
+          ${e.hidden?v`<span class="tag-hidden">hidden</span>`:""}
+          <span class="size">${dy(e.size)}</span>
+          ${e.detail?v`<span class="detail">${e.detail}</span>`:""}
+        </label>
+        ${n&&this.offerViewModes?this.renderModeToggle(t):""}
+      </li>
+    `}renderModeToggle(e){const t=this.modes[e]??"projection";return v`
+      <span class="mode" title="A projection recomputes from its source tables; Data is a snapshot you can edit">
+        <label class="mode-opt">
+          <input type="radio" name=${`mode-${e}`} .checked=${t==="projection"} @change=${()=>this.setMode(e,"projection")} />
+          Projection
+        </label>
+        <label class="mode-opt">
+          <input type="radio" name=${`mode-${e}`} .checked=${t==="data"} @change=${()=>this.setMode(e,"data")} />
+          Data
+        </label>
+      </span>
+    `}render(){const e=this.selectedCount;return v`
+      <dialog @cancel=${this.onCancel} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${()=>this.finish(null)}>×</button>
+        <form @submit=${this.submit}>
+          <div class="dialog-header">
+            <h2>${this.heading}</h2>
+            <div class="header-actions">
+              <button type="button" class="ghost" @click=${()=>this.finish(null)}>Cancel</button>
+              <button type="submit" class="primary" ?disabled=${e===0}>${this.confirmLabel} (${e})</button>
+            </div>
+          </div>
+          <div class="dialog-body">
+            ${this.message?v`<p class="message">${this.message}</p>`:""}
+            <div class="toolbar">
+              <span>${e} of ${this.items.length} selected</span>
+              <span>
+                <button type="button" @click=${()=>this.setAll(!0)}>Select all</button>
+                &nbsp;·&nbsp;
+                <button type="button" @click=${()=>this.setAll(!1)}>None</button>
+              </span>
+            </div>
+            ${this.sectioned?v`${this.renderSection("table","Tables")}${this.renderSection("view","Views")}`:v`<ul class="tables">
+                  ${this.items.map((t,n)=>this.renderRow(t,n))}
+                </ul>`}
+          </div>
+        </form>
+      </dialog>
+    `}};Je.instance=null;Je.styles=[mt,Se`
+      dialog {
+        min-width: 420px;
+        max-width: 560px;
+      }
+      .message {
+        margin: 0;
+        color: #374151;
+        font-size: 0.9rem;
+      }
+      .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.75rem;
+        font-size: 0.82rem;
+        color: #6b7280;
+      }
+      .toolbar button {
+        font: inherit;
+        background: transparent;
+        border: 0;
+        color: #2563eb;
+        cursor: pointer;
+        padding: 0;
+      }
+      .toolbar button:hover {
+        text-decoration: underline;
+      }
+      ul.tables {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.35rem;
+        max-height: 46vh;
+        overflow: auto;
+      }
+      li {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.45rem 0.7rem;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      li:last-child {
+        border-bottom: 0;
+      }
+      li label {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        flex: 1;
+        cursor: pointer;
+        min-width: 0;
+      }
+      .name {
+        font-weight: 500;
+        color: #111827;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .size {
+        color: #6b7280;
+        font-size: 0.8rem;
+        white-space: nowrap;
+      }
+      .detail {
+        color: #9ca3af;
+        font-size: 0.78rem;
+      }
+      .tag-hidden {
+        flex: 0 0 auto;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #92400e;
+        background: #fef3c7;
+        border-radius: 0.25rem;
+        padding: 0.05rem 0.35rem;
+      }
+      input[type='checkbox'] {
+        width: 1rem;
+        height: 1rem;
+      }
+      button.primary:disabled {
+        background: #93c5fd;
+        cursor: default;
+      }
+      .section + .section {
+        margin-top: 0.75rem;
+      }
+      .section-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0.75rem;
+        padding: 0 0.15rem 0.25rem;
+        font-size: 0.82rem;
+      }
+      .section-title {
+        font-weight: 600;
+        color: #374151;
+      }
+      .section-count {
+        font-weight: 400;
+        color: #6b7280;
+      }
+      .section-head button {
+        font: inherit;
+        background: transparent;
+        border: 0;
+        color: #2563eb;
+        cursor: pointer;
+        padding: 0;
+      }
+      .section-head button:hover {
+        text-decoration: underline;
+      }
+      .mode {
+        flex: 0 0 auto;
+        display: flex;
+        gap: 0.5rem;
+        font-size: 0.78rem;
+        color: #374151;
+      }
+      .mode-opt {
+        display: flex;
+        align-items: center;
+        gap: 0.2rem;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .mode input[type='radio'] {
+        width: 0.85rem;
+        height: 0.85rem;
+      }
+    `];mn([j()],Je.prototype,"items",2);mn([j()],Je.prototype,"selected",2);mn([j()],Je.prototype,"heading",2);mn([j()],Je.prototype,"message",2);mn([j()],Je.prototype,"confirmLabel",2);mn([j()],Je.prototype,"modes",2);mn([j()],Je.prototype,"offerViewModes",2);Je=mn([Re("table-select-dialog")],Je);const hy=Object.freeze(Object.defineProperty({__proto__:null,get TableSelectDialog(){return Je},chooseDatabaseObjects:uy,chooseTables:fi},Symbol.toStringTag,{value:"Module"}));function Kl(e,t){return e.every((n,r)=>n.field===t[r]?.field)?null:n=>{const r={};for(let i=0;i<e.length;i++)r[t[i].field]=n[e[i].field];return r}}function ed(e,t){if(t.length===0)return null;const n=new Set(t.map(i=>i.from)),r={};for(const i of Object.keys(e))n.has(i)||(r[i]=e[i]);for(const{from:i,to:s}of t)Object.prototype.hasOwnProperty.call(e,i)&&(r[s]=e[i]);return r}function oo(e,t,n=[]){const r=new Set(e.map(a=>a.field)),i=new Set(n),s=[...e],o=[];for(const a of t)r.has(a.field)||i.has(a.field)||(s.push(a),o.push(a.field),r.add(a.field));return{columns:s,newFields:o}}async function Wl(e,t){return(await e.store.tables.find()).filter(n=>n.workspaceId===t).map(n=>n.name)}async function wf(e,t,n,r){const{workspaceId:i,importerId:s,target:o,maxRows:a}=r;let c,d,f,p=!1,b=0,y,$=null;const k=_=>e.store.rows(_),C=async _=>{if(p)return!0;if(o.kind==="new"){let T=_.columns??[];if(r.editColumns){const D=await r.editColumns(T);if(D===null)return!1;$=Kl(T,D),T=D}c=_e(),d=fn(await Wl(e,i),t);const Y={id:c,workspaceId:i,name:d,code:Ne(d),columns:T,view:"table",...r.origin?{origin:r.origin}:{},updatedAt:Date.now()};await e.store.tables.insert(Y),f=!0}else{const T=await e.store.tables.findOne(o.tableId);if(!T)throw new Error("The table to import into no longer exists.");if(c=T.id,d=T.name,f=!1,o.kind==="overwrite"){const Y=await k(c).find();await k(c).bulkRemove(Y.map(D=>D.id))}if(_.columns?.length){const Y=oo(T.columns,_.columns,T.deletedColumns??[]);Y.newFields.length>0&&await e.store.tables.patch(c,{columns:Y.columns,updatedAt:Date.now()})}}return e.events.emit("import:before",{source:s,tableId:c}),p=!0,!0};for await(const _ of n){if(a!=null&&b>=a)break;if(!await C(_))return null;_.totalCount!=null&&(y=_.totalCount);let T=_.rows;if(a!=null&&b+T.length>a&&(T=T.slice(0,a-b)),T.length===0)continue;$&&(T=T.map($));const Y=Date.now(),D=T.map(ne=>({id:_e(),tableId:c,data:ne,updatedAt:Y}));await k(c).bulkInsert(D),b+=D.length,r.onProgress?.(b,y)}return!p&&!await C({})?null:(e.events.emit("import:after",{source:s,tableId:c,rowCount:b}),{tableId:c,tableName:d,rowCount:b,created:f})}function td(e,t,n={}){const r=t.mode==="reference"||t.maxRows!=null;return{api:e,fetchText:(i,s)=>$i(e,i,s??"Reading…",r?{maxBytes:null}:{}),panel:t.panel??{},...t.cursor!==void 0?{cursor:t.cursor}:{},...t.maxRows!==void 0?{maxRows:t.maxRows}:{},...n}}async function fy(e,t){if(t.length<=1)return t;const n=await fi(t.map(r=>({name:r.name,size:r.rowCount,...r.detail!==void 0?{detail:r.detail}:{},...r.hidden!==void 0?{hidden:r.hidden}:{}})),{title:`Import from ${e.label}`,message:`This source offers ${t.length} tables. Choose which to import.`,confirmLabel:"Import"});return n?n.map(r=>t[r]):null}async function py(e,t,n,r,i){if(!t.reference)throw new Error(`${t.label} cannot be referenced — import a copy instead.`);const s=t.reference(n,r);let o=[];for await(const d of t.read(n,r)){o=d.columns??[];break}if(o.length===0)throw new Error("No columns found in the referenced data.");const a=fn(await Wl(e,i),r.name),c=_e();return await e.store.tables.insert({id:c,workspaceId:i,name:a,code:Ne(a),columns:o,view:"table",source:s,readonly:!0,updatedAt:Date.now()}),{tableId:c,tableName:a,rowCount:0,created:!0}}async function ao(e,t,n,r){const i=e.workspaceId();if(!i)throw new Error("No active workspace.");const s=td(e,r),o=await t.list(s,n);if(o.length===0)throw new Error("No tables found at that source.");const a=await fy(t,o);if(a===null)return{landed:[],failed:[],cancelled:!0};const c=[],d=[];for(const f of a)try{if(r.mode==="reference"){c.push(await py(e,t,s,f,i));continue}const p=r.target;let b;p.kind!=="new"&&(b=(await e.store.tables.findOne(p.tableId))?.columns);const y=td(e,r,{...b?{targetColumns:b}:{}}),$=t.read(y,f),k=r.origin??(n.kind==="url"&&n.url?{type:t.id,url:n.url}:void 0),C=await wf(e,f.name,$,{workspaceId:i,importerId:t.id,target:p,...k?{origin:k}:{},...r.editColumns?{editColumns:r.editColumns}:{},...r.maxRows!==void 0?{maxRows:r.maxRows}:{}});if(C===null)return{landed:c,failed:d,cancelled:!0};c.push(C)}catch(p){d.push({name:f.name,error:p?.message??String(p)})}return{landed:c,failed:d,cancelled:!1}}async function yf(e,t,n){const r=new Map;if(n.length===0)return r;const i=(await e.find()).filter(a=>a.workspaceId===t),s=new Map(i.map(a=>[a.name,a])),o=new Map(i.map(a=>[a.id,a]));for(const a of n){if(!my(a))continue;const c=s.get(a.name)??o.get(a.id),d=c?.id??a.id;c&&r.set(a.id,c.id);const f=c?c.builtin:a.builtin,p={...a,id:d,workspaceId:t};f===void 0?delete p.builtin:p.builtin=f,await e.upsert(p),s.set(p.name,p),o.set(p.id,p)}return r}function my(e){if(typeof e!="object"||e===null)return!1;const t=e;return typeof t.id=="string"&&typeof t.name=="string"}const gy={id:"json-import",name:"JSON Import",type:"importer",version:"0.1.0",description:"Drag-and-drop JSON to create tables. Supports native dumps and arrays of objects.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2 2 2 0 0 1 2 2v4a2 2 0 0 0 2 2"/><path d="M16 3a2 2 0 0 1 2 2v4a2 2 0 0 0 2 2 2 2 0 0 0-2 2v4a2 2 0 0 1-2 2"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/json-import.ts"};function by(e){e.ui.registerImporter(kf),e.ui.registerDropHandler(async t=>{const r=_y(t).filter(Ty);if(r.length===0)return!1;t.preventDefault();for(const i of r)await wy(e,t,i)||await vy(e,i);return!0})}async function wy(e,t,n){const{tableIdAtNode:r}=await Ie(async()=>{const{tableIdAtNode:f}=await Promise.resolve().then(()=>Ic);return{tableIdAtNode:f}},void 0),i=r(t.target);if(!i)return!1;const s=await e.store.tables.findOne(i);if(!s)return!1;if(s.readonly===!0||s.source!=null)return e.ui.dialogs.toast(`"${s.name}" is read-only, so the file was imported as a new table.`,{kind:"warning",title:"Import JSON"}),!1;const o=await n.text();let a;try{a=JSON.parse(so(o))}catch{return!1}const c=xi(a,Ss(n.name));if(c.length===0)return!1;if(c.length>1)return e.ui.dialogs.toast(`"${n.name}" holds ${c.length} tables — drop it outside a window to import them.`,{kind:"warning",title:"Import JSON"}),!0;const d=await ro(e,{fileName:n.name,tableName:s.name,title:"Import JSON"});return d?d==="new"?!1:(await vf(e,s,c[0],d),!0):!0}async function vf(e,t,n,r){const i=e.store.rows(t.id);e.events.emit("import:before",{source:"json",tableId:t.id});let s;if(r==="recreate")await e.store.tables.patch(t.id,{columns:n.columns,updatedAt:Date.now()}),s=n.rows;else{const a=n.columns.map(d=>d.field);let c=t.columns.map(d=>d.field);if(!sf(a,t.columns)){const{mapColumnsToTable:d}=await Ie(async()=>{const{mapColumnsToTable:b}=await import("./column-map-dialog-rL70ht7J.js");return{mapColumnsToTable:b}},[]),f=a.map(b=>String(n.rows[0]?.[b]??"")),p=await d(a,t.columns,t.name,f);if(p===null)return;c=p}s=n.rows.map(d=>{const f={};return a.forEach((p,b)=>{const y=c[b];y&&(f[y]=d[p])}),f})}if(r!=="append"){const a=await i.find();await i.bulkRemove(a.map(c=>c.id))}const o=s.map(a=>({id:_e(),tableId:t.id,data:a,updatedAt:Date.now()}));await i.bulkInsert(o),e.events.emit("import:after",{source:"json",tableId:t.id,rowCount:o.length})}function Gl(e){return We(e)?Ga(e)||Array.isArray(e.tables)?!0:xf(e):!1}function yy(e){return e.kind==="file"&&e.file?Ss(e.file.name):e.kind==="url"&&e.url?Ss(Ht(e.url)):Ss(e.name??"imported")}const kf={id:"json",label:"JSON (array of objects or a dump)",icon:"data_object",order:20,accept:[".json",".db.json","application/json"],samples:[{label:"Northwind — sample database (JSON dump)",url:"https://raw.githubusercontent.com/cawoodm/easydbaccess/main/data/northwind.db.json"}],supports:{url:!0,file:!0,text:!0,reference:!0,multiTable:!0,kernel:!0},detect(e){const t=e.kind==="file"?e.file?.name??"":e.url??"";if(/\.db\.json$/i.test(t))return 1;if(/\.json$/i.test(t))return .95;if(e.file?.type==="application/json")return .9;const n=(e.text??"").trimStart();return n.startsWith("{")||n.startsWith("[")?.3:0},async list(e,t){let n;t.kind==="file"&&t.file?n=await t.file.text():t.kind==="url"&&t.url?n=await e.fetchText(t.url,`Reading ${Ht(t.url)}…`):n=t.text??"";const r=yy(t);let i;try{i=JSON.parse(so(n))}catch(o){throw new Error(`Invalid JSON in ${r}: ${o.message}`,{cause:o})}const s=xi(i,r);return s.map(o=>({name:o.name,rowCount:o.rows.length,handle:{table:o,input:t,single:s.length===1}}))},async*read(e,t){const{table:n}=t.handle;yield{columns:n.columns,rows:n.rows}},reference(e,t){const{input:n,single:r}=t.handle;if(n.kind!=="url"||!n.url)throw new Error("A reference needs a re-fetchable URL — an upload cannot be referenced.");if(!r)throw new Error("That URL holds several tables, so a reference would be ambiguous. Import a copy instead.");return{type:"url",config:{url:n.url,format:"json"}}}};function Ss(e){return e.replace(/\.db\.json$/i,"").replace(/\.json$/i,"")||"imported"}async function vy(e,t){const n=await t.text();let r;try{r=JSON.parse(so(n))}catch(o){e.events.emit("plugin:error",{url:"json-import",phase:"runtime",error:new Error(`Invalid JSON in ${t.name}: ${o.message}`)});return}if(Gl(r)){await Yl(e,n,t.name);return}const i=await ao(e,kf,{kind:"text",text:n,name:t.name},{mode:"copy",target:{kind:"new"}}),s=i.landed.reduce((o,a)=>o+a.rowCount,0);i.landed.length>0&&e.ui.dialogs.toast(`Imported ${t.name} (${s.toLocaleString()} rows).`,{kind:"success",title:"Import"})}async function Yl(e,t,n,r={}){const i=e.workspaceId();if(!i)throw new Error("json-import: no active workspace");let s;try{s=JSON.parse(so(t))}catch(C){e.events.emit("plugin:error",{url:"json-import",phase:"runtime",error:new Error(`Invalid JSON in ${n}: ${C.message}`)});return}const o=n.replace(/\.db\.json$/i,"").replace(/\.json$/i,"")||"imported",a=xi(s,o);if(a.length===0)return;let c=a;if(a.length>1){const C=await fi(a.map(_=>({name:_.name,size:_.rows.length})),{title:"Import tables",message:`"${n}" contains ${a.length} tables. Choose which to import.`,confirmLabel:"Import"});if(!C)return;c=C.map(_=>a[_])}const d=(await e.store.tables.find()).filter(C=>C.workspaceId===i),f=new Set(c.map(C=>C.name)),p=d.filter(C=>f.has(C.name));let b;if(p.length===0&&c.length===1)b="append-new";else if(c.length===1&&p.length===1){const C=p[0],_=await ro(e,{fileName:n,tableName:C.name,title:"JSON import",reason:`A table named "${C.name}" already exists in this workspace.`});if(!_)return;if(_==="reload"||_==="append"){await vf(e,C,c[0],_);return}b=_==="recreate"?"overwrite-matching":"append-new"}else{const C=p.length>0?[`Overwrite matching (${p.length})`,"Replace entire workspace","Add as new tables"]:["Add to current workspace","Replace entire workspace"],_=await e.ui.dialogs.choice(`Importing ${c.length} table${c.length===1?"":"s"} from "${n}".${p.length>0?`
+
+${p.length} table${p.length===1?"":"s"} share a name with existing data.`:""}`,C,"JSON import");if(!_)return;_.startsWith("Overwrite matching")?b="overwrite-matching":_==="Replace entire workspace"?b="replace-workspace":b="append-new"}const y=2e3,$=c.reduce((C,_)=>C+(_.source?0:Math.min(_.rows.length,r.maxRows??1/0)),0);let k=null;if($>=y){const{TopProgress:C}=await Ie(async()=>{const{TopProgress:_}=await import("./top-progress-Vz0ssV8n.js");return{TopProgress:_}},[]);k=C.begin(`Importing ${n}…`)}try{if(b==="replace-workspace")for(const D of d){const ne=e.store.rows(D.id),W=await ne.find();await ne.bulkRemove(W.map(I=>I.id)),await e.store.tables.remove(D.id)}const C=new Map(d.map(D=>[D.name,D])),_=new Map,T=[];let Y=0;for(const D of c){const ne=D.source,W=D.origin??(!ne&&r.originUrl?{type:"json",url:r.originUrl}:void 0);let I;const V=b==="overwrite-matching"?C.get(D.name):void 0;let K=D.columns,ie=D.rows;if(r.editColumns&&!V&&!ne){const H=await r.editColumns(K,D.name);if(H===null)continue;ie=Ey(ie,K,H),K=H}if(V){if(I=V.id,!V.source){const H=e.store.rows(I),te=await H.find();await H.bulkRemove(te.map(q=>q.id))}await e.store.tables.patch(I,{columns:K,...D.title?{title:D.title}:{},...D.windowGeometry?{windowGeometry:D.windowGeometry}:{},...D.sortColumn?{sortColumn:D.sortColumn,sortAsc:D.sortAsc??!0}:{sortColumn:void 0,sortAsc:void 0},...D.filters?{filters:D.filters}:{},...D.labelColumn?{labelColumn:D.labelColumn}:{},...D.info?{info:D.info}:{},...D.deletedColumns?{deletedColumns:D.deletedColumns}:{},...D.readonly?{readonly:!0}:{},source:ne??void 0,origin:W??void 0,updatedAt:Date.now()})}else{I=_e(),e.events.emit("import:before",{source:"json",tableId:I});const H=await e.store.tables.insert({id:I,workspaceId:i,name:D.name,code:Ne(D.name),columns:K,view:"table",...D.title?{title:D.title}:{},...D.windowGeometry?{windowGeometry:D.windowGeometry}:{},...D.sortColumn?{sortColumn:D.sortColumn,sortAsc:D.sortAsc??!0}:{},...D.filters?{filters:D.filters}:{},...D.labelColumn?{labelColumn:D.labelColumn}:{},...D.info?{info:D.info}:{},...D.deletedColumns?{deletedColumns:D.deletedColumns}:{},...D.readonly?{readonly:!0}:{},...ne?{source:ne}:{},...W?{origin:W}:{},updatedAt:Date.now()});H.name!==D.name&&T.push([D.name,H.name])}_.set(D.name,I);let de=0;if(!ne){const H=e.store.rows(I),q=(r.maxRows!=null?ie.slice(0,r.maxRows):ie).map(Q=>({id:_e(),tableId:I,data:Q,updatedAt:Date.now()}));await H.bulkInsert(q),de=q.length,Y+=de,k?.fraction($>0?Y/$:1)}e.events.emit("import:after",{source:"json",tableId:I,rowCount:de})}await ky(e,s,i,_,b==="replace-workspace"),T.length>0&&e.ui.dialogs.toast(T.map(([D,ne])=>`“${D}” came in as “${ne}”`).join(`
+`),{kind:"info",title:"Names must be unique"})}finally{k?.done()}document.dispatchEvent(new CustomEvent("easydb:restack-windows"))}async function ky(e,t,n,r,i){if(!We(t))return;const s=t,o=Array.isArray(s.viewTemplates)?s.viewTemplates:[],a=Array.isArray(s.viewInstances)?s.viewInstances:[];if(o.length===0&&a.length===0)return;if(i){const d=(await e.store.viewInstances.find()).filter(f=>f.workspaceId===n);await e.store.viewInstances.bulkRemove(d.map(f=>f.id))}const c=await yf(e.store.viewTemplates,n,o);for(const d of a){if(!We(d)||typeof d.id!="string")continue;const f=(d.tableName?r.get(d.tableName):void 0)??d.tableId;if(!f)continue;const p=c.get(d.templateId)??d.templateId;await e.store.viewInstances.upsert({...d,workspaceId:n,tableId:f,templateId:p})}}function xi(e,t){if(We(e)&&Ga(e))return nd(e);if(We(e)&&Array.isArray(e.tables)){const n=e,r=[];for(const i of n.tables){if($f(i)){r.push(rd(i));continue}We(i)&&Ga(i)&&r.push(...nd(i))}return r}if(xf(e))return[rd(e)];if(Array.isArray(e)){const n=e.filter(We);return n.length===0?[]:[{name:t,...id(n)}]}return We(e)?[{name:t,...id([e])}]:[]}function Ga(e){for(const[t,n]of Object.entries(e)){if(!/\.table\.json$/.test(t)||!We(n))continue;const r=n;if(Array.isArray(r.dataArray)&&Array.isArray(r.columns))return!0}return!1}function nd(e){const t=[];for(const[n,r]of Object.entries(e)){if(!/\.table\.json$/.test(n)||!We(r))continue;const i=r;if(!Array.isArray(i.dataArray)||!Array.isArray(i.columns))continue;const s=n.replace(/\.table\.json$/,""),o=i.columns.map(f=>$y(f)),a=o.map(f=>f.field),c=i.dataArray.filter(f=>Array.isArray(f)).map(f=>{const p={};for(let b=0;b<a.length;b++)p[a[b]]=f[b];return p}),d={name:s,columns:o,rows:c};if(i.elementRect&&typeof i.elementRect.x=="number"&&typeof i.elementRect.y=="number"){const f=i.elementRect;d.windowGeometry={x:f.x,y:f.y,w:f.width??600,h:f.height??400,z:f.zIndex??100,minimized:!!f.minimized,maximized:!!f.maximized}}typeof i.sortColumn=="number"&&i.sortColumn>=0&&i.sortColumn<a.length&&(d.sortColumn=a[i.sortColumn],d.sortAsc=(i.sortDirection??"asc")!=="desc"),t.push(d)}return t}function $y(e){const t=String(e.field??"col"),n=String(e.name??t),r=typeof e.type=="string"?e.type:"string",i={field:t,label:n,type:r};return e.isUnique&&(i.unique=!0),e.isNotNull&&(i.notnull=!0),i}function $f(e){return We(e)&&"name"in e&&"columns"in e&&Array.isArray(e.columns)}function xf(e){return $f(e)&&Array.isArray(e.rows)}function rd(e){const t=e,n=We(t.windowGeometry)?t.windowGeometry:void 0,r=typeof t.sortColumn=="string"?t.sortColumn:void 0,i=typeof t.sortAsc=="boolean"?t.sortAsc:void 0,s=typeof t.title=="string"?t.title:void 0,o=We(t.filters)?t.filters:void 0,a=typeof t.labelColumn=="string"?t.labelColumn:void 0,c=We(t.info)?t.info:void 0,d=Array.isArray(t.deletedColumns)?t.deletedColumns.filter(y=>typeof y=="string"):void 0,f=t.readonly===!0?!0:void 0,p=We(t.source)&&typeof t.source.type=="string"?t.source:void 0,b=We(t.origin)&&typeof t.origin.type=="string"&&typeof t.origin.url=="string"?t.origin:void 0;return{name:String(e.name),columns:e.columns.map(xy),rows:Array.isArray(e.rows)?e.rows.filter(We):[],...s?{title:s}:{},...n?{windowGeometry:n}:{},...r?{sortColumn:r,sortAsc:i??!0}:{},...o?{filters:o}:{},...a?{labelColumn:a}:{},...c?{info:c}:{},...d?{deletedColumns:d}:{},...f?{readonly:f}:{},...p?{source:p}:{},...b?{origin:b}:{}}}function xy(e){if(!We(e))return{field:"col",label:"Col",type:"string"};const t=e,n=String(t.field??"col");let r=typeof t.type=="string"?t.type:"string",i=typeof t.renderer=="string"?t.renderer:void 0;(r==="color"||r==="image")&&(i=i??r,r="string");const s={field:n,label:String(t.label??n),type:r};return i&&(s.renderer=i),typeof t.script=="string"&&(s.script=t.script),typeof t.validate=="string"&&(s.validate=t.validate),t.default!==void 0&&(s.default=t.default),typeof t.max=="number"&&(s.max=t.max),typeof t.width=="number"&&(s.width=t.width),typeof t.description=="string"&&(s.description=t.description),typeof t.units=="string"&&(s.units=t.units),t.unique===!0&&(s.unique=!0),t.notnull===!0&&(s.notnull=!0),t.hidden===!0&&(s.hidden=!0),t.sortable===!1&&(s.sortable=!1),t.filterable===!1&&(s.filterable=!1),t.readonly===!0&&(s.readonly=!0),s}function id(e){const t=new Set;for(const i of e)for(const s of Object.keys(i))t.add(s);return{columns:Array.from(t).map(i=>({field:i,label:i,type:Sy(e.map(s=>s[i]))})),rows:e}}function Sy(e){const t=e.filter(n=>n!=null&&n!=="");return t.length===0?"string":lf(t)?"array":t.every(n=>typeof n=="boolean")?"boolean":t.every(n=>typeof n=="number"&&Number.isFinite(n))?"number":t.every(n=>typeof n=="string"&&Cy(n))?"date":"string"}function Cy(e){const t=e.trim();return t===""||/^\d+$/.test(t)?!1:!!(/^\d{4}-\d{2}-\d{2}([T ]\d{1,2}:\d{2}(:\d{2})?)?/.test(t)||/^\d{1,2}[/\-.]\d{1,2}[/\-.]\d{2,4}([T ]\d{1,2}:\d{2})?$/.test(t))}function Ey(e,t,n){const r=Kl(t,n);return r?e.map(r):e}function We(e){return typeof e=="object"&&e!==null&&!Array.isArray(e)}function _y(e){const t=e.dataTransfer;if(!t)return[];if(t.files&&t.files.length>0)return Array.from(t.files);if(t.items){const n=[];for(const r of Array.from(t.items))if(r.kind==="file"){const i=r.getAsFile();i&&n.push(i)}return n}return[]}function Ty(e){return!!(/\.json$/i.test(e.name)||e.type==="application/json")}const Iy=Object.freeze(Object.defineProperty({__proto__:null,init:by,isWorkspaceDump:Gl,meta:gy,parsedToTables:xi,restoreWorkspaceDump:Yl},Symbol.toStringTag,{value:"Module"}));function Ql(e){return e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}function pi(e){return e.replace(/&(?![a-zA-Z][a-zA-Z0-9]*;|#\d+;|#x[0-9a-fA-F]+;)/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}function Sf(e){return e.replace(/&lt;/gi,"<").replace(/&gt;/gi,">").replace(/&quot;/gi,'"').replace(/&apos;|&#39;/gi,"'").replace(/&nbsp;/gi," ").replace(/&#x([0-9a-f]+);/gi,(t,n)=>String.fromCodePoint(parseInt(n,16))).replace(/&#(\d+);/g,(t,n)=>String.fromCodePoint(Number(n))).replace(/&amp;/gi,"&")}function Cs(e){const t=e.trim();return t===""?null:/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(t)?/^(https?|mailto|tel):/i.test(t)?t:null:t}function Ay(e){const t=Sf(e).trim(),n=t.replace(/[^!-~]/g,"");return Cs(n)===null?null:t}const Cf="script|style|iframe|object|embed|noscript|template|svg|math|frame|frameset",Ry=new RegExp(`<(${Cf})\\b(?:"[^"]*"|'[^']*'|[^"'>])*>[\\s\\S]*?<\\/\\s*\\1\\s*>`,"gi"),Oy=new RegExp(`<(?:${Cf})\\b[\\s\\S]*$`,"i"),Ly=new Set(["br","hr","img","source","wbr","col"]),Ef=new Set(["a","abbr","audio","b","blockquote","br","caption","cite","code","col","colgroup","dd","del","details","div","dl","dt","em","figcaption","figure","h1","h2","h3","h4","h5","h6","hr","i","img","ins","kbd","li","mark","ol","p","pre","s","samp","small","source","span","strong","sub","summary","sup","table","tbody","td","tfoot","th","thead","time","tr","u","ul","var","video","wbr"]),Dy=new Set(["title","dir","lang"]),My={a:new Set(["href"]),audio:new Set(["src","controls"]),col:new Set(["span"]),colgroup:new Set(["span"]),img:new Set(["src","alt","width","height"]),ol:new Set(["start","reversed"]),source:new Set(["src","type"]),td:new Set(["colspan","rowspan","headers"]),th:new Set(["colspan","rowspan","scope","headers"]),time:new Set(["datetime"]),video:new Set(["src","controls","poster","width","height"])},Py=new Set(["href","src","poster"]),zy=/([a-zA-Z_:][a-zA-Z0-9_:.-]*)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'`=<>]+)))?/g,_f=/<(\/?)([a-zA-Z][a-zA-Z0-9-]*)((?:\s(?:"[^"]*"|'[^']*'|[^"'>])*)?)\s*\/?>/g;function Ny(e,t,n){const r=t.toLowerCase();if(!Ef.has(r))return"";if(e)return Ly.has(r)?"":`</${r}>`;const i=My[r];let s=`<${r}`,o=null,a=!1;for(const c of n.matchAll(zy)){const d=c[1].toLowerCase();if(!Dy.has(d)&&!i?.has(d))continue;const f=c[2]??c[3]??c[4];if(f===void 0){s+=` ${d}`;continue}if(Py.has(d)){const p=Ay(f);if(p===null)continue;d==="href"&&(o=p),d==="src"&&(a=!0),s+=` ${d}="${pi(p)}"`;continue}s+=` ${d}="${pi(f)}"`}return r==="a"&&o!==null&&!o.startsWith("#")&&(s+=' target="_blank" rel="noopener noreferrer"'),(r==="img"||r==="source")&&!a?"":`${s}>`}function Tf(e){return e.replace(/<!--[\s\S]*?-->/g,"").replace(Ry,"").replace(Oy,"").replace(/<[!?][^>]*>/g,"")}const jy=new Set(["a","abbr","address","area","article","aside","audio","b","base","bdi","bdo","big","blockquote","body","br","button","canvas","caption","center","circle","cite","code","col","colgroup","data","datalist","dd","defs","del","details","dfn","dialog","div","dl","dt","em","embed","fieldset","figcaption","figure","font","footer","form","g","h1","h2","h3","h4","h5","h6","head","header","hgroup","hr","html","i","iframe","img","input","ins","kbd","label","legend","li","line","link","main","map","mark","marquee","menu","meta","meter","nav","noscript","object","ol","optgroup","option","output","p","param","path","picture","polygon","polyline","pre","progress","q","rect","rp","rt","ruby","s","samp","script","section","select","slot","small","source","span","strike","strong","style","sub","summary","sup","svg","table","tbody","td","template","text","textarea","tfoot","th","thead","time","title","tr","track","tt","u","ul","use","var","video","wbr"]);function If(e,t,n,r){const i=n.toLowerCase();return Ef.has(i)||jy.has(i)||i.includes("-")?Ny(t,n,r):Ql(e)}function Fy(e){const t=Tf(e);let n="",r=0;for(const i of t.matchAll(_f))n+=pi(t.slice(r,i.index)),n+=If(i[0],i[1]==="/",i[2],i[3]),r=i.index+i[0].length;return n+pi(t.slice(r))}const Uy=/<\/?[a-z][a-z0-9]*(\s[^<>]*)?\/?>|&[a-z][a-z0-9]*;|&#\d+;|&#x[0-9a-f]+;/i;function Af(e){return Uy.test(e)}function By(e){if(typeof document<"u"){const t=document.createElement("div");return t.innerHTML=e,t.textContent??""}return Sf(e.replace(/<[^>]*>/g,""))}function qy(e){return(Af(e)?By(e):e).replace(/\s+/g," ").trim()}const Qr="",Hy=/\uE000(\d+)\uE000/g;function sd(e){return e.startsWith("#")?"":' target="_blank" rel="noopener noreferrer"'}const Ya=/^\s*(```+|~~~+)\s*([A-Za-z0-9_+-]*)\s*$/,Qa=/^(#{1,6})\s+(.*)$/,Jl=/^\s*([-*_])(\s*\1){2,}\s*$/,Ja=/^\s*>/,Rf=/^\s*(?:[-*+]|\d+[.)])\s+/,Of=/^\s*\|?[\s:|-]+\|[\s:|-]*$/,Vy="address|article|aside|blockquote|caption|col|colgroup|dd|details|div|dl|dt|figcaption|figure|footer|form|h[1-6]|header|hr|iframe|legend|li|main|nav|ol|p|pre|script|section|style|summary|table|tbody|td|tfoot|th|thead|tr|ul",Lf=new RegExp(`^\\s*</?(?:${Vy})(?:[\\s/>]|$)`,"i");function Ky(e){return Ya.test(e)||Qa.test(e)||Jl.test(e)||Ja.test(e)||Rf.test(e)||Lf.test(e)}function nr(e){const t=[];let n=e.replaceAll(Qr,"").replace(/(`+)([\s\S]*?)\1/g,(r,i,s)=>(t.push(`<code>${Ql(s)}</code>`),`${Qr}${t.length-1}${Qr}`));return n=Tf(n).replace(_f,(r,i,s,o)=>{const a=If(r,i==="/",s,o);return a===""?"":(t.push(a),`${Qr}${t.length-1}${Qr}`)}),n=pi(n),n=n.replace(/!\[([^\]]*)\]\(([^)\s]+)(?:\s+&quot;([^&]*)&quot;)?\)/g,(r,i,s,o)=>{const a=Cs(s);return a===null?r:`<img src="${a}" alt="${i}"${o?` title="${o}"`:""}>`}),n=n.replace(/\[([^\]]*)\]\(([^)\s]+)(?:\s+&quot;([^&]*)&quot;)?\)/g,(r,i,s,o)=>{const a=Cs(s);return a===null?r:`<a href="${a}"${o?` title="${o}"`:""}${sd(a)}>${i}</a>`}),n=n.replace(/&lt;((?:https?|mailto):[^\s&]+)&gt;/g,(r,i)=>{const s=Cs(i);return s===null?r:`<a href="${s}"${sd(s)}>${s}</a>`}),n=n.replace(/~~([\s\S]+?)~~/g,"<del>$1</del>"),n=n.replace(/\*\*([\s\S]+?)\*\*/g,"<strong>$1</strong>"),n=n.replace(/__([\s\S]+?)__/g,"<strong>$1</strong>"),n=n.replace(/(^|[^*])\*(?!\s)([^*]+?)\*/g,"$1<em>$2</em>"),n=n.replace(/(^|[\s(])_(?!\s)([^_]+?)_(?=$|[\s).,;:!?])/g,"$1<em>$2</em>"),n=n.replace(/ {2,}\n/g,`<br>
+`),n.replace(Hy,(r,i)=>t[Number(i)]??"")}function Ta(e){return e.replace(/^\s*\|/,"").replace(/\|\s*$/,"").split(/(?<!\\)\|/).map(t=>t.trim().replace(/\\\|/g,"|"))}const Wy=e=>{const t=e.startsWith(":"),n=e.endsWith(":");return t&&n?' style="text-align:center"':n?' style="text-align:right"':t?' style="text-align:left"':""},Gy=[/^ {0,3}#{1,6}\s+\S/,/^ {0,3}>[ \t]+\S/,/^ {0,3}[-*+][ \t]+\S/,/^ {0,3}\d+[.)][ \t]+\S/,/^ {0,3}(?:```|~~~)/,Jl],Yy=[/\*\*(?!\s)[^*\n]+\*\*/,/~~(?!\s)[^~\n]+~~/,/`[^`\n]+`/,/!?\[[^\]\n]*\]\([^)\s]+\)/];function Qy(e){return typeof e!="string"||e.trim()===""?null:!Jy.test(e)&&od(e)?"markdown":Af(e)?"html":od(e)?"markdown":null}const Jy=/^\s*<\/?[a-z][a-z0-9]*(\s|\/?>)/i;function od(e){if(typeof e!="string"||e.trim()==="")return!1;const t=e.replace(/\r\n?/g,`
+`).split(`
+`);return t.some(n=>Gy.some(r=>r.test(n)))||Yy.some(n=>n.test(e))?!0:t.some((n,r)=>r>0&&Of.test(n)&&n.includes("-")&&(t[r-1]??"").includes("|"))}function lo(e){if(e==null)return"";const t=typeof e=="string"?e:String(e);if(t.trim()==="")return"";const n=t.replace(/\r\n?/g,`
+`).split(`
+`),r=[];let i=0;const s=o=>{const a=[];for(;i<n.length&&o(n[i]);)a.push(n[i++]);return a};for(;i<n.length;){const o=n[i];if(o.trim()===""){i++;continue}const a=Ya.exec(o);if(a){const f=a[1].slice(0,3);i++;const p=s(y=>!y.trim().startsWith(f));i<n.length&&i++;const b=a[2]?` class="language-${a[2]}"`:"";r.push(`<pre><code${b}>${Ql(p.join(`
+`))}</code></pre>`);continue}if(Lf.test(o)){const f=s(b=>b.trim()!==""),p=Fy(f.join(`
+`));p.trim()!==""&&r.push(p);continue}const c=Qa.exec(o);if(c){const f=c[1].length;r.push(`<h${f}>${nr(c[2].replace(/\s+#+\s*$/,""))}</h${f}>`),i++;continue}if(Jl.test(o)){r.push("<hr>"),i++;continue}if(Ja.test(o)){const f=s(p=>Ja.test(p)||p.trim()!=="");r.push(`<blockquote>${lo(f.map(p=>p.replace(/^\s*>\s?/,"")).join(`
+`))}</blockquote>`);continue}if(o.includes("|")&&i+1<n.length&&Of.test(n[i+1])&&n[i+1].includes("-")){const f=Ta(o),p=Ta(n[i+1]).map(Wy);i+=2;const b=s(k=>k.trim()!==""&&k.includes("|")),y=f.map((k,C)=>`<th${p[C]??""}>${nr(k)}</th>`).join(""),$=b.map(k=>`<tr>${Ta(k).map((C,_)=>`<td${p[_]??""}>${nr(C)}</td>`).join("")}</tr>`);r.push(`<table><thead><tr>${y}</tr></thead><tbody>${$.join("")}</tbody></table>`);continue}if(Rf.test(o)){const f=s(p=>p.trim()!==""&&!Ya.test(p)&&!Qa.test(p));r.push(Df(f));continue}const d=s(f=>f.trim()!==""&&!Ky(f));if(d.length===0){r.push(`<p>${nr(o)}</p>`),i++;continue}r.push(`<p>${nr(d.join(`
+`))}</p>`)}return r.join(`
+`)}function Df(e){const t=[];let n=null,r=null;for(const o of e){const a=/^(\s*)(?:([-*+])|(\d+)[.)])\s+(.*)$/.exec(o);if(!a){t[t.length-1]?.text.push(o.trim());continue}const c=a[1].length;if(r??=c,c>r&&t.length>0){t[t.length-1].children.push(o.slice(Math.min(c,r+2)));continue}n??=a[3]!==void 0,t.push({text:[a[4]],children:[],indent:c})}const i=n?"ol":"ul",s=t.map(o=>`<li>${nr(o.text.join(`
+`))}${o.children.length>0?Df(o.children):""}</li>`).join("");return`<${i}>${s}</${i}>`}const Mf={goto:"goto",table:"goto",search:"search",preview:"preview",view:"view",cmd:"cmd",ui:"ui"},Xy={goto:{min:1,rest:!1},search:{min:1,rest:!0},preview:{min:2,rest:!1},view:{min:0,rest:!0},cmd:{min:1,rest:!0},ui:{min:1,rest:!1}};class ct extends Error{}function Xl(e){return(e.trim().replace(/^\/+/,"").split(/[/?;]/,1)[0]??"").toLowerCase()in Mf}function Pf(e){const t=e.split(";").map(n=>n.trim()).filter(Boolean);if(t.length===0)throw new ct("Empty commandlet.");return t.map(Zy)}function Zy(e){const t=e.indexOf("?"),n=t<0?e:e.slice(0,t),r=t<0?"":e.slice(t+1),i=n.split("/").filter(y=>y!=="").map(y=>ev(y,e));if(i.length===0)throw new ct(`No action in "${e}".`);const s=(i[0]??"").toLowerCase(),o=Mf[s],a=o??"goto";let c=o?i.slice(1):i;const d=Xy[a];if(c.length<d.min)throw new ct(`"${a}" needs ${d.min} target${d.min===1?"":"s"} — got "${e}".`);const f=Math.max(0,d.min-1);d.rest&&c.length>f&&(c=[...c.slice(0,f),c.slice(f).join("/")]);const p={},b={};for(const[y,$]of new URLSearchParams(r))y.startsWith("@")?b[y.slice(1).toLowerCase()]=$:y!==""&&(p[y]=$);return{verb:a,targets:c,filters:p,options:b,raw:e}}function ev(e,t){try{return decodeURIComponent(e)}catch{throw new ct(`Bad percent-encoding in "${t}".`)}}function zf(e,t){const n=i=>i.replace(/\$([A-Za-z_][A-Za-z0-9_]*|\d+)/g,(s,o)=>t[o]??s),r=i=>Object.fromEntries(Object.entries(i).map(([s,o])=>[n(s),n(o)]));return{verb:e.verb,targets:e.targets.map(n),filters:r(e.filters),options:r(e.options),raw:e.raw}}function tv(e,t){const r=(Array.isArray(e)?e:e.split("/").filter(Boolean)).map(o=>encodeURIComponent(o)).join("/"),i=new URLSearchParams;for(const[o,a]of Object.entries(t??{}))i.append(o,String(a));const s=i.toString();return`#${r}${s?`?${s}`:""}`}function nv(e,t){return tv(e,t)}const Xa={markdownToHtml:lo,cmdlet:nv},Zl=Object.keys(Xa),ad=new Map;function rv(e){const t=ad.get(e);if(t)return t;const n=new Function("row",...Zl,"easydb",`${e}
+return render(row);`);return ad.set(e,n),n}function Nf(){return[...Zl.map(e=>Xa[e]),Xa]}function Er(e,t){if(!e||!e.trim())return{ok:!1,label:"no script",message:""};let n;try{n=rv(e)}catch(r){return{ok:!1,label:"compile error",message:js(r)}}try{return{ok:!0,value:n(t,...Nf())}}catch(r){return{ok:!1,label:"runtime error",message:js(r)}}}function js(e){return e instanceof Error?e.message:String(e)}const ld=new Map;function iv(e){const t=ld.get(e);if(t)return t;const n=new Function("value","row",...Zl,"easydb",`${e}
+return validate(value, row);`);return ld.set(e,n),n}function sv(e,t,n){if(!e||!e.trim())return{ok:!0};let r;try{r=iv(e)}catch(i){return{ok:!1,message:`Validation script has a compile error: ${js(i)}`}}try{return r(t,n,...Nf()),{ok:!0}}catch(i){return{ok:!1,message:js(i)||"Rejected by this column’s validation script."}}}const ov=new Set(["rowid"]);function ec(e){return ov.has(e.trim().toLowerCase())}function av(e){const t=new Map,n=(i,s)=>{if(!i||!s)return;let o=t.get(i);o||t.set(i,o=new Set),o.add(s)};for(const i of e.columns)i.from.kind==="source"&&n(i.from.alias,i.from.field);for(const i of e.sources)for(const s of i.join?.on??[])n(i.alias,s.field),n(s.eqAlias,s.eqField);const r={};for(const i of e.sources)r[i.alias]=[...t.get(i.alias)??[]];return r}function lv(e,t){const n=e.sources[0];if(!n)return{rows:[],provenance:new Map};let i=(t[n.alias]??[]).map(d=>({[n.alias]:d}));for(let d=1;d<e.sources.length;d++){const f=e.sources[d];if(!f)continue;const p=t[f.alias]??[],b=f.join,y=[];for(const $ of i){const k=b?p.filter(C=>b.on.every(_=>uv(C.data[_.field],$[_.eqAlias]?.data[_.eqField]))):[];if(k.length>0)for(const C of k)y.push({...$,[f.alias]:C});else b?.type==="left"&&y.push({...$,[f.alias]:void 0})}i=y}const s=[],o=new Map,a=new Map,c=e.limit!=null&&e.limit>0?e.limit:1/0;for(const d of i){if(s.length>=c)break;const f=d[n.alias];if(!f)continue;const p=cv(e.columns,d);if(!dv(p,e.filters))continue;const b=a.get(f.id)??0;a.set(f.id,b+1);const y=`${f.id}#${b}`,$={};for(const[k,C]of Object.entries(d))C&&($[k]=C.id);o.set(y,$),s.push({id:y,tableId:"",data:p,updatedAt:hv(d)})}return{rows:s,provenance:o}}function cv(e,t){const n={};for(const r of e){if(r.from.kind!=="source")continue;const i=t[r.from.alias]?.data[r.from.field];n[r.field]=i===void 0?null:i}for(const r of e)if(r.from.kind==="script"){const i=Er(r.from.script,n);n[r.field]=i.ok?i.value:void 0}return n}function uv(e,t){return e==null||t==null?!1:e===t?!0:typeof e!="object"&&typeof t!="object"?String(e)===String(t):!1}function dv(e,t){if(!t)return!0;for(const[n,r]of Object.entries(t)){if(!r)continue;const i=e[n];if(!(i==null?"":String(i)).toLowerCase().includes(r.toLowerCase()))return!1}return!0}function hv(e){let t=0;for(const n of Object.values(e))n&&n.updatedAt>t&&(t=n.updatedAt);return t}function co(e){const t=new Set(e.sources.map(r=>r.alias)),n=new Set;for(const r of e.columns)r.from.kind==="source"&&t.has(r.from.alias)&&n.add(r.field);return n}function jf(e,t,n=[],r=[]){const i=co(e),s=new Map(n.map(f=>[f.field,f])),o=new Set(r),a=new Map;for(const f of e.columns)!o.has(f.field)&&!a.has(f.field)&&a.set(f.field,f);const c=[];for(const f of n)a.has(f.field)&&!c.includes(f.field)&&c.push(f.field);for(const f of a.keys())c.includes(f)||c.push(f);const d=[];for(const f of c){const p=a.get(f);if(!p)continue;const b=s.get(p.field);let y;if(b)y={...b};else if(p.from.kind==="source"){const $=p.from,k=(t[$.alias]??[]).find(C=>C.field===$.field);y=k?{...k,field:p.field}:{field:p.field,label:p.label??p.field,type:p.type??"string"},ec($.field)&&(y.hidden=!0)}else y={field:p.field,label:p.label??p.field,type:p.type??"string"},y.script=p.from.script;i.has(p.field)?delete y.readonly:y.readonly=!0,d.push(y)}return d}function fv(e){const t=e.sources[0]?.alias,n=new Map;if(!t)return n;for(const r of e.columns)r.from.kind==="source"&&r.from.alias===t&&!n.has(r.from.field)&&n.set(r.from.field,r.field);return n}function pv(e,t){const n=fv(e),r={},i=t.sortBy&&t.sortBy.length>0?t.sortBy:t.sortColumn?[{field:t.sortColumn,asc:t.sortAsc??!0}]:[],s=[];for(const o of i){const a=n.get(o.field);a&&s.push({field:a,asc:o.asc})}if(s.length>0){r.sortBy=s;const o=s[0];o&&(r.sortColumn=o.field,r.sortAsc=o.asc)}if(t.filters){const o={};for(const[a,c]of Object.entries(t.filters)){const d=n.get(a);d&&c&&(o[d]=c)}Object.keys(o).length>0&&(r.filters=o)}return r}function mv(e,t){return t.get(e.tableName)}function gv(e,t){const n=new Map(t.map(s=>[s.id,s])),r=new Map;for(const s of t)r.has(s.name)||r.set(s.name,s);const i=(s,o)=>{if(o.has(s))return!0;const a=n.get(s);if(a?.source?.type!=="projection")return!1;const c=a.source.config;if(!c||!Array.isArray(c.sources))return!1;const d=new Set(o).add(s);for(const f of c.sources){const p=mv(f,r);if(p&&i(p.id,d))return!0}return!1};return i(e,new Set)}const Jr=e=>e.toLowerCase().replace(/[^a-z0-9]/g,""),Ia=e=>e.endsWith("s")&&e.length>1?e.slice(0,-1):e,cd=e=>e==="id"||e.endsWith("id");function bv(e,t){const n=Jr(e.field),r=Jr(t.field);if(!n||!r)return 0;const i=Jr(e.table)===Jr(t.table);if(n===r)return i||n==="id"?0:n.endsWith("id")?9:7;const s=(a,c,d)=>{if(a!=="id"||!d.endsWith("id")||d.length<=2)return 0;const f=d.slice(0,-2),p=Jr(c);return f===p||f===Ia(p)||Ia(f)===Ia(p)?9:5},o=Math.max(s(n,e.table,r),s(r,t.table,n));return o>0?o:e.isPk&&cd(r)||t.isPk&&cd(n)?6:0}function wv(e,t,n=[]){const r=new Set(n.map(o=>`${o.alias}\0${o.field}`)),i=new Set(e.pks??[]),s=o=>{let a=null,c=0;for(const d of t){const f=new Set(d.pks??[]);for(const p of e.fields)for(const b of d.fields){if(o&&r.has(`${d.alias}\0${b}`))continue;const y=bv({table:e.tableName,field:p,isPk:i.has(p)},{table:d.tableName,field:b,isPk:f.has(b)});y>c&&(c=y,a={thisField:p,otherAlias:d.alias,otherField:b})}}return a};return s(!0)??s(!1)}function yv(e){const t=e.lastIndexOf("#");return t>=0?e.slice(0,t):e}function vv(e,t,n,r){const i=e.columns.find(c=>c.field===n);if(!i||i.from.kind!=="source")return null;const s=i.from.alias;if(!e.sources.some(c=>c.alias===s))return null;const o=e.sources[0]?.alias===s,a=r?.[s]??(o?yv(t):void 0);return a?{alias:s,rowId:a,field:i.from.field}:null}async function tc(e,t,n,r){const i=n.spec.sources.map(f=>({source:f,table:r.resolve(f.tableName)}));if(i.some(f=>!f.table))return null;const s={...n.spec,sources:i.map(({source:f,table:p})=>({...f,tableName:p.name}))},o={};for(const{source:f,table:p}of i)o[f.alias]=p?.columns??[];const a=jf(s,o,[],[]),c=fn(r.taken,n.name),d={id:_e(),workspaceId:t,name:c,code:Ne(c),columns:a,view:"table",source:{type:"projection",config:s},readonly:co(s).size===0,...n.sortBy&&n.sortBy.length>0?{sortBy:n.sortBy}:{},...s.filters?{filters:s.filters}:{},updatedAt:Date.now()};return await e.store.tables.insert(d),d}const kv=Object.freeze(Object.defineProperty({__proto__:null,createProjectionTable:tc},Symbol.toStringTag,{value:"Module"})),Ff="__id";function Uf(e){const t=[];let n="",r,i=0;for(;i<e.length;){const s=e[i],o=e[i+1];if(s==="'"||s==='"'){const a=nc(e,i,s);n+=e.slice(i,a),i=a;continue}if(s==="-"&&o==="-"){let a="";for(i+=2;i<e.length&&e[i]!==`
+`;)a+=e[i++];const c=/^\s*projection:\s*(.+?)\s*$/i.exec(a);c?.[1]&&n.trim()===""&&(r=c[1]);continue}if(s==="/"&&o==="*"){for(i+=2;i<e.length&&!(e[i]==="*"&&e[i+1]==="/");)i++;i+=2;continue}if(s===";"){n.trim()&&t.push({sql:n.trim(),...r?{name:r}:{}}),n="",r=void 0,i++;continue}n+=s,i++}return n.trim()&&t.push({sql:n.trim(),...r?{name:r}:{}}),t}function nc(e,t,n){let r=t+1;for(;r<e.length;){if(e[r]===n){if(e[r+1]===n){r+=2;continue}return r+1}r++}return e.length}function Qt(e){const t=e.trim();return/^".*"$/s.test(t)?t.slice(1,-1).replace(/""/g,'"'):/^\[.*\]$/s.test(t)||/^`.*`$/s.test(t)?t.slice(1,-1):t}function Bf(e,t){const n=[];let r=0,i="",s=0;for(;s<e.length;){const o=e[s];if(o==="'"||o==='"'){const a=nc(e,s,o);i+=e.slice(s,a),s=a;continue}if(o==="("?r++:o===")"&&r--,r===0){const a=t(e,s);if(a>0){n.push(i),i="",s+=a;continue}}i+=o,s++}return n.push(i),n}function hr(e,t){return Bf(e,(n,r)=>n.startsWith(t,r)?t.length:0)}function qf(e,t){const n=new RegExp(`^\\s+${t}\\s+`,"i");return Bf(e,(r,i)=>/\s/.test(r[i]??"")?n.exec(r.slice(i,i+t.length+32))?.[0].length??0:0)}function Hf(e){const t=e.indexOf("(");if(t<0)return null;let n=0;for(let r=t;r<e.length;r++){const i=e[r];if(i==="'"||i==='"'){r=nc(e,r,i)-1;continue}if(i==="(")n++;else if(i===")"&&(n--,n===0))return e.slice(t+1,r)}return null}function Vf(e){const t=e.trim();return/^null$/i.test(t)?null:/^true$/i.test(t)?!0:/^false$/i.test(t)?!1:/^'[\s\S]*'$/.test(t)?t.slice(1,-1).replace(/''/g,"'"):io(t)?t:/^-?\d+(\.\d+)?([eE][+-]?\d+)?$/.test(t)?Number(t):t}function Kf(e){const t=e.toUpperCase();return/BOOL/.test(t)?"boolean":/TIMESTAMP|DATETIME/.test(t)?"datetime":/^DATE\b/.test(t)?"date":/INT|NUMERIC|DECIMAL|REAL|DOUBLE|FLOAT|MONEY/.test(t)?"number":"string"}function $v(e){const t=/^CREATE\s+(?:TEMP(?:ORARY)?\s+)?TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?("(?:[^"]|"")*"|\[[^\]]*\]|`[^`]*`|[^\s(]+)/i.exec(e);if(!t?.[1])return null;const n=Hf(e);if(n==null)return null;const r=[];for(const i of hr(n,",")){const s=i.trim();if(!s||/^(PRIMARY|FOREIGN|UNIQUE|CHECK|CONSTRAINT)\b/i.test(s))continue;const o=/^("(?:[^"]|"")*"|\[[^\]]*\]|`[^`]*`|[A-Za-z_][\w$]*)\s*([\s\S]*)$/.exec(s);if(!o?.[1])continue;const a=Qt(o[1]);if(a===Ff)continue;const c=o[2]??"",d=/^([A-Za-z]+(?:\s*\([^)]*\))?)/.exec(c.trim())?.[1]??"TEXT",f={field:a,label:a,type:Kf(d)};/\bNOT\s+NULL\b/i.test(c)&&(f.notnull=!0),(/\bUNIQUE\b/i.test(c)||/\bPRIMARY\s+KEY\b/i.test(c))&&(f.unique=!0),r.push(f)}return{name:Qt(t[1]),columns:r,rows:[]}}function xv(e){const t=/^INSERT\s+(?:OR\s+\w+\s+)?INTO\s+("(?:[^"]|"")*"|\[[^\]]*\]|`[^`]*`|[^\s(]+)\s*(\([\s\S]*?\))?\s*VALUES\s*([\s\S]+)$/i.exec(e);if(!t?.[1])return null;const n=Qt(t[1]),r=t[2]?hr(t[2].slice(1,-1),",").map(o=>Qt(o)):[],i=[];let s=(t[3]??"").trim();for(;s.startsWith("(");){const o=Hf(s);if(o==null)break;const a=hr(o,",").map(d=>Vf(d)),c={};a.forEach((d,f)=>{const p=r[f]??`col${f+1}`;p!==Ff&&(c[p]=d)}),i.push(c),s=s.slice(o.length+2).trim(),s.startsWith(",")&&(s=s.slice(1).trim())}return{table:n,rows:i}}function ud(e){const t=/^\s*("(?:[^"]|"")*"|\[[^\]]*\]|`[^`]*`|[^\s]+)(?:\s+(?:AS\s+)?("(?:[^"]|"")*"|\[[^\]]*\]|`[^`]*`|[^\s]+))?\s*$/i.exec(e);if(!t?.[1])return{table:"",alias:""};const n=Qt(t[1]);return{table:n,alias:t[2]?Qt(t[2]):n}}function mi(e){return hr(e,".").map(Qt)}function rc(e,t,n){const r=t.filter(i=>(n.get(i.tableName.toLowerCase())??[]).includes(e));return r.some(i=>i.alias===t[0]?.alias)?t[0].alias:(r.length===1?r[0]?.alias:void 0)??t[0]?.alias??""}function Sv(e){let t=e,n;const r=/\s+FETCH\s+FIRST\s+(\d+)\s+ROWS?\s+ONLY\s*$/i.exec(t);r&&(n=Number(r[1]),t=t.slice(0,r.index));const i=/\s+LIMIT\s+(\d+)\s*$/i.exec(t);i&&(n=Number(i[1]),t=t.slice(0,i.index));let s;const o=/\s+ORDER\s+BY\s+([\s\S]+)$/i.exec(t);o?.[1]&&(s=o[1],t=t.slice(0,o.index));let a;const c=/\s+WHERE\s+([\s\S]+)$/i.exec(t);return c?.[1]&&(a=c[1],t=t.slice(0,c.index)),{from:t,limit:n,orderBy:s,where:a}}function Cv(e,t,n,r,i){const s=[],o=a=>a.length===2?a[0]??"":rc(a[0]??"",n,r);for(const a of qf(e,"AND")){const c=/^\s*([\w".$[\]`]+)\s*=\s*([\w".$[\]`]+)\s*$/.exec(a);if(!c?.[1]||!c[2]){i.push(`ON ${a.trim()}`);continue}const d=mi(c[1]),f=mi(c[2]),p=o(d)===t.alias,b=p?d:f,y=p?f:d;if(o(b)!==t.alias){i.push(`ON ${a.trim()} — neither side names ${t.alias}`);continue}s.push({field:b.length===2?b[1]??"":b[0]??"",eqAlias:y.length===2?y[0]??"":o(y),eqField:y.length===2?y[1]??"":y[0]??""})}return s}function Ev(e,t,n){const r=/\s+(LEFT|RIGHT|FULL|INNER|CROSS)(?:\s+OUTER)?\s+JOIN\s+|\s+JOIN\s+/gi,i=[],s=[];let o=0;for(let d=r.exec(e);d;d=r.exec(e))i.push(e.slice(o,d.index)),s.push((d[1]??"INNER").toUpperCase()),o=d.index+d[0].length;i.push(e.slice(o));const a=ud(i[0]??"");if(!a.table)return null;const c=[{alias:a.alias,tableName:a.table}];for(let d=1;d<i.length;d++){const f=i[d]??"",p=/\s+ON\s+([\s\S]+)$/i.exec(f),b=ud(p?f.slice(0,p.index):f);if(!b.table)continue;const y=s[d-1]??"INNER";if(y==="CROSS"||!p?.[1]){n.push(`${y} JOIN ${b.table} — no ON predicate to model`),c.push({alias:b.alias,tableName:b.table});continue}(y==="RIGHT"||y==="FULL")&&n.push(`${y} JOIN ${b.table} — imported as LEFT JOIN (the closest a projection can express)`);const $=[...c,{alias:b.alias,tableName:b.table}];c.push({alias:b.alias,tableName:b.table,join:{type:y==="INNER"?"inner":"left",on:Cv(p[1],b,$,t,n)}})}return c}function _v(e,t,n,r){const i=[];for(const s of hr(e,",")){const o=s.trim();if(!o)continue;if(o==="*"){r.push("SELECT * — a projection needs its columns listed");continue}const a=/^([\s\S]*?)\s+AS\s+("(?:[^"]|"")*"|\[[^\]]*\]|`[^`]*`|[\w$]+)$/i.exec(o),c=(a?.[1]??o).trim(),d=mi(c),f=Qt(a?.[2]??d[d.length-1]??c);if(/^NULL$/i.test(c)){i.push({field:f,from:{kind:"script",script:Av}});continue}d.length===2&&d[0]&&d[1]?i.push({field:f,from:{kind:"source",alias:d[0],field:d[1]}}):d.length===1&&d[0]&&/^[\w$]+$/.test(d[0])?i.push({field:f,from:{kind:"source",alias:rc(d[0],t,n),field:d[0]}}):r.push(`SELECT ${o} — expression not modelled`)}return i}function Tv(e,t){const n={};if(!e)return n;for(const r of qf(e,"AND")){const i=/^\s*LOWER\(\s*([\w".$[\]`]+)\s*\)\s+LIKE\s+'%([\s\S]*)%'\s*$/i.exec(r.trim()),s=i?.[1]?Wf(t.columns,mi(i[1]),t.sources,t.schema):void 0;if(!i||!s){t.unsupported.push(`WHERE ${r.trim()}`);continue}n[s.field]=(i[2]??"").replace(/''/g,"'")}return n}function Iv(e,t){const n=[];for(const r of hr(e??"",",")){const i=r.trim();if(!i)continue;const[s,o]=i.split(/\s+/),a=Wf(t.columns,mi(s??""),t.sources,t.schema);if(!a){t.unsupported.push(`ORDER BY ${i}`);continue}n.push({field:a.field,asc:!/^DESC$/i.test(o??"")})}return n}function dd(e,t,n,r){const i=[],s=e.replace(/\s+/g," ").trim(),o=/^SELECT\s+(?:TOP\s+(\d+)\s+)?([\s\S]+?)\s+FROM\s+([\s\S]+)$/i.exec(s);if(!o)return null;const{from:a,limit:c,orderBy:d,where:f}=Sv(o[3]??""),p=c??(o[1]?Number(o[1]):void 0),b=Ev(a,n,i);if(!b)return null;const y=_v(o[2]??"",b,n,i),$={columns:y,sources:b,schema:n,unsupported:i},k=Tv(f,$),C=Iv(d,$),_={version:1,sources:b,columns:y};return Object.keys(k).length>0&&(_.filters=k),p!=null&&p>0&&(_.limit=p),{projection:{name:r||t,spec:_,...C.length>0?{sortBy:C}:{}},unsupported:i}}const Av=["// This column was computed in-app; SQL carried only its NAME,","// not its script. Re-enter the expression here.","function render(row) {","  return null;","}"].join(`
+`);function Wf(e,t,n,r){const i=t.length===2?t[0]:rc(t[0]??"",n,r),s=t.length===2?t[1]:t[0];return e.find(o=>o.from.kind==="source"&&o.from.alias===i&&o.from.field===s)??e.find(o=>o.field===s)}function Si(e){const t=new Map,n=[],r=[],i=new Map,s=o=>{i.set(o.name.toLowerCase(),o.columns.map(a=>a.field))};for(const o of Uf(e)){const a=o.sql;if(/^CREATE\s+(?:TEMP(?:ORARY)?\s+)?TABLE\b/i.test(a)){const c=$v(a);if(!c){r.push(Xr(a));continue}const d=t.get(c.name);t.set(c.name,{...c,rows:d?.rows??[]}),s(c);continue}if(/^INSERT\s+/i.test(a)){const c=xv(a);if(!c){r.push(Xr(a));continue}const d=t.get(c.table);if(d)d.rows.push(...c.rows);else{const f={name:c.table,columns:Rv(c.rows),rows:c.rows};t.set(c.table,f),s(f)}continue}if(/^CREATE\s+(?:OR\s+REPLACE\s+)?VIEW\b/i.test(a)){const c=/^CREATE\s+(?:OR\s+REPLACE\s+)?VIEW\s+("(?:[^"]|"")*"|\[[^\]]*\]|`[^`]*`|[^\s(]+)\s+AS\s+(SELECT[\s\S]+)$/i.exec(a),d=c?.[1]?Qt(c[1]):"",f=c?.[2]?dd(c[2],d||"view",i,d):null;f?(n.push(f.projection),r.push(...f.unsupported)):r.push(Xr(a));continue}if(/^SELECT\b/i.test(a)){const c=dd(a,"",i,o.name);c?(n.push(c.projection),r.push(...c.unsupported)):r.push(Xr(a));continue}/^(BEGIN|START\s+TRANSACTION|COMMIT|END|DROP|PRAGMA|SET|USE|ANALYZE|VACUUM)\b/i.test(a)||r.push(Xr(a))}for(const o of n)o.name||(o.name=`${o.spec.sources[0]?.tableName??"query"} view`);return{tables:[...t.values()],projections:n,unsupported:r}}function Xr(e){const t=e.split(`
+`)[0]?.trim()??e;return t.length>120?`${t.slice(0,117)}…`:t}function Rv(e){const t=[];for(const n of e)for(const r of Object.keys(n))t.includes(r)||t.push(r);return t.map(n=>{const r=e.map(s=>s[n]).filter(s=>s!=null),i=r.length===0?"string":r.every(s=>typeof s=="number")?"number":r.every(s=>typeof s=="boolean")?"boolean":"string";return{field:n,label:n,type:i}})}const Ov=Object.freeze(Object.defineProperty({__proto__:null,parseLiteral:Vf,parseSqlScript:Si,splitStatements:Uf,sqlTypeToColumnType:Kf},Symbol.toStringTag,{value:"Module"})),Lv={id:"sql-import",name:"SQL Import",type:"importer",version:"0.1.0",description:"Import a .sql script: CREATE TABLE + INSERT become tables, and each SELECT (or CREATE VIEW) becomes a projection.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/sql-import.ts"};function Dv(e){e.ui.registerImporter(ic),e.ui.registerDropHandler(async t=>{const n=zv(t).filter(Nv);if(n.length===0)return!1;t.preventDefault();for(const r of n)await Pv(e,r);return!0})}const ic={id:"sql",label:"SQL script (CREATE TABLE / INSERT / SELECT)",icon:"database",order:30,accept:[".sql","application/sql","text/sql","application/x-sql"],supports:{url:!0,file:!0,text:!0,multiTable:!0,kernel:!0},detect(e){const t=e.kind==="file"?e.file?.name??"":e.url??"";return/\.sql$/i.test(t)?1:(e.file?.type??"").includes("sql")?.9:/^\s*(--|\/\*|BEGIN\b|CREATE\s+TABLE\b|INSERT\s+INTO\b|DROP\s+TABLE\b)/i.test(e.text??"")?.6:0},async list(e,t){return Si(await Mv(e,t)).tables.map(r=>({name:r.name,rowCount:r.rows.length,handle:{columns:r.columns,rows:r.rows}}))},async*read(e,t){const{columns:n,rows:r}=t.handle;yield{columns:n,rows:r}}};function Mv(e,t){return t.kind==="file"&&t.file?t.file.text():t.kind==="url"&&t.url?e.fetchText(t.url,`Reading ${Ht(t.url)}…`):Promise.resolve(t.text??"")}function sc(e){return Si(e).projections.length>0}async function oc(e,t,n={}){const r=e.workspaceId();if(!r)throw new Error("sql-import: no active workspace");const i=Si(t),s={tables:[],projections:[],rowCount:0,unsupported:i.unsupported},o=n.target??{kind:"new"},a=o.kind==="new"||i.tables.length===1;a||s.unsupported.push(`"Import into" was not applied — this script defines ${i.tables.length} tables, and an append/replace names only one destination`);const c=new Map;for(const y of i.tables){const $=await wf(e,y.name,(async function*(){yield{columns:y.columns,rows:y.rows}})(),{workspaceId:r,importerId:"sql",target:a?o:{kind:"new"},...n.maxRows!==void 0?{maxRows:n.maxRows}:{},...n.editColumns?{editColumns:k=>n.editColumns(k,y.name)}:{}});$&&(c.set(y.name,$.tableName),s.tables.push($.tableName),s.rowCount+=$.rowCount)}const d=await e.store.tables.find({workspaceId:r}),f=new Map;for(const y of d)f.has(y.name)||f.set(y.name,y);const p=new Map;for(const y of d)p.has(y.name.toLowerCase())||p.set(y.name.toLowerCase(),y);const b=new Set([...d.map(y=>y.name),...s.tables]);for(const y of i.projections){const $=await tc(e,r,y,{resolve:k=>{const C=c.get(k);return(C?f.get(C):void 0)??f.get(k)??p.get(k.toLowerCase())},taken:b});if(!$){s.unsupported.push(`projection "${y.name}" — its source tables are not in this workspace`);continue}f.set($.name,$),p.set($.name.toLowerCase(),$),b.add($.name),s.projections.push($.name)}return s}function ac(e,t,n){const r=[];if(t.tables.length>0&&r.push(`${t.tables.length} table${t.tables.length===1?"":"s"} (${t.rowCount.toLocaleString()} rows)`),t.projections.length>0&&r.push(`${t.projections.length} projection${t.projections.length===1?"":"s"}`),r.length===0){e.ui.dialogs.toast(`Nothing importable found in ${n}.`,{kind:"warning",title:"SQL import"});return}const i=t.unsupported.length>0?` — ${t.unsupported.length} statement${t.unsupported.length===1?"":"s"} could not be imported: ${t.unsupported.slice(0,3).join("; ")}${t.unsupported.length>3?"…":""}`:"";e.ui.dialogs.toast(`Imported ${r.join(" and ")} from ${n}${i}.`,{kind:t.unsupported.length>0?"warning":"success",title:"SQL import"})}async function Pv(e,t){const n=await t.text();try{if(sc(n)){ac(e,await oc(e,n),t.name);return}const r=await ao(e,ic,{kind:"text",text:n,name:t.name},{mode:"copy",target:{kind:"new"}}),i=r.landed.reduce((s,o)=>s+o.rowCount,0);r.landed.length>0?e.ui.dialogs.toast(`Imported ${r.landed.length} table${r.landed.length===1?"":"s"} (${i.toLocaleString()} rows) from ${t.name}.`,{kind:"success",title:"SQL import"}):e.ui.dialogs.toast(`Nothing importable found in ${t.name}.`,{kind:"warning",title:"SQL import"})}catch(r){e.ui.dialogs.toast(`Could not import ${t.name}: ${r.message}`,{kind:"error",title:"SQL import"})}}function zv(e){const t=e.dataTransfer;if(!t)return[];if(t.files&&t.files.length>0)return Array.from(t.files);const n=[];for(const r of Array.from(t.items??[]))if(r.kind==="file"){const i=r.getAsFile();i&&n.push(i)}return n}function Nv(e){return/\.sql$/i.test(e.name)||(e.type??"").includes("sql")}const jv=Object.freeze(Object.defineProperty({__proto__:null,hasSqlProjections:sc,init:Dv,meta:Lv,reportSqlRestore:ac,restoreSqlScript:oc,sqlImporterSpec:ic},Symbol.toStringTag,{value:"Module"})),Gf=Se`
+  .mi {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.15rem;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+    vertical-align: middle;
+  }
+  .mi.sm {
+    font-size: 1rem;
+  }
+  .mi.lg {
+    font-size: 1.4rem;
+  }
+`;function Yf(e,t,n){return t.bottom<=n?null:Math.round(e.top-t.height-Fv)}const Fv=4;var Qf=function(e,t,n,r){var i=arguments.length,s=i<3?t:r===null?r=Object.getOwnPropertyDescriptor(t,n):r,o;if(typeof Reflect=="object"&&typeof Reflect.decorate=="function")s=Reflect.decorate(e,t,n,r);else for(var a=e.length-1;a>=0;a--)(o=e[a])&&(s=(i<3?o(s):i>3?o(t,n,s):o(t,n))||s);return i>3&&s&&Object.defineProperty(t,n,s),s};let ls=null,Za="anchored-menu";function Uv(){return ls||(Jf(Za),ls=document.createElement(Za),document.body.appendChild(ls)),ls}class Ci extends $e{constructor(){super(...arguments),this.items=[],this.shown=!1,this.resolveFn=null,this.onOutside=t=>{t.composedPath().includes(this)||this.finish(null)},this.onKey=t=>{t.key==="Escape"&&(t.preventDefault(),this.finish(null))}}static open(t,n){return Uv().openMenu(t,n)}static{this.styles=[Gf,Se`
+      :host {
+        position: fixed;
+        z-index: var(--menu-z, 150000);
+      }
+      :host([hidden]) {
+        display: none;
+      }
+      .menu {
+        background: var(--menu-surface, #fff);
+        border: 1px solid var(--menu-border, #e5e7eb);
+        border-radius: var(--menu-radius, 0.4rem);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+        padding: 0.25rem;
+        min-width: var(--menu-min-width, 190px);
+        /* Shadow DOM does not inherit the page font, so the buttons' inherited
+           font would fall back to the browser default serif. Name the font
+           explicitly; the buttons inherit it. */
+        font-family: var(--menu-font, system-ui, sans-serif);
+        font-size: 0.875rem;
+        color: var(--menu-text, #111);
+        /* A long value list (every distinct value of a field, say) can run to
+           hundreds of entries, so the menu scrolls rather than growing past the
+           viewport. Short menus are unaffected. */
+        max-height: var(--menu-max-height, min(60vh, 420px));
+        overflow-y: auto;
+      }
+      button {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        width: 100%;
+        border: 0;
+        background: transparent;
+        font: inherit;
+        text-align: left;
+        padding: 0.45rem 0.6rem;
+        border-radius: 0.3rem;
+        cursor: pointer;
+        color: var(--menu-text, #111);
+      }
+      button:hover {
+        background: var(--menu-hover, #f3f4f6);
+      }
+      button.danger {
+        color: var(--menu-danger, #b91c1c);
+      }
+      .mi {
+        font-size: 1.15rem;
+        color: var(--menu-icon, #6b7280);
+      }
+    `]}connectedCallback(){super.connectedCallback(),this.setAttribute("hidden","")}openMenu(t,n){return this.items=n,this.style.left=`${Math.round(t.left)}px`,this.style.top=`${Math.round(t.bottom+4)}px`,this.removeAttribute("hidden"),this.shown=!0,this.updateComplete.then(()=>{const r=this.shadowRoot?.querySelector(".menu");if(!r)return;const i=Yf(t,r.getBoundingClientRect(),window.innerHeight);i!==null&&(this.style.top=`${i}px`)}),new Promise(r=>{this.resolveFn=r,setTimeout(()=>{document.addEventListener("mousedown",this.onOutside,!0),document.addEventListener("keydown",this.onKey,!0)},0)})}finish(t){this.setAttribute("hidden",""),this.shown=!1,document.removeEventListener("mousedown",this.onOutside,!0),document.removeEventListener("keydown",this.onKey,!0);const n=this.resolveFn;this.resolveFn=null,queueMicrotask(()=>n?.(t))}render(){return this.shown?v`
+      <div class="menu" role="menu">
+        ${this.items.map(t=>v`
+            <button role="menuitem" class=${t.danger?"danger":""} @click=${()=>this.finish(t.id)}>
+              ${t.icon?v`<span class="mi">${t.icon}</span>`:""}
+              <span>${t.label}</span>
+            </button>
+          `)}
+      </div>
+    `:v``}}Qf([j()],Ci.prototype,"items",void 0);Qf([j()],Ci.prototype,"shown",void 0);function Jf(e="anchored-menu"){Za=e,customElements.get(e)||customElements.define(e,Ci)}const fr=Object.freeze(Object.defineProperty({__proto__:null,AnchoredMenu:Ci,defineAnchoredMenu:Jf,flipIfBelowViewport:Yf,materialIconStyles:Gf},Symbol.toStringTag,{value:"Module"})),el='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.9 12a3.1 3.1 0 0 1 3.1-3.1h4V7H7a5 5 0 0 0 0 10h4v-1.9H7A3.1 3.1 0 0 1 3.9 12zM8 13h8v-2H8v2zm9-6h-4v1.9h4A3.1 3.1 0 0 1 17 15h-4v1.9h4a5 5 0 0 0 0-10z"/></svg>',Bv={id:"connect-menu",name:"Connect",type:"ui",version:"0.1.0",description:"Header Connect button listing every registered live-backend connector. Chrome only — it knows no backend.",author:"Marc Cawood",icon:el,repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/connect-menu.ts"};function qv(e){e.ui.registerHeaderButton({id:"connect-menu:open",label:"Connect",icon:el,tooltip:"Connect a live table on a remote backend (rows are never stored locally)",onClick:(t,n)=>hd(t,n?.anchor)}),e.ui.registerCommand({id:"connect-menu:open",title:"Connect a live table…",group:"Data",icon:el,keywords:["datasette","live","remote","backend"],run:t=>hd(t)})}async function Hv(){const{registries:e}=await J();return[...e.connectors].sort((t,n)=>(t.order??Number.MAX_SAFE_INTEGER)-(n.order??Number.MAX_SAFE_INTEGER))}async function hd(e,t){const n=await Hv();if(n.length===0){await e.ui.dialogs.alert("No backends are installed to connect to. Install a connector plugin from the Plugin Manager first.","Connect");return}let r=n[0];if(n.length>1){const i=t?.getBoundingClientRect(),s=i?await Ci.open(i,n.map(o=>({id:o.id,label:o.label,icon:o.icon}))):await e.ui.dialogs.choice("Which backend do you want to connect to?",n.map(o=>o.label),"Connect");if(!s)return;r=i?n.find(o=>o.id===s):n.find(o=>o.label===s)}if(r)try{await r.connect(e)}catch(i){await e.ui.dialogs.alert(i?.message??String(i),`Connect ${r.label} failed`)}}const Vv=Object.freeze(Object.defineProperty({__proto__:null,init:qv,meta:Bv},Symbol.toStringTag,{value:"Module"}));function fd(e,t){return JSON.stringify(t.map(n=>e[n]??null))}function Kv(e,t){return t.every(n=>e[n]!==null&&e[n]!==void 0)}function Xf(e){const{oldRows:t,freshRows:n,pks:r,userAddedFields:i,deletedRemoteFields:s=[]}=e,o=new Set(s),a=new Set(i),c=T=>{const Y={...T};for(const D of o)delete Y[D];return Y},d=new Set(t.flatMap(T=>Object.keys(T.data))),f=[...new Set(n.flatMap(T=>Object.keys(T)))].filter(T=>d.has(T)&&!o.has(T)&&!a.has(T)).sort(),b=r.length>0&&n.every(T=>Kv(T,r))?"pk":f.length>0?"content":"none";if(b==="none")return{data:n.map(c),merged:!1,strategy:b,droppedUserRows:t.filter(T=>pd(T.data,i)).length};const y=b==="pk"?r:f,$=new Map;for(const T of t){const Y=fd(T.data,y);$.has(Y)||$.set(Y,T)}const k=new Set,C=n.map(T=>{const Y=c(T),D=fd(T,y),ne=$.get(D);if(ne){k.add(D);for(const W of i)Object.prototype.hasOwnProperty.call(ne.data,W)&&(Y[W]=ne.data[W])}return Y});let _=0;for(const[T,Y]of $)!k.has(T)&&pd(Y.data,i)&&(_+=1);return{data:C,merged:!0,strategy:b,droppedUserRows:_}}function pd(e,t){return t.some(n=>{const r=e[n];return r!=null&&r!==""})}const tl="easydb:table-loading",Fs=new Map;function At(e,t,n){e&&(t?Fs.set(e,typeof n=="number"?n:null):Fs.delete(e),!(typeof document>"u")&&document.dispatchEvent(new CustomEvent(tl,{detail:{tableId:e,loading:t,progress:n}})))}function Wv(e){if(Fs.has(e))return Fs.get(e)??null}const nl="easydb:app-progress";function uo(e){typeof document>"u"||document.dispatchEvent(new CustomEvent(nl,{detail:e}))}function Zf(){uo({label:""})}class ep{constructor(t){this.weight=new Map,this.done=new Map;const n=t.reduce((r,i)=>r+Math.max(0,i.total),0);this.uniform=n===0;for(const r of t)this.weight.set(r.tableId,this.uniform?1:Math.max(0,r.total));this.totalWeight=this.uniform?t.length:n}observe(t,n){const r=this.weight.get(t);r!=null&&this.done.set(t,Math.min(r,Math.max(0,n)))}complete(t){const n=this.weight.get(t);n!=null&&this.done.set(t,n)}fraction(){if(this.totalWeight<=0)return 1;let t=0;for(const n of this.done.values())t+=n;return Math.min(1,t/this.totalWeight)}completedTables(){let t=0;for(const[n,r]of this.weight)(this.done.get(n)??-1)>=r&&t++;return t}get tableCount(){return this.weight.size}}function rt(e){return typeof e=="object"&&e!==null&&!Array.isArray(e)?e:null}function ye(e,t){return rt(e)?.[t]}function Ue(e){return typeof e=="string"?e:null}function pr(e){return typeof e=="number"&&Number.isFinite(e)?e:null}function Ei(e){return Array.isArray(e)?e:[]}function jn(e){return Ei(e).filter(t=>typeof t=="string")}function lc(e){return Ei(ye(e,"rows")).filter(t=>rt(t)!==null)}function Aa(e){return e===!0||e===1}class Ge extends Error{constructor(t,n){const r=Ue(ye(t,"error")),i=jn(ye(t,"errors"));super(r??(i.length>0?i.join("; "):null)??"Datasette request failed"),this.name="DatasetteError";const s=n??pr(ye(t,"status"));s!=null&&(this.status=s),this.errors=i.length>0?i:r?[r]:[]}}function St(e){const t=new URL(String(e).trim());t.pathname=t.pathname.replace(/\.(json|csv)$/i,"");const n=t.pathname.split("/").filter(Boolean),r={};for(const[a,c]of t.searchParams)r[a]=c;let i,s=null,o=null;if(n.length>=2){o=decodeURIComponent(n[n.length-1]),s=decodeURIComponent(n[n.length-2]);const a=n.slice(0,n.length-2).join("/");i=t.origin+(a?"/"+a:"")}else n.length===1&&(s=decodeURIComponent(n[0])),i=t.origin;return{base:i,db:s,table:o,query:r}}function Fn(e,t={}){const n=new URL(`${e.base}/${encodeURIComponent(e.db)}/${encodeURIComponent(e.table)}.json`);for(const[r,i]of Object.entries({...e.query,...t}))i!=null&&n.searchParams.set(r,String(i));return n.toString()}function Gv(e,t){const n={};for(const[r,i]of Object.entries(e.query))r.startsWith("_")||(n[r]=i);return Fn({...e,query:n},{_next:t})}function md(e,t){try{const n=new URL(t),r=new URL(e,n);return r.hostname.toLowerCase()!==n.hostname.toLowerCase()?null:(r.protocol=n.protocol,r.port=n.port,r.toString())}catch{return null}}function Yv(e){const t=Ue(ye(e,"next_url")),n=ye(e,"next"),r=n!=null&&n!==!1?String(n):null,i=Ei(ye(e,"rows")),s=Array.isArray(ye(e,"columns"))?jn(ye(e,"columns")):null;return{rows:i.map(a=>Array.isArray(a)&&s?Object.fromEntries(s.map((c,d)=>[c,a[d]])):a),nextUrl:t,nextToken:r,hasMore:t!=null||r!=null,truncated:ye(e,"truncated")===!0}}function Qv(e,t=""){const n=String(e||"").toUpperCase();return n.includes("INT")?/^(is|has|can)_|_flag$|^enabled$|^active$/i.test(t)?"boolean":"number":n.includes("REAL")||n.includes("FLOA")||n.includes("DOUB")||n.includes("NUM")||n.includes("DEC")?"number":n.includes("BLOB")?"string":/(_at|_date|^date$|^created$|^updated$|^modified$)$/i.test(t)?"datetime":"string"}function gd(e){const t=jn(ye(e,"primary_keys")),n=jn(ye(e,"columns")),r={},i=ye(e,"column_details");if(Array.isArray(i))for(const a of i){const c=rt(a);if(!c)continue;const d=Ue(c.column)??Ue(c.name);d&&(r[d]=c)}else{const a=rt(i);if(a)for(const[c,d]of Object.entries(a))r[c]=rt(d)??{}}for(const a of n)a in r||(r[a]={});const o=(n.length?n:Object.keys(r)).map(a=>{const c=r[a]??{},d=Aa(c.is_pk)||t.includes(a),f=Ue(c.sqlite_type)??Ue(c.type)??void 0,p={field:a,label:tp(a),type:Qv(f,a)};(Aa(c.notnull)||d)&&(p.notnull=!0),d&&(p.unique=!0),(Aa(c.hidden)||ec(a))&&(p.hidden=!0);const b=c.default;return b!=null&&b!==""&&(p.default=b),p});if(t.length===0){const a=o.filter(c=>c.unique).map(c=>c.field);a.length&&t.push(...a)}return{columns:o,pks:t}}function ho(e,t){if(t.length===0)return e;const n=new Set(t);return e.map(r=>n.has(r.field)&&!(r.unique&&r.notnull)?{...r,unique:!0,notnull:!0}:r)}function tp(e){return String(e).replace(/[_-]+/g," ").replace(/\b\w/g,t=>t.toUpperCase()).trim()}function fo(e){const t=[],n=new Set;for(const r of e)for(const i of Object.keys(r))n.has(i)||(n.add(i),t.push(i));return t.map(r=>{const i={field:r,label:tp(r),type:Jv(e.map(s=>s[r]))};return ec(r)&&(i.hidden=!0),i})}function Jv(e){const t=e.filter(n=>n!=null&&n!=="");return t.length===0?"string":t.every(jl)?"array":t.every(n=>typeof n=="boolean")?"boolean":t.every(n=>typeof n=="number"&&Number.isFinite(n))?"number":t.every(n=>typeof n=="string"&&Xv(n))?"datetime":"string"}function Xv(e){return/^\d{4}-\d{2}-\d{2}([T ]\d{2}:\d{2})?/.test(e)}function Zv(e){const t=new TextEncoder().encode(String(e));let n="";for(const r of t){const i=String.fromCharCode(r);/[A-Za-z0-9_-]/.test(i)?n+=i:n+="~"+r.toString(16).toUpperCase().padStart(2,"0")}return n}function e0(e,t){return!t||t.length===0?null:t.map(n=>Zv(e[n])).join(",")}function t0(e){const t=Array.isArray(e)?e:Ei(ye(e,"databases")),n=[];for(const r of t){if(typeof r=="string"){n.push(r);continue}const i=Ue(ye(r,"name"));i===null||i==="_memory"||n.push(Ue(ye(r,"route"))||i)}return n}function n0(e,t){const n=Array.isArray(e)?e:Ei(ye(e,"tables")),r=[];for(const i of n){if(typeof i=="string"){r.push({db:t,table:i,count:null,hidden:!1,pks:[]});continue}const s=Ue(ye(i,"name"));s!==null&&r.push({db:t,table:s,count:pr(ye(i,"count")),hidden:ye(i,"hidden")===!0,pks:jn(ye(i,"primary_keys"))})}return r}async function Ot(e,t){let n;try{n=await e(t)}catch(i){const s=i?.message||"network error";throw new Ge({error:`Couldn't reach ${t} (${s}). If this is a Datasette instance, it must be served with --cors for direct browser access — otherwise configure an eda sync server to proxy the request.`},0)}if(n&&n.ok===!1){let i=null;try{i=await n.json()}catch{}throw new Ge(i&&typeof i=="object"?i:{error:`HTTP ${n.status} for ${t}`},n.status)}const r=await n.json();if(ye(r,"ok")===!1)throw new Ge(r,n.status);return r}async function cc(e,t){return t0(await Ot(e,`${t}/-/databases.json`))}async function bd(e,t,n){return n0(await Ot(e,`${t}/${encodeURIComponent(n)}.json`),n)}function r0(e){const t=e?.views,n=[];for(const r of Array.isArray(t)?t:[]){if(typeof r=="string"){n.push(r);continue}const i=r;i&&typeof i.name=="string"&&i.hidden!==!0&&n.push(i.name)}return n}async function i0(e,t,n){const i=`${t}/${encodeURIComponent(n)}.json?sql=${encodeURIComponent("select name, sql from sqlite_master where type='view' order by name")}&_shape=array`;let s;try{s=await Ot(e,i)}catch(d){const f=d instanceof Ge?d.message:String(d);throw new Ge({error:`Couldn't read the view definitions from "${n}". Importing views needs the SQL endpoint, which this instance may have disabled (allow_sql). Its tables can still be imported normally.
+
+${f}`},d instanceof Ge?d.status:0)}const o=s?.rows,a=Array.isArray(s)?s:Array.isArray(o)?o:[],c=[];for(const d of a){const f=d,p=typeof f?.name=="string"?f.name:Array.isArray(d)?d[0]:void 0,b=typeof f?.sql=="string"?f.sql:Array.isArray(d)?d[1]:void 0;typeof p=="string"&&typeof b=="string"&&b.trim()&&c.push({db:n,name:p,sql:b})}return c}async function s0(e,t){const n=t.db?[t.db]:await cc(e,t.base),r=[];for(const i of n){const s=await Ot(e,`${t.base}/${encodeURIComponent(i)}.json`);if(r0(s).length!==0){if(s?.allow_execute_sql===!1)throw new Ge({error:`"${i}" defines views, but this instance has SQL queries disabled (allow_execute_sql), and a view's definition can only be read through them. Its tables can still be imported normally.`},403);r.push(...await i0(e,t.base,i))}}return r}async function po(e,t){const n=Fn(t,{_extra:"column_details"}),r=await Ot(e,n);let{columns:i,pks:s}=gd(r),o=ye(r,"column_details")!=null,a=pr(ye(r,"count")),c=ye(r,"count_truncated")===!0,d=r;if(i.length===0){const f=Fn(t,{_extra:"columns"}),p=await Ot(e,f);({columns:i,pks:s}=gd(p)),o=ye(p,"column_details")!=null,a=pr(ye(p,"count"))??a,c=ye(p,"count_truncated")===!0||c,d=p}if(!o&&s.length===0)try{s=await sp(e,t)}catch{}return{columns:ho(i,s),pks:s,count:a,countTruncated:c,typed:o,raw:d}}async function rl(e,t){if(!t.db||!t.table)throw new Error("probeSingleTable: URL must name a database and a table");const n=await po(e,t);return{db:t.db,table:t.table,count:n.count,hidden:!1,pks:n.pks}}function wd(e,t,n){const r=rt(e)??{},i=t?rt(ye(r.databases,t))??{}:{},s=rt(i.tables)??{},o=(n?rt(s[n]):null)??(n?rt(s[n.toLowerCase()]):null)??{};return np(o,c=>Ue(o[c])??Ue(i[c])??Ue(r[c]))}function o0(e){const t=rt(e)??{};return np(t,n=>Ue(t[n]))}function np(e,t){const n={columns:{},units:{}},r=Ue(e.sort);r!==null&&(n.sort=r);const i=Ue(e.sort_desc);i!==null&&(n.sortDesc=i);const s=pr(e.size);s!==null&&(n.size=s),Array.isArray(e.sortable_columns)&&(n.sortableColumns=jn(e.sortable_columns));const o=Ue(e.label_column);o!==null&&(n.labelColumn=o),e.hidden===!0&&(n.hidden=!0);const a=Ue(e.description);a!==null&&(n.description=a);const c=Ue(e.description_html);c!==null&&(n.descriptionHtml=c);const d=t("source"),f=t("source_url"),p=t("license"),b=t("license_url"),y=t("about"),$=t("about_url");d!==null&&(n.source=d),f!==null&&(n.sourceUrl=f),p!==null&&(n.license=p),b!==null&&(n.licenseUrl=b),y!==null&&(n.about=y),$!==null&&(n.aboutUrl=$);const k=rt(e.columns);if(k)for(const[_,T]of Object.entries(k))typeof T=="string"&&(n.columns[_]=T);const C=rt(e.units);if(C)for(const[_,T]of Object.entries(C))typeof T=="string"&&(n.units[_]=T);return n}const yd=new Map,vd=new Map;async function a0(e,t){let n=yd.get(t);return n||(n=Ot(e,`${t}/-/metadata.json`).catch(()=>({})),yd.set(t,n)),n}async function l0(e,t){let n=vd.get(t);return n||(n=Ot(e,`${t}/-/config.json`).catch(()=>({})),vd.set(t,n)),n}async function c0(e,t){try{const n=await Ot(e,Fn(t,{_extra:"metadata"}));return ye(n,"metadata")??{}}catch{return{}}}function u0(...e){const t={columns:{},units:{}};for(const n of e){const{columns:r,units:i,...s}=n;Object.assign(t,Object.fromEntries(Object.entries(s).filter(([,o])=>o!==void 0))),Object.assign(t.columns,r),Object.assign(t.units,i)}return t}async function uc(e,t){const n=await a0(e,t.base),r=wd(n,t.db,t.table);if(Object.keys(rt(n)??{}).length>0)return r;const[i,s]=await Promise.all([l0(e,t.base),t.db&&t.table?c0(e,t):Promise.resolve({})]);return u0(r,wd(i,t.db,t.table),o0(s))}function d0(e){const t={};return e.description!=null&&(t.description=e.description),e.descriptionHtml!=null&&(t.descriptionHtml=e.descriptionHtml),e.source!=null&&(t.source=e.source),e.sourceUrl!=null&&(t.sourceUrl=e.sourceUrl),e.license!=null&&(t.license=e.license),e.licenseUrl!=null&&(t.licenseUrl=e.licenseUrl),e.about!=null&&(t.about=e.about),e.aboutUrl!=null&&(t.aboutUrl=e.aboutUrl),Object.keys(t).length>0?t:void 0}function dc(e,t){const n=e.sortableColumns!=null?new Set(e.sortableColumns):null,r=t.map(a=>{const c=e.columns[a.field],d=e.units[a.field],f=n?n.has(a.field):void 0;return c==null&&d==null&&f===void 0?a:{...a,...c!=null?{description:c}:{},...d!=null?{units:d}:{},...f!==void 0?{sortable:f}:{}}}),i=new Set(t.map(a=>a.field)),s={};e.sort&&i.has(e.sort)?(s.sortColumn=e.sort,s.sortAsc=!0):e.sortDesc&&i.has(e.sortDesc)&&(s.sortColumn=e.sortDesc,s.sortAsc=!1);const o=d0(e);return o&&(s.info=o),e.labelColumn&&i.has(e.labelColumn)&&(s.labelColumn=e.labelColumn),{columns:r,patch:s}}function hc(e,t){if(t.length===0)return e;const n=new Map(fo(t).map(r=>[r.field,r.type]));return e.map(r=>{if(r.type!=="string")return r;const i=n.get(r.field);return i&&i!=="string"?{...r,type:i}:r})}async function _i(e,t,n={}){const r=n.maxRows??1e4,s={_size:n.pageSize??1e3,...n.extraParams||{}},o=Fn(t,s);let a=n.startUrl?md(n.startUrl,o)??n.startUrl:o;const c=[];let d=!1,f=!1,p=0,b,y;for(;a;){let $;try{$=await Ot(e,a)}catch(T){if(c.length===0&&!n.startUrl)throw T;b=T instanceof Ge&&T.status?`stopped after ${c.length} rows: HTTP ${T.status}`:`stopped after ${c.length} rows: ${T?.message??String(T)}`,f=!0,y=a;break}const k=Yv($);c.push(...k.rows),d=d||k.truncated,p+=1,n.onProgress?.(c.length);const _=(k.nextUrl!=null?md(k.nextUrl,a):null)??(k.nextToken!=null?Gv(t,k.nextToken):null);_&&c.length<r&&k.rows.length>0?a=_:(f=_!=null&&k.rows.length>0,f&&(y=_??void 0),a=null)}return{rows:c,truncated:d,hasMore:f,pages:p,error:b,nextUrl:y}}function h0(e){const t={"Content-Type":"application/json"};return e&&(t.Authorization=`Bearer ${e}`),t}function rp(e,t){return`${e.base}/${encodeURIComponent(e.db)}/${encodeURIComponent(e.table)}/-/${t}`}function ip(e,t,n){return`${e.base}/${encodeURIComponent(e.db)}/${encodeURIComponent(e.table)}/${t}/-/${n}`}async function mo(e,t,n,r){let i;try{i=await e(t,{method:"POST",headers:h0(r),body:JSON.stringify(n)})}catch(o){throw new Ge({error:`Couldn't reach ${t} (${o?.message||"network error"}).`},0)}if(i&&i.ok===!1){let o=null;try{o=await i.json()}catch{}throw new Ge(o&&typeof o=="object"?o:{error:`HTTP ${i.status} for ${t}`},i.status)}const s=await i.json();if(ye(s,"ok")===!1)throw new Ge(s,i.status);return s}async function kd(e,t,n,r={}){const i=await mo(e,rp(t,"insert"),{rows:n,return:!0},r.token);return lc(i)}async function f0(e,t,n,r,i={}){const s=await mo(e,ip(t,n,"update"),{update:r,return:!0},i.token),o=rt(ye(s,"row"));return o||(lc(s)[0]??null)}async function $d(e,t,n,r={}){await mo(e,ip(t,n,"delete"),{},r.token)}async function p0(e,t,n,r={}){const i=await mo(e,rp(t,"upsert"),{rows:n,return:!0},r.token);return lc(i)}async function sp(e,t){const n=Fn(t,{_extra:"primary_keys"}),r=await Ot(e,n);return jn(ye(r,"primary_keys"))}async function op(e,t){try{const n=await Ot(e,Fn(t,{_extra:"count"}));return{count:pr(ye(n,"count")),truncated:ye(n,"count_truncated")===!0}}catch{return{count:null,truncated:!1}}}async function ap(e,t,n={}){const r=n.token?{headers:{Authorization:`Bearer ${n.token}`}}:void 0;try{const i=await e(`${t}/-/versions.json`,r);if(i&&i.ok===!1)return{reachable:!1,version:null,actor:null,writable:!1,error:`HTTP ${i.status}`};const s=await i.json(),o=Ue(ye(ye(s,"datasette"),"version"))??Ue(ye(s,"version"));let a=null;try{const d=await(await e(`${t}/-/actor.json`,r)).json();a=rt(ye(d,"actor"))}catch{}return{reachable:!0,version:o,actor:a,writable:!!(n.token&&a)}}catch(i){return{reachable:!1,version:null,actor:null,writable:!1,error:i?.message||"unreachable"}}}function mr(e,t){return t?(n,r)=>{const i=(r??{}).headers??{};return e(n,{...r??{},headers:{...i,Authorization:`Bearer ${t}`}})}:e}function m0(e,t){const n=new Map;for(const r of e)n.has(r.name.toLowerCase())||n.set(r.name.toLowerCase(),r);return r=>n.get(`${t}/${r}`.toLowerCase())??n.get(r.toLowerCase())}async function g0(e,t,n){const r={created:[],skipped:[],found:n.length};if(n.length===0)return r;const i=(await e.store.tables.find()).filter(a=>a.workspaceId===t),s=new Set(i.map(a=>a.name)),o=[...i];for(const a of n){const c=Si(a.sql),d=c.projections[0];if(!d){r.skipped.push({name:a.name,reason:c.unsupported[0]??"its SELECT could not be modelled as a projection"});continue}const f=await tc(e,t,{name:`${a.db}/${a.name}`,spec:d.spec,...d.sortBy?{sortBy:d.sortBy}:{}},{resolve:m0(o,a.db),taken:s});if(!f){const p=d.spec.sources.map(b=>b.tableName).join(", ");r.skipped.push({name:a.name,reason:`its source tables are not in this workspace (${p}) — import them first`});continue}o.push(f),s.add(f.name),r.created.push(f.name),c.unsupported.length>0&&r.skipped.push({name:a.name,reason:`imported, but part of the query was not modelled: ${c.unsupported.slice(0,2).join("; ")}`})}return r}function b0(e,t){if(t.found===0){e.ui.dialogs.toast("That Datasette database defines no views.",{kind:"info",title:"Datasette views"});return}const n=t.skipped.length>0?` ${t.skipped.length} not fully imported: ${t.skipped.map(r=>`${r.name} — ${r.reason}`).join("; ")}`:"";if(t.created.length===0){e.ui.dialogs.toast(`No views could be imported as projections.${n}`,{kind:"warning",title:"Datasette views"});return}e.ui.dialogs.toast(`Imported ${t.created.length} of ${t.found} view${t.found===1?"":"s"} as projections.${n}`,{kind:t.skipped.length>0?"warning":"success",title:"Datasette views"})}function w0(e,t){return`${e}/${encodeURIComponent(t.db)}/${encodeURIComponent(t.name)}`}async function lp(e,t){try{return await s0(n=>e.backend.fetch(n),St(t))}catch(n){if(n instanceof Ge)return null;throw n}}async function cp(e,t,n){const r=t.slice(0,5).map(s=>s.name).join(", "),i=await e.ui.dialogs.choice(`${n} ${t.length} view${t.length===1?"":"s"} (${r}${t.length>5?", …":""}).
+
+A view is a query rather than stored rows, so it can come in either way.`,["As projections (live)","As tables (snapshot)"],"Datasette views");return i?i.startsWith("As projections")?"projection":"table":null}async function y0(e,t,n){const r=await lp(e,t);if(!r||r.length===0)return;const i=await cp(e,r,"This database also defines");i&&await up(e,St(t).base,r,i,n)}async function up(e,t,n,r,i){if(r==="table"){await i(n.map(o=>w0(t,o)));return}const s=e.workspaceId();s&&b0(e,await g0(e,s,n))}const Us=e=>e.replace(/^https?:\/\//,""),ni="datasette",dp=1e4,hp=1e3,fc=1e4,fp=60;function pp(e){e.ui.registerSettings(ni,"Datasette",[{key:"maxImportRows",label:"Max import rows per table",type:"number",default:dp,scope:"workspace",description:"Max rows imported per table. 0 = unlimited."},{key:"pageSize",label:"Page size",type:"number",default:hp,scope:"workspace",description:"Rows requested per page hop while paging a table (the instance clamps this to its own max_returned_rows)."},{key:"connectMaxRows",label:"Connected table row cap",type:"number",default:fc,scope:"workspace",description:"Row cap for a single live connected table."},{key:"retryWaitSeconds",label:"Rate-limit retry wait (seconds)",type:"number",default:fp,scope:"workspace",description:"Wait before resuming an import paused by the instance's rate limiting."}])}function cs(e,t,n){const r=typeof e=="number"?e:Number(e);return Number.isFinite(r)&&r>=n?Math.floor(r):t}async function go(e){const[t,n,r,i]=await Promise.all([e.settings.get(ni,"maxImportRows"),e.settings.get(ni,"pageSize"),e.settings.get(ni,"connectMaxRows"),e.settings.get(ni,"retryWaitSeconds")]);return{maxImportRows:cs(t,dp,0),pageSize:cs(n,hp,1),connectMaxRows:cs(r,fc,1),retryWaitSeconds:cs(i,fp,1)}}function bo(e){return e===0?Number.MAX_SAFE_INTEGER:e}function v0(e,t,n){return`${e}/${encodeURIComponent(t)}/${encodeURIComponent(n)}`}function pc(e,t,n,r){const i={...e.info??{}};return!i.source&&!i.sourceUrl&&(i.source=`${Us(t)}/${n}/${r}`,i.sourceUrl=v0(t,n,r)),{...e,info:i}}async function mc(e,t,n,r={}){if(t.db&&t.table)return[await rl(e,t)];const i=[];if(t.db){if(i.push(...await bd(e,t.base,t.db)),r.skipPicker)return i.filter(a=>!a.hidden)}else{const a=await cc(e,t.base);if(a.length===0)return[];let c=a;if(a.length>1){const d=await fi(a.map(f=>({name:f,size:null})),{title:`${n} from Datasette`,message:`Choose databases on ${Us(t.base)}, then their tables.`,confirmLabel:"Next: choose tables"});if(!d)return null;c=d.map(f=>a[f])}for(const d of c)try{i.push(...await bd(e,t.base,d))}catch{}}if(i.length===0)return[];const s=new Set(i.map(a=>a.db)).size>1,o=await fi(i.map(a=>({name:s?`${a.db}/${a.table}`:a.table,size:a.count,detail:s?void 0:a.db,hidden:a.hidden})),{title:`${n} from Datasette`,message:`Choose tables to ${n.toLowerCase()} from ${Us(t.base)}.`,confirmLabel:n});return o?o.map(a=>i[a]):null}const k0=e=>new Promise(t=>setTimeout(t,e));function $0(e){const t=globalThis.__eda_resumeDelayMs;return typeof t=="number"&&t>=0?t:e*1e3}function gc(e,t,n,r){if(!(!e||!t))return{nextUrl:t,loadedRows:n,...r!=null?{totalCount:r}:{}}}const x0={id:"datasette-import",name:"Datasette Import",type:"importer",version:"0.3.0",description:"Import snapshot tables from any online Datasette instance, database, or single table by URL",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/datasette-import.ts"},xd="https://latest.datasette.io/fixtures/facetable";function S0(e){pp(e),e.ui.registerTableButton({id:"datasette:refresh-snapshot",label:"Refresh",icon:"refresh",tooltip:"Re-fetch this snapshot from the Datasette table it came from",visible:t=>t.origin?.type==="datasette"&&t.source?.type!=="datasette",onClick:(t,{tableId:n})=>A0(t,n)}),e.ui.registerTableButton({id:"datasette:resume",label:"Resume import",icon:"sync_problem",tooltip:"Import was interrupted — click to resume from where it stopped",danger:!0,visible:t=>t.origin?.type==="datasette"&&t.importResume!=null,onClick:(t,{tableId:n})=>O0(t,n)}),e.ui.registerUrlSource({id:"datasette",label:"Datasette (table or instance)…",async run(t,{url:n}){const r=n||await t.ui.dialogs.prompt(`Datasette URL — a single table, a database, or an instance root.
+
+e.g. ${xd}`,"","Import from Datasette");r&&await Sd(t,r)}}),e.ui.registerUrlSource({id:"datasette-views",label:"Datasette views…",async run(t,{url:n}){const r=n||await t.ui.dialogs.prompt(`Datasette database URL — its SQL views can come in as live Projections over the tables you already imported, or as snapshot tables.
+
+e.g. ${xd}`,"","Import Datasette views");if(r)try{const i=await lp(t,r);if(!i||i.length===0){await t.ui.dialogs.alert("That Datasette database defines no views.","Datasette views");return}const s=await cp(t,i,"This database defines");if(!s)return;await up(t,St(r).base,i,s,o=>mp(t,o,{}))}catch(i){await t.ui.dialogs.alert(i?.message??String(i),"Datasette views")}}}),e.ui.registerDropHandler(async(t,n)=>{const r=t.dataTransfer?.getData("text/plain")||"";return C0(r)?(t.preventDefault(),await Sd(n,r,{skipViews:!0}),!0):!1})}async function Sd(e,t,n={}){try{await wo(e,t,n)}catch(r){let i;r instanceof Ge?i=r.status?`Datasette error (${r.status}): ${r.message}`:r.message:i=`Could not import: ${r?.message??r}`,await e.ui.dialogs.alert(i,"Datasette import failed")}}function C0(e){try{const t=St(e);return!!(t.db&&t.table)}catch{return!1}}async function wo(e,t,n={}){const r=e.workspaceId();if(!r)throw new Error("datasette-source: no active workspace");const i=await go(e),s=St(t),a=await mc(D=>e.backend.fetch(D),s,"Import",{skipPicker:n.skipTablePicker});if(a===null)return;if(a.length===0){await e.ui.dialogs.alert("No tables found at that Datasette URL.","Datasette import");return}const c=[];let d=0;for(const D of a){const ne={base:s.base,db:D.db,table:D.table,query:{}},W=await E0(e,r,ne);if(W.skipped){d+=1;continue}c.push({tableId:W.tableId,ref:ne,overwrite:W.overwrite,knownCount:D.count}),At(W.tableId,!0)}let f=0,p=0;const b=[],y=[],$=[],k=new ep(c.map(D=>({tableId:D.tableId,total:D.knownCount??0}))),C=`Importing ${c.length} table${c.length===1?"":"s"}`,_=D=>{c.length!==0&&uo({label:C,...D===void 0?{}:{fraction:D},detail:`${k.completedTables()} of ${k.tableCount} table${k.tableCount===1?"":"s"}`})};_();try{for(const D of c){try{const ne=await _0(e,D.tableId,D.ref,D.overwrite,D.knownCount,n,i,W=>{k.observe(D.tableId,W),_(k.fraction())});f+=1,p+=ne.rowCount,ne.error?y.push(`${D.ref.db}/${D.ref.table} (${ne.error})`):(ne.hasMore||ne.truncated)&&b.push(`${D.ref.db}/${D.ref.table}`)}catch(ne){$.push(`${D.ref.db}/${D.ref.table}: ${ne?.message??String(ne)}`)}k.complete(D.tableId),_(k.fraction()),At(D.tableId,!1)}}finally{Zf()}const T=bo(i.maxImportRows),Y=n.maxRows!=null?Math.min(n.maxRows,T):T;if(I0(e,{imported:f,skipped:d,totalRows:p,capped:b,cap:Y,partial:y,failed:$,requested:a.length}),f>0&&!n.skipViews)try{await y0(e,t,D=>mp(e,D,n))}catch{}}async function mp(e,t,n){for(const r of t)await wo(e,r,{...n,skipViews:!0})}async function E0(e,t,n){const r=`${n.db}/${n.table}`,i={type:"datasette",url:`${n.base}/${encodeURIComponent(n.db)}/${encodeURIComponent(n.table)}`},s=(await e.store.tables.find()).filter(d=>d.workspaceId===t),o=s.find(d=>d.name.toLowerCase()===r.toLowerCase());let a=r;if(o){const d=await e.ui.dialogs.choice(`A table named "${r}" already exists in this workspace.`,["Overwrite","Rename","Skip"],"Import — table already exists");if(!d||d==="Skip")return{tableId:"",overwrite:!1,skipped:!0};if(d==="Overwrite")return await e.store.tables.patch(o.id,{origin:i,updatedAt:Date.now()}),{tableId:o.id,overwrite:!0};a=fn(new Set(s.map(f=>f.name)),r)}const c=_e();return await e.store.tables.insert({id:c,workspaceId:t,name:a,code:Ne(`${n.db}-${n.table}`),columns:[],view:"table",origin:i,updatedAt:Date.now()}),{tableId:c,overwrite:!1}}async function _0(e,t,n,r,i,s,o,a){const c=`${n.db}/${n.table}`,d=b=>e.backend.fetch(b),f=bo(o.maxImportRows),p=s.maxRows!=null?Math.min(s.maxRows,f):f;At(t,!0);try{let b=[],y=i,$=!1,k=!1,C=[];try{const me=await po(d,n);b=me.columns,y==null&&(y=me.count,$=me.countTruncated),k=me.typed,C=me.pks??[]}catch{}if(y==null){const me=await op(d,n);y=me.count,$=me.truncated}const _=y&&y>0&&(!$||p<=y)?Math.min(y,p):0,T=[];let Y=!1,D=!1,ne=0,W,I,V;for(;;){const me=await _i(d,n,{maxRows:Math.max(0,p-T.length),pageSize:o.pageSize,...V?{startUrl:V}:{},onProgress:Wn=>{_>0&&At(t,!0,Math.min(1,(T.length+Wn)/_)),a?.(T.length+Wn)}});if(T.push(...me.rows),Y=Y||me.truncated,ne+=me.pages,D=me.hasMore,W=me.error,I=me.nextUrl,!me.error||!me.nextUrl||T.length>=p)break;const ze=`${o.retryWaitSeconds}s`;if(await e.ui.dialogs.choice(`Import of "${c}" paused after ${T.length.toLocaleString()} rows (${me.error}). Datasette may be rate-limiting a large import. Wait ${ze} and resume from where it stopped, or cancel and keep the rows imported so far (you can resume later from the table's footer)?`,[`Resume in ${ze}`,"Cancel"],"Import paused — rate limited?")!==`Resume in ${ze}`)break;At(t,!0),e.ui.dialogs.toast(`Resuming "${c}" in ${ze}…`,{kind:"info",title:"Import paused"}),await k0($0(o.retryWaitSeconds)),V=me.nextUrl,W=void 0,I=void 0}const K=b.length===0?fo(T):k?b:hc(b,T);let de=ho(K,C),H={};try{const me=await uc(d,n),ze=dc(me,de);de=ze.columns,H=ze.patch}catch{}H=pc(H,n.base,n.db,n.table);const te=await e.store.tables.findOne(t),q=te?.columns??[],Q=q.length===0;let{columns:ae}=oo(q,de,te?.deletedColumns),we=T;if(s.editColumns&&Q){const me=await s.editColumns(ae,c);if(me===null)return{name:c,rowCount:0,hasMore:!1,truncated:!1,pages:ne,count:y,error:W};we=T0(we,ae,me),ae=me}const xe=Date.now();e.events.emit("import:before",{source:"datasette",tableId:t});const De=gc(W,I,T.length,y),pe=C.length>0&&te?.origin?{origin:{...te.origin,pks:C}}:{},yt=Q?{columns:ae,...H,...pe,importResume:De,updatedAt:xe}:{columns:ae,...H.info?{info:H.info}:{},...pe,importResume:De,updatedAt:xe};await e.store.tables.patch(t,yt);const Dt=e.store.rows(t);if(r){const me=await Dt.find();await Dt.bulkRemove(me.map(ze=>ze.id))}const He=we.map(me=>({id:_e(),tableId:t,data:me,updatedAt:xe}));return await Dt.bulkInsert(He),e.events.emit("import:after",{source:"datasette",tableId:t,rowCount:He.length}),{name:c,rowCount:He.length,hasMore:D,truncated:Y,pages:ne,count:y,error:W}}finally{At(t,!1)}}function T0(e,t,n){const r=Kl(t,n);return r?e.map(r):e}function I0(e,t){const n=`${t.totalRows.toLocaleString()} row${t.totalRows===1?"":"s"}`,r=`${t.imported} table${t.imported===1?"":"s"}`,i=t.skipped>0?` ${t.skipped} skipped (already existed).`:"";if(t.imported===0&&t.failed.length===0&&t.skipped>0){e.ui.dialogs.toast(`Nothing imported — ${t.skipped} table(s) skipped (already existed).`,{kind:"info",title:"Datasette import"});return}if(t.failed.length>0){e.ui.dialogs.toast(`Imported ${r} (${n});${i} ${t.failed.length} failed:
+${t.failed.join(`
+`)}`,{kind:"error",title:"Datasette import"});return}if(t.partial.length>0){e.ui.dialogs.toast(`Imported ${r} (${n}).${i} ${t.partial.length} loaded partially (stopped early — the server may have rate-limited us): ${t.partial.join(", ")}. Use Refresh to fetch the rest.`,{kind:"warning",title:"Datasette import"});return}if(t.capped.length>0){const s=t.cap<Number.MAX_SAFE_INTEGER?` at ${t.cap.toLocaleString()}`:"";e.ui.dialogs.toast(`Imported ${r} (${n}).${i} ${t.capped.length} capped${s} — more available: ${t.capped.join(", ")}.`,{kind:"warning",title:"Datasette import"});return}e.ui.dialogs.toast(`Imported ${r} (${n}) from Datasette.${i}`,{kind:"success",title:"Datasette import"})}async function A0(e,t){const n=await e.store.tables.findOne(t);if(!(!n?.origin?.url||n.origin.type!=="datasette"))try{const r=await go(e);await R0(e,n,r)}catch(r){const i=r instanceof Ge?r.message:r?.message??String(r);e.ui.dialogs.toast(`Refresh failed: ${i}`,{kind:"error",title:"Refresh"})}}async function R0(e,t,n){const r=St(t.origin.url),i=f=>e.backend.fetch(f),s=bo(n.maxImportRows);At(t.id,!0);let o,a;try{let f=[],p=null,b=!1,y=!1,$=[];try{const pe=await po(i,r);f=pe.columns,p=pe.count,b=pe.countTruncated,y=pe.typed,$=pe.pks??[]}catch{}if(p==null){const pe=await op(i,r);p=pe.count,b=pe.truncated}const k=p&&p>0&&(!b||s<=p)?Math.min(p,s):0,{rows:C,hasMore:_,truncated:T,error:Y,nextUrl:D}=await _i(i,r,{maxRows:s,pageSize:n.pageSize,onProgress:pe=>{k>0&&At(t.id,!0,Math.min(1,pe/k))}}),ne=$.length>0?$:t.origin?.pks??[];let W=ho(f.length===0?fo(C):y?f:hc(f,C),ne),I={};try{const pe=await uc(i,r),yt=dc(pe,W);W=yt.columns,I=yt.patch}catch{}I=pc(I,r.base,r.db,r.table);const V=t.columns.length===0,K=oo(t.columns,W,t.deletedColumns);a=K.newFields;const ie=Date.now(),de=gc(Y,D,C.length,p),H=V?{columns:K.columns,...I,importResume:de,updatedAt:ie}:{columns:K.columns,...I.info?{info:I.info}:{},importResume:de,updatedAt:ie};await e.store.tables.patch(t.id,H);const te=new Set(W.map(pe=>pe.field)),q=t.columns.map(pe=>pe.field).filter(pe=>!te.has(pe)&&!ne.includes(pe)),Q=(t.deletedColumns??[]).filter(pe=>te.has(pe)),ae=e.store.rows(t.id),we=await ae.find(),{data:xe,droppedUserRows:De}=Xf({oldRows:we.map(pe=>({data:pe.data})),freshRows:C,pks:ne,userAddedFields:q,deletedRemoteFields:Q});await ae.bulkRemove(we.map(pe=>pe.id)),await ae.bulkInsert(xe.map(pe=>({id:_e(),tableId:t.id,data:pe,updatedAt:ie}))),o={rowCount:xe.length,hasMore:_,truncated:T,error:Y,droppedUserRows:De}}finally{At(t.id,!1)}const c=[];if(o.error)c.push(`partial (${o.error})`);else if(o.hasMore||o.truncated){const f=s<Number.MAX_SAFE_INTEGER?` at ${s.toLocaleString()}`:"";c.push(`capped${f}`)}a.length>0&&c.push(`${a.length} new column${a.length===1?"":"s"}`),o.droppedUserRows>0&&c.push(`${o.droppedUserRows} row${o.droppedUserRows===1?"":"s"} changed at the source, so your own column values for ${o.droppedUserRows===1?"it":"them"} could not be carried over`);const d=c.length?` — ${c.join(", ")}`:"";e.ui.dialogs.toast(`Refreshed ${o.rowCount} rows from ${r.db}/${r.table}${d}.`,{kind:o.error||o.hasMore||o.truncated||a.length>0||o.droppedUserRows>0?"warning":"success",title:"Refresh"}),a.length>0&&L0(t.id,r,a)}async function O0(e,t){const n=await e.store.tables.findOne(t),r=n?.importResume;if(!n||!n.origin?.url||!r)return;const i=await go(e),s=bo(i.maxImportRows),o=St(n.origin.url),a=$=>e.backend.fetch($),c=r.loadedRows,d=r.totalCount??null,f=d&&d>0?Math.min(d,s):0;At(t,!0,f>0?Math.min(1,c/f):void 0);let p,b;try{const $=await _i(a,o,{startUrl:r.nextUrl,maxRows:Math.max(0,s-c),pageSize:i.pageSize,onProgress:_=>{f>0&&At(t,!0,Math.min(1,(c+_)/f))}});p=$.rows.length;const k=Date.now();await e.store.rows(t).bulkInsert($.rows.map(_=>({id:_e(),tableId:t,data:_,updatedAt:k}))),b={error:$.error,nextUrl:$.nextUrl};const C=gc($.error,$.nextUrl,c+p,d);await e.store.tables.patch(t,{importResume:C,updatedAt:k})}catch($){const k=$ instanceof Ge?$.message:$?.message??String($);e.ui.dialogs.toast(`Couldn't resume ${o.db}/${o.table}: ${k}. Try again later.`,{kind:"error",title:"Resume import"});return}finally{At(t,!1)}const y=c+p;b.error?e.ui.dialogs.toast(`Resumed ${o.db}/${o.table}: +${p} rows (${y} total) — interrupted again (${b.error}). Resume to continue.`,{kind:"warning",title:"Resume import"}):e.ui.dialogs.toast(`Finished ${o.db}/${o.table}: +${p} rows (${y} total).`,{kind:"success",title:"Resume import"})}function L0(e,t,n){const r=n.join(", "),i=n.length!==1,s=`Refreshing ${t.db}/${t.table} revealed ${n.length} new column${i?"s":""}: ${r}. Review, reorder or hide ${i?"them":"it"} here.`;document.dispatchEvent(new CustomEvent("easydb:edit-columns",{detail:{tableId:e,notice:s}}))}const D0=Object.freeze(Object.defineProperty({__proto__:null,importDatasette:wo,init:S0,meta:x0},Symbol.toStringTag,{value:"Module"})),bc=new Map;let Cd=!1;function M0(){for(const e of bc.values())if(e===null||e.open)return!0;return!1}function gp(e,t=null){bc.set(e,t),z0()}function P0(e){bc.delete(e)}function Xt(e,t){const n=()=>{t.open&&gp(e,t)};t.addEventListener("input",n),t.addEventListener("change",n),t.addEventListener("close",()=>P0(e))}function z0(){Cd||(Cd=!0,window.addEventListener("beforeunload",e=>{M0()&&(e.preventDefault(),e.returnValue="")}))}var N0=Object.defineProperty,j0=Object.getOwnPropertyDescriptor,Ti=(e,t,n,r)=>{for(var i=r>1?void 0:r?j0(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&N0(t,n,i),i};const F0="https://latest.datasette.io/ephemeral";let Rt=class extends $e{constructor(){super(...arguments),this.url="",this.token="",this.status="",this.statusKind="",this.dialogEl=null,this.resolveFn=null,this.onCancel=e=>{e.preventDefault(),this.finish(null)},this.submit=async e=>{e.preventDefault();const t=this.url.trim();if(!t)return;const n=this.token.trim();if(this.onConnect){this.status="Checking…",this.statusKind="busy";try{await this.onConnect(t,n)}catch(r){this.status=r?.message??String(r),this.statusKind="err";return}}this.finish({url:t,token:n})}}connectedCallback(){super.connectedCallback(),Rt.instance=this}disconnectedCallback(){super.disconnectedCallback(),Rt.instance===this&&(Rt.instance=null)}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e),this.dialogEl&&Xt("datasette-connect",this.dialogEl)}open(e={}){return this.url=e.initialUrl??"",this.token=e.initialToken??"",this.status="",this.statusKind="",this.onTest=e.onTest,this.onConnect=e.onConnect,new Promise(t=>{this.resolveFn=t,this.updateComplete.then(()=>this.dialogEl?.showModal())})}finish(e){this.dialogEl?.close();const t=this.resolveFn;this.resolveFn=null,queueMicrotask(()=>t?.(e))}async runTest(){const e=this.url.trim();if(!(!e||!this.onTest)){this.status="Testing…",this.statusKind="busy";try{this.status=await this.onTest(e,this.token.trim()),this.statusKind=/read-write|reachable|ok\b/i.test(this.status)?"ok":"err"}catch(t){this.status=t?.message??String(t),this.statusKind="err"}}}render(){return v`
+      <dialog @cancel=${this.onCancel} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${()=>this.finish(null)}>×</button>
+        <form @submit=${this.submit}>
+          <div class="dialog-header">
+            <h2>Connect Datasette</h2>
+            <div class="header-actions">
+              <button type="button" class="ghost" @click=${()=>this.finish(null)}>Cancel</button>
+              <button type="submit" class="primary">Connect</button>
+            </div>
+          </div>
+          <div class="dialog-body">
+            <label>
+              URL — a table, a database, or an instance
+              <input
+                type="text"
+                autofocus
+                placeholder="e.g. ${F0}"
+                .value=${this.url}
+                @input=${e=>{this.url=e.target.value,this.status="",this.statusKind=""}}
+              />
+            </label>
+            <label>
+              Write token (optional)
+              <input
+                type="password"
+                placeholder="dstok_…  — leave blank for read-only"
+                .value=${this.token}
+                @input=${e=>{this.token=e.target.value}}
+              />
+            </label>
+            <div class="test-row">
+              <button type="button" class="ghost test" @click=${()=>void this.runTest()}>Test connection</button>
+              <span class="status ${this.statusKind}">${this.status}</span>
+            </div>
+            <p class="hint">
+              Enter a single table (<code>…/db/table</code>), a whole database (<code>…/db</code>), or an instance root — you'll pick which tables to connect. Opens live tables backed by the remote
+              Datasette: reads stay remote, and edits write back when the token grants them. The token is stored on this device only and is never synced or exported. A blank token opens tables
+              read-only.
+            </p>
+          </div>
+        </form>
+      </dialog>
+    `}};Rt.instance=null;Rt.styles=[mt,Se`
+      dialog {
+        min-width: 440px;
+        max-width: 560px;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        font-size: 0.85rem;
+        color: #374151;
+      }
+      input {
+        font: inherit;
+        padding: 0.45rem 0.55rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        width: 100%;
+        box-sizing: border-box;
+        background: white;
+      }
+      .test-row {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      button.ghost.test {
+        white-space: nowrap;
+      }
+      .status {
+        font-size: 0.82rem;
+        color: #6b7280;
+        min-height: 1.1em;
+      }
+      .status.ok {
+        color: #15803d;
+      }
+      .status.err {
+        color: #b91c1c;
+      }
+      .hint {
+        color: #6b7280;
+        font-size: 0.78rem;
+        margin: 0;
+        line-height: 1.5;
+      }
+      .hint code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.72rem;
+        background: #f3f4f6;
+        padding: 0.05rem 0.25rem;
+        border-radius: 0.2rem;
+      }
+    `];Ti([j()],Rt.prototype,"url",2);Ti([j()],Rt.prototype,"token",2);Ti([j()],Rt.prototype,"status",2);Ti([j()],Rt.prototype,"statusKind",2);Rt=Ti([Re("datasette-connect-dialog")],Rt);class U0 extends Error{constructor(t){super(`This Datasette table is read-only — ${t} is not permitted.`),this.name="SourceReadOnlyError"}}function bp(e){return`datasette:token:${e}`}function B0(e,t){for(const[n,r]of Object.entries(t))if(n!=="data"&&e[n]!==r)return!1;return!0}function q0(e,t,n){const r=e.source,i=r?.config??{},s={base:i.base,db:i.db,table:i.table,query:{}},o=Array.isArray(i.pks)&&i.pks.length>0?i.pks:["rowid"],a=r?.writable===!0,c=i.maxRows;let d=null;function f(){return c!=null?Promise.resolve(c):(d||(d=n?go(n).then(I=>I.connectMaxRows):Promise.resolve(fc)),d)}const p=i.pollIntervalMs??0,b=(I,V)=>t.backend.fetch(I,V);async function y(){const V=(await t.settings.findOne(bp(i.base)))?.value;return typeof V=="string"&&V.length>0?V:void 0}const $=async(I,V)=>mr(b,await y())(I,V);function k(I){return{id:e0(I,o)??_e(),tableId:e.id,data:I,updatedAt:Date.now()}}function C(I){if(!a)throw new U0(I)}function _(I){const V={};for(const[K,ie]of Object.entries(I))o.includes(K)||(V[K]=ie);return V}const T=new Set;let Y=[],D=!1,ne=null;function W(){return ne||(ne=(async()=>{try{const{rows:I}=await _i($,s,{maxRows:await f()});Y=I.map(k),D=!0;for(const V of T)V(Y);return Y}finally{ne=null}})(),ne)}return{async find(I){const V=D?Y:await W();return!I||Object.keys(I).length===0?V:V.filter(K=>B0(K,I))},async findOne(I){return(D?Y:await W()).find(K=>K.id===I)??null},async insert(I){C("insert");const[V]=await kd($,s,[I.data]),K=k(V??I.data);return t.events.emit("row:created",{tableId:e.id,row:K}),W(),K},async bulkInsert(I){if(I.length===0)return[];C("insert");const V=await kd($,s,I.map(ie=>ie.data)),K=(V.length?V:I.map(ie=>ie.data)).map(k);return W(),K},async upsert(I){C("upsert");const[V]=await p0($,s,[I.data]),K=k(V??I.data);return W(),K},async patch(I,V){C("update");const K=V.data,ie=_(K??{}),de=await f0($,s,I,ie),H=k(de??{...K??{}});return t.events.emit("row:updated",{tableId:e.id,row:H,prev:H}),W(),H},async remove(I){C("delete"),await $d($,s,I),t.events.emit("row:deleted",{tableId:e.id,rowId:I}),W()},async bulkRemove(I){if(I.length!==0){C("delete");for(const V of I)await $d($,s,V);W()}},subscribe(I){T.add(I),D?I(Y):W();let V=null;return p>0&&(V=setInterval(()=>void W(),p)),()=>{T.delete(I),V&&clearInterval(V)}},async refresh(){await W()}}}const H0='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3.9 12a3.1 3.1 0 0 1 3.1-3.1h4V7H7a5 5 0 0 0 0 10h4v-1.9H7A3.1 3.1 0 0 1 3.9 12zM8 13h8v-2H8v2zm9-6h-4v1.9h4A3.1 3.1 0 0 1 17 15h-4v1.9h4a5 5 0 0 0 0-10z"/></svg>',V0={id:"datasette-connect",name:"Datasette Connect",type:"source",version:"0.3.0",description:"Connect a live, editable table on any Datasette instance — rows are never stored locally",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/datasette-connect.ts"};function K0(e){pp(e),e.ui.registerConnector({id:"datasette",label:"Datasette",icon:H0,order:10,description:"A live, editable table on any Datasette instance",connect:t=>G0(t)}),e.ui.registerTableButton({id:"datasette:refresh-live",label:"Refresh",icon:"refresh",tooltip:"Re-read this live table from its Datasette instance",visible:t=>t.source?.type==="datasette",onClick:(t,{tableId:n})=>W0(t,n)}),typeof e.registerRowSource=="function"&&e.registerRowSource({type:"datasette",create:(t,n)=>q0(t,n,e)})}async function W0(e,t){if((await e.store.tables.findOne(t))?.source?.type==="datasette")try{const r=e.store.rows(t);typeof r.refresh=="function"&&await r.refresh();const i=await r.find();e.ui.dialogs.toast(`Reloaded ${i.length} rows from Datasette.`,{kind:"success",title:"Refresh"})}catch(r){const i=r instanceof Ge?r.message:r?.message??String(r);e.ui.dialogs.toast(`Refresh failed: ${i}`,{kind:"error",title:"Refresh"})}}async function G0(e){const t=Rt.instance??Y0(),n=(i,s)=>e.backend.fetch(i,s),r=await t.open({initialUrl:"https://datasette.io",async onTest(i,s){const o=St(i),a=await ap(n,o.base,{token:s||void 0});if(o.db&&o.table){await rl(mr(n,s||void 0),o);const d=a.version?` (Datasette ${a.version})`:"";return a.writable?`Reachable${d} — table found, signed in, read-write.`:`Reachable${d} — table found, read-only (no token / not authenticated).`}if(!a.reachable)return`Unreachable: ${a.error??"no response"}`;const c=a.version?` (Datasette ${a.version})`:"";return a.writable?`Reachable${c} — signed in, read-write.`:`Reachable${c} — read-only (no token / not authenticated).`},async onConnect(i,s){const o=St(i);o.db&&o.table&&await rl(mr(n,s||void 0),o)}});if(r)try{await wp(e,r.url,r.token)}catch(i){const s=i instanceof Ge?i.message:i?.message??String(i);await e.ui.dialogs.alert(s,"Connect Datasette failed")}}function Y0(){const e=document.createElement("datasette-connect-dialog");return document.body.appendChild(e),e}async function wp(e,t,n){const r=e.workspaceId();if(!r)throw new Error("datasette-source: no active workspace");const i=St(t),s=(p,b)=>e.backend.fetch(p,b),o=mr(s,n||void 0),a=await ap(s,i.base,{token:n||void 0});n&&await e.store.settings.upsert({name:bp(i.base),value:n});let c;try{c=await mc(o,i,"Connect")}catch(p){const b=p instanceof Ge?p.message:p?.message??String(p);throw new Error(`Couldn't read tables from ${Us(i.base)}: ${b}`,{cause:p})}if(c===null)return;if(c.length===0){await e.ui.dialogs.alert("No tables found at that URL.","Connect Datasette");return}const d=[];for(const p of c){const b=await Q0(e,r,i.base,p,a.writable,n);b!==null&&d.push({tableId:b,c:p})}if(d.length===0)return;const f=a.writable?"read-write":"read-only";e.ui.dialogs.toast(`Connected ${d.length} live table${d.length===1?"":"s"} from Datasette (${f}).`,{kind:"success",title:"Connect Datasette"});for(const{tableId:p,c:b}of d)J0(e,p,i.base,b,n)}async function Q0(e,t,n,r,i,s){const o=(await e.store.tables.find()).filter(b=>b.workspaceId===t);let a=`${r.db}/${r.table}`,c=o.find(b=>{const y=b.source?.config;return b.source?.type==="datasette"&&y?.base===n&&y?.db===r.db&&y?.table===r.table});if(!c){const b=o.find(y=>y.name.toLowerCase()===a.toLowerCase());if(b){const y=await e.ui.dialogs.choice(`A table named "${a}" already exists in this workspace.`,["Overwrite","Rename","Skip"],"Connect — table already exists");if(!y||y==="Skip")return null;y==="Overwrite"?c=b:a=fn(new Set(o.map($=>$.name)),a)}}let d=r.pks??[];if(d.length===0){const b=mr((y,$)=>e.backend.fetch(y,$),s||void 0);try{d=await sp(b,{base:n,db:r.db,table:r.table,query:{}})}catch{d=[]}}const f=c?.id??_e(),p={...c??{},id:f,workspaceId:t,name:a,code:Ne(`${r.db}-${r.table}`),columns:c?.columns??[],view:c?.view??"table",source:{type:"datasette",writable:i,config:{base:n,db:r.db,table:r.table,pks:d}},updatedAt:Date.now()};return c?await e.store.tables.upsert(p):await e.store.tables.insert(p),f}async function J0(e,t,n,r,i){const s={base:n,db:r.db,table:r.table,query:{}},o=mr((a,c)=>e.backend.fetch(a,c),i||void 0);try{let a=[],c=!1;try{const k=await po(o,s);a=k.columns,c=k.typed}catch{}const{rows:d}=await _i(o,s,{maxRows:50,pageSize:50}),f=a.length===0?fo(d):c?a:hc(a,d);if(f.length===0)return;const p=await e.store.tables.findOne(t);if(!p)return;const b=p.source?.config?.pks??[];let y=ho(f,b),$={};try{const k=await uc(o,s),C=dc(k,y);y=C.columns,$=C.patch}catch{}$=pc($,s.base,r.db,r.table),await e.store.tables.patch(t,{columns:y,...$,updatedAt:Date.now()})}catch{}}const X0=Object.freeze(Object.defineProperty({__proto__:null,connectDatasette:wp,init:K0,meta:V0},Symbol.toStringTag,{value:"Module"})),Z0={id:"url-source",name:"URL Reference",type:"source",version:"0.1.0",description:'Backs a table with a live read-only fetch of a plain CSV or JSON URL — a "reference" table whose rows are never persisted locally.',author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18z"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/url-source.ts"};function ek(e){typeof e.registerRowSource=="function"&&e.registerRowSource({type:"url",create:yp}),e.ui.registerTableButton({id:"url-source:refresh",label:"Refresh",icon:"refresh",tooltip:"Re-fetch this reference from its source URL",visible:t=>t.source?.type==="url",onClick:async(t,{tableId:n})=>{try{const r=t.store.rows(n);typeof r.refresh=="function"&&await r.refresh(),t.ui.dialogs.toast("Reference refreshed.",{kind:"success",title:"Refresh"})}catch(r){t.ui.dialogs.toast(`Refresh failed: ${r.message}`,{kind:"error",title:"Refresh"})}}})}class On extends Error{constructor(t){super(`This is a reference (read-only) table — ${t} is not permitted. Import a copy to edit.`),this.name="ReadOnlyReferenceError"}}function tk(e,t){for(const[n,r]of Object.entries(t))if(n!=="data"&&e[n]!==r)return!1;return!0}const Ed=5e4;function nk(e){return e.ok===!0&&Array.isArray(e.rows)}function rk(e,t){if(typeof e!="object"||e===null||Array.isArray(e))return null;const n=e;let r;try{r=new URL(t)}catch{return null}for(const i of["next_url","nextUrl","next"]){const s=n[i];if(typeof s!="string")continue;const o=s.trim();if(o!==""){if(/^(https?:\/\/|[/?])/i.test(o))try{const a=new URL(o,t);if(a.origin!==r.origin)continue;return a.toString()}catch{continue}if(i==="next"&&nk(n))return`${r.origin}${r.pathname}?_next=${encodeURIComponent(o)}`}}return null}function ik(e){const t=n=>typeof n=="object"&&n!==null&&!Array.isArray(n);if(Array.isArray(e))return e.filter(t);if(t(e)){for(const n of["rows","records","data"]){const r=e[n];if(Array.isArray(r))return r.filter(t)}for(const n of Object.values(e))if(Array.isArray(n))return n.filter(t)}return[]}function yp(e,t){const n=e.source?.config??{},r=typeof n.url=="string"?n.url:"",i=n.format==="json"?"json":"csv",s=new Set;let o=[],a=!1,c=null;function d($){return $.map((k,C)=>({id:`url:${C}`,tableId:e.id,data:k,updatedAt:0}))}async function f($){let k;try{k=await t.backend.fetch($)}catch(C){throw new Error(`Could not reach ${r}: ${C?.message??String(C)}`,{cause:C})}if(!k.ok)throw new Error(`Could not load ${r}: HTTP ${k.status} ${k.statusText}`);try{return await Zh(k)}catch(C){throw new Error(`Could not read response from ${r}: ${C?.message??String(C)}`,{cause:C})}}async function p($){const k=Nl($);let C=await f(k);if(Jh(C)){const _=Xh(k);_&&(C=await f(_))}try{if(i==="json"){const _=JSON.parse(C);return{records:ik(_),nextUrl:rk(_,k)}}return{records:Cr(C).rows,nextUrl:null}}catch(_){throw new Error(`Could not parse ${i.toUpperCase()} from ${r}: ${_?.message??String(_)}`,{cause:_})}}async function b(){if(!r)throw new Error("This reference table has no URL configured.");const $=[];let k=r;const C=new Set;for(;k&&$.length<Ed&&!C.has(k);){C.add(k);const _=await p(k);$.push(..._.records),k=_.records.length>0?_.nextUrl:null}return $.slice(0,Ed)}function y(){return c||(c=(async()=>{try{const $=await b();o=d($),a=!0;for(const k of s)k(o);return o}finally{c=null}})(),c)}return{async find($){const k=a?o:await y();return!$||Object.keys($).length===0?k:k.filter(C=>tk(C,$))},async findOne($){return(a?o:await y()).find(C=>C.id===$)??null},async insert(){throw new On("insert")},async bulkInsert(){throw new On("insert")},async upsert(){throw new On("upsert")},async patch(){throw new On("update")},async remove(){throw new On("delete")},async bulkRemove(){throw new On("delete")},subscribe($){return s.add($),a?$(o):y(),()=>{s.delete($)}},async refresh(){a=!1,o=[],await y()}}}const sk=Object.freeze(Object.defineProperty({__proto__:null,ReadOnlyReferenceError:On,createUrlCollection:yp,init:ek,meta:Z0},Symbol.toStringTag,{value:"Module"}));function Qe(e){let t=e.replace(/[^a-zA-Z0-9_]/g,"_");return/^[0-9]/.test(t)&&(t=`_${t}`),`"${t||"_"}"`}function _d(e){return`'${e.replace(/'/g,"''")}'`}function Td(e,t){const n=e.columns.find(r=>r.field===t);return n?n.from.kind==="script"?{expr:null,computed:!0}:{expr:`${Qe(n.from.alias)}.${Qe(n.from.field)}`,computed:!1}:null}function ok(e,t){const n=e.sources[0];if(!n)return`-- projection has no source table; nothing to select.
+`;const r=t.limitStyle??"limit",i=e.limit!=null&&e.limit>0?Math.floor(e.limit):null,s=[];for(const y of e.columns)y.from.kind==="source"?s.push(`  ${Qe(y.from.alias)}.${Qe(y.from.field)} AS ${Qe(y.field)}`):s.push(`  NULL AS ${Qe(y.field)} -- computed in-app by a script; no SQL equivalent`);s.length===0&&s.push("  *");const a=[`SELECT${i!=null&&r==="top"?` TOP ${i}`:""}`,s.join(`,
+`)],c=t.tableNames[n.alias]??n.tableName;a.push(`FROM ${Qe(c)} AS ${Qe(n.alias)}`);for(const y of e.sources.slice(1)){const $=t.tableNames[y.alias]??y.tableName;if(!y.join){a.push(`CROSS JOIN ${Qe($)} AS ${Qe(y.alias)}`);continue}const k=y.join.type==="inner"?"INNER JOIN":"LEFT JOIN",C=y.join.on.map(_=>`${Qe(y.alias)}.${Qe(_.field)} = ${Qe(_.eqAlias)}.${Qe(_.eqField)}`).join(" AND ");a.push(`${k} ${Qe($)} AS ${Qe(y.alias)} ON ${C||"1 = 1"}`)}const d=[],f=[];for(const[y,$]of Object.entries(e.filters??{})){if(!$)continue;const k=Td(e,y);if(k){if(k.computed){f.push(`-- filter on ${Qe(y)} (${_d($)}) applies to a computed column; enforced in-app only`);continue}d.push(`LOWER(${k.expr}) LIKE ${_d(`%${$.toLowerCase()}%`)}`)}}d.length>0&&a.push(`WHERE ${d.join(`
+  AND `)}`);const p=(t.orderBy??[]).map(y=>{const $=Td(e,y.field);return!$||$.computed?null:`${$.expr} ${y.asc?"ASC":"DESC"}`}).filter(y=>y!==null);p.length>0&&a.push(`ORDER BY ${p.join(", ")}`);const b=i==null?"":r==="limit"?`
+LIMIT ${i}`:r==="fetch"?`
+FETCH FIRST ${i} ROWS ONLY`:"";return`${a.join(`
+`)}${b};
+${f.length>0?`${f.join(`
+`)}
+`:""}`}const ak={id:"sql-export",name:"SQL Export",type:"exporter",version:"0.1.0",description:"Export the current workspace as a portable .sql script (CREATE TABLE + INSERT).",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/sql-export.ts"};function lk(){}async function vp(e){const t=e.workspaceId();if(!t)throw new Error("sql-export: no active workspace");const n=(await e.store.tables.find()).filter(a=>a.workspaceId===t),r=n.filter(a=>a.source?.type!=="projection"),i=n.filter(a=>a.source?.type==="projection"),s=ck(n),o=["-- easyDBAccess SQL dump",`-- workspace: ${t}`,`-- exported:  ${new Date().toISOString()}`,`-- tables:    ${r.length}${i.length>0?` (+ ${i.length} projection${i.length===1?"":"s"})`:""}`,"-- Compatible with PostgreSQL and SQLite. For MySQL run","--   SET sql_mode='ANSI_QUOTES';",'-- before executing, or rewrite "ident" to `ident`.',"","BEGIN;",""];for(const a of r){const c=await e.store.rows(a.id).find();o.push(xp(a,c),"")}if(o.push("COMMIT;",""),i.length>0){o.push("","-- Projections (virtual tables). Each is the query behind one, reading the","-- tables above. Run them as-is, or wrap one in CREATE VIEW to keep it.","");for(const a of i)o.push(`-- projection: ${a.name}`,wc(a,s)??"","")}return o.join(`
+`)}function ck(e){const t=new Map;for(const n of e)t.has(n.name)||t.set(n.name,gr(n.code||n.name));return n=>t.get(n)??gr(Ne(n))}function kp(e,t){const n=$p(e);return n||["-- easyDBAccess table export",`-- table:    ${e.name}`,`-- exported: ${new Date().toISOString()}`,"","BEGIN;","",xp(e,t),"","COMMIT;",""].join(`
+`)}function $p(e,t){const n=wc(e,t);return n===null?null:["-- easyDBAccess projection export",`-- projection: ${e.name}`,`-- exported:   ${new Date().toISOString()}`,"--","-- A projection is a derived (virtual) table: this is the query behind it,","-- reading the source tables by name.","-- Compatible with PostgreSQL and SQLite. For MySQL run","--   SET sql_mode='ANSI_QUOTES';","-- before executing. For SQL Server / HANA, replace the trailing LIMIT n","-- with SELECT TOP n.","",n].join(`
+`)}function wc(e,t){if(e.source?.type!=="projection")return null;const n=e.source.config;if(!n||!Array.isArray(n.sources))return null;const r=t??(o=>gr(Ne(o))),i={};for(const o of n.sources)i[o.alias]=r(o.tableName);const s=n.sources.length>0&&e.sortBy&&e.sortBy.length>0?e.sortBy:e.sortColumn?[{field:e.sortColumn,asc:e.sortAsc??!0}]:void 0;return ok(n,{tableNames:i,limitStyle:"limit",...s?{orderBy:s}:{}})}function xp(e,t){const n=gr(e.code||e.name||`table_${e.id}`),r=['  "__id" TEXT PRIMARY KEY',...e.columns.map(s=>`  ${uk(s)}`)],i=[`DROP TABLE IF EXISTS "${n}";`,`CREATE TABLE "${n}" (`,r.join(`,
+`),");"];if(t.length>0){const o=["__id",...e.columns.map(a=>a.field)].map(a=>`"${gr(a)}"`).join(", ");for(const a of t){const c=[Id(a.id),...e.columns.map(d=>Id(a.data[d.field],d.type))];i.push(`INSERT INTO "${n}" (${o}) VALUES (${c.join(", ")});`)}}return i.join(`
+`)}function uk(e){const t=[`"${gr(e.field)}"`,dk(e.type)];return e.notnull&&t.push("NOT NULL"),e.unique&&t.push("UNIQUE"),t.join(" ")}function dk(e){switch(e){case"number":return"NUMERIC";case"boolean":return"BOOLEAN";case"date":return"CHAR(8)";case"datetime":return"TIMESTAMP";case"string":default:return"TEXT"}}function Id(e,t){if(e==null)return"NULL";if(t==="date"){if(typeof e=="string"&&e.trim()==="")return"NULL";const n=hk(e);return n===null?"NULL":us(n)}return typeof e=="number"?Number.isFinite(e)?String(e):"NULL":typeof e=="boolean"?e?"TRUE":"FALSE":e instanceof Date?us(e.toISOString()):us(typeof e=="string"?e:JSON.stringify(e))}function hk(e){if(e==null)return null;if(e instanceof Date)return Number.isFinite(e.getTime())?Ad(e):null;if(typeof e=="string"){const t=e.trim();if(t.length===0)return null;const n=/^(\d{4})-(\d{2})-(\d{2})/.exec(t);if(n)return`${n[1]}${n[2]}${n[3]}`;const r=new Date(t);return Number.isFinite(r.getTime())?Ad(r):null}return null}function Ad(e){const t=String(e.getUTCFullYear()).padStart(4,"0"),n=String(e.getUTCMonth()+1).padStart(2,"0"),r=String(e.getUTCDate()).padStart(2,"0");return`${t}${n}${r}`}function us(e){return`'${e.replace(/'/g,"''")}'`}function gr(e){let t=e.replace(/[^a-zA-Z0-9_]/g,"_");return/^[0-9]/.test(t)&&(t=`_${t}`),t||"_"}const fk=Object.freeze(Object.defineProperty({__proto__:null,init:lk,meta:ak,projectionSelectBody:wc,projectionSelectFor:$p,serializeTableAsSql:kp,serializeWorkspaceAsSql:vp},Symbol.toStringTag,{value:"Module"}));function yo(e){return/(?:Z|[+-]\d{2}:?\d{2})$/i.test(e.trim())}function vo(e){if(typeof e!="string"&&typeof e!="number")return null;const t=String(e).trim();return t===""?null:t}const ko=/^(\d{4})-(\d{2})-(\d{2})$/,$o=/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})(?::(\d{2}))?/;function yc(e,t){const n=vo(e);if(n===null)return"";const r=ko.exec(n);if(r)return Ra(new Date(Number(r[1]),Number(r[2])-1,Number(r[3])),t);const i=$o.exec(n);if(i&&!yo(n))return Ra(new Date(Number(i[1]),Number(i[2])-1,Number(i[3])),t);const s=new Date(n);return Number.isNaN(s.getTime())?n:Ra(s,t)}function Sp(e,t){const n=vo(e);if(n===null)return"";const r=$o.exec(n);if(r&&!yo(n)){const s=new Date(Number(r[1]),Number(r[2])-1,Number(r[3]),Number(r[4]),Number(r[5]),Number(r[6]??0));return Rd(s,t)}if(ko.test(n))return yc(n,t);const i=new Date(n);return Number.isNaN(i.getTime())?n:Rd(i,t)}function ii(e){const t=vo(e);if(t===null)return"";if(ko.test(t))return t;const n=$o.exec(t);if(n&&!yo(t))return`${n[1]}-${n[2]}-${n[3]}`;const r=new Date(t);return Number.isNaN(r.getTime())?"":`${r.getFullYear()}-${rr(r.getMonth()+1)}-${rr(r.getDate())}`}function si(e){const t=vo(e);if(t===null)return"";const n=$o.exec(t);if(n&&!yo(t))return`${n[1]}-${n[2]}-${n[3]}T${n[4]}:${n[5]}`;if(ko.test(t))return`${t}T00:00`;const r=new Date(t);return Number.isNaN(r.getTime())?"":`${r.getFullYear()}-${rr(r.getMonth()+1)}-${rr(r.getDate())}T${rr(r.getHours())}:${rr(r.getMinutes())}`}function rr(e){return String(e).padStart(2,"0")}function Ra(e,t){return e.toLocaleDateString(t)}function Rd(e,t){return`${e.toLocaleDateString(t)} ${e.toLocaleTimeString(t,{hour:"2-digit",minute:"2-digit"})}`}function Cp(e,t,n){return e==="date"?yc(t,n):e==="datetime"?Sp(t,n):null}const vc=/\$((?:input|filter|raw)[.:])?([A-Za-z_][A-Za-z0-9_]*)/g;function Od(...e){const t=new Set;for(const n of e)if(n)for(const r of n.matchAll(vc))t.add(r[2]);return[...t]}function pk(...e){const t=new Set;for(const n of e)if(n)for(const r of n.matchAll(vc))r[1]?.startsWith("filter")&&t.add(r[2]);return[...t]}const xo=e=>e.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"),Pt=e=>xo(e).replace(/"/g,"&quot;").replace(/'/g,"&#39;");function mk(e){return typeof e=="boolean"?e:typeof e=="number"?e!==0:typeof e=="string"?["true","1","yes","y","t","on"].includes(e.trim().toLowerCase()):!1}function gk(e,t,n,r,i){const s=r?.type??"string",o=xo(r?.label||e),a=`class="eda-input" data-eda-row="${Pt(n)}" data-eda-field="${Pt(e)}" data-eda-type="${Pt(s)}"`,c=i?" disabled":"";let d;if(s==="boolean")d=`<input type="checkbox" ${a}${mk(t)?" checked":""}${c} />`;else{const f=s==="number"?"number":"text",p=t==null?"":Pt(String(t));d=`<input type="${f}" ${a} value="${p}"${c} />`}return`<label class="eda-input-field" title="${o}">${d}<span class="eda-input-label">${o}</span></label>`}function Ld(e,t){const n=Pt(e),r=Pt(t);return`<button type="button" class="eda-filter-pill" data-eda-filter-field="${n}" data-eda-filter-value="${r}" title="Filter by ${n}: ${r}">${xo(t)}</button>`}function bk(e,t){return t?.type==="array"||Array.isArray(e)?ft(e):null}function wk(e,t,n){const r=bk(t,n);return r?r.map(i=>Ld(e,i)).join(""):t==null||t===""?"":Ld(e,String(t))}function yk(e,t){const n=Er(e,t.data);return n.ok?n.value==null?"":String(n.value):`<span class="eda-script-error" title="${Pt(n.message)}">⚠ ${xo(n.label)}</span>`}const Ep="eda-cell";function vk(e,t,n){if(n?.trim()){const r=Er(n,e.data);return r.ok?r.value:`⚠ ${r.label}`}return e.data[t]}function kk(e,t){const n=e.lastIndexOf("<",t);return n>=0&&n>e.lastIndexOf(">",t)}function $k(e,t,n,r){return`<span class="${Ep}" data-eda-row="${Pt(e)}" data-eda-field="${Pt(t)}" data-eda-token="${Pt(n)}" data-eda-tag="${Pt(r)}"></span>`}function xk(e,t,n,r={}){return e.replace(vc,(i,s,o,a,c)=>{const d=n[o],f=r.scripts?.[o];if(!s&&f?.trim())return yk(f,t);if(!d)return"";const p=t.data[d],b=r.columns?.get(d);if(!s||s.startsWith("raw")){const $=s?void 0:Sk(b,r.renderers);return $&&r.raw?.[o]!==!0&&!kk(c,a)?$k(t.id,d,o,$):p==null||p===""?"":(s?null:Cp(b?.type,p))??String(p)}if(s.startsWith("filter"))return wk(d,p,b);const y=r.readonly===!0||!!b?.script?.trim();return gk(d,p,t.id,b,y)})}function Sk(e,t){const n=e?.renderer;return n?t?.get(n):void 0}function Dd(e){return e==null||e===""}function Ck(e,t){let n=null;for(const r of t){if(!r.script?.trim())continue;const i=Er(r.script,e.data);n??={...e.data},n[r.field]=i.ok?i.value:`⚠ ${i.label}`}return n?{...e,data:n}:e}function Md(e,t){return t.some(n=>n.script?.trim())?e.map(n=>Ck(n,t)):e}function Pd(e,t,n){const r=Object.entries(t).filter(([,s])=>s!=null&&String(s).trim()!=="");if(r.length===0)return e;const i=new Map((n??[]).map(s=>[s.field,s.type]));return e.filter(s=>r.every(([o,a])=>hi(s.data[o],a,{type:i.get(o)})))}function So(e,t){return e.exact===!0&&!e.negate&&e.term.toLowerCase()===t.toLowerCase()}function Ek(e,t){const n=Hn(e??"");return n.some(r=>So(r,t))||n.push({term:t,negate:!1,exact:!0}),dn(n)}function _k(e,t){const n=Hn(e??"").filter(r=>!So(r,t));return dn(n)}function _p(e,t){return e.exact===!0&&e.negate===!0&&e.term.toLowerCase()===t.toLowerCase()}function Tk(e,t){const n=Hn(e??"");return n.some(r=>So(r,t))?"on":n.some(r=>_p(r,t))?"not":"off"}function Ik(e,t){const n=Tk(e,t),r=Hn(e??"").filter(i=>!So(i,t)&&!_p(i,t));return dn(n==="off"?[...r,{term:t,negate:!1,exact:!0}]:n==="on"?[...r,{term:t,negate:!0,exact:!0}]:r)}function Ak(e,t,n=!0){if(!t)return e;const r=n?1:-1;return[...e].sort((i,s)=>{const o=i.data[t],a=s.data[t],c=Dd(o),d=Dd(a);if(c||d)return c===d?0:c?1:-1;const f=Number(o),p=Number(a);return!Number.isNaN(f)&&!Number.isNaN(p)?(f-p)*r:String(o).localeCompare(String(a),void 0,{numeric:!0,sensitivity:"base"})*r})}function il(e,t,n){const r=Pd(e,t.filters??{},n),i=Pd(r,t.pillFilters??{},n);return Ak(i,t.sortColumn,t.sortAsc??!0)}function Rk(e){return!!e&&e.trim().length>0}function Tp(e,t){return t==="raw"||t==="structure"?e.columns:e.columns.filter(n=>n.hidden!==!0)}function Ok(e,t){return t==="raw"||t==="structure"?e:{...e,columns:Tp(e,t)}}function Ip(e,t,n){return n==="structure"?[]:n==="raw"?t:il(t,{filters:e.filters??{},sortColumn:e.sortColumn,sortAsc:e.sortAsc},e.columns)}function kc(e,t){const n=e.columns.map(i=>i.field),r=e.source!=null;return{name:e.name,title:e.title,columns:e.columns,view:e.view,windowGeometry:e.windowGeometry,sortColumn:e.sortColumn,sortAsc:e.sortAsc,filters:e.filters,labelColumn:e.labelColumn,deletedColumns:e.deletedColumns,info:e.info,source:e.source,origin:e.origin,rows:r?[]:t.map(i=>{const s={};for(const o of n)s[o]=i.data[o];return s})}}const Lk={id:"dump-export",name:"Dump Export",type:"exporter",version:"0.1.0",description:"Export the current workspace as a single .db.json dump file, and — per table — CSV/JSON/SQL with a Raw vs. Visible vs. Structure Only choice.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/dump-export.ts"};function Dk(e){e.ui.registerFooterButton({id:"export:menu",label:"Export",icon:"download",tooltip:"Export the current workspace (JSON or SQL)",onClick:async(t,n)=>{const r=t.workspaceId();if(!r)return;const{AnchoredMenu:i}=await Ie(async()=>{const{AnchoredMenu:a}=await Promise.resolve().then(()=>fr);return{AnchoredMenu:a}},void 0),s=n?.anchor?.getBoundingClientRect()??new DOMRect(16,window.innerHeight-48,0,0),o=await i.open(s,[{id:"json",label:"JSON dump (.db.json)",icon:"data_object"},{id:"sql",label:"SQL script (.sql)",icon:"storage"}]);if(o)try{if(o==="json"){const a=await Co(t);await t.backend.saveFile(`workspace-${r}.db.json`,a,"application/json")}else if(o==="sql"){const a=await vp(t);await t.backend.saveFile(`workspace-${r}.sql`,a,"application/sql")}}catch(a){t.ui.dialogs.toast(`Export failed: ${a.message}`,{kind:"error",title:"Export"})}}}),e.ui.registerTableButton({id:"table-export:menu",label:"Export",icon:"file_download",tooltip:"Export this table as CSV, JSON, or SQL",onClick:async(t,n)=>{const{AnchoredMenu:r}=await Ie(async()=>{const{AnchoredMenu:d}=await Promise.resolve().then(()=>fr);return{AnchoredMenu:d}},void 0),i=n.anchor?.getBoundingClientRect()??new DOMRect(16,window.innerHeight-48,0,0),s=await r.open(i,[{id:"csv",label:"CSV (.csv)",icon:"table_chart"},{id:"json",label:"JSON (.table.json)",icon:"data_object"},{id:"sql",label:"SQL (.sql)",icon:"storage"}]);if(!s)return;const o=await t.store.tables.findOne(n.tableId);if(!o)return;const a=await t.ui.dialogs.choice(`Export "${o.name}" as ${s.toUpperCase()} — which rows/columns?`,["Visible Data","Raw Data","Structure Only"],"Export table");if(!a)return;const c=a==="Visible Data"?"visible":a==="Raw Data"?"raw":"structure";try{const d=await t.store.rows(o.id).find(),f=Ok(o,c),p=Ip(o,d,c),b=Ne(o.code||o.name||"table"),y=c!=="structure"&&o.source!=null&&d.length===0;if(s==="csv")y&&t.ui.dialogs.toast(`"${o.name}" is a live table with no local rows — exporting column definitions only.`,{kind:"warning",title:"Export"}),await t.backend.saveFile(`${b}.csv`,Vl(f,p),"text/csv");else if(s==="json"){const $=JSON.stringify(kc(f,p),null,2);await t.backend.saveFile(`${b}.table.json`,$,"application/json")}else s==="sql"&&(y&&t.ui.dialogs.toast(`"${o.name}" is a live table with no local rows — exporting the CREATE TABLE only.`,{kind:"warning",title:"Export"}),await t.backend.saveFile(`${b}.sql`,kp(f,p),"application/sql"))}catch(d){t.ui.dialogs.toast(`Export failed: ${d.message}`,{kind:"error",title:"Export"})}}})}async function Co(e){const t=e.workspaceId();if(!t)throw new Error("dump-export: no active workspace");const n=(await e.store.tables.find()).filter(o=>o.workspaceId===t),r=(await e.store.viewTemplates.find()).filter(o=>o.workspaceId===t),i=(await e.store.viewInstances.find()).filter(o=>o.workspaceId===t),s={workspaceId:t,exportedAt:Date.now(),tables:[],viewTemplates:r,viewInstances:i};for(const o of n){const a=await e.store.rows(o.id).find();s.tables.push({name:o.name,columns:o.columns,rows:a.map(c=>c.data),...o.title?{title:o.title}:{},...o.windowGeometry?{windowGeometry:o.windowGeometry}:{},...o.sortColumn?{sortColumn:o.sortColumn,sortAsc:o.sortAsc??!0}:{},...o.filters?{filters:o.filters}:{},...o.labelColumn?{labelColumn:o.labelColumn}:{},...o.info?{info:o.info}:{},...o.deletedColumns?{deletedColumns:o.deletedColumns}:{},...o.readonly?{readonly:!0}:{},...o.source?{source:o.source}:{},...o.origin?{origin:o.origin}:{}})}return JSON.stringify(s,null,2)}const Mk=Object.freeze(Object.defineProperty({__proto__:null,init:Dk,meta:Lk,serializeWorkspace:Co},Symbol.toStringTag,{value:"Module"})),Pk={id:"gist-sync",name:"Gist Sync",type:"sync",version:"0.1.0",description:"Push and pull the current workspace to a private GitHub Gist.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/gist-sync.ts"},zk="gist:",zd='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.92 1.24 3.23 0 4.62-2.81 5.64-5.49 5.94.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z"/></svg>';function Nk(e){e.ui.registerSettings("gist-sync","Gist Sync",[{key:"user",label:"GitHub user",type:"string",scope:"workspace",description:"GitHub username that owns the gist."},{key:"gist_id",label:"Gist ID",type:"string",scope:"workspace",description:"Leave empty to create a new gist on the first Push."},{key:"gist_token",label:"GitHub token (PAT)",type:"secret",scope:"user",description:'Personal access token with the "gist" scope. Stored on this device only (not synced).',help:'A classic token with the single "gist" scope is enough — nothing else is needed and nothing else should be granted. Give it an expiry you are happy with; the sync stops working when it lapses and you paste a new one here. Keep the value in the secrets store (General tab) and reference it, so it is never written into a synced setting.',helpUrl:"https://github.com/settings/tokens/new?scopes=gist&description=easyDBAccess",helpLinkLabel:"Create a token on GitHub"}]),e.ui.registerFooterButton({id:"gist-sync:menu",label:"Gist",icon:zd,tooltip:"Gist sync — push, pull, share…",onClick:async(t,n)=>{const{AnchoredMenu:r}=await Ie(async()=>{const{AnchoredMenu:o}=await Promise.resolve().then(()=>fr);return{AnchoredMenu:o}},void 0),i=n?.anchor?.getBoundingClientRect()??new DOMRect(16,window.innerHeight-48,0,0),s=await r.open(i,[{id:"push",label:"Push",icon:"cloud_upload"},{id:"pull",label:"Pull",icon:"cloud_download"},{id:"share",label:"Share",icon:"share"},{id:"view",label:"View gist",icon:"open_in_new"}]);if(s)try{if(s==="push"||s==="pull"){const o=await r.open(i,[{id:"all",label:"Everything",icon:"sync"},{id:"data",label:"Data only (tables + rows)",icon:"table_rows"},{id:"settings",label:"Settings only (views + settings)",icon:"tune"}]);if(!o)return;const a=o;s==="push"?await Vk(t,a):await Lp(t,a)}else s==="share"?await Bk(t):s==="view"&&await qk(t)}catch(o){t.ui.dialogs.toast(`Gist ${s} failed: ${o.message}`,{kind:"error",title:"Gist sync"})}}}),e.ui.registerTableButton({id:"gist-sync:table",label:"Gist",icon:zd,tooltip:"Gist sync for this table — push, pull, view file",onClick:async(t,n)=>{const{AnchoredMenu:r}=await Ie(async()=>{const{AnchoredMenu:o}=await Promise.resolve().then(()=>fr);return{AnchoredMenu:o}},void 0),i=n.anchor?.getBoundingClientRect()??new DOMRect(16,window.innerHeight-48,0,0),s=await r.open(i,[{id:"push",label:"Push this table",icon:"cloud_upload"},{id:"pull",label:"Pull this table",icon:"cloud_download"},{id:"view",label:"View gist file",icon:"open_in_new"}]);if(s)try{s==="push"?await Wk(t,n.tableId):s==="pull"?await Gk(t,n.tableId):s==="view"&&await Yk(t,n.tableId)}catch(o){t.ui.dialogs.toast(`Gist ${s} failed: ${o.message}`,{kind:"error",title:"Gist sync"})}}})}async function jk(e){const t=new URLSearchParams(location.hash.replace(/^#/,"")).get("gist");if(!t)return;history.replaceState(null,"",location.pathname+location.search);let n;try{n=atob(t)}catch{return}const r=Fk(n);if(!r){await e.ui.dialogs.alert("The shared gist link is invalid.","Gist sync");return}await e.ui.dialogs.confirm(`Load shared workspace from gist ${r.gistId||"(new)"} (owner: ${r.user})?
+
+This pulls its tables into the current workspace.`,"Gist sync")&&(await Rp(e,r),await Lp(e))}async function Ap(e){const t=e.workspaceId();return`${zk}${t??"default"}`}async function Ii(e){const[t,n,r]=await Promise.all([e.settings.get("gist-sync","user"),e.settings.get("gist-sync","gist_id"),e.settings.get("gist-sync","gist_token")]);if(t&&r)return{user:t,gistId:n??"",token:r};const s=(await e.store.settings.findOne(await Ap(e)))?.value;if(s?.user&&s?.token){const o={user:s.user,gistId:s.gistId??"",token:s.token};return await Rp(e,o),o}return null}async function Rp(e,t){await e.settings.set("gist-sync","user",t.user),await e.settings.set("gist-sync","gist_id",t.gistId),await e.settings.set("gist-sync","gist_token",t.token),await e.store.settings.upsert({name:await Ap(e),value:t})}function Fk(e){const t={};for(const n of e.split(";")){const r=n.indexOf("=");if(r<0)continue;const i=n.slice(0,r).trim(),s=n.slice(r+1).trim();i&&(t[i]=s)}return!t.user||!t.gist_token?null:{user:t.user,gistId:t.gist_id??"",token:t.gist_token}}async function $c(e){const t=await Ii(e);return t||(e.ui.dialogs.toast("Add your GitHub user and token in Settings → Gist Sync, then try again.",{kind:"warning",title:"Gist sync"}),e.ui.openSettings(),null)}function Uk(e){return`user=${e.user};gist_id=${e.gistId};gist_token=${e.token}`}async function Bk(e){const t=await Ii(e);if(!t||!t.gistId){await e.ui.dialogs.alert("Configure a gist and Push first — there is nothing to share yet.","Gist sync");return}const r=`${location.origin+location.pathname}#gist=${encodeURIComponent(btoa(Uk(t)))}`,{GistShareDialog:i}=await Ie(async()=>{const{GistShareDialog:s}=await import("./gist-share-dialog-BO62-VMG.js");return{GistShareDialog:s}},[]);await i.open(r)}async function qk(e){const t=await Ii(e);if(!t||!t.gistId){await e.ui.dialogs.alert("No gist configured yet — Push first.","Gist sync");return}window.open(`https://gist.github.com/${t.user}/${t.gistId}`,"_blank","noopener")}function Hk(e){return e.endsWith(".table.json")&&!e.startsWith("_easydb")}function Op(e,t){const n=new Set(t);return[...e].filter(r=>Hk(r)&&!n.has(r)).sort()}async function Vk(e,t="all"){const n=await $c(e);if(!n)return;const r=e.workspaceId();if(!r)throw new Error("no active workspace");const i=t!=="settings",s=t!=="data",o=(await e.store.tables.find()).filter(T=>T.workspaceId===r);if(i&&o.length===0){await e.ui.dialogs.alert("Nothing to push: the current workspace has no tables.","Gist sync");return}const a=1e8,c=1e7,d={},f=[],p=[];if(i)for(const T of o){const Y=T.source!=null?[]:await e.store.rows(T.id).find(),D=JSON.stringify(kc(T,Y),null,2),ne=`${T.name} (${(D.length/1e6).toFixed(2)} MB)`;D.length>a?f.push(ne):D.length>c&&p.push(ne),d[`${Ne(T.name)}.table.json`]={content:D}}if(f.length>0||p.length>0){const T=[];if(f.length>0&&T.push(`Over Gist's 100 MB per-file limit — GitHub will REJECT these:
+${f.join(`
+`)}`),p.length>0&&T.push(`Large (over 10 MB) — Gist sync will be slow and less reliable:
+${p.join(`
+`)}`),!await e.ui.dialogs.confirm(`${T.join(`
+
+`)}
+
+To reduce size: remove unnecessary columns, limit the number of rows, or mark the table no-persist/no-sync.
+
+Push anyway?`,"Gist size warning"))return}if(s){const T=(await e.store.viewTemplates.find()).filter(I=>I.workspaceId===r),Y=(await e.store.viewInstances.find()).filter(I=>I.workspaceId===r),D=(await e.store.settings.find()).map(I=>({name:I.name,value:I.value})),{kept:ne,withheld:W}=bw(D);W.length>0&&e.ui.dialogs.toast(`Not pushed: ${W.join(", ")} — a secret is stored as its own value. Move it into the secrets store (Settings → General) and reference it with \${secret:name}.`,{kind:"warning",title:"Gist sync"}),d["_easydb.workspace.json"]={content:JSON.stringify({workspaceId:r,exportedAt:Date.now(),kind:"easydb-workspace-v1",viewTemplates:T,viewInstances:Y,settings:ne},null,2)}}const b={...d};let y=[];if(i&&n.gistId){y=await Kk(e,n,Object.keys(d));for(const T of y)b[T]=null}let $;if(n.gistId){const T=await fetch(`https://api.github.com/gists/${n.gistId}`,{method:"PATCH",headers:{Authorization:`Bearer ${n.token}`,Accept:"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify({files:b,description:`easyDBAccess workspace: ${r}`})});if(!T.ok)throw new Error(await gi(T));$=await T.json()}else{const T=await fetch("https://api.github.com/gists",{method:"POST",headers:{Authorization:`Bearer ${n.token}`,Accept:"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify({public:!1,description:`easyDBAccess workspace: ${r}`,files:d})});if(!T.ok)throw new Error(await gi(T));$=await T.json(),n.gistId=$.id,await e.settings.set("gist-sync","gist_id",$.id)}const k=$.html_url??`https://gist.github.com/${n.user}/${$.id}`,C=t==="settings"?"settings":t==="data"?`${o.length} table${o.length===1?"":"s"} (data only)`:`${o.length} table${o.length===1?"":"s"}`,_=y.length>0?`  Removed ${y.length} file${y.length===1?"":"s"}.`:"";e.ui.dialogs.toast(`Pushed ${C}.${_}  ${k}`,{kind:"success",title:"Gist sync"})}async function Lp(e,t="all"){const n=t!=="settings",r=t!=="data",i=await $c(e);if(!i||!i.gistId){await e.ui.dialogs.alert("No gist id configured for this workspace. Push first or set it via the connection string.","Gist sync");return}const s=e.workspaceId();if(!s)throw new Error("no active workspace");const o=await fetch(`https://api.github.com/gists/${i.gistId}`,{headers:{Authorization:`Bearer ${i.token}`,Accept:"application/vnd.github+json"}});if(!o.ok)throw new Error(await gi(o));const a=await o.json(),c=Object.entries(a.files).filter(([T])=>T.endsWith(".table.json")&&!T.startsWith("_easydb"));if(n&&c.length===0){await e.ui.dialogs.alert("Gist contains no .table.json files.","Gist sync");return}const d=(await e.store.tables.find()).filter(T=>T.workspaceId===s),f=new Map(d.map(T=>[T.name.toLowerCase(),T]));let p=0;const b=[],y=new Map;if(n){const{TopProgress:T}=await Ie(async()=>{const{TopProgress:D}=await import("./top-progress-Vz0ssV8n.js");return{TopProgress:D}},[]),Y=T.begin("Pulling from gist…");try{for(const[D,[ne,W]]of c.entries())try{const I=await Bs(W),V=JSON.parse(I);if(!V.name||!Array.isArray(V.columns))throw new Error("unexpected file shape (missing name/columns)");let K;const ie=f.get(V.name.toLowerCase());if(ie){if(K=await e.store.tables.patch(ie.id,{title:V.title,columns:V.columns,...ol(V),updatedAt:Date.now()}),K.source==null){const de=e.store.rows(ie.id),H=await de.find();await de.bulkRemove(H.map(te=>te.id))}}else K=await e.store.tables.insert({id:_e(),workspaceId:s,name:V.name,title:V.title,code:Ne(V.name),columns:V.columns,view:V.view??"table",...ol(V),updatedAt:Date.now()});if(K.source==null){const de=(V.rows??[]).map(H=>({id:_e(),tableId:K.id,data:H,updatedAt:Date.now()}));await e.store.rows(K.id).bulkInsert(de)}y.set(V.name,K.id),p++}catch(I){b.push({file:ne,error:I.message})}finally{Y.fraction((D+1)/c.length)}}finally{Y.done()}}let $=0,k="",C=null;const _=r?a.files["_easydb.workspace.json"]:void 0;if(_)try{const T=await Bs(_),Y=JSON.parse(T),D=Y.viewTemplates??[],ne=Y.viewInstances??[],W=Y.settings??[];C=new Set(ne.map(V=>V.id));const I=await yf(e.store.viewTemplates,s,D);for(const V of ne){let K;if(V.tableName&&(K=y.get(V.tableName)??f.get(V.tableName)?.id),K??=V.tableId,!K)continue;const ie=I.get(V.templateId)??V.templateId;await e.store.viewInstances.upsert({...V,workspaceId:s,tableId:K,templateId:ie}),$++}for(const V of W)await e.store.settings.upsert(V)}catch(T){k=`Workspace metadata import failed: ${T.message}`}if(b.length>0){const T=b.map(Y=>`• ${Y.file}: ${Y.error}`).join(`
+`);e.ui.dialogs.toast(`Pulled ${p} of ${c.length} tables. ${b.length} failed:
+${T}${k?`
+${k}`:""}`,{kind:"warning",title:"Gist sync"})}else{const T=$>0?` (+${$} views)`:"",Y=t==="settings"?`Pulled settings${T}.`:`Pulled ${p} table${p===1?"":"s"}.${T}`;e.ui.dialogs.toast(Y,{kind:"success",title:"Gist sync"}),k&&e.ui.dialogs.toast(k,{kind:"warning",title:"Gist sync"})}b.length===0&&await Dp(e,s,{tableNames:n?new Set([...y.keys()].map(T=>T.toLowerCase())):null,viewInstanceIds:C}),document.dispatchEvent(new CustomEvent("easydb:restack-windows"))}async function Kk(e,t,n){let r;try{const o=await fetch(`https://api.github.com/gists/${t.gistId}`,{headers:{Authorization:`Bearer ${t.token}`,Accept:"application/vnd.github+json"}});if(!o.ok)return[];const a=await o.json();r=Object.keys(a.files??{})}catch{return[]}const i=Op(r,n);return i.length===0?[]:await e.ui.dialogs.confirm(`The gist has these table files that this workspace no longer has:
+
+${sl(i)}
+
+Delete them from the gist, so it matches this workspace? Keep them if another device pushed them and you have not pulled yet.`,"Delete table files missing from this workspace?")?i:[]}function sl(e,t=8){const n=e.slice(0,t).map(i=>`• ${i}`),r=e.length-n.length;return[...n,...r>0?[`• …and ${r} more`]:[]].join(`
+`)}async function Dp(e,t,n){const r=n.tableNames?(await e.store.tables.find()).filter(c=>c.workspaceId===t&&!n.tableNames.has(c.name.toLowerCase())):[],i=n.viewInstanceIds?(await e.store.viewInstances.find()).filter(c=>c.workspaceId===t&&!n.viewInstanceIds.has(c.id)):[];if(r.length===0&&i.length===0)return;const s=[];if(r.length>0&&s.push(`${r.length} table${r.length===1?"":"s"}:
+`+sl(r.map(c=>c.name))),i.length>0&&s.push(`${i.length} view${i.length===1?"":"s"}:
+`+sl(i.map(c=>c.name))),!await e.ui.dialogs.confirm(`The gist does not have these local objects:
+
+${s.join(`
+
+`)}
+
+Delete them, so this workspace matches the gist? A table goes with its rows. Keep them if this is local work you have not pushed yet.`,"Delete objects missing from the pull?"))return;for(const c of i)await e.store.viewInstances.remove(c.id);const{deleteTable:a}=await Ie(async()=>{const{deleteTable:c}=await Promise.resolve().then(()=>Ic);return{deleteTable:c}},void 0);for(const c of r)await a(c.id);e.ui.dialogs.toast(`Deleted ${r.length} table${r.length===1?"":"s"} and ${i.length} view${i.length===1?"":"s"}.`,{kind:"success",title:"Gist sync"})}async function Wk(e,t){const n=await $c(e);if(!n)return;if(!n.gistId){await e.ui.dialogs.alert("No gist yet — use the main Gist button to Push the whole workspace first.","Gist sync");return}const r=await e.store.tables.findOne(t);if(!r)return;const i=r.source!=null?[]:await e.store.rows(t).find(),s=JSON.stringify(kc(r,i),null,2),o={[`${Ne(r.name)}.table.json`]:{content:s}},a=await fetch(`https://api.github.com/gists/${n.gistId}`,{method:"PATCH",headers:{Authorization:`Bearer ${n.token}`,Accept:"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify({files:o})});if(!a.ok)throw new Error(await gi(a));e.ui.dialogs.toast(`Pushed "${r.name}" to gist.`,{kind:"success",title:"Gist sync"})}async function Gk(e,t){const n=await Ii(e);if(!n||!n.gistId){await e.ui.dialogs.alert("No gist configured — Push first.","Gist sync");return}const r=await e.store.tables.findOne(t);if(!r)return;const i=`${Ne(r.name)}.table.json`,s=await fetch(`https://api.github.com/gists/${n.gistId}`,{headers:{Authorization:`Bearer ${n.token}`,Accept:"application/vnd.github+json"}});if(!s.ok)throw new Error(await gi(s));const a=(await s.json()).files[i];if(!a){await e.ui.dialogs.alert(`No file "${i}" in the gist for this table.`,"Gist sync");return}const c=await Bs(a),d=JSON.parse(c);if(!d.name||!Array.isArray(d.columns))throw new Error("unexpected file shape (missing name/columns)");if((await e.store.tables.patch(t,{title:d.title,columns:d.columns,...ol(d),updatedAt:Date.now()})).source==null){const p=e.store.rows(t),b=await p.find();await p.bulkRemove(b.map($=>$.id));const y=(d.rows??[]).map($=>({id:_e(),tableId:t,data:$,updatedAt:Date.now()}));await p.bulkInsert(y)}e.ui.dialogs.toast(`Pulled "${r.name}" from gist.`,{kind:"success",title:"Gist sync"})}async function Yk(e,t){const n=await Ii(e);if(!n||!n.gistId){await e.ui.dialogs.alert("No gist configured — Push first.","Gist sync");return}const r=await e.store.tables.findOne(t);if(!r)return;const i=`file-${Ne(r.name)}-table-json`;window.open(`https://gist.github.com/${n.user}/${n.gistId}#${i}`,"_blank","noopener")}function ol(e){const t={};return e.view!==void 0&&(t.view=e.view),e.windowGeometry&&(t.windowGeometry=e.windowGeometry),e.sortColumn!==void 0&&(t.sortColumn=e.sortColumn),e.sortAsc!==void 0&&(t.sortAsc=e.sortAsc),e.filters!==void 0&&(t.filters=e.filters),e.labelColumn!==void 0&&(t.labelColumn=e.labelColumn),e.deletedColumns!==void 0&&(t.deletedColumns=e.deletedColumns),e.info!==void 0&&(t.info=e.info),e.source!==void 0&&(t.source=e.source),e.origin!==void 0&&(t.origin=e.origin),t}async function Bs(e,t=n=>fetch(n)){if(!e.truncated)return e.content;if(!e.raw_url)throw new Error("GitHub truncated this file but returned no raw_url");const n=await t(e.raw_url);if(!n.ok)throw new Error(`raw fetch failed: ${n.status} ${n.statusText}`);return n.text()}async function gi(e){let t="";try{t=await e.text()}catch{}return`${e.status} ${e.statusText}${t?`: ${t.slice(0,200)}`:""}`}const Qk=Object.freeze(Object.defineProperty({__proto__:null,fetchGistFileContent:Bs,init:Nk,load:jk,meta:Pk,offerPrune:Dp,staleTableFiles:Op},Symbol.toStringTag,{value:"Module"})),Mp="server-sync:url";function Pp(e){return`server-sync:etag:${e}`}async function zp(e){const n=(await e.store.settings.findOne(Mp))?.value;return typeof n!="string"||n.length===0?null:n.replace(/\/+$/,"")}async function Jk(e,t){await e.store.settings.upsert({name:Mp,value:t.replace(/\/+$/,"")})}async function Np(e,t){const r=(await e.store.settings.findOne(Pp(t)))?.value;return typeof r=="string"?r:null}async function Un(e,t,n){await e.store.settings.upsert({name:Pp(t),value:n})}function Eo(e){if(!e)return null;const t=e.trim();return t.startsWith('"')&&t.endsWith('"')?t.slice(1,-1):t}function Nd(e){try{const t=JSON.parse(e);return t&&typeof t=="object"&&!Array.isArray(t)&&delete t.exportedAt,JSON.stringify(t)}catch{return e}}async function jp(e,t,n){const r=xi(n,t),i=(await e.store.tables.find()).filter(o=>o.workspaceId===t);for(const o of i){const a=e.store.rows(o.id),c=await a.find();await a.bulkRemove(c.map(d=>d.id)),await e.store.tables.remove(o.id)}let s=0;for(const o of r){const a=_e(),c=await e.store.tables.insert({id:a,workspaceId:t,name:o.name,code:Ne(o.name),columns:o.columns,view:"table",...o.windowGeometry?{windowGeometry:o.windowGeometry}:{},...o.sortColumn?{sortColumn:o.sortColumn,sortAsc:o.sortAsc??!0}:{},updatedAt:Date.now()}),d=o.rows.map(f=>({id:_e(),tableId:c.id,data:f,updatedAt:Date.now()}));await e.store.rows(c.id).bulkInsert(d),s++}return s}const Xk={id:"server-sync",name:"Server Sync",type:"sync",version:"0.1.0",description:"Push and pull the current workspace to an easyDBAccess Hono backend.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/server-sync.ts"};function Zk(e){e.ui.registerSettings("server-sync","Server Sync",[{key:"url",label:"Server URL",type:"string",scope:"workspace",description:"Base URL of the sync server, e.g. http://localhost:3000"}]),e.ui.registerFooterButton({id:"server-sync:menu",label:"Sync",icon:"cloud_sync",tooltip:"Server sync — push or pull this workspace",onClick:async(t,n)=>{const{AnchoredMenu:r}=await Ie(async()=>{const{AnchoredMenu:o}=await Promise.resolve().then(()=>fr);return{AnchoredMenu:o}},void 0),i=n?.anchor?.getBoundingClientRect()??new DOMRect(16,window.innerHeight-48,0,0),s=await r.open(i,[{id:"push",label:"Push (↑)",icon:"cloud_upload"},{id:"pull",label:"Pull (↓)",icon:"cloud_download"}]);if(s)try{s==="push"?await e$(t):s==="pull"&&await t$(t)}catch(o){t.ui.dialogs.toast(`${s==="push"?"Push":"Pull"} failed: ${o.message}`,{kind:"error",title:"Server sync"})}}})}async function e$(e){const t=e.workspaceId();if(!t)throw new Error("no active workspace");const n=await Fp(e);if(!n)return;const r=await Co(e),i=await Np(e,t),s={"Content-Type":"application/json"};i&&(s["If-Match"]=`"${i}"`);let o=await fetch(`${n}/sync/${encodeURIComponent(t)}`,{method:"PUT",headers:s,body:r});if(o.status===412){const c=await o.json().catch(()=>({}));if(!await e.ui.dialogs.confirm(`The server's copy of "${t}" has changed since you last pulled.
+
+Push anyway and overwrite it? (Cancel to pull the server version first.)`,"Server sync — conflict")){c.currentEtag&&await Un(e,t,c.currentEtag),e.ui.dialogs.toast("Push cancelled. Pull, merge locally, then push again.",{kind:"warning",title:"Server sync"});return}o=await fetch(`${n}/sync/${encodeURIComponent(t)}`,{method:"PUT",headers:{"Content-Type":"application/json"},body:r})}if(!o.ok)throw new Error(await Up(o));const a=Eo(o.headers.get("ETag"));a&&await Un(e,t,a),e.ui.dialogs.toast(`Pushed workspace "${t}" to ${n}.`,{kind:"success",title:"Server sync"})}async function t$(e){const t=e.workspaceId();if(!t)throw new Error("no active workspace");const n=await Fp(e);if(!n||!await e.ui.dialogs.confirm(`Replace your local copy of "${t}" with the server's version?
+
+Local tables that aren't on the server will be removed.`,"Server sync — pull"))return;const i=await fetch(`${n}/sync/${encodeURIComponent(t)}`);if(i.status===404){e.ui.dialogs.toast(`Workspace "${t}" doesn't exist on the server yet. Push first.`,{kind:"warning",title:"Server sync"});return}if(!i.ok)throw new Error(await Up(i));const s=Eo(i.headers.get("ETag")),o=await i.json(),a=await jp(e,t,o);s&&await Un(e,t,s),e.ui.dialogs.toast(`Pulled ${a} table${a===1?"":"s"} from ${n}.`,{kind:"success",title:"Server sync"})}async function Fp(e){const t=await zp(e);if(t)return t;const n=await e.ui.dialogs.prompt("Server URL (e.g. http://localhost:3000):","http://localhost:3000","Server sync");if(!n)return null;try{new URL(n)}catch{return await e.ui.dialogs.alert(`"${n}" is not a valid URL.`,"Server sync"),null}return await Jk(e,n),n.replace(/\/+$/,"")}async function Up(e){let t="";try{t=await e.text()}catch{}return`${e.status} ${e.statusText}${t?`: ${t.slice(0,200)}`:""}`}const n$=Object.freeze(Object.defineProperty({__proto__:null,init:Zk,meta:Xk},Symbol.toStringTag,{value:"Module"})),r$={id:"new-table",name:"New Table",type:"ui",version:"0.1.0",description:'Registers the "+ New Table" header button.',author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/new-table-button.ts"};function i$(e){e.ui.registerHeaderButton({id:"new-table:open",label:"New Table",icon:"add",variant:"primary",tooltip:"Create a new table",onClick:()=>e.ui.openNewTableDialog()})}const s$=Object.freeze(Object.defineProperty({__proto__:null,init:i$,meta:r$},Symbol.toStringTag,{value:"Module"})),Bp="#dc2626",qp="cell-invalid",o$=`border-color:${Bp};background:#fef2f2`;function xc(e,t){e.classList.add(qp),e.style.border=`1px solid ${Bp}`,e.style.background="#fef2f2",t&&(e.title=t)}function a$(e,t){if(e==null||typeof e=="string"&&e.trim()==="")return"empty";switch(t){case"boolean":return Hp(e)==="invalid"?"invalid":"ok";case"number":return Number.isFinite(typeof e=="number"?e:Number(e))?"ok":"invalid";case"date":case"datetime":return Number.isNaN(Date.parse(String(e)))?"invalid":"ok";case"array":return ft(e).length===0?"empty":"ok";default:return"ok"}}const l$=/^\s*(true|1)\s*$/i,c$=/^\s*(false|0)\s*$/i;function Hp(e){return e===!0||e===1?"true":e===!1||e===0?"false":e==null?"empty":typeof e=="string"?e.trim()===""?"empty":l$.test(e)?"true":c$.test(e)?"false":"invalid":"invalid"}function _o(e,t="Edit"){const n=document.createElement("button");return n.type="button",n.title=t,n.textContent="✎",n.className="cell-pencil",n.style.cssText="flex:none;background:transparent;border:0;cursor:pointer;color:#9ca3af;font-size:0.85em;padding:0 0.15rem;line-height:1",n.addEventListener("mouseenter",()=>n.style.color="#374151"),n.addEventListener("mouseleave",()=>n.style.color="#9ca3af"),n.addEventListener("click",r=>{r.preventDefault(),r.stopPropagation(),e()}),n}function To(e,t){const n=document.createElement("span");return n.style.cssText="display:flex;align-items:center;gap:0.25rem;width:100%;min-width:0;max-width:100%",e.style.flex="1 1 auto",e.style.minWidth="0",e.style.overflow="hidden",n.append(e,t),n}function Io(e){const t=document.createElement("input");t.type="text",t.value=e.value,t.style.cssText="width:100%;box-sizing:border-box;border:0;background:transparent;font:inherit;padding:0;text-overflow:ellipsis";const n=()=>{e.isLive(t)&&e.onCommit(t.value)};return t.addEventListener("keydown",r=>{r.key==="Enter"?(r.preventDefault(),n()):r.key==="Escape"&&(r.preventDefault(),e.onCancel())}),t.addEventListener("blur",n),setTimeout(()=>{t.focus(),t.select()},0),t}const u$={id:"cell-date",name:"Cell Date",type:"cell-renderer",version:"0.1.0",description:"Renderer for date columns: a native `<input type=date>` picker. A non-empty value the picker can't parse shows as red-bordered raw text with a pencil instead of a misleadingly blank box. Apply by setting a column's renderer to \"date\".",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/cell-date.ts"};function d$(e){customElements.get("cell-date")||customElements.define("cell-date",h$),e.ui.registerCellRenderer("date","cell-date")}class h$ extends HTMLElement{constructor(){super(...arguments),this._value="",this._readonly=!1,this._editing=!1,this._editor=null}set value(t){this._value!==t&&(this._value=t,this._editing=!1,this.render())}get value(){return this._value}set readonly(t){const n=!!t;this._readonly!==n&&(this._readonly=n,this.render())}get readonly(){return this._readonly}connectedCallback(){this.render()}render(){if(this.innerHTML="",this._editor=null,this._editing){const n=Io({value:this._value==null?"":String(this._value),onCommit:r=>this.commit(r||null),onCancel:()=>{this._editor=null,this._editing=!1,this.render()},isLive:r=>this._editor===r});this.append(n),this._editor=n;return}if(f$(this._value)){const n=document.createElement("span");n.textContent=String(this._value),n.style.cssText="display:inline-block;width:100%;overflow:hidden;text-overflow:ellipsis",xc(n,`Not a valid date: "${String(this._value)}"`),this.append(this._readonly?n:To(n,this.pencil()));return}if(this._readonly){this.textContent=yc(this._value);return}const t=document.createElement("input");t.type="date",t.value=ii(this._value),t.style.cssText="font:inherit;border:0;background:transparent;padding:0;width:100%;box-sizing:border-box",t.addEventListener("change",()=>this.commit(t.value||null)),this.append(t)}pencil(){return _o(()=>{this._editing=!0,this.render()},"Edit the stored value")}commit(t){this._value=t,this._editing=!1,this.render(),this.dispatchEvent(new CustomEvent("change",{detail:{value:t},bubbles:!0,composed:!0}))}}function f$(e){return e==null||typeof e=="string"&&e.trim()===""?!1:ii(e)===""}const p$=Object.freeze(Object.defineProperty({__proto__:null,init:d$,meta:u$},Symbol.toStringTag,{value:"Module"})),m$={id:"cell-datetime",name:"Cell Datetime",type:"cell-renderer",version:"0.1.0",description:"Renderer for datetime columns: a native `<input type=datetime-local>` picker. A non-empty value the picker can't parse shows as red-bordered raw text with a pencil instead of a misleadingly blank box. Apply by setting a column's renderer to \"datetime\".",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/cell-datetime.ts"};function g$(e){customElements.get("cell-datetime")||customElements.define("cell-datetime",b$),e.ui.registerCellRenderer("datetime","cell-datetime")}class b$ extends HTMLElement{constructor(){super(...arguments),this._value="",this._readonly=!1,this._editing=!1,this._editor=null}set value(t){this._value!==t&&(this._value=t,this._editing=!1,this.render())}get value(){return this._value}set readonly(t){const n=!!t;this._readonly!==n&&(this._readonly=n,this.render())}get readonly(){return this._readonly}connectedCallback(){this.render()}render(){if(this.innerHTML="",this._editor=null,this._editing){const n=Io({value:this._value==null?"":String(this._value),onCommit:r=>this.commit(r||null),onCancel:()=>{this._editor=null,this._editing=!1,this.render()},isLive:r=>this._editor===r});this.append(n),this._editor=n;return}if(w$(this._value)){const n=document.createElement("span");n.textContent=String(this._value),n.style.cssText="display:inline-block;width:100%;overflow:hidden;text-overflow:ellipsis",xc(n,`Not a valid datetime: "${String(this._value)}"`),this.append(this._readonly?n:To(n,this.pencil()));return}if(this._readonly){this.textContent=Sp(this._value);return}const t=document.createElement("input");t.type="datetime-local",t.value=si(this._value),t.style.cssText="font:inherit;border:0;background:transparent;padding:0;width:100%;box-sizing:border-box",t.addEventListener("change",()=>this.commit(t.value||null)),this.append(t)}pencil(){return _o(()=>{this._editing=!0,this.render()},"Edit the stored value")}commit(t){this._value=t,this._editing=!1,this.render(),this.dispatchEvent(new CustomEvent("change",{detail:{value:t},bubbles:!0,composed:!0}))}}function w$(e){return e==null||typeof e=="string"&&e.trim()===""?!1:si(e)===""}const y$=Object.freeze(Object.defineProperty({__proto__:null,init:g$,meta:m$},Symbol.toStringTag,{value:"Module"})),v$={id:"cell-boolean",name:"Cell Boolean",type:"cell-renderer",version:"0.1.0",description:`Renderer for boolean columns: a checkbox for true/false, a grayed-out unchecked box for an empty cell (clickable to set true), and red-bordered raw text with a pencil for a stored value that is none of those. Apply by setting a column's renderer to "boolean".`,author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="8 12 11 15 16 9"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/cell-boolean.ts"};function k$(e){customElements.get("cell-boolean")||customElements.define("cell-boolean",$$),e.ui.registerCellRenderer("boolean","cell-boolean")}class $$ extends HTMLElement{constructor(){super(...arguments),this._value=!1,this._readonly=!1,this._editing=!1,this._editor=null}set value(t){this._value!==t&&(this._value=t,this._editing=!1,this.render())}get value(){return this._value}set readonly(t){const n=!!t;this._readonly!==n&&(this._readonly=n,this.render())}get readonly(){return this._readonly}connectedCallback(){this.render()}render(){if(this.innerHTML="",this._editor=null,this._editing){const i=Io({value:this._value==null?"":String(this._value),onCommit:s=>this.commit(s),onCancel:()=>{this._editor=null,this._editing=!1,this.render()},isLive:s=>this._editor===s});this.append(i),this._editor=i;return}const t=Hp(this._value);if(t==="invalid"){const i=document.createElement("span");i.textContent=String(this._value),i.style.cssText="display:inline-block;width:100%;overflow:hidden;text-overflow:ellipsis",xc(i,`Not a valid boolean: "${String(this._value)}"`),this.append(this._readonly?i:To(i,this.pencil()));return}const n=document.createElement("input");n.type="checkbox",n.checked=t==="true";let r="transform:translateY(1px)";t==="empty"&&(r+=";opacity:0.45",n.title="Empty — no value stored. Click to set true."),this._readonly?n.disabled=!0:(r+=";cursor:pointer",n.addEventListener("change",()=>this.commit(n.checked))),n.style.cssText=r,this.append(n)}pencil(){return _o(()=>{this._editing=!0,this.render()},"Edit the stored value")}commit(t){this._value=t,this._editing=!1,this.render(),this.dispatchEvent(new CustomEvent("change",{detail:{value:t},bubbles:!0,composed:!0}))}}const x$=Object.freeze(Object.defineProperty({__proto__:null,init:k$,meta:v$},Symbol.toStringTag,{value:"Module"})),S$={id:"cell-color",name:"Cell Color",type:"cell-renderer",version:"0.1.0",description:`Renderer for hex colour values: a native swatch picker. Apply by setting a column's renderer to "color".`,author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 2-.9 2-2 0-.5-.2-1-.6-1.4-.4-.4-.6-.9-.6-1.4 0-1.1.9-2 2-2h2.3c2 0 3.6-1.6 3.6-3.6C20.7 6 16.9 3 12 3z"/><circle cx="7.5" cy="10.5" r="1"/><circle cx="11" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/cell-color.ts"};function C$(e){customElements.get("cell-color")||customElements.define("cell-color",E$),e.ui.registerCellRenderer("color","cell-color")}class E$ extends HTMLElement{constructor(){super(...arguments),this._value=""}static get observedAttributes(){return["value"]}set value(t){this._value!==t&&(this._value=t??"",this.render())}get value(){return this._value}connectedCallback(){this.render()}attributeChangedCallback(t,n,r){this.value=r}render(){const t=/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(this._value)?this._value:"#000000";this.innerHTML="";const n=document.createElement("input");n.type="color",n.value=t,n.style.cssText="width:1.5rem;height:1.25rem;padding:0;border:1px solid #d1d5db;background:transparent;vertical-align:middle;cursor:pointer",n.addEventListener("change",()=>this.commit(n.value)),this.append(n)}commit(t){this._value=t,this.dispatchEvent(new CustomEvent("change",{detail:{value:t},bubbles:!0,composed:!0}))}}const _$=Object.freeze(Object.defineProperty({__proto__:null,init:C$,meta:S$},Symbol.toStringTag,{value:"Module"})),T$=[{bytes:[137,80,78,71,13,10,26,10],type:"image/png"},{bytes:[71,73,70,56],type:"image/gif"},{bytes:[255,216,255],type:"image/jpeg"},{bytes:[66,77],type:"image/bmp"}],al=16;function I$(e){const t=(n,r)=>r.split("").every((i,s)=>e[n+s]===i.charCodeAt(0));return e.length>=12&&t(0,"RIFF")&&t(8,"WEBP")}function Es(e){for(const{bytes:t,type:n}of T$)if(t.every((r,i)=>e[i]===r))return n;return I$(e)?"image/webp":null}function Vp(e){if(e==null)return null;const t=R$(e);if(t){const s=Array.prototype.slice.call(t,0,al),o=Es(s);return o?`data:${o};base64,${Gp(t)}`:null}if(typeof e!="string")return null;const n=e.trim();if(n==="")return null;if(n.startsWith("data:"))return L$(n);if(/^(https?:)?\/\//i.test(n)||n.startsWith("/")&&/\.(png|jpe?g|gif|webp|bmp|svg)(\?|#|$)/i.test(n))return n;const r=O$(n);if(r){const s=Wp(r.slice(0,al*2)),o=Es(s);return o?`data:${o};base64,${D$(r)}`:null}const i=Kp(n);if(i){const s=Es(i);return s?`data:${s};base64,${n}`:null}return null}function A$(e){return Vp(e)!==null}function R$(e){if(e instanceof Uint8Array)return e;if(Array.isArray(e))return e.length>0&&e.every(t=>typeof t=="number")?e:null;if(typeof e=="object"&&e!==null){const t=e;if(typeof t[0]!="number")return null;const n=[];for(let r=0;typeof t[String(r)]=="number";r++)n.push(t[String(r)]);return n}return null}function O$(e){const t=/^[xX]\s*(['"])([0-9a-fA-F]*)\1$/.exec(e);return t?.[2]?t[2]:e.length>=8&&e.length%2===0&&/^[0-9a-fA-F]+$/.test(e)?e:null}function Kp(e){if(e.length<8||!/^[A-Za-z0-9+/]+={0,2}$/.test(e))return null;try{const t=e.slice(0,Math.ceil(al*4/3));return[...atob(t.slice(0,t.length-t.length%4))].map(r=>r.charCodeAt(0))}catch{return null}}function L$(e){const t=/^data:([^;,]*)(;base64)?,([\s\S]*)$/.exec(e);if(!t)return null;if((t[1]??"").toLowerCase().startsWith("image/"))return e;const r=t[3]??"";if(!t[2])return null;const i=Kp(r),s=i&&Es(i);return s?`data:${s};base64,${r}`:null}function Wp(e){const t=[];for(let n=0;n+1<e.length;n+=2)t.push(parseInt(e.slice(n,n+2),16));return t}function Gp(e){let n="";for(let r=0;r<e.length;r+=32768){const i=Array.prototype.slice.call(e,r,r+32768);n+=String.fromCharCode(...i)}return btoa(n)}function D$(e){return Gp(Wp(e))}const M$={id:"cell-image",name:"Cell Image",type:"cell-renderer",version:"0.1.0",description:`Renderer for image cells: thumbnail with upload/clear. Apply by setting a column's renderer to "image". Values are kept as data: URIs.`,author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/cell-image.ts"};function P$(e){customElements.get("cell-image")||customElements.define("cell-image",z$),e.ui.registerCellRenderer("image","cell-image")}class z$ extends HTMLElement{constructor(){super(...arguments),this._value="",this._readonly=!1,this._editing=!1,this._editor=null}set value(t){this._value!==t&&(this._value=t??"",this._editing=!1,this.render())}get value(){return this._value}set readonly(t){const n=!!t;this._readonly!==n&&(this._readonly=n,this.render())}get readonly(){return this._readonly}connectedCallback(){this.render()}render(){if(this.innerHTML="",this._editor=null,this.style.display="block",this.style.minWidth="0",this.style.overflow="hidden",this._editing){const r=document.createElement("span");r.style.cssText="display:flex;align-items:center;gap:0.25rem;width:100%;min-width:0;max-width:100%";const i=Io({value:typeof this._value=="string"?this._value:"",onCommit:o=>this.commit(o),onCancel:()=>{this._editor=null,this._editing=!1,this.render()},isLive:o=>this._editor===o}),s=document.createElement("button");s.type="button",s.textContent="upload",s.style.cssText="flex:none;padding:0.1rem 0.4rem;font-size:0.75rem;cursor:pointer",s.addEventListener("mousedown",o=>o.preventDefault()),s.addEventListener("click",()=>this.pickFile()),r.append(i,s),this.append(r),this._editor=i;return}const t=document.createElement("span");t.style.cssText="display:flex;align-items:center;gap:0.4rem;min-width:0";const n=Vp(this._value);if(n){const r=document.createElement("img");r.src=n,r.alt="",r.style.cssText="max-height:32px;max-width:64px;border-radius:.15rem;border:1px solid #e5e7eb",t.append(r)}else{const r=document.createElement("span");if(r.style.color="#9ca3af",r.textContent="no image",t.append(r),!this._readonly){const i=document.createElement("button");i.type="button",i.textContent="upload",i.style.cssText="flex:none;padding:0.1rem 0.4rem;font-size:0.75rem;cursor:pointer",i.addEventListener("click",()=>this.pickFile()),t.append(i)}}this.append(this._readonly?t:To(t,this.pencil()))}pencil(){return _o(()=>{this._editing=!0,this.render()},"Edit the image URL")}pickFile(){const t=document.createElement("input");t.type="file",t.accept="image/*",t.addEventListener("change",()=>{const n=t.files?.[0];if(!n)return;const r=new FileReader;r.onload=()=>this.commit(String(r.result)),r.readAsDataURL(n)}),t.click()}commit(t){const n=t!==this._value;this._value=t,this._editing=!1,this.render(),n&&this.dispatchEvent(new CustomEvent("change",{detail:{value:t},bubbles:!0,composed:!0}))}}const N$=Object.freeze(Object.defineProperty({__proto__:null,init:P$,meta:M$},Symbol.toStringTag,{value:"Module"})),Yp=200,Qp=100;function j$(e){return!e||!Number.isFinite(e.w)||!Number.isFinite(e.h)||!Number.isFinite(e.x)||!Number.isFinite(e.y)||e.w<Yp||e.h<Qp?null:{...e}}function qs(e,t){return(e.windowGeometry?.z??-1/0)-(t.windowGeometry?.z??-1/0)}const jd=640;function Ao(){return typeof window>"u"?!1:typeof window.matchMedia=="function"?window.matchMedia(`(max-width: ${jd}px)`).matches:window.innerWidth<=jd}const F$=["n","s","e","w","ne","nw","se","sw"];function U$(e,t,n,r){const i=r>0?r:1;return{...e,x:e.x+t/i,y:e.y+n/i}}function B$(e,t,n,r,i,s,o){const a=i>0?i:1,c=n/a,d=r/a;let{x:f,y:p,w:b,h:y}=e;return t.includes("e")&&(b=Math.max(s,e.w+c)),t.includes("s")&&(y=Math.max(o,e.h+d)),t.includes("w")&&(b=Math.max(s,e.w-c),f=e.x+(e.w-b)),t.includes("n")&&(y=Math.max(o,e.h-d),p=e.y+(e.h-y)),{x:f,y:p,w:b,h:y}}function q$(e){return e?.minimized?{status:"minimized",restoreStatus:e.maximized?"maximized":"normalized"}:e?.maximized?{status:"maximized",restoreStatus:"normalized"}:e?.smallified?{status:"smallified",restoreStatus:"normalized"}:{status:"normalized",restoreStatus:"normalized"}}function Fd(e,t){if(e.status==="closed")return e;switch(t){case"close":return{...e,status:"closed"};case"minimize":return e.status==="minimized"?e:{status:"minimized",restoreStatus:e.status==="maximized"?"maximized":"normalized"};case"maximize":return{status:"maximized",restoreStatus:"normalized"};case"smallify":return e.status!=="normalized"?e:{...e,status:"smallified"};case"normalize":return e.status==="minimized"?{status:e.restoreStatus,restoreStatus:"normalized"}:{status:"normalized",restoreStatus:"normalized"}}}function H$(e){return{minimized:e.status==="minimized",maximized:e.status==="maximized"||e.status==="minimized"&&e.restoreStatus==="maximized",smallified:e.status==="smallified"}}const V$="#01579b",K$="input, textarea, select, button, a, .jsPanel-controlbar";function Ud(e){for(const t of e.composedPath())if(t instanceof HTMLElement&&t.matches(K$))return!0;return!1}const W$={smallify:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 15 12 9 18 15"/></svg>',minimize:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="19" x2="19" y2="19"/></svg>',maximize:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="5" width="14" height="14" rx="1"/></svg>',normalize:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="8" y="4" width="12" height="12" rx="1"/><rect x="4" y="8" width="12" height="12" rx="1"/></svg>',close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>'};let Oa=100;function Bd(){let e=Oa;for(const t of document.querySelectorAll(".jsPanel")){const n=Number(t.style.zIndex);Number.isFinite(n)&&n>e&&(e=n)}return Oa=e+1,Oa}function G$(e){const t=Number(e.style.zIndex);for(const n of document.querySelectorAll(".jsPanel"))if(!(n===e||n.style.display==="none")&&Number(n.style.zIndex)>t)return!1;return!0}const ll=new Set,bi=new Set;function Y$(){let e=null;for(const t of bi)t.style.display!=="none"&&(!e||Number(t.style.zIndex)>Number(e.style.zIndex))&&(e=t);return e}const Jp=e=>{if(e.key!=="Escape"||e.defaultPrevented)return;const t=Y$();t&&(e.preventDefault(),t.close())};function Q$(e){bi.size===0&&document.addEventListener("keydown",Jp),bi.add(e)}function J$(e){bi.delete(e)&&bi.size===0&&document.removeEventListener("keydown",Jp)}function X$(){return[...ll].sort((e,t)=>Number(t.style.zIndex)-Number(e.style.zIndex))}function In(e,t,n){const r=document.createElement("button");return r.type="button",r.className=`jsPanel-btn jsPanel-btn-${e}`,r.title=t,r.setAttribute("aria-label",t),r.innerHTML=W$[e]??"",r.addEventListener("click",i=>{i.stopPropagation(),n()}),r}function Ro(e){const t=document.createElement("div");t.className="jsPanel",t.id=e.id;let n=e.color??V$;t.style.setProperty("--eda-panel-color",n);const r=document.createElement("div");r.className="jsPanel-hdr";const i=document.createElement("div");i.className="jsPanel-headerbar";const s=document.createElement("div");s.className="jsPanel-headerlogo",s.innerHTML=e.logo??"";const o=document.createElement("div");o.className="jsPanel-titlebar",o.tabIndex=-1,o.style.outline="none",o.addEventListener("pointerdown",()=>o.focus());const a=document.createElement("span");a.className="jsPanel-title",a.textContent=e.title,o.append(a);const c=document.createElement("div");c.className="jsPanel-controlbar",c.append(In("smallify","Collapse",()=>H("smallify")),In("minimize","Minimize",()=>H("minimize")),In("maximize","Maximize",()=>t.maximize()),In("normalize","Restore",()=>H("normalize")),In("close","Close",()=>t.close())),i.append(s,o,c),r.append(i);const d=document.createElement("div");d.className="jsPanel-content",d.append(e.content);const f=document.createElement("div");f.className="jsPanel-ftr",e.footerToolbar&&(f.classList.add("active"),f.append(e.footerToolbar)),t.append(r,d,f);const p=[];for(const q of F$){const Q=document.createElement("div");Q.className="eda-resize",Q.dataset.edge=q,t.append(Q),p.push({zone:Q,edge:q})}if(t.style.zIndex=String(Bd()),e.container.append(t),e.panelSize)t.style.width=`${e.panelSize.w}px`,t.style.height=`${e.panelSize.h}px`;else{const q=e.contentSize??{w:720,h:360};t.style.width=`${q.w}px`,t.style.height=`${q.h+r.offsetHeight+f.offsetHeight}px`}const b=e.position??"center",y=t.offsetWidth,$=e.container.clientWidth;b==="center"?(t.style.left=`${Math.max(0,($-y)/2)}px`,t.style.top=`${Math.max(0,(e.container.clientHeight-t.offsetHeight)/2)}px`):"centerTopOffset"in b?(t.style.left=`${Math.max(0,($-y)/2)}px`,t.style.top=`${b.centerTopOffset}px`):(t.style.left=`${b.x}px`,t.style.top=`${b.y}px`);let k=q$(e.boot),C=D(),_=null,T=null,Y=null;function D(){return{x:t.offsetLeft,y:t.offsetTop,w:t.offsetWidth,h:t.offsetHeight}}function ne(q){t.style.left=`${q.x}px`,t.style.top=`${q.y}px`,t.style.width=`${q.w}px`,t.style.height=`${q.h}px`}function W(){const q=e.viewport?.getState()??{x:0,y:0,scale:1};t.style.left="0px",t.style.top="0px",t.style.width=`${e.container.clientWidth}px`,t.style.height=`${e.container.clientHeight}px`,t.style.transformOrigin="0 0",t.style.transform=`translate(${-q.x/q.scale}px, ${-q.y/q.scale}px) scale(${1/q.scale})`}function I(){const q=e.viewport?.getState()??{x:0,y:0,scale:1},Q=q.scale||1;return{x:-q.x/Q,y:-q.y/Q,w:e.container.clientWidth/Q,h:e.container.clientHeight/Q}}function V(){W(),T??=e.viewport?.subscribe(W)??null,!Y&&typeof ResizeObserver<"u"&&(Y=new ResizeObserver(W),Y.observe(e.container))}function K(){T?.(),T=null,Y?.disconnect(),Y=null,t.style.transform="",t.style.transformOrigin=""}function ie(){const q=document.createElement("div");q.className="jsPanel-replacement",q.id=`${e.id}-min`,q.style.setProperty("--eda-panel-color",n);const Q=document.createElement("div");Q.className="jsPanel-headerlogo",Q.innerHTML=s.innerHTML;const ae=document.createElement("span");return ae.className="jsPanel-title",ae.textContent=a.textContent,q.append(Q,ae,In("normalize","Restore",()=>{H("normalize"),t.front()}),In("close","Close",()=>t.close())),q.addEventListener("click",we=>{we.target.closest("button")||(H("normalize"),t.front())}),q}function de(q){switch(q==="maximized"&&k.status!=="maximized"&&K(),q==="minimized"&&k.status!=="minimized"&&(_?.remove(),_=null,t.style.display=""),k.status){case"minimized":{q==="normalized"?C=D():q==="smallified"&&(C={...C,x:t.offsetLeft,y:t.offsetTop}),t.style.display="none";const Q=e.minimizeTo?document.querySelector(e.minimizeTo):null;_=ie(),(Q??e.container).append(_);break}case"maximized":q==="normalized"?C=D():q==="smallified"&&(C={...C,x:t.offsetLeft,y:t.offsetTop}),V();break;case"smallified":C=D(),t.style.height=`${r.offsetHeight}px`;break;case"normalized":q==="smallified"?C={...C,x:t.offsetLeft,y:t.offsetTop}:q==="maximized"&&Ao()&&(C=I()),ne(C);break}t.dataset.status=k.status}function H(q){const Q=k;k=Fd(k,q),k.status!==Q.status&&(de(Q.status),e.onstatuschange?.(t))}Object.defineProperty(t,"status",{get:()=>k.status}),t.minimize=()=>H("minimize"),t.maximize=(q,Q)=>{H("maximize"),Q!==!0&&t.front()},t.normalize=()=>H("normalize"),t.smallify=()=>H("smallify"),t.front=(q,Q)=>{t.style.zIndex=String(Bd()),Q!==!1&&e.onfronted?.()},t.close=()=>{k.status!=="closed"&&(k=Fd(k,"close"),_?.remove(),K(),ll.delete(t),J$(t),t.remove(),e.onclosed?.())},t.setHeaderTitle=q=>{a.textContent=q;const Q=_?.querySelector(".jsPanel-title");Q&&(Q.textContent=q)},t.setHeaderLogo=q=>{s.innerHTML=q;const Q=_?.querySelector(".jsPanel-headerlogo");Q&&(Q.innerHTML=q)},t.setHeaderColor=q=>{n=q,t.style.setProperty("--eda-panel-color",n),_?.style.setProperty("--eda-panel-color",n)},t.centerInViewport=()=>{if(k.status!=="normalized"&&k.status!=="smallified")return;const q=I(),Q=t.offsetWidth,ae=t.offsetHeight;ne({x:q.x+Math.max(0,(q.w-Q)/2),y:q.y+Math.max(0,(q.h-ae)/2),w:Q,h:ae})},t.persistFlags=()=>H$(k),t.persistRect=()=>k.status==="smallified"?{...C,x:t.offsetLeft,y:t.offsetTop}:k.status==="minimized"||k.status==="maximized"?{...C}:D(),ll.add(t),e.closeOnEscape&&Q$(t),t.addEventListener("pointerdown",()=>{G$(t)||t.front()},!0);const te=q=>{q.addEventListener("pointerdown",Q=>{if(Q.button!==0||Ud(Q)||k.status==="maximized"||k.status==="minimized")return;const ae=D(),we=e.viewport?.getState().scale??1,xe=Q.pointerId,De=Q.clientX,pe=Q.clientY;let yt=!1;const Dt=me=>{if(me.pointerId!==xe)return;yt=!0;const ze=U$(ae,me.clientX-De,me.clientY-pe,we);t.style.left=`${ze.x}px`,t.style.top=`${ze.y}px`},He=me=>{me.pointerId===xe&&(q.removeEventListener("pointermove",Dt),q.removeEventListener("pointerup",He),q.removeEventListener("pointercancel",He),yt&&e.onmoved?.())};q.setPointerCapture(Q.pointerId),q.addEventListener("pointermove",Dt),q.addEventListener("pointerup",He),q.addEventListener("pointercancel",He)})};te(o),te(s),te(f);for(const{zone:q,edge:Q}of p)q.addEventListener("pointerdown",ae=>{if(ae.button!==0||k.status!=="normalized")return;const we=D(),xe=e.viewport?.getState().scale??1,De=ae.pointerId,pe=ae.clientX,yt=ae.clientY;let Dt=!1;const He=ze=>{ze.pointerId===De&&(Dt=!0,ne(B$(we,Q,ze.clientX-pe,ze.clientY-yt,xe,Yp,Qp)))},me=ze=>{ze.pointerId===De&&(q.removeEventListener("pointermove",He),q.removeEventListener("pointerup",me),q.removeEventListener("pointercancel",me),Dt&&e.onresized?.())};q.setPointerCapture(ae.pointerId),q.addEventListener("pointermove",He),q.addEventListener("pointerup",me),q.addEventListener("pointercancel",me)});return r.addEventListener("dblclick",q=>{Ud(q)||(k.status==="maximized"?H("normalize"):t.maximize())}),k.status!=="normalized"?de("normalized"):t.dataset.status="normalized",t}let Xp=null;function Z$(e){Xp=e}function Hs(){return Xp}function Oo(){return{getState:()=>Hs()?.snapshot()??{x:0,y:0,scale:1},subscribe:e=>Hs()?.subscribe(e)??(()=>{})}}function Zp(){return document.getElementById("easydb-panels-viewport")??document.getElementById("easydb-panels")??document.body}let ex=0;function em(e,t){const n=document.createElement("button");return n.type="button",n.title=t,n.setAttribute("aria-label",t),n.innerHTML=e,n.style.cssText="flex:none;display:inline-flex;align-items:center;justify-content:center;padding:1px;background:none;border:0;color:#9ca3af;cursor:pointer;line-height:0",n.addEventListener("mouseenter",()=>n.style.color="#4b5563"),n.addEventListener("mouseleave",()=>n.style.color="#9ca3af"),n}const tx='<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',nx='<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M19 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h6"/></svg>';function cl(e,t,n,r){const i=r?.readonly===!0,s=document.createElement("div");s.style.cssText="display:flex;flex-direction:column;gap:0.5rem;height:100%;box-sizing:border-box;padding:0.5rem";const o=document.createElement("textarea");o.value=t,o.style.cssText="flex:1 1 auto;width:100%;box-sizing:border-box;resize:none;font-family:monospace;font-size:0.85rem";const a=document.createElement("div");a.style.cssText="display:flex;justify-content:flex-end;gap:0.5rem;flex:none";const c=document.createElement("button");c.type="button",c.textContent=i?"Close":"Cancel",c.style.cssText="padding:0.3rem 0.8rem;cursor:pointer";const d=document.createElement("button");d.type="button",d.textContent="Save",d.style.cssText="padding:0.3rem 0.8rem;cursor:pointer;background:#7c3aed;color:#fff;border:0;border-radius:0.25rem",i?(o.readOnly=!0,o.style.background="#f9fafb",a.append(c)):a.append(c,d),s.append(o,a);const f=Ro({id:`easydb-html-edit-${++ex}`,container:Zp(),title:e,color:"#7c3aed",content:s,contentSize:{w:520,h:400},position:"center",closeOnEscape:!0,boot:{maximized:Ao()},minimizeTo:"#easydb-minimized-dock",viewport:Oo()});c.addEventListener("click",()=>f.close()),d.addEventListener("click",()=>{n(o.value),f.close()}),o.addEventListener("keydown",p=>{i||p.key==="Enter"&&(p.ctrlKey||p.metaKey)&&(p.preventDefault(),d.click())}),setTimeout(()=>o.focus(),0)}const Sc=2e3;let ul=Sc;function rx(e){ul=typeof e=="number"&&Number.isFinite(e)&&e>0?Math.floor(e):Sc}let ix=0;class tm extends HTMLElement{constructor(){super(...arguments),this.language="Preview",this._value="",this._readonly=!1}toHtml(t){return t||null}set value(t){const n=t??"";this._value!==n&&(this._value=n,this.render())}get value(){return this._value}set rawValue(t){this._source=t==null?"":String(t)}set column(t){this._label=t?.label}set sourceReadonly(t){const n=t===!0;this._readonly!==n&&(this._readonly=n,this.render())}get sourceReadonly(){return this._readonly}get title_(){return this._label??this.language}connectedCallback(){this.render()}render(){if(this.innerHTML="",!this._value){const o=document.createElement("span");o.style.cssText=this._readonly?"color:#9ca3af":"color:#9ca3af;cursor:text",o.textContent="empty",this._readonly||(o.title="Click to edit",o.addEventListener("click",()=>this.openEditor())),this.append(o);return}const t=document.createElement("span");t.style.cssText="display:flex;align-items:center;gap:0.25rem;width:100%";const n=document.createElement("span"),r=qy(this.toHtml(this._value)??this._value);n.textContent=r.length>ul?r.slice(0,ul)+"…":r,n.title=this._readonly?"Click to view the source":"Click to edit",n.style.cssText="flex:0 1 auto;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;cursor:text",n.addEventListener("click",o=>{o.stopPropagation(),this.openEditor()});const i=document.createElement("span");i.style.cssText="flex:1 1 auto";const s=em(nx,"Open in a window");s.addEventListener("click",o=>{o.stopPropagation(),this.openWindow()}),t.append(n,i,s),this.append(t)}openWindow(){const t=document.createElement("div");t.style.cssText="padding:0.75rem;overflow:auto;height:100%;box-sizing:border-box";const n=this.toHtml(this._value);if(n!==null)t.innerHTML=n;else{const r=document.createElement("pre");r.style.cssText="white-space:pre-wrap;word-break:break-word;margin:0;font-family:ui-monospace, monospace;",r.textContent=this._value,t.append(r)}Ro({id:`easydb-preview-popup-${++ix}`,container:Zp(),title:this.title_,color:"#7c3aed",content:t,contentSize:{w:520,h:400},position:{centerTopOffset:60},boot:{maximized:Ao()},closeOnEscape:!0,minimizeTo:"#easydb-minimized-dock",viewport:Oo()})}openEditor(){const t=this._source!==void 0,n=t?this._source:this._value;if(this._readonly){cl(`View ${this.title_}`,n,()=>{},{readonly:!0});return}cl(`Edit ${this.title_}`,n,r=>{t?this._source=r:(this._value=r,this.render()),this.dispatchEvent(new CustomEvent("change",{detail:{value:r},bubbles:!0,composed:!0}))})}}const sx={id:"preview",name:"Preview",type:"cell-renderer",version:"0.4.0",description:`Shows a long value as a plain-text preview (first N characters); click to edit the source in a dialog, or use the popup icon to open the full value in a window. HTML is shown there as markup, and Markdown is recognised and converted first — so a Markdown column reads as formatted text without a script. Apply by setting a column's renderer to "preview". For direct in-cell rendering use the "html" renderer instead.`,author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/preview.ts"};async function qd(e){rx(await e.settings.get("preview","maxChars"))}function ox(e){customElements.get("preview-cell")||customElements.define("preview-cell",ax),e.ui.registerCellRenderer("preview","preview-cell"),e.ui.registerCellRenderer("html-preview","preview-cell"),e.ui.registerSettings("preview","Preview",[{key:"maxChars",label:"Max characters shown",type:"number",default:Sc,scope:"workspace",description:"A safety cap on how much text goes into a preview cell. What you SEE follows the column width — the cell ellipsizes like any other, so widen the column to read more. Lower this only to cut long values short regardless of width. Applies to cells rendered after the change (reload to refresh all). Shared with the `markdown` renderer."}]),qd(e),e.events.on("app:ready",()=>void qd(e))}class ax extends tm{toHtml(t){const n=Qy(t);return n==="html"?t:n==="markdown"?lo(t):null}}const lx=Object.freeze(Object.defineProperty({__proto__:null,init:ox,meta:sx},Symbol.toStringTag,{value:"Module"})),cx={id:"html-render",name:"HTML",type:"cell-renderer",version:"0.1.0",description:`Renders a cell's value directly as HTML (unescaped, in full, no popup); a pencil on the right edits the source. Apply by setting a column's renderer to "html". For a truncated preview use "preview".`,author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/html-render.ts"};function ux(e){customElements.get("html-render-cell")||customElements.define("html-render-cell",dx),e.ui.registerCellRenderer("html","html-render-cell")}class dx extends HTMLElement{constructor(){super(...arguments),this._value="",this._label="HTML",this._readonly=!1}set value(t){const n=t??"";this._value!==n&&(this._value=n,this.render())}get value(){return this._value}set rawValue(t){this._source=t==null?"":String(t)}set column(t){this._label=t?.label??"HTML"}set sourceReadonly(t){const n=t===!0;this._readonly!==n&&(this._readonly=n,this.render())}get sourceReadonly(){return this._readonly}connectedCallback(){this.render()}render(){this.innerHTML="";const t=document.createElement("span");t.style.cssText="display:flex;align-items:flex-start;gap:0.25rem;width:100%";const n=document.createElement("span");if(n.style.cssText="flex:1 1 auto;min-width:0",this._value?n.innerHTML=this._value:(n.style.color="#9ca3af",n.textContent="empty"),t.append(n),!this._readonly){const r=em(tx,"Edit the HTML");r.addEventListener("click",i=>{i.stopPropagation(),this.openEditor()}),t.append(r)}this.append(t)}openEditor(){const t=this._source!==void 0;cl(`Edit ${this._label}`,t?this._source:this._value,n=>{t?this._source=n:(this._value=n,this.render()),this.dispatchEvent(new CustomEvent("change",{detail:{value:n},bubbles:!0,composed:!0}))})}}const hx=Object.freeze(Object.defineProperty({__proto__:null,init:ux,meta:cx},Symbol.toStringTag,{value:"Module"})),fx={id:"cell-markdown",name:"Markdown",type:"cell-renderer",version:"0.2.0",description:`For a column written in Markdown: the cell shows one line of plain text with the markers flattened, and the popup icon opens the formatted value in a window. Click the text to edit the Markdown source. Apply by setting a column's renderer to "markdown". Unlike "preview" it never guesses — the value is always read as Markdown.`,author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M6 15V9l3 3 3-3v6"/><path d="M16 9v6"/><path d="M14 13l2 2 2-2"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/cell-markdown.ts"};function px(e){customElements.get("markdown-cell")||customElements.define("markdown-cell",mx),e.ui.registerCellRenderer("markdown","markdown-cell")}class mx extends tm{constructor(){super(...arguments),this.language="Markdown"}toHtml(t){return t?lo(t):null}}const gx=Object.freeze(Object.defineProperty({__proto__:null,init:px,meta:fx},Symbol.toStringTag,{value:"Module"})),bx={id:"cell-link",name:"Cell Link",type:"cell-renderer",version:"0.2.0",description:"Renderer for URL/email/phone cells. Inside a single cell, http(s) URLs render as <a target=_blank>, email addresses as <a href=mailto:>, phone-like values as <a href=tel:>, anything else falls back to a text input. A pencil toggles to edit mode.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/cell-link.ts"};function wx(e){customElements.get("cell-link")||customElements.define("cell-link",yx),e.ui.registerCellRenderer("link","cell-link")}class yx extends HTMLElement{constructor(){super(...arguments),this._value="",this._editing=!1,this._editor=null,this._raw=null}set value(t){const n=t==null?"":String(t);this._value!==n&&(this._value=n,this._editing=!1,this.render())}get value(){return this._value}set rawValue(t){const n=t==null?"":String(t);this._raw!==n&&(this._raw=n,this._editing&&this.render())}get rawValue(){return this._raw??this._value}connectedCallback(){this.style.display="block",this.style.minWidth="0",this.style.maxWidth="100%",this.style.overflow="hidden",this.render()}render(){this.innerHTML="",this._editor=null;const t=this._value,n=this._editing?null:vx(t),r=!this._editing&&!n?kx(t):null,i=!this._editing&&!n&&!r?$x(t):null;if(n||r||i){const s=document.createElement("span");s.style.cssText="display:flex;align-items:center;gap:0.25rem;width:100%;min-width:0;max-width:100%";const o=document.createElement("a");o.href=n?t:r?`mailto:${t.trim()}`:`tel:${t.replace(/[^\d+]/g,"")}`,n&&(o.target="_blank",o.rel="noopener noreferrer"),o.textContent=t,o.style.cssText="flex:1 1 auto;min-width:0;display:block;color:#2563eb;text-decoration:underline;white-space:nowrap;overflow:hidden;text-overflow:ellipsis",o.title=n?`Open ${t}`:r?`Email ${t}`:`Call ${t}`;const a=document.createElement("button");a.type="button",a.title="Edit",a.textContent="✎",a.style.cssText="flex:none;background:transparent;border:0;cursor:pointer;color:#9ca3af;font-size:0.85em;padding:0 0.15rem;line-height:1",a.addEventListener("click",c=>{c.preventDefault(),c.stopPropagation(),this._editing=!0,this.render()}),s.append(o,a),this.append(s)}else{const s=document.createElement("input");s.type="text",s.value=this.rawValue,s.style.cssText="width:100%;box-sizing:border-box;border:0;background:transparent;font:inherit;padding:0",s.addEventListener("change",()=>{this._editor===s&&this.commit(s.value)}),s.addEventListener("keydown",o=>{o.key==="Enter"?(o.preventDefault(),this.commit(s.value)):o.key==="Escape"&&(this._editor=null,this._editing=!1,this.render())}),s.addEventListener("blur",()=>{this._editor===s&&this.commit(s.value)}),this.append(s),this._editor=s,this._editing&&setTimeout(()=>{s.focus(),s.select()},0)}}commit(t){const n=t!==this.rawValue;this._raw===null?this._value=t:this._raw=t,this._editing=!1,this.render(),n&&this.dispatchEvent(new CustomEvent("change",{detail:{value:t},bubbles:!0,composed:!0}))}}function vx(e){const t=e.trim();return/^https?:\/\/\S+$/i.test(t)?t:null}function kx(e){const t=e.trim();return t&&/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)*\.[A-Za-z]{2,}$/.test(t)?t:null}function $x(e){const t=e.trim();if(!t||!/^[+0-9 ()\-.]+$/.test(t)||/^\d{4}-\d{2}-\d{2}$/.test(t)||/^\d{1,2}[/\-.]\d{1,2}[/\-.]\d{2,4}$/.test(t))return null;const n=t.replace(/\D/g,"");if(n.length<7||n.length>15)return null;const r=/[ ()\-.]/.test(t),i=t.startsWith("+");return!r&&!i&&n.length<10?null:t}const xx=Object.freeze(Object.defineProperty({__proto__:null,init:wx,meta:bx},Symbol.toStringTag,{value:"Module"})),Sx={id:"cell-tags",name:"Cell Tags",type:"cell-renderer",version:"0.1.0",description:'Renderer for `array` columns: each value in the cell shows as its own pill. A comma list ("foo,bar"), a JSON array ("[\\"Foo\\",\\"Bar\\"]") and a real array all read the same. A pencil edits the raw list; an empty list shows nothing.',author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0l-7.2-7.2a2 2 0 0 1-.6-1.4V4a1 1 0 0 1 1-1h8a2 2 0 0 1 1.4.6l7.2 7.2a2 2 0 0 1 0 2.6z"/><circle cx="7.5" cy="7.5" r="1.2"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/cell-tags.ts"};function Cx(e){customElements.get("cell-tags")||customElements.define("cell-tags",_x),e.ui.registerCellRenderer("tags","cell-tags")}const Ex="flex:0 1 auto;min-width:0;display:inline-block;max-width:100%;padding:0 0.4rem;border:1px solid #d1d5db;border-radius:999px;background:#f3f4f6;color:#374151;font-size:0.85em;line-height:1.4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis";class _x extends HTMLElement{constructor(){super(...arguments),this._value="",this._editing=!1,this._readonly=!1,this._editor=null}set value(t){const n=t==null?"":String(t);this._value!==n&&(this._value=n,this._editing=!1,this.render())}get value(){return this._value}set readonly(t){const n=t===!0;this._readonly!==n&&(this._readonly=n,this._readonly&&(this._editing=!1),this.render())}get readonly(){return this._readonly}connectedCallback(){this.style.display="block",this.style.minWidth="0",this.style.maxWidth="100%",this.style.overflow="hidden",this.render()}render(){if(this.innerHTML="",this._editor=null,this._editing&&!this._readonly){this.renderEditor();return}const t=ft(this._value),n=document.createElement("span");n.style.cssText="display:flex;align-items:center;gap:0.25rem;width:100%;min-width:0;max-width:100%";for(const r of t){const i=document.createElement("span");i.className="tag-pill",i.textContent=r,i.title=r,i.style.cssText=Ex,n.append(i)}this._readonly||n.append(this.pencil()),this.append(n)}pencil(){const t=document.createElement("button");return t.type="button",t.title="Edit the list",t.textContent="✎",t.style.cssText="flex:none;background:transparent;border:0;cursor:pointer;color:#9ca3af;font-size:0.85em;padding:0 0.15rem;line-height:1",t.addEventListener("click",n=>{n.preventDefault(),n.stopPropagation(),this._editing=!0,this.render()}),t}renderEditor(){const t=document.createElement("input");t.type="text",t.value=ft(this._value).length===0?"":this._value,t.title="Comma-separated, or a JSON array",t.style.cssText="width:100%;box-sizing:border-box;border:0;background:transparent;font:inherit;padding:0",t.addEventListener("change",()=>{this._editor===t&&this.commit(t.value)}),t.addEventListener("keydown",n=>{n.key==="Enter"?(n.preventDefault(),this.commit(t.value)):n.key==="Escape"&&(this._editor=null,this._editing=!1,this.render())}),t.addEventListener("blur",()=>{this._editor===t&&this.commit(t.value)}),this.append(t),this._editor=t,setTimeout(()=>{t.focus(),t.select()},0)}commit(t){const n=t!==this._value;this._value=t,this._editing=!1,this.render(),n&&this.dispatchEvent(new CustomEvent("change",{detail:{value:t},bubbles:!0,composed:!0}))}}const Tx=Object.freeze(Object.defineProperty({__proto__:null,init:Cx,meta:Sx},Symbol.toStringTag,{value:"Module"})),oi={id:"auto-renderer",name:"Auto Renderer",type:"cell-renderer",version:"0.1.0",description:"After any import, gives columns a renderer based on their values: link for URLs, image for image URLs, preview for markup or long text.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9.5 3 8 6.5 4.5 8 8 9.5 9.5 13 11 9.5 14.5 8 11 6.5 9.5 3z"/><path d="M17.5 12 16.75 14 15 14.75 16.75 15.5 17.5 17.5 18.25 15.5 20 14.75 18.25 14 17.5 12z"/><path d="M4 17h9"/><path d="M4 21h6"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/auto-renderer.ts"},Ix=120,nm=50,Ax=/\.(png|jpe?g|gif|webp|svg|avif|bmp|ico)(\?|#|$)/i,Rx=/<[a-z][a-z0-9-]*(\s[^<>]*)?\/?>/i;function rm(e){return/^https?:\/\/\S+$/i.test(e)}function Ox(e){return/^data:image\//i.test(e)?!0:rm(e)?Ax.test(e):A$(e)}function im(e,t){if(e==="array")return"tags";if(e!=="string")return;const n=[];for(const i of t){if(i==null)continue;const s=typeof i=="string"?i.trim():String(i).trim();s&&n.push(s)}if(n.length===0)return;if(n.every(Ox))return"image";if(n.every(rm))return"link";if(n.some(i=>Rx.test(i))||n.reduce((i,s)=>i+s.length,0)/n.length>Ix)return"preview"}function Cc(e,t){return t.length===0?[...e]:e.map(n=>{if(n.renderer)return n;const r=im(n.type,t.map(i=>i[n.field]));return r?{...n,renderer:r}:n})}function Lx(e){e.events.on("import:after",({tableId:t})=>{Dx(e,t)}),e.ui.registerColumnEditorAction({id:"auto-renderer:guess",label:"Guess renderers",icon:"auto_fix_high",tooltip:"Pick a renderer for each column from what its values look like",async run(t,{columns:n,tableId:r}){if(!r)return t.ui.dialogs.toast("Guessing needs rows to look at — import or add data first.",{kind:"info",title:oi.name}),null;const i=(await t.store.rows(r).find()).slice(0,nm);if(i.length===0)return t.ui.dialogs.toast("This table has no rows to learn from yet.",{kind:"info",title:oi.name}),null;const s=n.map(({renderer:c,...d})=>d),o=Cc(s,i.map(c=>c.data)),a=o.filter((c,d)=>c.renderer!==n[d]?.renderer).length;return t.ui.dialogs.toast(a===0?"No renderer fits these values — columns left as they are.":`Set ${a} renderer${a===1?"":"s"}. Press Save to keep them.`,{kind:a===0?"info":"success",title:oi.name}),o}})}async function Dx(e,t){try{const n=await e.store.tables.findOne(t);if(!n||n.columns.length===0||n.columns.every(s=>s.renderer))return;const r=(await e.store.rows(t).find()).slice(0,nm);if(r.length===0)return;const i=Cc(n.columns,r.map(s=>s.data));if(i.every((s,o)=>s.renderer===n.columns[o]?.renderer))return;await e.store.tables.upsert({...n,columns:i,updatedAt:Date.now()})}catch(n){e.events.emit("plugin:error",{url:oi.id,phase:"runtime",error:n})}}const Mx=Object.freeze(Object.defineProperty({__proto__:null,inferRenderer:im,init:Lx,meta:oi,withInferredRenderers:Cc},Symbol.toStringTag,{value:"Module"}));function _s(e){return e.source?e.source.type==="url"?"referenced":"connected":e.origin?"imported":"normal"}function Px(e){return!!(e.source||e.origin)}const zx="#01579b",Nx="#6d28d9";function Hd(e){return Px(e)?Nx:zx}const ir='viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15" role="img"',Vd={normal:`<svg ${ir} aria-label="Local table"><title>Local table</title><rect x="3" y="3" width="18" height="18" rx="1"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>`,imported:`<svg ${ir} aria-label="Imported table (snapshot)"><title>Imported table (snapshot)</title><rect x="3" y="11" width="18" height="10" rx="1"/><line x1="7" y1="15" x2="7" y2="17"/><line x1="12" y1="15" x2="12" y2="17"/><line x1="17" y1="15" x2="17" y2="17"/><path d="M12 2v7"/><polyline points="8 6 12 9 16 6"/></svg>`,referenced:`<svg ${ir} aria-label="Referenced table (read-only)"><title>Referenced table (read-only)</title><path d="M10 14a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-1 1"/><path d="M14 10a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l1-1"/></svg>`,connected:`<svg ${ir} aria-label="Connected table (live)"><title>Connected table (live)</title><line x1="9" y1="2" x2="9" y2="7"/><line x1="15" y1="2" x2="15" y2="7"/><rect x="6" y="7" width="12" height="7" rx="2"/><path d="M9 14v3a3 3 0 0 0 6 0v-3"/></svg>`},jx=`<svg ${ir} aria-label="View"><title>View</title><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,Fx=`<svg ${ir} aria-label="Visualization"><title>Visualization</title><path d="M3 3v18h18"/><rect x="6" y="12" width="3" height="6"/><rect x="11" y="8" width="3" height="10"/><rect x="16" y="5" width="3" height="13"/></svg>`;var Ux=Object.defineProperty,Bx=Object.getOwnPropertyDescriptor,Lo=(e,t,n,r)=>{for(var i=r>1?void 0:r?Bx(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&Ux(t,n,i),i};function qx(e,t,n){(zt.instance??Vx()).show(e,t,n)}function Hx(e){if(!e)return null;const t=_s(e);if(t==="connected"||t==="referenced"){const n=e.source?.type??"remote",r=e.source?.writable?"Edits you make are written back to the source.":"It is read-only — edits are not saved back to the source.";return{label:`Connected (live ${n})`,note:`This table is connected to a live ${n} backend: its rows are fetched from the source on demand and are not stored locally. ${r} Closing its window just disconnects the view — the source data is untouched.`}}return t==="imported"?{label:"Imported (snapshot)",note:"This table is a local snapshot imported once from its origin. The rows live in this browser, so edits stay local; use Refresh to re-fetch the latest data from the origin.",...e.origin?{url:e.origin.url}:{}}:{label:"Local",note:"This table was created in the app and is stored locally in your browser."}}function Vx(){const e=document.createElement("table-info-dialog");return document.body.appendChild(e),e}let zt=class extends $e{constructor(){super(...arguments),this.name="",this.info=null,this.provenance=null,this.dialogEl=null,this.close=()=>this.dialogEl?.close(),this.onSubmit=e=>{e.preventDefault(),this.close()}}connectedCallback(){super.connectedCallback(),zt.instance=this}disconnectedCallback(){super.disconnectedCallback(),zt.instance===this&&(zt.instance=null)}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e)}show(e,t,n){this.name=e,this.info=t,this.provenance=n??null,this.updateComplete.then(()=>this.dialogEl?.showModal())}row(e,t,n){if(!t&&!n)return X;const r=n?v`<a href=${n} target="_blank" rel="noopener noreferrer">${t||n}</a>`:v`${t}`;return v`<dt>${e}</dt>
+      <dd>${r}</dd>`}render(){const e=this.info,t=!!(e?.source||e?.sourceUrl||e?.license||e?.licenseUrl||e?.about||e?.aboutUrl),n=Hx(this.provenance);return v`
+      <dialog @cancel=${this.close} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${this.close}>×</button>
+        <form @submit=${this.onSubmit}>
+          <div class="dialog-header">
+            <h2>${this.name}</h2>
+            <div class="header-actions">
+              <button type="submit" class="ghost">Close</button>
+            </div>
+          </div>
+          <div class="dialog-body">
+            ${n?v`<div class="kind">
+                  <span class="kind-label">${n.label}</span>
+                  <p class="kind-note">${n.note}</p>
+                  ${n.url?v`<div class="kind-origin">
+                        <a href=${n.url} target="_blank" rel="noopener noreferrer">${n.url}</a>
+                      </div>`:X}
+                </div>`:X}
+            ${e?.descriptionHtml?v`<div class="desc">${ar(e.descriptionHtml)}</div>`:e?.description?v`<div class="desc">${e.description}</div>`:X}
+            ${t?v`<dl>${this.row("Source",e?.source,e?.sourceUrl)} ${this.row("License",e?.license,e?.licenseUrl)} ${this.row("About",e?.about,e?.aboutUrl)}</dl>`:X}
+            ${!e?.description&&!e?.descriptionHtml&&!t&&!n?v`<p class="empty">No additional information.</p>`:X}
+          </div>
+        </form>
+      </dialog>
+    `}};zt.instance=null;zt.styles=[mt,Se`
+      dialog {
+        min-width: 360px;
+        max-width: 560px;
+      }
+      .desc {
+        font-size: 0.9rem;
+        color: #374151;
+        line-height: 1.5;
+      }
+      dl {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.35rem 0.75rem;
+        margin: 0.75rem 0 0;
+        font-size: 0.85rem;
+      }
+      dt {
+        color: #6b7280;
+        font-weight: 600;
+      }
+      dd {
+        margin: 0;
+      }
+      a {
+        color: #2563eb;
+      }
+      .empty {
+        color: #6b7280;
+        font-size: 0.85rem;
+      }
+      .kind {
+        margin: 0 0 0.5rem;
+        padding: 0.5rem 0.6rem;
+        background: #f3f4f6;
+        border-radius: 0.35rem;
+        font-size: 0.85rem;
+      }
+      .kind .kind-label {
+        font-weight: 600;
+        color: #374151;
+      }
+      .kind .kind-note {
+        margin: 0.2rem 0 0;
+        color: #4b5563;
+        line-height: 1.45;
+      }
+      .kind .kind-origin {
+        margin: 0.25rem 0 0;
+        word-break: break-all;
+      }
+    `];Lo([j()],zt.prototype,"name",2);Lo([j()],zt.prototype,"info",2);Lo([j()],zt.prototype,"provenance",2);zt=Lo([Re("table-info-dialog")],zt);const Kx=.25,Wx=4;function Gx(e){return Math.min(Wx,Math.max(Kx,e))}function Kd(e,t,n){return{x:e.x+t,y:e.y+n,scale:e.scale}}const Zr={x:0,y:0,scale:1};function Wd(e,t){return Math.hypot(e.clientX-t.clientX,e.clientY-t.clientY)}function Yx(e){return e instanceof Element&&e.closest(".jsPanel")!=null}function Qx(e,t){let n={...Zr};t.style.transformOrigin="0 0";const r=new Set,i=()=>{t.style.transform=`translate(${n.x}px, ${n.y}px) scale(${n.scale})`;for(const H of r)H({...n})};let s="none",o={...Zr},a=0,c=0,d=0,f=0,p=0,b=0;const y=(H,te)=>{const q=e.getBoundingClientRect();return{x:H-q.left,y:te-q.top}},$=H=>{if(H.touches.length===2){s="pinch",o={...n};const[te,q]=[H.touches[0],H.touches[1]];d=Wd(te,q)||1;const Q=y((te.clientX+q.clientX)/2,(te.clientY+q.clientY)/2);f=(Q.x-n.x)/n.scale,p=(Q.y-n.y)/n.scale,H.preventDefault();return}if(H.touches.length===1&&!Yx(H.target)){const te=H.timeStamp;if(te-b<300){n={...Zr},i(),b=0,s="none",H.preventDefault();return}b=te,s="pan",o={...n},a=H.touches[0].clientX,c=H.touches[0].clientY}else s="none"},k=H=>{if(s==="pan"&&H.touches.length===1){const te=H.touches[0];n=Kd(o,te.clientX-a,te.clientY-c),i(),H.preventDefault()}else if(s==="pinch"&&H.touches.length>=2){const[te,q]=[H.touches[0],H.touches[1]],Q=Gx(o.scale*(Wd(te,q)/d)),ae=y((te.clientX+q.clientX)/2,(te.clientY+q.clientY)/2);n={x:ae.x-f*Q,y:ae.y-p*Q,scale:Q},i(),H.preventDefault()}},C=H=>{H.touches.length===0?s="none":H.touches.length===1&&s==="pinch"&&(s="pan",o={...n},a=H.touches[0].clientX,c=H.touches[0].clientY)};let _=!1,T={...Zr},Y=0,D=0,ne=!1;const W=(H,te)=>{const q=e.getBoundingClientRect();return H>=q.left&&H<=q.right&&te>=q.top&&te<=q.bottom},I=H=>{if(!_)return;const te=H.clientX-Y,q=H.clientY-D;!ne&&Math.hypot(te,q)<4||(ne=!0,document.body.style.cursor="grabbing",n=Kd(T,te,q),i(),H.preventDefault())},V=()=>{_&&(_=!1,document.body.style.cursor="",window.removeEventListener("mousemove",I,!0),window.removeEventListener("mouseup",K,!0))};function K(){V()}const ie=H=>{H.button===2&&W(H.clientX,H.clientY)&&(_=!0,ne=!1,T={...n},Y=H.clientX,D=H.clientY,window.addEventListener("mousemove",I,!0),window.addEventListener("mouseup",K,!0))},de=H=>{ne&&(H.preventDefault(),ne=!1)};return e.addEventListener("touchstart",$,{passive:!1}),e.addEventListener("touchmove",k,{passive:!1}),e.addEventListener("touchend",C),e.addEventListener("touchcancel",C),window.addEventListener("mousedown",ie,!0),window.addEventListener("contextmenu",de,!0),{snapshot:()=>({...n}),reset:()=>{n={...Zr},i()},restore:H=>{n={...H},i()},subscribe:H=>(r.add(H),()=>r.delete(H)),dispose:()=>{e.removeEventListener("touchstart",$),e.removeEventListener("touchmove",k),e.removeEventListener("touchend",C),e.removeEventListener("touchcancel",C),window.removeEventListener("mousedown",ie,!0),window.removeEventListener("contextmenu",de,!0),V()}}}const un=48,sm=80;function Gd(e,t,n,r=sm){const i=t-n-r;return Number.isFinite(e)?Math.max(un,Math.min(Math.round(e),Math.max(un,Math.round(i)))):un}function Jx(e,t,n=sm){const r=e.map(d=>Math.max(un,Math.round(d)));if(r.length===0)return r;const i=Math.round(t-n),s=un*r.length;if(i<=s)return r.map(()=>un);if(r.reduce((d,f)=>d+f,0)<=i)return r;const o=d=>r.reduce((f,p)=>f+Math.min(p,d),0);let a=un,c=Math.max(...r);for(;a<c;){const d=Math.ceil((a+c)/2);o(d)<=i?a=d:c=d-1}return r.map(d=>Math.min(d,a))}function Xx(e){return[...e].map((t,n)=>({p:t,i:n})).sort((t,n)=>t.p.order-n.p.order||t.i-n.i).map(({p:t})=>t)}const ei=5;function om(){const e=document.createElement("div");e.className="panel-stack",e.style.cssText="display:flex;flex-direction:column;height:100%;min-height:0;overflow:hidden";const t=document.createElement("div");t.className="panel-stack-above",t.style.cssText="display:flex;flex-direction:column;flex:none;min-height:0";const n=document.createElement("div");n.className="panel-stack-primary",n.style.cssText="flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden";const r=document.createElement("div");r.className="panel-stack-below",r.style.cssText="display:flex;flex-direction:column;flex:none;min-height:0",e.append(t,n,r);const i=new Map;let s=null;const o=()=>e.clientHeight||0,a=$=>{let k=0;for(const C of i.values())C.id!==$&&(k+=C.size+ei);return k},c=()=>{for(const $ of i.values())$.wrap.style.height=`${$.size}px`},d=()=>{for(const $ of["above","below"]){const k=$==="above"?t:r,C=Xx([...i.values()].filter(_=>_.edge===$));for(const _ of C)$==="above"?k.append(_.wrap,_.splitter):k.append(_.splitter,_.wrap)}},f=()=>{const $=o();if($<=0||i.size===0)return;const k=[...i.values()],C=k.length*ei,_=Jx(k.map(T=>T.size),$-C);k.forEach((T,Y)=>{T.size=_[Y]??un}),c()},p=()=>{s||i.size===0||(s=new ResizeObserver(()=>f()),s.observe(e))},b=()=>{i.size>0||(s?.disconnect(),s=null)},y=$=>{const k=document.createElement("div");return k.className="panel-stack-splitter",k.style.cssText=`flex:none;height:${ei}px;cursor:ns-resize;background:rgba(127,127,127,.28);touch-action:none`,k.setAttribute("role","separator"),k.setAttribute("aria-orientation","horizontal"),k.title="Drag to resize",k.addEventListener("pointerdown",C=>{const _=$();C.preventDefault(),k.setPointerCapture(C.pointerId);const T=C.clientY,Y=_.size,D=W=>{const I=W.clientY-T,V=_.edge==="above"?I:-I;_.size=Gd(Y+V,o()-i.size*ei,a(_.id)),c()},ne=()=>{k.releasePointerCapture(C.pointerId),k.removeEventListener("pointermove",D),k.removeEventListener("pointerup",ne),k.removeEventListener("pointercancel",ne),_.onResized?.(_.size)};k.addEventListener("pointermove",D),k.addEventListener("pointerup",ne),k.addEventListener("pointercancel",ne)}),k};return{root:e,setPrimary($){n.replaceChildren(),$&&($.style.flex="1",$.style.minHeight="0",n.append($))},addPane($){i.has($.id)&&this.removePane($.id);const k=document.createElement("div");k.className="panel-stack-pane",k.style.cssText="flex:none;min-height:0;overflow:hidden;display:flex;flex-direction:column",$.el.style.flex="1",$.el.style.minHeight="0",k.append($.el);const C={...$,wrap:k,splitter:document.createElement("div")};C.splitter=y(()=>C),C.size=Gd($.size,o()-(i.size+1)*ei,a($.id)),i.set($.id,C),d(),c(),p(),f()},removePane($){const k=i.get($);k&&(i.delete($),k.splitter.remove(),k.wrap.remove(),b(),f())},hasPane($){return i.has($)},paneIds(){return[...i.keys()]},refit:f,destroy(){s?.disconnect(),s=null,i.clear(),e.replaceChildren()}}}const Ec=new Map,dl=new Set;function Yd(e){return e.kind==="table"?`table:${e.tableId}`:`view:${e.viewInstanceId}`}function am(e,t){Ec.set(e,t),lm()}function Vs(e){Ec.delete(e)&&lm()}function Qd(e){return Ec.get(e)??null}function Zx(e){return dl.add(e),()=>dl.delete(e)}function lm(){for(const e of[...dl])try{e()}catch(t){console.warn("[panel-stacks] listener failed",t)}}const ds=new Map;function _r(e,t){const r=(ds.get(e)??Promise.resolve()).then(t,t);return ds.set(e,r),r.finally(()=>{ds.get(e)===r&&ds.delete(e)}),r}const Ks="easydb:visible-count";function cm(e,t,n){e&&document.dispatchEvent(new CustomEvent(Ks,{detail:{key:e,count:t,total:n}}))}function um(e,t){return e<0||t<0?"":e===t?` (${t})`:` (${e}/${t})`}const hl="easydb:import-progress";function e1(e,t){if(t<=0)return` (${e.toLocaleString()})`;const n=Math.min(100,Math.round(e/t*100));return` (${e.toLocaleString()}/${t.toLocaleString()} · ${n}%)`}let La=0;function dm(){return La=Math.max(Date.now(),La+1),La}const Do=new Map;function hm(e,t){Do.set(e,t)}function Mo(e){Do.delete(e)}function t1(e){return Do.has(e)}function n1(e){try{Do.get(e)?.()}catch{}}const hn=(()=>{const e=new URLSearchParams(location.search).get("minimize");return e===null?!1:!/^(0|false|no)$/i.test(e)})();function r1(e){return e.filter(t=>!t.minimized).slice().sort((t,n)=>(t.z??-1/0)-(n.z??-1/0)).map(t=>t.id)}let Jd=!1;async function i1(){Jd||(Jd=!0,document.addEventListener("easydb:restack-windows",()=>void Xd())),await Xd()}async function Xd(){if(hn)return;const e=await J();for(let t=0;t<=12;t++){const[n,r]=await Promise.all([e.store.tables.find(),e.store.viewInstances.find()]),i=[...n.filter(o=>o.workspaceId===e.workspaceId&&!o.windowGeometry?.closed).map(o=>({id:o.id,z:o.windowGeometry?.z,minimized:o.windowGeometry?.minimized===!0})),...r.filter(o=>o.workspaceId===e.workspaceId&&o.open).map(o=>({id:o.id,z:o.windowGeometry?.z,minimized:o.windowGeometry?.minimized===!0}))],s=r1(i);if(t<12&&!s.every(o=>t1(o))){await new Promise(o=>setTimeout(o,80));continue}for(const o of s)n1(o);return}}const s1=12;function o1(e,t,n,r,i=s1){const s=Zd(e.x,t.x,t.w,n,e.scale,i),o=Zd(e.y,t.y,t.h,r,e.scale,i);return s===e.x&&o===e.y?null:{...e,x:s,y:o}}function Zd(e,t,n,r,i,s){const o=t*i+e,a=n*i,c=o+a,d=r-s*2;return a>=d?o<=s&&c>=r-s?e:s-t*i:o<s?s-t*i:c>r-s?r-s-a-t*i:e}function fm(e){if(e.status==="minimized"&&e.normalize(),Ao()){e.status!=="maximized"&&e.maximize(),e.front();return}e.status!=="maximized"&&a1(e),e.front()}function a1(e){const t=Hs(),n=document.getElementById("easydb-panels");if(!t||!n)return;const r=o1(t.snapshot(),{x:e.offsetLeft,y:e.offsetTop,w:e.offsetWidth,h:e.offsetHeight},n.clientWidth,n.clientHeight);r&&t.restore(r)}/**
+ * @license
+ * Copyright 2020 Google LLC
+ * SPDX-License-Identifier: BSD-3-Clause
+ */const pm=Symbol.for(""),l1=e=>{if(e?.r===pm)return e?._$litStatic$},fl=e=>({_$litStatic$:e,r:pm}),eh=new Map,c1=e=>(t,...n)=>{const r=n.length;let i,s;const o=[],a=[];let c,d=0,f=!1;for(;d<r;){for(c=t[d];d<r&&(s=n[d],(i=l1(s))!==void 0);)c+=i+t[++d],f=!0;d!==r&&a.push(s),o.push(c),d++}if(d===r&&o.push(t[r]),f){const p=o.join("$$lit$$");(t=eh.get(p))===void 0&&(o.raw=o,eh.set(p,t=o)),n=a}return e(t,...n)},pl=c1(v);function u1(e){const t=e.trim(),n=t.split(/\s+/).filter(Boolean);if(!n.some(a=>a==="AND"||a==="OR"))return{kind:"plain",phrase:t.toLowerCase(),words:n.map(a=>a.toLowerCase())};const i=[];let s=[];for(const a of n)a==="OR"?(i.push(s),s=[]):a==="AND"||s.push(a.toLowerCase());i.push(s);const o=i.filter(a=>a.length>0);return o.length===0?{kind:"plain",phrase:t.toLowerCase(),words:[]}:{kind:"boolean",groups:o}}function d1(e,t,n){const r=u1(t);if(r.kind==="boolean")return e.filter(c=>r.groups.some(d=>d.every(f=>n(c,f))));const{phrase:i,words:s}=r;if(s.length<=1)return i===""?e:e.filter(c=>n(c,i));const o=e.filter(c=>n(c,i));if(o.length>0)return o;const a=e.filter(c=>s.every(d=>n(c,d)));return a.length>0?a:e.filter(c=>s.some(d=>n(c,d)))}const h1=e=>e.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");function wi(e,t,n){const r=new Map,i=new Map;for(const c of n)r.set(c.field.toLowerCase(),c.field),c.label&&r.set(c.label.toLowerCase(),c.field),i.set(c.field,c.type);const s=[...r.keys()].filter(Boolean).sort((c,d)=>d.length-c.length);let o=t;return s.length>0&&(o=o.replace(new RegExp(`(^|\\s)(${s.map(h1).join("|")}):\\s+`,"gi"),"$1$2:")),d1(e,o,(c,d)=>{const f=d.indexOf(":");if(f>0){const p=r.get(d.slice(0,f));if(p)return hi(c.data[p],d.slice(f+1),{type:i.get(p)})}return Object.values(c.data).some(p=>p!=null&&String(p).toLowerCase().includes(d))})}function f1(e,t){return e.some(n=>{const r=n.data[t];return r!=null&&r!==""})}function mm(e,t){return!e.script?.trim()||t.length===0?!1:!f1(t,e.field)}function gm(e,t){return e.filter(n=>n.filterable!==!1&&!mm(n,t))}function p1(e,t,n,r){const i=a=>a==null?0:a===""?1:2,s=i(e),o=i(t);return s!==2||o!==2?(s-o)*r:bm(e,t,n)*r}function bm(e,t,n){switch(n){case"number":{const r=Number(e),i=Number(t);return Number.isNaN(r)||Number.isNaN(i)?String(e).localeCompare(String(t)):r-i}case"boolean":return(e?1:0)-(t?1:0);case"array":return Wu(e).localeCompare(Wu(t),void 0,{numeric:!0,sensitivity:"base"});case"date":{const r=new Date(String(e)).getTime(),i=new Date(String(t)).getTime();return Number.isNaN(r)||Number.isNaN(i)?String(e).localeCompare(String(t)):r-i}default:return String(e).localeCompare(String(t),void 0,{numeric:!0,sensitivity:"base"})}}function wm(e,t,n){if(t.length===0)return e;const r=t.map(s=>({field:s.field,factor:s.asc?1:-1,type:n.find(o=>o.field===s.field)?.type??"string"})),i=[...e];return i.sort((s,o)=>{for(const a of r){const c=p1(s.data[a.field],o.data[a.field],a.type,a.factor);if(c!==0)return c}return 0}),i}function ml(e){return e.sortBy?.length?e.sortBy.map(t=>({field:t.field,asc:t.asc!==!1})):e.sortColumn?[{field:e.sortColumn,asc:e.sortAsc!==!1}]:[]}function m1(e,t){const n=e.trim();if(n==="")return!0;const r=n.split(/\s+/);if(r.length!==1)return!1;const i=r[0]??"",s=i.indexOf(":");if(s>0){const o=i.slice(0,s).toLowerCase();if(t.some(c=>c.field.toLowerCase()===o||c.label?.toLowerCase()===o))return!1}return!0}function ym(e,t=[]){return gm(e,t).map(n=>({field:n.field,label:n.label}))}function vm(e){const t=new Set(e.columns.filter(r=>r.filterable===!1).map(r=>r.field)),n=new Set(e.columns.map(r=>r.field));return Object.entries(e.filters??{}).filter(([r,i])=>i&&i.trim().length>0&&!t.has(r)&&n.has(r))}function th(e,t){let n=e;const r=vm(t);if(r.length>0){const c=new Map(t.columns.map(d=>[d.field,d.type]));n=n.filter(d=>r.every(([f,p])=>hi(d.data[f],p,{type:c.get(f)})))}const i=(t.search??"").trim();i!==""&&(n=wi(n,i,ym(t.columns,e))),n=wm(n,t.sort??[],t.columns);const s=n.length,o=Math.max(0,t.offset??0),a=t.limit!=null&&t.limit>0?o+t.limit:void 0;return(o>0||a!=null)&&(n=n.slice(o,a)),{rows:g1(n,t.fields),total:s}}function g1(e,t){if(!t||t.length===0)return e;const n=new Set(t);return e.map(r=>({...r,data:Object.fromEntries(Object.entries(r.data).filter(([i])=>n.has(i)))}))}async function Ai(e,t,n=0){const r=(t.search??"").trim(),i=m1(r,ym(t.columns));if(!e.query){const f=await e.find(),p=n>0&&f.length>=n;return{...th(p?f.slice(0,n):f,t),...p?{truncated:!0}:{}}}const s={...t.fields?{fields:t.fields}:{},...Object.keys(t.filters??{}).length>0?{filters:Object.fromEntries(vm(t))}:{},...i&&r?{search:r}:{},...t.sort&&t.sort.length>0?{sort:[...t.sort]}:{}},o=i;o?(t.offset!=null&&(s.offset=t.offset),t.limit!=null&&(s.limit=t.limit)):n>0&&(s.limit=n);const a=await e.query(s);if(o&&!a.partial)return a;const c=th(a.rows,t),d=!o&&s.limit!=null&&a.rows.length>=s.limit;return{...c,...a.partial?{partial:!0}:{},...a.truncated||d?{truncated:!0}:{}}}const hs=e=>Math.max(0,Math.round(e)).toLocaleString();function _c(e){if(!e)return null;const{shown:t,total:n,searching:r,searched:i}=e;if(r){const s=i&&i>0?`the first ${hs(i)} rows`:"the rows loaded so far";return t===0?`Nothing found in ${s} — this table is bigger, so there may be matches further in. Filter a column to search the rest.`:`Found ${hs(t)} in ${s} — there may be more further in. Filter a column to search the rest.`}return`Showing the first ${hs(t)} of ${hs(n)}+ matching rows. Narrow the filter to see the rest.`}const Et=Se`
+  .mi {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.15rem;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+    vertical-align: middle;
+  }
+  .mi.sm {
+    font-size: 1rem;
+  }
+  .mi.lg {
+    font-size: 1.4rem;
+  }
+`;var b1=Object.defineProperty,w1=Object.getOwnPropertyDescriptor,Tr=(e,t,n,r)=>{for(var i=r>1?void 0:r?w1(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&b1(t,n,i),i};function Da(e){return dn([{...e,negate:!1}])}let dt=class extends $e{constructor(){super(...arguments),this.values=[],this.blanks=0,this.current="",this.search="",this.states=new Map,this.resolveFn=null,this.onChange=null,this.exactValues=!1,this.onOutside=e=>{e.composedPath().includes(this)||this.close(null)},this.onKey=e=>{e.key==="Escape"&&(e.preventDefault(),this.close(null))}}open(e,t,n,r=0,i,s){return this.values=t,this.blanks=r,this.onChange=i??null,this.exactValues=s?.exact===!0,this.states=new Map(Hn(n??"").map(o=>[Da(o),{state:o.negate?"not":"on",token:o}])),this.current=n??"",this.search="",this.style.top=`${Math.round(e.bottom+4)}px`,this.style.left=`${Math.round(e.left)}px`,this.removeAttribute("hidden"),new Promise(o=>{this.resolveFn=o,setTimeout(()=>document.addEventListener("mousedown",this.onOutside,!0),0),document.addEventListener("keydown",this.onKey,!0)})}cycle(e,t=this.exactValues){const n=t?{term:e,negate:!1,exact:!0}:{term:e,negate:!1},r=Da(n),i=new Map(this.states),s=i.get(r);s===void 0?i.set(r,{state:"on",token:n}):s.state==="on"?i.set(r,{state:"not",token:s.token}):i.delete(r),this.states=i;const o=[...i.values()].map(a=>({...a.token,negate:a.state==="not"}));this.current=dn(o),this.onChange?.(this.current)}close(e){this.onChange=null,document.removeEventListener("mousedown",this.onOutside,!0),document.removeEventListener("keydown",this.onKey,!0),this.setAttribute("hidden","");const t=this.resolveFn;this.resolveFn=null,t?.(e)}connectedCallback(){super.connectedCallback(),dt.instance=this,this.setAttribute("hidden","")}disconnectedCallback(){super.disconnectedCallback(),dt.instance===this&&(dt.instance=null)}render(){const e=this.search.toLowerCase(),t=this.values.filter(o=>o.value.toLowerCase().includes(e)),n=this.blanks>0&&"(blanks)".includes(e),r=(o,a=this.exactValues)=>this.states.get(Da(a?{term:o,negate:!1,exact:!0}:{term:o,negate:!1}))?.state,i=o=>v` <span class=${`cb${o?` ${o}`:""}`}>${o==="on"?"✓":o==="not"?"✕":""}</span> `,s=o=>o==="on"?"Included — click to exclude":o==="not"?"Excluded — click to clear":"Click to include → exclude → off";return v`
+      <header>
+        <span class="mi sm">search</span>
+        <input type="text" autofocus placeholder="Filter values…" .value=${this.search} @input=${o=>this.search=o.target.value} />
+        <button class="icon" title="Close" @click=${()=>this.close(null)}>
+          <span class="mi sm">close</span>
+        </button>
+      </header>
+      <div class="hint">Click a value: include (✓) → exclude (✕) → off.</div>
+      ${t.length===0&&!n?v`<div class="empty">No matching values.</div>`:v`<ul>
+            ${n?v`
+                  <li class="blanks" title=${s(r("NULL",!1))} @click=${()=>this.cycle("NULL",!1)}>
+                    <span class="left">
+                      ${i(r("NULL",!1))}
+                      <span class="label"><em>(Blanks)</em></span>
+                    </span>
+                    <span class="count">${this.blanks}</span>
+                  </li>
+                `:""}
+            ${t.slice(0,500).map(o=>{const a=r(o.value);return v`
+                <li title=${s(a)} @click=${()=>this.cycle(o.value)}>
+                  <span class="left">
+                    ${i(a)}
+                    <span class="label">${o.value}</span>
+                  </span>
+                  <span class="count">${o.count}</span>
+                </li>
+              `})}
+          </ul>`}
+      ${this.values.length>500?v`<div class="cap" style="padding:0 .55rem">Showing first 500 of ${this.values.length}.</div>`:""}
+      <div class="actions">
+        <button
+          class="text"
+          @click=${()=>{this.states=new Map,this.close({clear:!0})}}
+        >
+          Clear filter
+        </button>
+        <span style="color:#6b7280">${t.length} value${t.length===1?"":"s"}</span>
+      </div>
+    `}};dt.instance=null;dt.styles=[Et,Se`
+      :host {
+        position: fixed;
+        z-index: 150000;
+        background: white;
+        border: 1px solid #d1d5db;
+        border-radius: 0.35rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+        min-width: 220px;
+        max-width: 320px;
+        max-height: 360px;
+        display: flex;
+        flex-direction: column;
+        font:
+          0.85rem system-ui,
+          sans-serif;
+        overflow: hidden;
+      }
+      :host([hidden]) {
+        display: none;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.35rem 0.45rem;
+        border-bottom: 1px solid #e5e7eb;
+        background: #f9fafb;
+      }
+      header input {
+        flex: 1;
+        font: inherit;
+        padding: 0.2rem 0.4rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.2rem;
+      }
+      header button.icon {
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        color: #6b7280;
+        padding: 0 0.1rem;
+      }
+      header button.icon:hover {
+        color: #111;
+      }
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+        flex: 1;
+      }
+      li {
+        padding: 0.25rem 0.55rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        gap: 0.5rem;
+        align-items: center;
+      }
+      li:hover {
+        background: #eff6ff;
+      }
+      li .count {
+        color: #6b7280;
+        font-variant-numeric: tabular-nums;
+        font-size: 0.78rem;
+      }
+      li .label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      li.blanks .label {
+        color: #6b7280;
+      }
+      li .left {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        min-width: 0;
+      }
+      /* Tri-state checkbox: off (empty gray) → on (green ✓) → not (red ✕). */
+      .cb {
+        flex: 0 0 auto;
+        width: 14px;
+        height: 14px;
+        border: 1px solid #9ca3af;
+        border-radius: 0.15rem;
+        background: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 11px;
+        line-height: 1;
+        font-weight: 700;
+        color: transparent;
+        user-select: none;
+      }
+      .cb.on {
+        border-color: #16a34a;
+        background: #dcfce7;
+        color: #15803d;
+      }
+      .cb.not {
+        border-color: #dc2626;
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .hint {
+        padding: 0.3rem 0.55rem;
+        border-bottom: 1px solid #e5e7eb;
+        color: #6b7280;
+        font-size: 0.75rem;
+      }
+      .empty {
+        padding: 0.6rem;
+        color: #9ca3af;
+        font-style: italic;
+      }
+      .actions {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.3rem 0.45rem;
+        border-top: 1px solid #e5e7eb;
+        background: #f9fafb;
+      }
+      button.text {
+        background: transparent;
+        border: 0;
+        color: #2563eb;
+        font: inherit;
+        cursor: pointer;
+        padding: 0;
+      }
+      button.text:hover {
+        text-decoration: underline;
+      }
+      .cap {
+        color: #9ca3af;
+        font-size: 0.78rem;
+        font-style: italic;
+      }
+    `];Tr([Ye({type:Array})],dt.prototype,"values",2);Tr([Ye({type:Number})],dt.prototype,"blanks",2);Tr([Ye({type:String})],dt.prototype,"current",2);Tr([j()],dt.prototype,"search",2);Tr([j()],dt.prototype,"states",2);dt=Tr([Re("filter-popover")],dt);var y1=Object.defineProperty,v1=Object.getOwnPropertyDescriptor,Ft=(e,t,n,r)=>{for(var i=r>1?void 0:r?v1(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&y1(t,n,i),i};let Ct=class extends $e{constructor(){super(...arguments),this.value="",this.options=[],this.placeholder="filter…",this.open=!1,this.highlightIdx=-1,this.dropTop=0,this.dropLeft=0,this.dropMinWidth=160,this.editing=!1,this.onOutside=e=>{e.composedPath().includes(this)||this.closeDropdown()},this.onWindowChange=()=>{this.open&&this.positionDropdown()},this.onInput=e=>{const t=e.target.value;this.fire(t),this.open||this.openDropdown(),this.editing=!0,this.highlightIdx=-1},this.onClear=e=>{e.preventDefault(),e.stopPropagation(),this.fire(""),this.editing=!1,this.highlightIdx=-1,this.inputEl?.focus()},this.onKeyDown=e=>{const t=this.filtered();if(e.key==="ArrowDown"){if(e.preventDefault(),!this.open){this.openDropdown();return}this.highlightIdx=Math.min(this.highlightIdx+1,t.length-1),this.scrollHighlightIntoView()}else if(e.key==="ArrowUp"){if(e.preventDefault(),!this.open){this.openDropdown();return}this.highlightIdx=Math.max(this.highlightIdx-1,0),this.scrollHighlightIntoView()}else if(e.key==="Enter"){const n=t[this.highlightIdx];n!==void 0?(e.preventDefault(),this.onPick(n)):this.open&&this.closeDropdown()}else e.key==="Escape"&&this.open&&(e.preventDefault(),this.closeDropdown())}}filtered(){if(!this.editing)return this.options.slice(0,500);const t=(this.value??"").trim().toLowerCase();if(!t)return this.options.slice(0,500);const n=[];for(const r of this.options)if(r.toLowerCase().includes(t)&&(n.push(r),n.length>=500))break;return n}positionDropdown(){if(!this.inputEl)return;const e=this.inputEl.getBoundingClientRect();this.dropTop=Math.round(e.bottom+2),this.dropLeft=Math.round(e.left),this.dropMinWidth=Math.max(160,Math.round(e.width))}openDropdown(){this.open||(this.positionDropdown(),this.open=!0,this.editing=!1,this.highlightIdx=-1,document.addEventListener("pointerdown",this.onOutside,!0),window.addEventListener("scroll",this.onWindowChange,!0),window.addEventListener("resize",this.onWindowChange))}closeDropdown(){this.open&&(this.open=!1,document.removeEventListener("pointerdown",this.onOutside,!0),window.removeEventListener("scroll",this.onWindowChange,!0),window.removeEventListener("resize",this.onWindowChange))}disconnectedCallback(){super.disconnectedCallback(),this.closeDropdown()}fire(e){this.value=e,this.dispatchEvent(new CustomEvent("filter-change",{detail:{value:e},bubbles:!0,composed:!0}))}onPick(e){this.fire(e),this.closeDropdown(),this.editing=!1,this.inputEl?.focus()}scrollHighlightIntoView(){queueMicrotask(()=>{this.renderRoot.querySelector("ul.dropdown")?.children[this.highlightIdx]?.scrollIntoView({block:"nearest"})})}render(){const e=this.open?this.filtered():[],t=this.open&&e.length>0,n=`top:${this.dropTop}px;left:${this.dropLeft}px;min-width:${this.dropMinWidth}px;`;return v`
+      <div class="wrap">
+        <input
+          type="text"
+          placeholder=${this.placeholder}
+          .value=${this.value}
+          @focus=${()=>this.openDropdown()}
+          @click=${()=>this.openDropdown()}
+          @blur=${()=>this.closeDropdown()}
+          @input=${this.onInput}
+          @keydown=${this.onKeyDown}
+        />
+        ${this.value?v`<button type="button" class="clear" title="Clear filter" tabindex="-1" @mousedown=${r=>r.preventDefault()} @click=${this.onClear}>×</button>`:X}
+      </div>
+      ${t?v`<ul class="dropdown" style=${n} @mousedown=${r=>r.preventDefault()}>
+            ${e.map((r,i)=>v` <li class=${i===this.highlightIdx?"highlighted":""} @mousedown=${s=>s.preventDefault()} @click=${()=>this.onPick(r)}>${r}</li> `)}
+          </ul>`:X}
+    `}};Ct.styles=Se`
+    :host {
+      display: block;
+      width: 100%;
+    }
+    .wrap {
+      position: relative;
+      display: block;
+    }
+    input {
+      width: 100%;
+      box-sizing: border-box;
+      border: 1px solid #d1d5db;
+      border-radius: 0.2rem;
+      background: white;
+      font: inherit;
+      font-size: 0.8rem;
+      padding: 0.1rem 1.1rem 0.1rem 0.3rem;
+    }
+    input::placeholder {
+      color: #9ca3af;
+      font-style: italic;
+    }
+    input:focus {
+      outline: 2px solid #3b82f6;
+      outline-offset: -2px;
+    }
+    button.clear {
+      position: absolute;
+      right: 0.15rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0.95rem;
+      height: 0.95rem;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: #9ca3af;
+      cursor: pointer;
+      font-size: 0.85rem;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+    button.clear:hover {
+      color: #111827;
+      background: #e5e7eb;
+    }
+    .dropdown {
+      position: fixed;
+      z-index: 150000;
+      background: white;
+      border: 1px solid #d1d5db;
+      border-radius: 0.25rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+      max-height: 260px;
+      max-width: 360px;
+      overflow: auto;
+      font: inherit;
+      font-size: 0.8rem;
+      margin: 0;
+      padding: 0.15rem 0;
+      list-style: none;
+    }
+    .dropdown li {
+      padding: 0.2rem 0.5rem;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dropdown li:hover,
+    .dropdown li.highlighted {
+      background: #eff6ff;
+    }
+  `;Ft([Ye({type:String})],Ct.prototype,"value",2);Ft([Ye({type:Array})],Ct.prototype,"options",2);Ft([Ye({type:String})],Ct.prototype,"placeholder",2);Ft([j()],Ct.prototype,"open",2);Ft([j()],Ct.prototype,"highlightIdx",2);Ft([j()],Ct.prototype,"dropTop",2);Ft([j()],Ct.prototype,"dropLeft",2);Ft([j()],Ct.prototype,"dropMinWidth",2);Ft([j()],Ct.prototype,"editing",2);Ft([Kt("input")],Ct.prototype,"inputEl",2);Ct=Ft([Re("filter-combobox")],Ct);const km=50,k1=500,$1=100;function Ws(e){return typeof e=="string"?e:String(e)}function x1(e,t){return t==="array"?ft(e):e==null||e===""?[]:[Ws(e)]}function $m(e,t,n){const r=n?.maxLen??km;if(e.length===0)return!1;for(const i of e.slice(0,$1)){const s=i.data[t];if(s!=null){if(n?.type==="array"){if(ft(s).some(o=>o.length>=r))return!1;continue}if(Ws(s).length>=r)return!1}}return!0}function S1(e,t,n){const r=n?.maxLen??km,i=n?.maxOptions??k1,s=new Set;for(const o of e)for(const a of x1(o.data[t],n?.type))if(!(a.length>=r)&&(s.add(a),s.size>=i))return[...s].sort();return[...s].sort()}function xm(e,t,n){const r=new Map;let i=0;for(const o of e){const a=o.data[t],c=n?.type==="array"?ft(a):a==null||Ws(a).trim()===""?[]:[Ws(a)];if(c.length===0){i++;continue}for(const d of c)r.set(d,(r.get(d)??0)+1)}let s=[...r.entries()].map(([o,a])=>({value:o,count:a})).sort((o,a)=>a.count-o.count||o.value.localeCompare(a.value));return n?.type==="boolean"&&(s=[...["true","false"].map(a=>({value:a,count:r.get(a)??0})),...s.filter(a=>a.value!=="true"&&a.value!=="false")]),{values:s,blanks:i}}const Po="grid";async function C1(e){return await e.get(Po,"sortDescFirst")!==!1}async function E1(e){return await e.get(Po,"highlightNulls")!==!1}const gl="easydb:settings-changed";function _1(e,t){typeof document>"u"||document.dispatchEvent(new CustomEvent(gl,{detail:{pluginId:e,key:t}}))}function T1(e,t,n={}){const r=n.additive===!0,i=n.descFirst!==!0,s=e.find(c=>c.field===t),o=e.length===1&&e[0]?.field===t;if(!r&&!o)return[{field:t,asc:i}];const a=r?e.filter(c=>c.field!==t):[];return s?s.asc===i?[...a,{field:t,asc:!i}]:[...a]:[...a,{field:t,asc:i}]}const sr=new Map;function I1(e,t){let n=sr.get(e);return n||(n=new Set,sr.set(e,n)),n.add(t),()=>{const r=sr.get(e);r&&(r.delete(t),r.size===0&&sr.delete(e))}}function A1(e){return(sr.get(e)?.size??0)>0}function R1(e){const t=sr.get(e.key);if(!(!t||t.size===0))for(const n of[...t])try{n(e)}catch(r){console.warn("[visible-rows] listener failed",r)}}var O1=Object.defineProperty,L1=Object.getOwnPropertyDescriptor,Pe=(e,t,n,r)=>{for(var i=r>1?void 0:r?L1(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&O1(t,n,i),i};const D1=200,M1=250,P1=10,Ma=32;let Oe=class extends $e{constructor(){super(...arguments),this.tableId="",this.viewInstanceId="",this.columns=[],this.rows=[],this.matchingTotal=0,this.tableTotal=0,this.truncated=!1,this.sortSpecs=[],this.filters={},this.globalQuery="",this.localQuery="",this.dragSourceField=null,this.dropTargetField=null,this.dropEdge=null,this.resizing=null,this.cellRenderers=new Map,this.scrollY=0,this.viewportHeight=0,this.loading=!1,this.externalLoading=!1,this.externalProgress=null,this.highlightNulls=!0,this.rowHeight=28,this.resizeObs=null,this.filterSaveTimer=null,this.rowColl=null,this.loadGeneration=0,this.reloadTimer=null,this.viewInst=null,this.tableColumns=[],this.tableReadonly=!1,this.renderedCount=0,this.renderedRows=null,this.lastEmittedCount=-1,this.lastEmittedTotal=-1,this.VIRT_THRESHOLD=200,this.OVERSCAN=8,this.onScroll=()=>{this.scrollY=this.scrollTop},this.onGlobalSearch=e=>{const t=e.detail.query??"";t!==this.globalQuery&&(this.globalQuery=t,this.scheduleReload())},this.onTableSearch=e=>{const t=e.detail;if(t.tableId===this.tableId||this.viewMode&&t.tableId===this.viewInstanceId){const n=t.query??"";if(n===this.localQuery)return;this.localQuery=n,this.scheduleReload()}},this.onTableLoading=e=>{const t=e.detail;t.tableId===this.tableId&&(this.externalLoading=t.loading,this.externalProgress=t.loading&&typeof t.progress=="number"?t.progress:null)},this.onSettingsChanged=e=>{e.detail?.pluginId===Po&&this.readGridSettings()}}get searchIsActive(){return this.localQuery.trim()!==""||this.globalQuery.trim()!==""}get viewMode(){return!!this.viewInstanceId}get readOnlyView(){return this.viewMode&&!!this.viewInst?.readonly}get readOnly(){return this.readOnlyView||this.tableReadonly}async connectedCallback(){super.connectedCallback(),document.addEventListener("easydb:global-search",this.onGlobalSearch),document.addEventListener("easydb:table-search",this.onTableSearch),document.addEventListener(tl,this.onTableLoading),document.addEventListener(gl,this.onSettingsChanged),this.readGridSettings(),this.readLoadingState(),this.addEventListener("scroll",this.onScroll,{passive:!0}),this.resizeObs=new ResizeObserver(()=>{this.viewportHeight=this.clientHeight}),this.resizeObs.observe(this),await this.bind()}disconnectedCallback(){super.disconnectedCallback(),document.removeEventListener("easydb:global-search",this.onGlobalSearch),document.removeEventListener("easydb:table-search",this.onTableSearch),document.removeEventListener(tl,this.onTableLoading),document.removeEventListener(gl,this.onSettingsChanged),this.removeEventListener("scroll",this.onScroll),this.resizeObs?.disconnect(),this.resizeObs=null,this.unsubscribe?.(),this.tableSubUnsub?.(),this.viewSubUnsub?.(),this.reloadTimer!=null&&(window.clearTimeout(this.reloadTimer),this.reloadTimer=null),this.resizing=null}async readGridSettings(){try{const e=await J();this.highlightNulls=await E1(e.api.settings)}catch{}}readLoadingState(){const e=Wv(this.tableId);this.externalLoading=e!==void 0,this.externalProgress=typeof e=="number"?e:null}async updated(e){(e.has("tableId")||e.has("viewInstanceId"))&&this.tableId&&(this.unsubscribe?.(),this.tableSubUnsub?.(),this.viewSubUnsub?.(),e.has("tableId")&&this.readLoadingState(),await this.bind());const t=this.shadowRoot?.querySelector("tbody tr:not(.spacer)");t&&t.offsetHeight>0&&(this.rowHeight=t.offsetHeight),this.viewportHeight||(this.viewportHeight=this.clientHeight),this.emitCount(),this.emitRows()}get visibleRowsKey(){return(this.viewMode?this.viewInstanceId:this.tableId)||""}emitRows(){const e=this.visibleRowsKey,t=this.renderedRows;!e||!t||R1({key:e,rows:t,total:Math.max(this.matchingTotal,t.length),truncated:this.truncated,searching:this.searchIsActive})}emitCount(){const e=this.viewMode?this.viewInstanceId:this.tableId;if(!e)return;const t=this.renderedCount,n=Math.max(this.tableTotal,this.matchingTotal,this.rows.length);t===this.lastEmittedCount&&n===this.lastEmittedTotal||(this.lastEmittedCount=t,this.lastEmittedTotal=n,cm(e,t,n))}async bind(){if(!this.tableId)return;const e=await J(),t=await e.store.tables.findOne(this.tableId);t&&(this.viewMode?(this.tableColumns=t.columns,this.viewInst=await e.store.viewInstances.findOne(this.viewInstanceId)??null,this.applyView(),this.tableSubUnsub?.(),this.tableSubUnsub=e.store.tables.subscribe(n=>{const r=n.find(i=>i.id===this.tableId);r&&(this.tableColumns=r.columns,this.applyView())}),this.viewSubUnsub?.(),this.viewSubUnsub=e.store.viewInstances.subscribe(n=>{const r=n.find(i=>i.id===this.viewInstanceId);r&&(this.viewInst=r,this.applyView())})):(this.applyTable(t),this.tableSubUnsub?.(),this.tableSubUnsub=e.store.tables.subscribe(n=>{const r=n.find(i=>i.id===this.tableId);r&&this.applyTable(r)})),this.cellRenderers=new Map(e.registries.cellRenderers),e.events.on("app:ready",()=>this.cellRenderers=new Map(e.registries.cellRenderers)),this.rowColl=e.store.rows(this.tableId),this.unsubscribe=this.rowColl.watch?this.rowColl.watch(()=>void this.loadRows()):this.rowColl.subscribe(()=>void this.loadRows()),await this.loadRows())}async loadRows(){const e=this.rowColl;if(!e)return;const t=++this.loadGeneration,n=window.setTimeout(()=>this.loading=!0,D1);try{const r=await Ai(e,this.rowRequest(),Nn);if(t!==this.loadGeneration)return;if(this.rows=r.rows,this.matchingTotal=r.total,this.truncated=r.truncated===!0,e.count){const i=await e.count();if(t!==this.loadGeneration)return;this.tableTotal=i}else this.tableTotal=r.total}catch(r){if(t!==this.loadGeneration)return;this.rows=[],this.matchingTotal=0,this.tableTotal=0,(await J()).api.ui.dialogs.toast(`Couldn't load rows: ${r?.message??String(r)}`,{kind:"error",title:"Load failed"})}finally{window.clearTimeout(n),t===this.loadGeneration&&(this.loading=!1)}}rowRequest(){const e=[this.localQuery.trim(),this.globalQuery.trim()].filter(Boolean).join(" ");return{columns:this.columns,filters:this.filters,...e?{search:e}:{},...this.sortSpecs.length>0?{sort:this.sortSpecs}:{}}}scheduleReload(){this.reloadTimer!=null&&window.clearTimeout(this.reloadTimer),this.reloadTimer=window.setTimeout(()=>{this.reloadTimer=null,this.loadRows()},M1)}applyTable(e){this.resizing==null&&(this.columns=e.columns),this.tableReadonly=!!e.readonly,this.sortSpecs=ml(e),this.filterSaveTimer==null&&(this.filters={...e.filters??{}})}applyView(){const e=this.viewInst;if(!e)return;const t=new Map(this.tableColumns.map(r=>[r.field,r])),n=e.columnWidths??{};this.columns=e.visibleColumns.map(r=>t.get(r)).filter(r=>!!r).map(r=>{const i=n[r.field];return typeof i=="number"?{...r,width:i}:r}),this.sortSpecs=ml(e),this.filterSaveTimer==null&&(this.filters={...e.filters??{}})}async setCell(e,t,n){const r=await J();await this.commitCell(r,e,t,n)}async commitCell(e,t,n,r){const i=this.columns.find(s=>s.field===n);if(this.readOnly||i?.readonly===!0){e.api.ui.dialogs.toast(this.readOnly?"This table is read-only.":`“${i?.label??n}” is a read-only column.`,{kind:"warning",title:"Not saved"}),this.requestUpdate();return}if(i){const s=j1(i,r,this.rows,t.id,t);if(s){await e.api.ui.dialogs.alert(s,`Cannot save ${i.label}`),this.requestUpdate();return}}try{await e.store.rows(this.tableId).patch(t.id,{data:{...t.data,[n]:r},updatedAt:Date.now()})}catch(s){await e.api.ui.dialogs.alert(s?.message??"Could not save the change.","Save failed"),this.requestUpdate()}}cancelCellEdit(e,t){if(e.key!=="Escape")return;e.stopPropagation();const n=e.target;typeof t=="boolean"?n.checked=t:n.value=t,n.blur()}renderInvalidCell(e,t,n,r){const i=String(n);return v`<input
+      type="text"
+      class=${qp}
+      style=${o$}
+      title=${r}
+      .value=${i}
+      @keydown=${s=>this.cancelCellEdit(s,i)}
+      @change=${s=>this.setCell(e,t.field,s.target.value)}
+    />`}renderReadonlyCell(e,t){if(e.type==="boolean")return v`<input type="checkbox" .checked=${t===!0||t==="true"||t===1||t==="1"} disabled />`;if(t==null||t==="")return v``;if(e.type==="array"&&ft(t).length===0)return v``;const n=Cp(e.type,t);return n!==null?v`${n}`:v`${String(t)}`}renderScriptedCell(e,t){const n=Er(t.script,e.data);if(!n.ok)return v`<span class="script-err" title=${n.message}>⚠ ${n.label}</span>`;const r=t.renderer?this.cellRenderers?.get(t.renderer):void 0;if(!r)return v`${n.value==null?"":String(n.value)}`;const i=fl(r);return pl`<${i}
+      .value=${n.value??""}
+      .rawValue=${e.data[t.field]??""}
+      .column=${t}
+      .row=${e.data}
+      .readonly=${!0}
+      .sourceReadonly=${this.readOnly}
+      @change=${this.readOnly?void 0:s=>this.setCell(e,t.field,s.detail.value)}
+    ></${i}>`}renderCell(e,t){const n=e.data[t.field];if(t.script?.trim())return this.renderScriptedCell(e,t);const r=this.readOnly||t.readonly===!0,i=t.renderer,s=i?this.cellRenderers?.get(i):void 0;if(s){const o=fl(s);return pl`<${o}
+        .value=${n??""}
+        .column=${t}
+        .row=${e.data}
+        .readonly=${r}
+        .sourceReadonly=${r}
+        @change=${r?void 0:a=>this.setCell(e,t.field,a.detail.value)}
+      ></${o}>`}if(r)return this.renderReadonlyCell(t,n);switch(t.type){case"date":return rh(n,ii(n))?this.renderInvalidCell(e,t,n,`Not a valid date: "${String(n)}"`):v`<input
+          type="date"
+          .value=${ii(n)}
+          @keydown=${o=>this.cancelCellEdit(o,ii(n))}
+          @change=${o=>this.setCell(e,t.field,o.target.value||null)}
+        />`;case"datetime":return rh(n,si(n))?this.renderInvalidCell(e,t,n,`Not a valid datetime: "${String(n)}"`):v`<input
+          type="datetime-local"
+          .value=${si(n)}
+          @keydown=${o=>this.cancelCellEdit(o,si(n))}
+          @change=${o=>this.setCell(e,t.field,o.target.value||null)}
+        />`;case"number":{const o=n==null||n==="";return!o&&Number.isNaN(Number(n))?this.renderInvalidCell(e,t,n,`Not a valid number: "${String(n)}"`):v`<input
+          type="number"
+          .value=${o?"":String(n)}
+          @keydown=${a=>this.cancelCellEdit(a,o?"":String(n))}
+          @change=${a=>{const c=a.target.value;this.setCell(e,t.field,c===""?null:Number(c))}}
+        />`}case"array":{const o=ft(n).length===0?"":String(n);return v`<input
+          type="text"
+          .value=${o}
+          @keydown=${a=>this.cancelCellEdit(a,o)}
+          @change=${a=>this.setCell(e,t.field,a.target.value)}
+        />`}default:return v`<input
+          type="text"
+          .value=${String(n??"")}
+          @keydown=${o=>this.cancelCellEdit(o,String(n??""))}
+          @change=${o=>this.setCell(e,t.field,o.target.value)}
+        />`}}async deleteRow(e){const t=await J();try{await t.store.rows(this.tableId).remove(e)}catch(n){await t.api.ui.dialogs.alert(n?.message??"Could not delete the row.","Delete failed")}}async toggleSort(e,t=!1){const n=await J(),r=T1(this.sortSpecs,e,{additive:t,descFirst:await C1(n.api.settings)});this.sortSpecs=r,this.scheduleReload(),await this.persistSort(r)}async persistSort(e){const t=e[0],n={sortBy:e.length>0?e:void 0,sortColumn:t?.field,sortAsc:t?t.asc:void 0,updatedAt:Date.now()},r=await J();this.viewMode?await r.store.viewInstances.patch(this.viewInstanceId,n):await r.store.tables.patch(this.tableId,n)}typedFilters(e){return e.map(([t,n])=>({field:t,query:n,type:this.columns.find(r=>r.field===t)?.type}))}filteredRows(){const e=new Set(this.columns.filter(a=>a.filterable===!1).map(a=>a.field)),t=new Set(this.columns.map(a=>a.field)),n=Object.entries(this.filters).filter(([a,c])=>c&&c.trim().length>0&&!e.has(a)&&t.has(a)),r=this.globalQuery.trim(),i=this.localQuery.trim();if(n.length===0&&r.length===0&&i.length===0)return this.rows;let s=this.rows;if(n.length>0){const a=this.typedFilters(n);s=s.filter(c=>a.every(d=>hi(c.data[d.field],d.query,{type:d.type})))}const o=gm(this.columns,this.rows);return i&&(s=wi(s,i,o)),r&&(s=wi(s,r,o)),s}sortedRows(){return wm(this.filteredRows(),this.sortSpecs,this.columns)}async openFilterPicker(e,t){e.stopPropagation();const n=e.currentTarget,r=dt.instance;if(!r)return;const{values:i,blanks:s}=xm(this.rowsFacetedFor(t),t,{type:this.columns.find(a=>a.field===t)?.type}),o=await r.open(n.getBoundingClientRect(),i,this.filters[t]??"",s,a=>this.onFilterInput(t,a));o!==null&&(typeof o=="object"&&"clear"in o?this.onFilterInput(t,""):typeof o=="string"&&this.onFilterInput(t,o))}onFilterInput(e,t){this.filters={...this.filters,[e]:t},this.filterSaveTimer!=null&&window.clearTimeout(this.filterSaveTimer),this.filterSaveTimer=window.setTimeout(()=>{this.filterSaveTimer=null,this.saveFilters()},250),this.scheduleReload()}get visibleColumns(){return this.columns.filter(e=>!e.hidden)}rowsFacetedFor(e){const t=new Set(this.columns.filter(i=>i.filterable===!1).map(i=>i.field)),n=Object.entries(this.filters).filter(([i,s])=>s&&s.trim().length>0&&i!==e&&!t.has(i));if(n.length===0)return this.rows;const r=this.typedFilters(n);return this.rows.filter(i=>r.every(s=>hi(i.data[s.field],s.query,{type:s.type})))}computeFilterSuggestions(){const e=new Map;for(const t of this.visibleColumns)$m(this.rows,t.field,{type:t.type})&&e.set(t.field,S1(this.rowsFacetedFor(t.field),t.field,{type:t.type}));return e}freezeColumnWidths(){const e=this.renderRoot.querySelector("thead tr");if(!e)return;const t=Array.from(e.querySelectorAll(":scope > th")),n=this.visibleColumns,r=new Map;n.forEach((i,s)=>{if(i.width!=null)return;const o=t[s];o&&r.set(i.field,Math.round(o.getBoundingClientRect().width))}),r.size!==0&&(this.columns=this.columns.map(i=>r.has(i.field)?{...i,width:r.get(i.field)}:i))}onResizeStart(e,t,n){e.preventDefault(),e.stopPropagation();const r=n.offsetWidth;this.freezeColumnWidths(),this.resizing={field:t,startX:e.clientX,startW:r};const i=o=>{if(!this.resizing)return;const a=o.clientX-this.resizing.startX,c=Math.max(P1,this.resizing.startW+a);this.columns=this.columns.map(d=>d.field===this.resizing.field?{...d,width:c}:d)},s=async()=>{window.removeEventListener("pointermove",i),window.removeEventListener("pointerup",s),window.removeEventListener("pointercancel",s);const o=this.resizing?.field;if(this.resizing=null,!o)return;const a=await J();if(this.viewMode){const c={...this.viewInst?.columnWidths??{}};for(const d of this.columns)typeof d.width=="number"&&(c[d.field]=d.width);await a.store.viewInstances.patch(this.viewInstanceId,{columnWidths:c,updatedAt:Date.now()})}else await a.store.tables.patch(this.tableId,{columns:this.columns,updatedAt:Date.now()})};window.addEventListener("pointermove",i),window.addEventListener("pointerup",s),window.addEventListener("pointercancel",s)}onColDragStart(e,t){this.dragSourceField=t,e.dataTransfer&&(e.dataTransfer.effectAllowed="move",e.dataTransfer.setData("text/x-easydb-col",t))}onColDragOver(e,t,n){if(!this.dragSourceField||this.dragSourceField===t)return;e.preventDefault();const r=n.getBoundingClientRect(),i=e.clientX<r.left+r.width/2;this.dropTargetField=t,this.dropEdge=i?"before":"after"}onColDragLeave(e){this.dropTargetField===e&&(this.dropTargetField=null,this.dropEdge=null)}async onColDrop(e,t){e.preventDefault();const n=this.dragSourceField,r=this.dropEdge;if(this.dragSourceField=null,this.dropTargetField=null,this.dropEdge=null,!n||n===t||!r)return;const i=[...this.columns],s=i.findIndex(d=>d.field===n);if(s<0)return;const[o]=i.splice(s,1);let a=i.findIndex(d=>d.field===t);if(a<0){i.splice(s,0,o);return}r==="after"&&(a+=1),i.splice(a,0,o);const c=await J();this.viewMode?await c.store.viewInstances.patch(this.viewInstanceId,{visibleColumns:i.map(d=>d.field),updatedAt:Date.now()}):await c.store.tables.patch(this.tableId,{columns:i,updatedAt:Date.now()})}async saveFilters(){const e=await J(),t={};for(const[r,i]of Object.entries(this.filters))i&&i.trim().length>0&&(t[r]=i);if(this.viewMode){await e.store.viewInstances.patch(this.viewInstanceId,{filters:t,updatedAt:Date.now()});return}const n=Object.keys(t).length===0?void 0:t;await e.store.tables.patch(this.tableId,{filters:n,updatedAt:Date.now()})}tableSizingStyle(e){return e.length===0||!e.every(n=>typeof n.width=="number")?null:`table-layout: fixed; width: ${e.reduce((n,r)=>n+(r.width??0),0)+Ma}px; min-width: 0`}virtualSlice(e){if(e.length<=this.VIRT_THRESHOLD||this.viewportHeight===0)return{slice:e,topPad:0,bottomPad:0};const t=this.rowHeight,n=Math.ceil(this.viewportHeight/t)+this.OVERSCAN*2,r=Math.max(0,Math.floor(this.scrollY/t)-this.OVERSCAN),i=Math.min(e.length,r+n);return{slice:e.slice(r,i),topPad:r*t,bottomPad:(e.length-i)*t}}render(){const e=this.sortedRows();this.renderedCount=e.length,this.renderedRows=this.visibleRowsKey&&A1(this.visibleRowsKey)?e:null;const t=this.visibleColumns,{slice:n,topPad:r,bottomPad:i}=this.virtualSlice(e),s=this.computeFilterSuggestions(),o=this.externalLoading?this.externalProgress:null;return v`
+      ${this.loading||this.externalLoading?v`<div class="load-bar" role="progressbar" aria-label="Loading rows" aria-valuemin="0" aria-valuemax="100" aria-valuenow=${o!=null?Math.round(o*100):X}>
+            <div class="load-bar-fill ${o!=null?"determinate":""}" style=${o!=null?`width:${Math.max(2,Math.round(o*100))}%`:X}></div>
+          </div>`:X}
+      ${this.truncated?v`<div class="truncated-note" role="status">
+            ${_c({shown:this.rows.length,total:this.matchingTotal,searching:this.searchIsActive,searched:Nn})}
+          </div>`:X}
+      <table style=${this.tableSizingStyle(t)??X}>
+        <colgroup>
+          ${t.map(a=>v`<col style=${a.width!=null?`width: ${a.width}px`:""} />`)}
+          <col style="width:${Ma}px" />
+        </colgroup>
+        <thead>
+          <tr>
+            ${t.map(a=>{const c=a.sortable!==!1,d=a.filterable!==!1&&!mm(a,this.rows),f=this.sortSpecs.findIndex(D=>D.field===a.field),p=f>=0?this.sortSpecs[f]:void 0,b=p?p.asc?"asc":"desc":null,y=c?b==="asc"?"▲":b==="desc"?"▼":"⇅":"",$=this.sortSpecs.length>1&&f>=0?String(f+1):"",k=`t-${a.type}`,C=this.dragSourceField===a.field,_=this.dropTargetField===a.field,T=_&&this.dropEdge==="before"?" drop-before":_&&this.dropEdge==="after"?" drop-after":"",Y=(a.description?`${a.description}
+`:"")+(a.units?`Units: ${a.units}
+`:"")+`${a.field} — ${c?"click to sort, shift-click to add a sort level, ":"not sortable · "}drag to reorder`+(d?"":" · not filterable");return v`
+                <th
+                  class=${`${k}${b?" sorted":""}${C?" drag-source":""}${T}${c?"":" no-sort"}`}
+                  title=${Y}
+                  @click=${D=>c&&this.toggleSort(a.field,D.shiftKey)}
+                  @dragover=${D=>this.onColDragOver(D,a.field,D.currentTarget)}
+                  @dragleave=${()=>this.onColDragLeave(a.field)}
+                  @drop=${D=>this.onColDrop(D,a.field)}
+                >
+                  <div class="col-head">
+                    <!-- The grip, sort arrow and funnel glyph are decoration: a
+                         Material Icons glyph is its own ligature text, so without
+                         aria-hidden a header's accessible name reads
+                         "drag_indicator a filter_list" and every column looks
+                         alike to a screen reader (and to a by-name query). -->
+                    <span
+                      class="col-grip mi sm"
+                      title="Drag to reorder column"
+                      aria-hidden="true"
+                      draggable="true"
+                      @click=${D=>D.stopPropagation()}
+                      @dragstart=${D=>this.onColDragStart(D,a.field)}
+                      @dragend=${()=>{this.dragSourceField=null,this.dropTargetField=null,this.dropEdge=null}}
+                      >drag_indicator</span
+                    ><span class="col-label">${a.label}${a.units?v`<span class="col-units"> (${a.units})</span>`:""}</span
+                    ><span class="sort-icon" aria-hidden="true">${y}${$?v`<span class="sort-rank">${$}</span>`:X}</span>
+                    ${d?v`<button
+                          class=${`funnel${this.filters[a.field]?" active":""}`}
+                          title="Filter by value"
+                          aria-label=${`Filter ${a.label||a.field}`}
+                          @click=${D=>this.openFilterPicker(D,a.field)}
+                        >
+                          <span class="mi sm" aria-hidden="true">filter_list</span>
+                        </button>`:""}
+                  </div>
+                  <span
+                    class="col-resize"
+                    title="Drag to resize column"
+                    @click=${D=>D.stopPropagation()}
+                    @pointerdown=${D=>this.onResizeStart(D,a.field,D.currentTarget.parentElement)}
+                  ></span>
+                </th>
+              `})}
+            <th style="width:${Ma}px"></th>
+          </tr>
+          <tr class="filter-row">
+            ${t.map(a=>{if(a.filterable===!1)return v`<th></th>`;const c=s.get(a.field)??[];return v`
+                <th>
+                  <filter-combobox
+                    .value=${this.filters[a.field]??""}
+                    .options=${c}
+                    placeholder="filter…"
+                    title="Filter: text = contains, ^text = starts with, !text = does not contain, NULL = empty, !NULL = has a value. Comma-separate for several values (a,b = a OR b; !a,!b excludes both); quote a value containing a comma."
+                    @filter-change=${d=>this.onFilterInput(a.field,d.detail.value)}
+                  ></filter-combobox>
+                </th>
+              `})}
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${r>0?v`<tr class="spacer" style=${`height:${r}px`}>
+                <td colspan=${t.length+1}></td>
+              </tr>`:""}
+          ${n.map(a=>v`
+              <tr>
+                ${t.map(c=>v`<td
+                      class=${`t-${c.type}${c.renderer?` r-${c.renderer}`:""}${c.renderer&&this.cellRenderers?.get(c.renderer)?" has-renderer":""}${N1(a,c,this.highlightNulls)}`}
+                      title=${z1(a,c)}
+                    >
+                      ${this.renderCell(a,c)}
+                    </td>`)}
+                <td>
+                  ${this.readOnly?X:v`<button class="danger" title="Delete row" @click=${()=>this.deleteRow(a.id)}>
+                        <span class="mi sm">delete</span>
+                      </button>`}
+                </td>
+              </tr>
+            `)}
+          ${i>0?v`<tr class="spacer" style=${`height:${i}px`}>
+                <td colspan=${t.length+1}></td>
+              </tr>`:""}
+        </tbody>
+      </table>
+    `}};Oe.styles=[Et,Se`
+      :host {
+        display: block;
+        overflow: auto;
+        /* Fill whatever box the host gives us and scroll inside it. This used to
+           be a hard 60vh, which BEAT the height:100% the panel sets inline
+           (max-height wins over height) — so a maximized window left a dead gap
+           between the last row and the panel footer. 100% caps us at the parent
+           when its height is definite (a jsPanel content box always is) and is
+           ignored when it isn't, so a standalone mount still grows to its
+           content. view-window.ts overrides this with max-height:none because
+           it drives the height with flex instead. */
+        max-height: 100%;
+      }
+      /* Indeterminate loading bar, pinned to the top of the table's header while
+       a (large / remote) table's rows are still loading. Sticky + high z-index
+       so it rides above the sticky column headers (th z-index 1–2). */
+      .load-bar {
+        position: sticky;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        height: 8px;
+        background: #dbeafe;
+        overflow: hidden;
+      }
+      /* Says the grid is showing a slice. Sticky so scrolling a long table
+         cannot leave the user reading a partial answer as a whole one. */
+      .truncated-note {
+        position: sticky;
+        top: 0;
+        left: 0;
+        z-index: 3;
+        padding: 0.25rem 0.5rem;
+        background: #fef3c7;
+        border-bottom: 1px solid #fcd34d;
+        color: #92400e;
+        font-size: 0.75rem;
+      }
+      .load-bar-fill {
+        height: 100%;
+        background: #2563eb;
+      }
+      /* Indeterminate: a moving sliver, shown before any progress is known. */
+      .load-bar-fill:not(.determinate) {
+        width: 40%;
+        border-radius: 4px;
+        animation: eda-load-bar 1.1s ease-in-out infinite;
+      }
+      /* Determinate: width tracks the actual fraction loaded (set inline). */
+      .load-bar-fill.determinate {
+        width: 0;
+        transition: width 0.2s ease;
+      }
+      @keyframes eda-load-bar {
+        0% {
+          transform: translateX(-120%);
+        }
+        100% {
+          transform: translateX(320%);
+        }
+      }
+      table {
+        /* min-width keeps a narrow table filling the panel; max-content lets a
+           wide one grow past it (the host scrolls). Under table-layout:fixed
+           (set inline once a column is resized) the sum of the <col> widths is
+           authoritative, which is what makes per-column resize actually stick —
+           auto layout silently ignores <col> widths on content-heavy tables. */
+        width: max-content;
+        min-width: 100%;
+        border-collapse: collapse;
+        font-size: 0.875rem;
+      }
+      th,
+      td {
+        border: 1px solid #e5e7eb;
+        padding: 0.25rem 0.5rem;
+        text-align: left;
+        vertical-align: top;
+        /* A narrow column must CHOP its content, not spill it over the next
+           column and not wrap into a taller row. One line + ellipsis also keeps
+           every row the same height, which the row virtualization assumes when
+           it converts scrollTop into a row index. */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      th {
+        background: #f9fafb;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        cursor: pointer;
+        user-select: none;
+        white-space: nowrap;
+      }
+      th:hover {
+        background: #eef2f7;
+      }
+      /* Header cell layout: grip on the left, label taking the free space, then
+         the sort + filter icons pinned to the right edge of the column. The
+         flex lives on an inner wrapper — display:flex on the th itself would
+         drop it out of table-cell layout and the columns would stack. */
+      th .col-head {
+        display: flex;
+        align-items: center;
+        gap: 0.15rem;
+      }
+      th .col-head .col-label {
+        flex: 1 1 auto;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      /* Link cells chop their display length. A ~40ch cap stops a long URL
+         from blowing the column out to its full width; the anchor inside (a
+         min-width:0 flex child with text-overflow:ellipsis) truncates to the
+         cap — and shrinks *further*, to whatever the column actually offers,
+         when it's narrower (many columns, a narrow panel, mobile). Pure CSS,
+         re-flows live on resize; the full value stays in the title tooltip.
+         A concrete cap (not max-width:0) is used so a lone link column can't
+         collapse to zero width. */
+      /* A cell whose content is a RENDERER ELEMENT: the element sizes itself from
+         its content, and overflow:hidden does not shrink an element's intrinsic
+         width — so a long value pushed the whole COLUMN wide and the table
+         scrolled sideways instead of ellipsizing. That is what "auto ellipsis
+         works until we have a renderer" meant. Capping the cell (the same trick
+         as a link cell, and for the same reason) gives the element a bounded box
+         to clip inside, so the ellipsis follows the column again. An explicitly
+         resized column sets width, which takes over from this cap. */
+      td.has-renderer {
+        max-width: 40ch;
+      }
+      td.r-link {
+        max-width: 40ch;
+        overflow: hidden;
+      }
+      th .sort-icon {
+        display: inline-block;
+        width: 0.75em;
+        color: #6b7280;
+        font-size: 0.75em;
+        margin-left: 0.25rem;
+      }
+      th.sorted .sort-icon {
+        color: #2563eb;
+      }
+      /* Sort priority (1, 2, 3 …), shown only while several columns sort. */
+      .sort-rank {
+        font-size: 0.85em;
+        vertical-align: super;
+        margin-left: 0.05em;
+      }
+      th .col-units {
+        color: #9ca3af;
+        font-weight: 400;
+      }
+      /* A column outside the source's sortable-columns allowlist. */
+      th.no-sort {
+        cursor: default;
+      }
+      /* Only this small grip drags-to-reorder — NOT the whole th. A draggable
+         th would (a) make the entire cell a grab surface that swallows the sort
+         click and (b) start a native HTML5 drag on the resize gutter, which
+         hijacks the pointer and breaks column resizing. */
+      th .col-grip {
+        cursor: grab;
+        color: #cbd5e1;
+        vertical-align: middle;
+        margin-right: 0.15rem;
+        line-height: 1;
+      }
+      th .col-grip:hover {
+        color: #6b7280;
+      }
+      th .col-grip:active {
+        cursor: grabbing;
+      }
+      /* 6px right-edge resize gutter; absolute so it doesn't push cell text. The
+       th is already position: sticky (declared in the main th rule above),
+       which is a containing block for absolute children. */
+      th .col-resize {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 6px;
+        height: 100%;
+        cursor: col-resize;
+        user-select: none;
+        z-index: 2;
+      }
+      th .col-resize:hover {
+        background: #3b82f6;
+        opacity: 0.4;
+      }
+      th.drag-source {
+        opacity: 0.4;
+      }
+      th.drop-before {
+        box-shadow: inset 3px 0 0 #3b82f6;
+      }
+      th.drop-after {
+        box-shadow: inset -3px 0 0 #3b82f6;
+      }
+      tr.filter-row th {
+        cursor: default;
+        background: #f3f4f6;
+        padding: 0.15rem 0.3rem;
+        top: 1.85em; /* sits just below the header row */
+        z-index: 1;
+      }
+      tr.filter-row th:hover {
+        background: #f3f4f6;
+      }
+      th button.funnel {
+        background: transparent;
+        border: 0;
+        cursor: pointer;
+        color: #9ca3af;
+        margin-left: 0.2rem;
+        padding: 0;
+        vertical-align: middle;
+        line-height: 1;
+      }
+      th button.funnel.active {
+        color: #2563eb;
+      }
+      th button.funnel:hover {
+        color: #2563eb;
+      }
+      td input[type='text'] {
+        width: 100%;
+        box-sizing: border-box;
+        border: 0;
+        background: transparent;
+        font: inherit;
+        padding: 0;
+      }
+      td input:focus {
+        outline: 2px solid #3b82f6;
+        outline-offset: -2px;
+      }
+      td input[type='color'] {
+        width: 1.5rem;
+        height: 1.25rem;
+        padding: 0;
+        border: 1px solid #d1d5db;
+        background: transparent;
+        vertical-align: middle;
+        cursor: pointer;
+      }
+      td .color-cell {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      td .color-cell input[type='text'] {
+        width: 6rem;
+        font-family: ui-monospace, SFMono-Regular, monospace;
+      }
+      td input[type='checkbox'] {
+        transform: translateY(1px);
+        cursor: pointer;
+      }
+      td .image-cell {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      td .image-cell img {
+        max-height: 32px;
+        max-width: 64px;
+        border-radius: 0.15rem;
+        border: 1px solid #e5e7eb;
+      }
+      td .image-cell button {
+        padding: 0.1rem 0.4rem;
+        font-size: 0.75rem;
+      }
+      button {
+        font: inherit;
+        padding: 0.25rem 0.75rem;
+        border: 1px solid #d1d5db;
+        background: white;
+        border-radius: 0.25rem;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #f3f4f6;
+      }
+      button.danger {
+        color: #9ca3af;
+        border: 0;
+        background: transparent;
+        padding: 0 0.25rem;
+        font-size: 1.1rem;
+        line-height: 1;
+        cursor: pointer;
+      }
+      button.danger:hover {
+        color: #ef4444;
+      }
+      /* Number CELLS are right-aligned so digits line up; the HEADER stays
+         left-aligned like every other column header. */
+      td.t-number {
+        text-align: right;
+      }
+      td.t-number input[type='text'] {
+        text-align: right;
+      }
+      /* A column script that failed to compile or threw. Kept small and inline
+         so one broken script does not disturb the rest of the row; the full
+         message is the element's title. */
+      .script-err {
+        color: #b91c1c;
+        font-size: 0.8em;
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        cursor: help;
+      }
+      /* Empty cell: pink background, so a gap is visible at a glance whatever
+         the column's renderer draws. Kept distinct from the invalid red below —
+         "nothing here" is normal, "this does not fit the type" is not. */
+      td.is-null {
+        background: #fce7f3;
+      }
+      td.is-null input[type='text'] {
+        background: transparent;
+      }
+      /* Invalid stored value: the app-wide invalid red (see util/cell-validity),
+         as an inset outline so the cell keeps its size and the grid lines stay
+         put. Renderers additionally mark their own inputs. */
+      td.is-invalid {
+        outline: 1px solid #dc2626;
+        outline-offset: -1px;
+        background: #fef2f2;
+      }
+      td input[type='date'],
+      td input[type='datetime-local'],
+      td input[type='text'],
+      td input[type='number'] {
+        font: inherit;
+        border: 0;
+        background: transparent;
+        padding: 0;
+        width: 100%;
+        box-sizing: border-box;
+        /* An editable cell is an <input>, which clips its value flat — the td's
+           own text-overflow can't reach inside it. Inputs honor text-overflow
+           themselves while unfocused, so a narrow column ellipses its text and
+           still reveals the whole value once you click into it. */
+        text-overflow: ellipsis;
+      }
+      .mi.sm {
+        font-size: 1rem;
+      }
+    `];Pe([Ye({type:String})],Oe.prototype,"tableId",2);Pe([Ye({type:String})],Oe.prototype,"viewInstanceId",2);Pe([j()],Oe.prototype,"columns",2);Pe([j()],Oe.prototype,"rows",2);Pe([j()],Oe.prototype,"matchingTotal",2);Pe([j()],Oe.prototype,"tableTotal",2);Pe([j()],Oe.prototype,"truncated",2);Pe([j()],Oe.prototype,"sortSpecs",2);Pe([j()],Oe.prototype,"filters",2);Pe([j()],Oe.prototype,"globalQuery",2);Pe([j()],Oe.prototype,"localQuery",2);Pe([j()],Oe.prototype,"dragSourceField",2);Pe([j()],Oe.prototype,"dropTargetField",2);Pe([j()],Oe.prototype,"dropEdge",2);Pe([j()],Oe.prototype,"resizing",2);Pe([j()],Oe.prototype,"cellRenderers",2);Pe([j()],Oe.prototype,"scrollY",2);Pe([j()],Oe.prototype,"viewportHeight",2);Pe([j()],Oe.prototype,"loading",2);Pe([j()],Oe.prototype,"externalLoading",2);Pe([j()],Oe.prototype,"externalProgress",2);Pe([j()],Oe.prototype,"highlightNulls",2);Pe([j()],Oe.prototype,"tableReadonly",2);Oe=Pe([Re("data-table")],Oe);const nh=500;function z1(e,t){if(t.script)return"";const n=e.data[t.field];if(n==null||t.type==="array"&&ft(n).length===0)return"";const r=typeof n=="string"?n:String(n);return r.trim()===""?"":r.length>nh?`${r.slice(0,nh)}…`:r}function N1(e,t,n=!0){if(t.script)return"";const r=a$(e.data[t.field],t.type);return r==="empty"?n?" is-null":"":r==="invalid"?" is-invalid":""}function j1(e,t,n,r,i){if(e.notnull){if(t==null)return`${e.label} cannot be empty.`;if(typeof t=="string"&&t.trim().length===0)return`${e.label} cannot be empty.`}if(e.max!=null&&e.max>0){if(typeof t=="string"&&t.length>e.max)return`${e.label} must be at most ${e.max} characters (got ${t.length}).`;if(typeof t=="number"&&t>e.max)return`${e.label} must be at most ${e.max} (got ${t}).`}if(e.unique&&t!==null&&t!==void 0&&t!==""&&n.find(o=>o.id!==r&&o.data[e.field]===t))return`${e.label} must be unique. Another row already has "${String(t)}".`;if(e.validate?.trim()){const s={...i.data,[e.field]:t},o=sv(e.validate,t,s);if(!o.ok)return o.message}return null}function rh(e,t){return e==null||typeof e=="string"&&e.trim()===""?!1:t===""}var F1=Object.defineProperty,U1=Object.getOwnPropertyDescriptor,Ri=(e,t,n,r)=>{for(var i=r>1?void 0:r?U1(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&F1(t,n,i),i};let Bn=class extends $e{constructor(){super(...arguments),this.tableId="",this.query="",this.open=!1,this.focusPending=!1,this.onInput=e=>{this.query=e.target.value,this.dispatchQuery()},this.openSearch=()=>{this.open=!0,this.focusPending=!0},this.onBlur=()=>{this.open=!1}}dispatchQuery(){document.dispatchEvent(new CustomEvent("easydb:table-search",{detail:{tableId:this.tableId,query:this.query}}))}updated(){this.focusPending&&this.inputEl&&(this.inputEl.focus(),this.focusPending=!1)}render(){if(!this.open){const e=this.query.trim().length>0;return v`<button class="icon ${e?"active":""}" title=${e?`Filtering rows: ${this.query}`:"Search rows in this table"} @click=${this.openSearch}>
+        <span class="mi sm">search</span>
+      </button>`}return v`<input type="search" placeholder="search…" .value=${this.query} @input=${this.onInput} @blur=${this.onBlur} />`}};Bn.styles=[Et,Se`
+      :host {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+      }
+      button.icon {
+        background: transparent;
+        border: 0;
+        color: white;
+        cursor: pointer;
+        padding: 0 0.25rem;
+        font-size: 0.95rem;
+        line-height: 1;
+      }
+      button.icon:hover {
+        opacity: 0.8;
+      }
+      button.icon.active {
+        color: #93c5fd;
+      }
+      input {
+        font: inherit;
+        font-size: 0.85rem;
+        padding: 0.15rem 0.4rem;
+        border: 0;
+        border-radius: 0.15rem;
+        background: rgba(255, 255, 255, 0.9);
+        color: #111;
+        width: 11rem;
+      }
+      input:focus {
+        outline: 2px solid #93c5fd;
+        outline-offset: -1px;
+      }
+      .mi.sm {
+        font-size: 0.95rem;
+      }
+    `];Ri([Ye({type:String})],Bn.prototype,"tableId",2);Ri([j()],Bn.prototype,"query",2);Ri([j()],Bn.prototype,"open",2);Ri([Kt("input")],Bn.prototype,"inputEl",2);Bn=Ri([Re("panel-search")],Bn);var B1=Object.defineProperty,q1=Object.getOwnPropertyDescriptor,Vn=(e,t,n,r)=>{for(var i=r>1?void 0:r?q1(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&B1(t,n,i),i};let Jt=class extends $e{constructor(){super(...arguments),this.tableId="",this.active=!0,this.rowCount=0,this.tableButtons=[],this.table=null,this.fixedSchemaSources=new Set,this.rowsActive=!1,this.runTableButton=async(e,t)=>{const n=t?.currentTarget??void 0,r=await J();try{await Promise.resolve(e.onClick(r.api,{tableId:this.tableId,anchor:n}))}catch(i){console.error(`[table-button:${e.id}]`,i)}}}async connectedCallback(){super.connectedCallback();const e=await J();this.tableButtons=[...e.registries.tableButtons],this.fixedSchemaSources=ih(e.registries.rowSources),e.events.on("app:ready",()=>{this.tableButtons=[...e.registries.tableButtons],this.fixedSchemaSources=ih(e.registries.rowSources)}),this.table=await e.store.tables.findOne(this.tableId)??null,this.unsubTables=e.store.tables.subscribe(t=>{this.table=t.find(n=>n.id===this.tableId)??null}),this.active&&this.startRows()}disconnectedCallback(){super.disconnectedCallback(),this.stopRows(),this.unsubTables?.()}updated(e){e.has("active")&&(this.active?this.startRows():this.stopRows())}async startRows(){if(this.rowsActive)return;this.rowsActive=!0;const e=await J();this.rowsActive&&(this.unsubRows=e.store.rows(this.tableId).subscribe(t=>this.rowCount=t.length))}stopRows(){this.rowsActive=!1,this.unsubRows?.(),this.unsubRows=void 0}async addRow(){const e=await J(),t=await e.store.tables.findOne(this.tableId);if(!t)return;const n={};for(const r of t.columns)n[r.field]=H1(r);await e.store.rows(this.tableId).insert({id:crypto.randomUUID(),tableId:this.tableId,data:n,updatedAt:Date.now()})}editColumns(){document.dispatchEvent(new CustomEvent("easydb:edit-columns",{detail:{tableId:this.tableId}}))}get schemaEditable(){const e=this.table?.source?.type;return!e||!this.fixedSchemaSources.has(e)}render(){return v`
+      ${this.table?.readonly?X:v`<button title="Add a blank row" aria-label="Add row" @click=${this.addRow}>
+            <span class="mi sm">add</span>
+          </button>`}
+      ${this.schemaEditable?v`<button title="Edit columns" aria-label="Columns" @click=${this.editColumns}>
+            <span class="mi sm">view_column</span>
+          </button>`:X}
+      ${this.tableButtons.filter(e=>!e.visible||this.table!=null&&e.visible(this.table)).map(e=>v`<button class=${e.danger?"danger":""} title=${e.tooltip??e.label} aria-label=${e.label} @click=${t=>this.runTableButton(e,t)}>
+              ${e.icon?e.icon.trimStart().startsWith("<svg")?v`<span class="icon-svg">${Ol(e.icon)}</span>`:v`<span class="mi sm">${e.icon}</span>`:v`<span>${e.label}</span>`}
+            </button>`)}
+      <span class="spacer"></span>
+      <span class="count">${this.rowCount} row${this.rowCount===1?"":"s"}</span>
+    `}};Jt.styles=[Et,Se`
+      :host {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        width: 100%;
+        padding: 0.35rem 0.55rem;
+        box-sizing: border-box;
+        font-size: 0.85rem;
+      }
+      /* Icon-only footer buttons: tight, roughly square. A button that has no
+         icon (falls back to its text label) still reads fine with this padding. */
+      button {
+        font: inherit;
+        padding: 0.2rem 0.4rem;
+        border: 1px solid #d1d5db;
+        background: white;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      button:hover {
+        background: #f3f4f6;
+      }
+      /* Inline-SVG icon (e.g. the GitHub mark) sized to match the small material
+         glyphs the other footer buttons use. */
+      .icon-svg {
+        display: inline-flex;
+        align-items: center;
+      }
+      .icon-svg svg {
+        width: 1rem;
+        height: 1rem;
+        display: block;
+      }
+      /* Danger buttons (e.g. resume an interrupted import) read as red and
+         pulse gently to draw the eye. */
+      button.danger {
+        color: #b91c1c;
+        border-color: #fca5a5;
+        background: #fef2f2;
+        animation: danger-pulse 1.6s ease-in-out infinite;
+      }
+      button.danger:hover {
+        background: #fee2e2;
+      }
+      @keyframes danger-pulse {
+        0%,
+        100% {
+          border-color: #fca5a5;
+        }
+        50% {
+          border-color: #ef4444;
+        }
+      }
+      .spacer {
+        flex: 1;
+      }
+      .count {
+        color: #6b7280;
+      }
+      .mi.sm {
+        font-size: 0.95rem;
+      }
+    `];Vn([Ye({type:String})],Jt.prototype,"tableId",2);Vn([Ye({type:Boolean})],Jt.prototype,"active",2);Vn([j()],Jt.prototype,"rowCount",2);Vn([j()],Jt.prototype,"tableButtons",2);Vn([j()],Jt.prototype,"table",2);Vn([j()],Jt.prototype,"fixedSchemaSources",2);Jt=Vn([Re("panel-footer")],Jt);function H1(e){if(e.default!==void 0)return e.default;switch(e.type){case"boolean":return!1;case"number":return null;default:return""}}function ih(e){const t=new Set;for(const[n,r]of e)r.schemaEditable===!1&&t.add(n);return t}function Pa(e){return e.title?.trim()?e.title.trim():e.name}function V1(){return document.getElementById("easydb-panels-viewport")??document.getElementById("easydb-panels")??document.body}function K1(e){const t=document.querySelector("app-shell")?.shadowRoot,n=t?.querySelector("header"),r=t?.querySelector("footer");n&&(e.style.top=`${n.offsetHeight}px`),r&&(e.style.bottom=`${r.offsetHeight}px`)}const Nt=new Map,Sm=new Set;let sh=!1;async function Cm(){const e=await J();await Promise.all([...Nt.keys()].map(t=>Ts(t,e)))}function Tc(e){const t=Nt.get(e);return t?(fm(t),!0):(W1(e),!0)}async function W1(e){const t=await J(),n=await t.store.tables.findOne(e);n?.windowGeometry?.closed&&await t.store.tables.patch(e,{windowGeometry:{...n.windowGeometry,closed:!1},updatedAt:Date.now()})}async function Em(e){const t=await J();await Z1(e,t)}async function _m(){if(sh)return;sh=!0;const e=await J(),t=document.getElementById("easydb-panels"),n=document.getElementById("easydb-panels-viewport");if(t&&n){Z$(Qx(t,n));const i=()=>K1(t);i(),window.addEventListener("resize",i);const s=document.querySelector("app-shell")?.shadowRoot,o=s?.querySelector("header"),a=s?.querySelector("footer");if(typeof ResizeObserver<"u"&&(o||a)){const c=new ResizeObserver(i);o&&c.observe(o),a&&c.observe(a)}}const r=(await e.store.tables.find()).filter(i=>i.workspaceId===e.workspaceId);r.sort(qs);for(const i of r)i.windowGeometry?.closed||oh(i,e);e.store.tables.subscribe(i=>{const s=i.filter(c=>c.workspaceId===e.workspaceId),o=new Map(s.map(c=>[c.id,c]));for(const[c,d]of Nt){const f=o.get(c);if(!f||f.windowGeometry?.closed){Nt.delete(c),Mo(c),Sm.add(c);try{d.status!=="closed"&&d.close()}catch{}}}const a=s.filter(c=>!Nt.has(c.id)&&!c.windowGeometry?.closed).sort(qs);for(const c of a)oh(c,e)}),i1()}const bl=720,wl=360;function oh(e,t){const n=`panel-${Tm(e.id)}`,r=V1(),i=j$(e.windowGeometry),s=hn||i?.minimized===!0,o=()=>{const Q=document.createElement("data-table");return Q.tableId=e.id,Q.style.height="100%",Q};let a=null;const c=`table:${e.id}`,d=Q=>(a=om(),a.setPrimary(Q),am(c,a),a.root),f=s?document.createElement("div"):d(o());let p=s?null:f,b=Pa(e),y=-1,$=-1,k=null;const C=()=>{V.setHeaderTitle(b+(k?e1(k.rows,k.total):um(y,$)))},_=Q=>{const ae=Q.detail;ae.key===e.id&&(y=ae.count,$=ae.total,C())},T=Q=>{const ae=Q.detail;ae.tableId===e.id&&(k=ae.done?null:{rows:ae.rows,total:ae.total},C())};document.addEventListener(Ks,_),document.addEventListener(hl,T);const Y=()=>{W.active=!1,Vs(c),a?.destroy(),a=null,p?.remove(),p=null},D=()=>{if(p)return;const Q=document.getElementById(n)?.querySelector(".jsPanel-content");if(!Q)return;Q.replaceChildren();const ae=d(o());Q.appendChild(ae),p=ae,W.active=!0},ne=document.createElement("panel-search");ne.tableId=e.id;const W=document.createElement("panel-footer");W.tableId=e.id,W.active=!s;const I=async()=>{Vs(c),a?.destroy(),a=null,document.removeEventListener(Ks,_),document.removeEventListener(hl,T);const Q=Nt.get(e.id)?.persistRect();Nt.delete(e.id),Mo(e.id),!Sm.delete(e.id)&&await _r(`table:${e.id}`,async()=>{const ae=await t.store.tables.findOne(e.id);if(!ae)return;const we=ae.windowGeometry??{...Q??{x:60,y:60,w:bl,h:wl},z:1,minimized:!1,maximized:!1};await t.store.tables.patch(e.id,{windowGeometry:{...we,closed:!0},updatedAt:Date.now()})})},V=Ro({id:n,container:r,title:b,logo:Vd[_s(e)],color:Hd(e),content:f,footerToolbar:W,...i?{panelSize:{w:i.w,h:i.h},position:{x:i.x,y:i.y}}:{contentSize:{w:bl,h:wl},position:Y1()},minimizeTo:"#easydb-minimized-dock",viewport:Oo(),boot:{minimized:s,maximized:!hn&&i?.maximized===!0,smallified:!hn&&i?.smallified===!0},onmoved:()=>void Ts(e.id,t),onresized:()=>void Ts(e.id,t),onfronted:()=>void J1(e.id,t),onstatuschange:Q=>{Q.status==="minimized"?Y():(Q.status==="normalized"||Q.status==="maximized")&&D(),Ts(e.id,t)},onclosed:()=>void I()});Nt.set(e.id,V),hm(e.id,()=>V.front(void 0,!1));const ie=document.getElementById(n)?.querySelector(".jsPanel-controlbar");ie&&ie.prepend(ne);let de=null;const H=document.createElement("button");H.type="button",H.title="Table info",H.setAttribute("aria-label","Table info"),H.className="eda-info-btn",H.textContent="ⓘ",H.style.cssText="display:none;background:none;border:0;color:inherit;cursor:pointer;font-size:1rem;line-height:1;padding:0 0.3rem;",H.addEventListener("click",Q=>{Q.stopPropagation(),de&&qx(b,de.info??{},{source:de.source,origin:de.origin})}),ie?.prepend(H);const te=Q=>{de=Q??null;const ae=!!(Q?.info||Q?.source||Q?.origin);H.style.display=ae?"inline-flex":"none"};te(e);let q=_s(e);t.store.tables.subscribe(Q=>{const ae=Q.find(xe=>xe.id===e.id);if(!ae)return;te(ae),Pa(ae)!==b&&(b=Pa(ae),C());const we=_s(ae);we!==q&&(q=we,V.setHeaderLogo(Vd[we]),V.setHeaderColor(Hd(ae)))})}let G1=0;function Y1(){const e=G1++;return{x:40+e%8*30,y:80+e%8*30}}function Ts(e,t){return _r(`table:${e}`,()=>Q1(e,t))}async function Q1(e,t){const n=Nt.get(e),r=n??document.getElementById(`panel-${Tm(e)}`);if(!r)return;const i=n?.persistFlags()??{minimized:!1,maximized:!1,smallified:!1},s=n?.persistRect()??{x:r.offsetLeft,y:r.offsetTop,w:r.offsetWidth,h:r.offsetHeight};try{const a=(await t.store.tables.findOne(e))?.windowGeometry,c=hn?a?.minimized??!1:i.minimized,d=hn?a?.maximized??!1:i.maximized,f=hn?a?.smallified??!1:i.smallified,p={...s,z:a?.z??0,minimized:c,maximized:d,smallified:f};await t.store.tables.patch(e,{windowGeometry:p,updatedAt:Date.now()})}catch{}}function J1(e,t){return _r(`table:${e}`,()=>X1(e,t))}async function X1(e,t){try{const n=await t.store.tables.findOne(e);if(!n)return;const r=n.windowGeometry??{...Nt.get(e)?.persistRect()??{x:0,y:0,w:bl,h:wl},z:0,minimized:!1,maximized:!1};await t.store.tables.patch(e,{windowGeometry:{...r,z:dm()},updatedAt:Date.now()})}catch{}}async function Z1(e,t){if(!(await t.store.tables.findOne(e))?.source){const r=t.store.rows(e),i=await r.find();await r.bulkRemove(i.map(s=>s.id))}await t.store.tables.remove(e)}function Tm(e){return e.replace(/[^a-zA-Z0-9_-]/g,"_")}function Im(e){if(!(e instanceof Node))return null;for(const[t,n]of Nt)if(n.contains(e))return t;return null}const Ic=Object.freeze(Object.defineProperty({__proto__:null,FORCE_MINIMIZED:hn,deleteTable:Em,focusTableWindow:Tc,initWindowManager:_m,persistTablePanelGeometry:Cm,tableIdAtNode:Im},Symbol.toStringTag,{value:"Module"})),eS={id:"delete-table",name:"Delete Table",type:"ui",version:"0.1.0",description:"Adds a trash button to each table window that permanently deletes the table and its rows (with confirmation).",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/delete-table.ts"};function tS(e){e.ui.registerTableButton({id:"delete-table:delete",label:"Delete",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="#7f1d1d" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',tooltip:"Delete this table permanently",onClick:async(t,n)=>{const r=await t.store.tables.findOne(n.tableId);!r||!await t.ui.dialogs.confirm(r.source?`Delete the live table "${r.name}"? Its data stays on the server — only the local connection is removed.`:`Permanently delete table "${r.name}" and all its rows? This can't be undone.`,"Delete table")||(await Em(n.tableId),t.ui.dialogs.toast(`Deleted "${r.name}".`,{kind:"success",title:"Delete table"}))}})}const nS=Object.freeze(Object.defineProperty({__proto__:null,init:tS,meta:eS},Symbol.toStringTag,{value:"Module"})),rS={id:"table-copy",name:"Copy Table",type:"ui",version:"0.1.0",description:"Adds a Copy button to each table window: duplicate it as-is, or snapshot its Raw / Visible data into a new plain table. Works on projections too — that is how you freeze one.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/table-copy.ts"};function iS(e){e.ui.registerTableButton({id:"table-copy:copy",label:"Copy",icon:"content_copy",tooltip:"Copy this table — as a duplicate, or as a snapshot of its data",onClick:(t,{tableId:n})=>void oS(t,n)})}function sS(e,t){const n=e.source?.type==="projection";if(t==="duplicate")return n?"a second projection over the same sources (still live)":e.source?"another connection to the same source (still live)":"a full copy of its columns and rows";const r=t==="raw"?"every column and row":"the visible columns and filtered rows";return e.source?`a plain table holding ${r} as they are right now`:`a plain table holding ${r}`}async function oS(e,t){const n=await e.store.tables.findOne(t);if(!n)return;const r=await e.ui.dialogs.choice(`Copy "${n.name}" — what should the copy contain?`,["Duplicate","Raw Data","Visible Data"],"Copy table");if(!r)return;const i=r==="Duplicate"?"duplicate":r==="Raw Data"?"raw":"visible";try{const s=await Am(e,n,i);e.ui.dialogs.toast(`Copied "${n.name}" to "${s.name}" — ${sS(n,i)}.`,{kind:"success",title:"Copy table"})}catch(s){e.ui.dialogs.toast(`Could not copy "${n.name}": ${s?.message??String(s)}`,{kind:"error",title:"Copy table"})}}async function Am(e,t,n){const r=e.workspaceId();if(!r)throw new Error("table-copy: no active workspace");const i=fn(await Wl(e,r),`${t.name} copy`),s=_e(),o=Date.now(),a={id:s,workspaceId:r,name:i,code:Ne(i),view:t.view,...t.title?{title:`${t.title} copy`}:{},...t.labelColumn?{labelColumn:t.labelColumn}:{},...t.info?{info:t.info}:{},updatedAt:o};if(n==="duplicate"){const d={...a,columns:t.columns,...t.sortBy?{sortBy:t.sortBy}:{},...t.sortColumn?{sortColumn:t.sortColumn,sortAsc:t.sortAsc??!0}:{},...t.filters?{filters:t.filters}:{},...t.deletedColumns?{deletedColumns:t.deletedColumns}:{},...t.readonly?{readonly:!0}:{},...t.source?{source:t.source}:{},...t.origin?{origin:t.origin}:{}};return await e.store.tables.insert(d),t.source||await ah(e,t.id,s,f=>f),d}const c={...a,columns:Tp(t,n).map(aS),...n==="raw"&&t.filters?{filters:t.filters}:{},...n==="raw"&&t.sortBy?{sortBy:t.sortBy}:{},...n==="raw"&&t.sortColumn?{sortColumn:t.sortColumn,sortAsc:t.sortAsc??!0}:{},...t.origin?{origin:t.origin}:{}};return await e.store.tables.insert(c),await ah(e,t.id,s,d=>Ip(t,d,n)),c}function aS(e){if(!e.readonly)return e;const t={...e};return delete t.readonly,t}async function ah(e,t,n,r){const i=r(await e.store.rows(t).find());if(i.length===0)return;const s=Date.now();await e.store.rows(n).bulkInsert(i.map(o=>({id:_e(),tableId:n,data:{...o.data},updatedAt:s})))}const lS=Object.freeze(Object.defineProperty({__proto__:null,copyTable:Am,init:iS,meta:rS},Symbol.toStringTag,{value:"Module"}));var cS=Object.defineProperty,uS=Object.getOwnPropertyDescriptor,Ac=(e,t,n,r)=>{for(var i=r>1?void 0:r?uS(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&cS(t,n,i),i};function Rm(e,t){return(jt.instance??dS()).open(e,t)}function dS(){const e=document.createElement("column-names-dialog");return document.body.appendChild(e),e}let jt=class extends $e{constructor(){super(...arguments),this.rows=[],this.subject="",this.source=[],this.dialogEl=null,this.resolveFn=null,this.onCancel=e=>{e.preventDefault(),this.finish(null)},this.submit=e=>{if(e.preventDefault(),this.invalidIndices().size>0)return;const t=this.source.map((n,r)=>{const i=this.rows[r],s=i.field.trim(),o=i.label.trim()||s;return{...n,field:s,label:o,hidden:i.hidden}});this.finish(t)},this.toggleAllHidden=()=>{const e=this.rows.length>0&&this.rows.every(t=>t.hidden);this.rows=this.rows.map(t=>({...t,hidden:!e}))}}connectedCallback(){super.connectedCallback(),jt.instance=this}disconnectedCallback(){super.disconnectedCallback(),jt.instance===this&&(jt.instance=null)}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e),this.dialogEl&&Xt("column-names",this.dialogEl)}open(e,t){return this.source=e,this.subject=t??"",this.rows=e.map(n=>({field:n.field,label:n.label,hidden:!!n.hidden})),new Promise(n=>{this.resolveFn=n,this.updateComplete.then(()=>this.dialogEl?.showModal())})}invalidIndices(){const e=new Set,t=new Map;this.rows.forEach((n,r)=>{const i=n.field.trim().toLowerCase();if(i===""){e.add(r);return}(t.get(i)??t.set(i,[]).get(i)).push(r)});for(const n of t.values())if(n.length>1)for(const r of n)e.add(r);return e}finish(e){this.dialogEl?.close();const t=this.resolveFn;this.resolveFn=null,queueMicrotask(()=>t?.(e))}updateRow(e,t,n){this.rows=this.rows.map((r,i)=>i===e?{...r,[t]:n}:r)}setHidden(e,t){this.rows=this.rows.map((n,r)=>r===e?{...n,hidden:t}:n)}render(){const e=this.invalidIndices(),t=e.size;return v`
+      <dialog @cancel=${this.onCancel} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${()=>this.finish(null)}>×</button>
+        <form @submit=${this.submit}>
+          <div class="dialog-header">
+            <h2>${this.subject?`Edit columns — ${this.subject}`:"Edit columns"}</h2>
+            <div class="header-actions">
+              <button type="button" class="ghost" @click=${()=>this.finish(null)}>Cancel</button>
+              <button type="submit" class="primary" ?disabled=${t>0}>Import</button>
+            </div>
+          </div>
+          <div class="dialog-body">
+            <p class="intro">
+              Rename columns before importing. A <strong>name</strong> is the field key; duplicate or empty names are shown in red and must be fixed first. Tick <strong>Hide</strong> to import a
+              column hidden — click the <strong>Hide</strong> header to toggle all/none.
+            </p>
+            <div class="grid">
+              <div class="head">Name</div>
+              <div class="head">Label</div>
+              <div
+                class="head toggle"
+                role="button"
+                tabindex="0"
+                title="Toggle hide for all columns"
+                @click=${this.toggleAllHidden}
+                @keydown=${n=>{(n.key==="Enter"||n.key===" ")&&(n.preventDefault(),this.toggleAllHidden())}}
+              >
+                Hide
+              </div>
+              ${this.rows.map((n,r)=>v`
+                  <input
+                    class=${e.has(r)?"invalid":""}
+                    .value=${n.field}
+                    aria-label=${`Column ${r+1} name`}
+                    @input=${i=>this.updateRow(r,"field",i.target.value)}
+                  />
+                  <input .value=${n.label} aria-label=${`Column ${r+1} label`} @input=${i=>this.updateRow(r,"label",i.target.value)} />
+                  <div class="hidecell">
+                    <input type="checkbox" .checked=${n.hidden} aria-label=${`Hide column ${r+1}`} @change=${i=>this.setHidden(r,i.target.checked)} />
+                  </div>
+                `)}
+            </div>
+            <p class="err">${t>0?`Fix ${t} column name${t===1?"":"s"} — names must be unique and non-empty.`:X}</p>
+          </div>
+        </form>
+      </dialog>
+    `}};jt.instance=null;jt.styles=[mt,Se`
+      dialog {
+        min-width: 460px;
+        max-width: 640px;
+      }
+      p.intro {
+        margin: 0;
+        font-size: 0.85rem;
+        color: #6b7280;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr auto;
+        gap: 0.4rem 0.75rem;
+        margin-top: 0.6rem;
+        max-height: 50vh;
+        overflow: auto;
+        align-items: center;
+      }
+      .head {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6b7280;
+        position: sticky;
+        top: 0;
+        background: white;
+        padding-bottom: 0.15rem;
+      }
+      /* A header for a per-row toggle column: clicking it flips all rows on/off. */
+      .head.toggle {
+        cursor: pointer;
+        user-select: none;
+        text-align: center;
+      }
+      .head.toggle:hover {
+        color: #2563eb;
+        text-decoration: underline;
+      }
+      .hidecell {
+        display: flex;
+        justify-content: center;
+      }
+      input {
+        font: inherit;
+        padding: 0.35rem 0.45rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        width: 100%;
+        box-sizing: border-box;
+        background: white;
+      }
+      input[type='checkbox'] {
+        width: auto;
+        padding: 0;
+        cursor: pointer;
+      }
+      input.invalid {
+        border-color: #dc2626;
+        background: #fef2f2;
+        outline-color: #dc2626;
+      }
+      .err {
+        color: #b91c1c;
+        font-size: 0.78rem;
+        margin: 0.5rem 0 0;
+        min-height: 1.1em;
+      }
+    `];Ac([j()],jt.prototype,"rows",2);Ac([j()],jt.prototype,"subject",2);jt=Ac([Re("column-names-dialog")],jt);const hS=Object.freeze(Object.defineProperty({__proto__:null,get ColumnNamesDialog(){return jt},editColumnNames:Rm},Symbol.toStringTag,{value:"Module"}));async function fS(e,t,n){const r=t.origin?.url;if(!r)throw new Error(`"${t.name}" has no source URL to reload from.`);const i={api:e,fetchText:(I,V)=>$i(e,I,V??`Reading ${t.name}…`,{maxBytes:null}),panel:{}},s=await n.list(i,{kind:"url",url:r});if(s.length===0)throw new Error(`Nothing to read at ${r} any more.`);const o=s.find(I=>I.name===t.name)??(s.length===1?s[0]:void 0);if(!o)throw new Error(`"${t.name}" is no longer one of the tables at ${r}.`);let a=[];const c=[];for await(const I of n.read(i,o))I.columns?.length&&(a=I.columns),c.push(...I.rows);const{columns:d,newFields:f}=oo(t.columns,a,t.deletedColumns??[]),p=t.origin?.pks??[],b=new Set(a.map(I=>I.field)),y=t.columns.map(I=>I.field).filter(I=>!b.has(I)&&!p.includes(I)),$=(t.deletedColumns??[]).filter(I=>b.has(I)),k=e.store.rows(t.id),C=await k.find(),{data:_,merged:T,strategy:Y,droppedUserRows:D}=Xf({oldRows:C.map(I=>({data:I.data})),freshRows:c,pks:p,userAddedFields:y,deletedRemoteFields:$}),ne=Date.now();d.length>0&&await e.store.tables.patch(t.id,{columns:d,updatedAt:ne}),await k.bulkRemove(C.map(I=>I.id));const W=_.map(I=>({id:_e(),tableId:t.id,data:I,updatedAt:ne}));return await k.bulkInsert(W),{rowCount:W.length,newFields:f,merged:T,strategy:Y,droppedUserRows:D}}const lh="import:samples",ch="import:samplesHidden";function pS(e,t,n){const r=new Set(n),i=[];for(const s of e)r.has(s.url)||i.push({...s,key:`b:${s.url}`,own:!1});for(const s of t)i.push({...s,key:`u:${s.id}`,own:!0});return i}function mS(e){const t=typeof e=="string"?Om(e):e;if(!Array.isArray(t))return[];const n=[];for(const r of t){if(!r||typeof r!="object")continue;const{id:i,label:s,url:o,kind:a}=r;typeof i!="string"||!i||typeof s!="string"||!s.trim()||typeof o!="string"||!o.trim()||n.push({id:i,label:s.trim(),url:o.trim(),...bS(a)?{kind:a}:{}})}return n}function gS(e){const t=typeof e=="string"?Om(e):e;return Array.isArray(t)?t.filter(n=>typeof n=="string"&&!!n.trim()).map(n=>n.trim()):[]}function bS(e){return e==="json"||e==="csv"||e==="sql"||e==="datasette"}function Om(e){try{return JSON.parse(e)}catch{return null}}function wS(e,t){return[...e,t]}function yS(e,t){return e.filter(n=>n.id!==t)}function vS(e,t){return e.includes(t)?[...e]:[...e,t]}var kS=Object.defineProperty,$S=Object.getOwnPropertyDescriptor,qe=(e,t,n,r)=>{for(var i=r>1?void 0:r?$S(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&kS(t,n,i),i};const xS="https://raw.githubusercontent.com/cawoodm/easydbaccess/main/data/northwind.db.json",SS="https://raw.githubusercontent.com/MainakRepositor/Datasets/master/Air%20Quality/real_2016_air.csv",CS='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>',ES=[{label:"Northwind — sample database (JSON dump)",url:xS,kind:"json"},{label:"Air quality — 2016 readings (CSV)",url:SS,kind:"csv"},{label:"Datasette — US legislators (whole database, pick tables)",url:"https://datasette.io/legislators",kind:"datasette"},{label:"Datasette — datasette.io (whole instance, pick database & tables)",url:"https://datasette.io",kind:"datasette"}],_S={id:"import-data",name:"Import Data",type:"importer",version:"0.2.0",description:"Header button that imports data from a URL — a JSON dump (e.g. Northwind) or a Datasette table, database, or whole instance — with a picker of sample sources.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="8 17 12 21 16 17"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/import-data.ts"};function TS(e){e.ui.registerHeaderButton({id:"import-data:open",label:"Import",icon:CS,tooltip:"Import data from a URL (snapshot into a local table)",onClick:()=>AS(e)}),e.ui.registerTableButton({id:"import-data:refresh",label:"Refresh",icon:"refresh",tooltip:"Reload this table from the URL it was imported from",visible:t=>t.origin?.type==="csv"||t.origin?.type==="json",onClick:(t,{tableId:n})=>IS(t,n)})}async function IS(e,t){const n=await e.store.tables.findOne(t);if(n?.origin?.url)try{const r=await Rc(n.origin.type);if(!r)throw new Error(`No importer is installed that can read a "${n.origin.type}" source.`);const i=await fS(e,n,r),s=[];i.newFields.length>0&&s.push(`${i.newFields.length} new column${i.newFields.length===1?"":"s"}`),!i.merged&&i.rowCount>0&&s.push("rows replaced (nothing to match them on)"),i.droppedUserRows>0&&s.push(`${i.droppedUserRows} row${i.droppedUserRows===1?"":"s"} changed at the source, so your own column values for ${i.droppedUserRows===1?"it":"them"} could not be carried over`),e.ui.dialogs.toast(`Refreshed "${n.name}" (${i.rowCount.toLocaleString()} rows)${s.length?` — ${s.join(", ")}`:""}.`,{kind:i.newFields.length>0||i.droppedUserRows>0?"warning":"success",title:"Refresh"})}catch(r){e.ui.dialogs.toast(`Couldn't refresh "${n.name}": ${r.message}`,{kind:"error",title:"Refresh"})}}async function AS(e,t="auto"){const r=await(Ae.instance??zS()).open({presetKind:t,async listDatabases(k){const C=St(k);return cc(_=>e.backend.fetch(_),C.base)},async listTables(){const k=e.workspaceId();return(await e.store.tables.find()).filter(C=>C.workspaceId===k&&!C.source).map(C=>({id:C.id,name:C.name})).sort((C,_)=>C.name.localeCompare(_.name))}});if(!r)return;const{url:i,file:s,kind:o,dbChosen:a,editColumns:c,maxRows:d,mode:f,panel:p,target:b}=r,y=s?.name??i,$=c?(k,C)=>Rm(k,C):void 0;try{if(o==="sql"){await RS(e,{url:i,file:s,label:y,maxRows:d,mode:f,target:b,panel:p,editHook:$});return}const k=await Rc(o);if(k){const C=o==="json"?await OS(e,i,s,d,f):null;if(C?.isDump&&await e.ui.dialogs.confirm(`"${y}" is a workspace dump, not a plain table. Restore it — tables, window layout, views and filters? Choose Cancel to import only its tables as data.`,"Restore workspace")){await Yl(e,C.text,y,{maxRows:d,editColumns:$,...s?{}:{originUrl:i}});return}const _=s?s.name:Ht(i),T=C?{kind:"text",text:C.text,name:_}:s?{kind:"file",file:s}:{kind:"url",url:i},Y=await ao(e,k,T,{mode:f,target:b,maxRows:d,panel:p,...C&&!s?{origin:{type:k.id,url:i}}:{},...$?{editColumns:D=>$(D)}:{}});k.ownToasts||Lm(e,Y,y);return}if(f==="reference"&&!s){o==="datasette"?await PS(e,i):await Dm(e,i,o);return}await wo(e,i,{skipTablePicker:a,maxRows:d,editColumns:$})}catch(k){e.ui.dialogs.toast(`Could not import ${y}: ${k.message}`,{kind:"error",title:"Import"})}}async function RS(e,t){const{url:n,file:r,label:i,maxRows:s,mode:o,target:a,panel:c,editHook:d}=t;if(o==="reference")throw new Error("A .sql script cannot be referenced live — it is a script to run, not a rows endpoint. Import it as a Copy instead.");const f=r?await r.text():await $i(e,n,`Reading ${Ht(n)}…`,s!=null?{maxBytes:null}:{});if(sc(f)){const y=await oc(e,f,{maxRows:s,target:a,...d?{editColumns:d}:{}});ac(e,y,i);return}const p=await Rc("sql");if(!p)throw new Error("The SQL importer is not installed.");const b=await ao(e,p,{kind:"text",text:f,name:r?r.name:Ht(n)},{mode:o,target:a,maxRows:s,panel:c,...r?{}:{origin:{type:p.id,url:n}},...d?{editColumns:y=>d(y)}:{}});Lm(e,b,i)}async function OS(e,t,n,r,i){if(i==="reference")return null;const s=n?await n.text():await $i(e,t,`Reading ${Ht(t)}…`,r!=null?{maxBytes:null}:{});try{return{text:s,isDump:Gl(JSON.parse(s))}}catch{return{text:s,isDump:!1}}}async function Rc(e){const{registries:t}=await J();return t.importers.find(n=>n.id===e&&n.supports?.kernel===!0)}function Lm(e,t,n){if(t.cancelled&&t.landed.length===0)return;const r=t.landed.reduce((o,a)=>o+a.rowCount,0),i=t.landed.length===1?`"${t.landed[0].tableName}"`:`${t.landed.length} tables from ${n}`;if(t.landed.length>0){const o=t.failed.length>0?` — ${t.failed.length} failed`:"";e.ui.dialogs.toast(`Imported ${i} (${r.toLocaleString()} rows)${o}.`,{kind:t.failed.length>0?"warning":"success",title:"Import"});return}const s=t.failed.map(o=>`${o.name}: ${o.error}`).join("; ");e.ui.dialogs.toast(`Could not import ${n}${s?` — ${s}`:""}.`,{kind:"error",title:"Import"})}function LS(e){const t=JSON.parse(e),n=r=>Array.isArray(r)&&r.every(i=>i!=null&&typeof i=="object"&&!Array.isArray(i));if(n(t))return t;if(t&&typeof t=="object"){const r=t;for(const i of["rows","records","data"])if(n(r[i]))return r[i];for(const i of Object.values(r))if(n(i))return i}return[]}function DS(e){const t=LS(e).slice(0,50),n=i=>jl(i)?"array":typeof i=="number"?"number":typeof i=="boolean"?"boolean":"string",r=new Map;for(const i of t)for(const[s,o]of Object.entries(i))!r.has(s)&&o!=null?r.set(s,n(o)):r.has(s)||r.set(s,"string");return[...r.entries()].map(([i,s])=>({field:i,label:i,type:s}))}function MS(e,t,n){return`${e}/${encodeURIComponent(t)}/${encodeURIComponent(n)}.json?_size=max`}async function PS(e,t){const n=St(t),i=await mc(a=>e.backend.fetch(a),n,"Reference");if(i===null)return;if(i.length===0)throw new Error("No tables found to reference at that URL.");let s=0;const o=[];for(const a of i)try{await Dm(e,MS(n.base,a.db,a.table),"json",{nameHint:`${a.db}/${a.table}`,silent:!0}),s++}catch(c){o.push(`${a.table}: ${c.message}`)}e.ui.dialogs.toast(`Referenced ${s} table${s===1?"":"s"}${o.length?` — ${o.length} failed`:""}.`,{kind:o.length?"warning":"success",title:"Reference"})}async function Dm(e,t,n,r={}){const i=e.workspaceId();if(!i)throw new Error("No active workspace.");const s=r.nameHint??Ht(t),o=await $i(e,t,`Reading ${s}…`,{maxBytes:null}),a=n==="csv"?Cr(o).columns:DS(o);if(a.length===0)throw new Error("No columns found in the referenced data.");const c=new Set((await e.store.tables.find()).filter(p=>p.workspaceId===i).map(p=>p.name.toLowerCase()));let d=s;for(let p=2;c.has(d.toLowerCase());p++)d=`${s}-${p}`;const f={id:_e(),workspaceId:i,name:d,code:Ne(d),columns:a,view:"table",source:{type:"url",config:{url:t,format:n}},readonly:!0,updatedAt:Date.now()};await e.store.tables.insert(f),r.silent||e.ui.dialogs.toast(`Referenced ${d} — live, read-only.`,{kind:"success",title:"Reference"})}function zS(){const e=document.createElement("import-dialog");return document.body.appendChild(e),e}function NS(e){try{const t=new URL(e),n=t.hostname.toLowerCase(),r=[...t.searchParams.keys()].some(s=>s.startsWith("_")),i=n.includes("datasette")||r;return!r&&/\.(csv|tsv|tab)$/i.test(t.pathname)?"csv":!r&&/\.sql$/i.test(t.pathname)?"sql":!r&&/\.json$/i.test(t.pathname)?"json":i?"datasette":"json"}catch{return"json"}}function uh(e,t){if(t!=="datasette"||!e)return!1;try{const n=St(e);return!n.db&&!n.table}catch{return!1}}function jS(e){return/\.(csv|tsv|tab)$/i.test(e)?"csv":/\.sql$/i.test(e)?"sql":"json"}let Ae=class extends $e{constructor(){super(...arguments),this.url="",this.kind="auto",this.pickedSample="",this.userSamples=[],this.hiddenSamples=[],this.dbList=null,this.dbLoading=!1,this.dbError="",this.selectedDb="",this.editColumns=!1,this.file=null,this.maxRowsInput="",this.mode="copy",this.targetKind="new",this.targetTableId="",this.tables=[],this.dialogEl=null,this.resolveFn=null,this.listDatabases=null,this.panelEl=null,this.mountedPanel="",this.panelGeneration=0,this.formats=[],this.acceptAttr=".txt",this.onCancel=e=>{e.preventDefault(),this.finish(null)},this.submit=e=>{e.preventDefault();const t=this.url.trim();if(!t&&!this.file)return;const n=this.resolvedKind,r=this.maxRows,i=this.editColumns&&this.mode==="copy",s=this.panelValue(),o=this.supportsTarget?this.target:{kind:"new"},a=this.file?"copy":this.mode;if(this.file){this.finish({url:"",file:this.file,kind:n,editColumns:i,maxRows:r,mode:a,panel:s,target:o});return}const c=n==="datasette"&&!!this.selectedDb&&uh(t,n),d=c?`${t.replace(/\/+$/,"")}/${encodeURIComponent(this.selectedDb)}`:t;this.finish({url:d,kind:n,dbChosen:c,editColumns:i,maxRows:r,mode:a,panel:s,target:o})}}get supportsTarget(){return this.formats.find(e=>e.id===this.resolvedKind)?.kernel===!0}get target(){return this.mode==="reference"||this.targetKind==="new"||!this.targetTableId?{kind:"new"}:{kind:this.targetKind,tableId:this.targetTableId}}get resolvedKind(){return this.kind!=="auto"?this.kind:this.file?jS(this.file.name):NS(this.url.trim())}get maxRows(){const e=Math.floor(Number(this.maxRowsInput));return Number.isFinite(e)&&e>0?e:void 0}resetDbList(){this.dbList=null,this.selectedDb="",this.dbError="",this.dbLoading=!1}async loadDatabases(){const e=this.url.trim();if(!(!e||!this.listDatabases)){this.dbLoading=!0,this.dbError="",this.dbList=null,this.selectedDb="";try{const t=await this.listDatabases(e);this.dbList=t,t.length===0?this.dbError="No databases found at that instance.":t.length===1&&(this.selectedDb=t[0])}catch(t){this.dbError=t?.message??"Could not list databases."}finally{this.dbLoading=!1}}}connectedCallback(){super.connectedCallback(),Ae.instance=this}disconnectedCallback(){super.disconnectedCallback(),Ae.instance===this&&(Ae.instance=null)}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e)}updated(){const e=this.shadowRoot?.querySelector(".panel-slot");if(!e){this.panelEl=null,this.mountedPanel="";return}const t=this.activePanelTag,n=t?`${t}#${this.panelGeneration}`:"";if(n===this.mountedPanel||(e.replaceChildren(),this.panelEl=null,this.mountedPanel=n,!t))return;const r=document.createElement(t);r.addEventListener("change",()=>this.requestUpdate()),e.appendChild(r),this.panelEl=r}get activePanelTag(){return this.formats.find(e=>e.id===this.resolvedKind)?.panel}get activeLabel(){return this.formats.find(e=>e.id===this.resolvedKind)?.label??this.resolvedKind}panelValue(){const e=this.panelEl?.value;return e&&typeof e=="object"?e:{}}async loadFormats(){const{registries:e}=await J(),t=[...e.importers].sort((i,s)=>(i.order??Number.MAX_SAFE_INTEGER)-(s.order??Number.MAX_SAFE_INTEGER)).map(i=>({id:i.id,label:i.label,panel:i.panel,kernel:i.supports?.kernel})),n=t.some(i=>i.id==="datasette")?t:[...t,{id:"datasette",label:"Datasette (table or instance)"}];this.formats=n;const r=new Set([".txt"]);for(const i of e.importers)for(const s of i.accept??[])r.add(s);this.acceptAttr=[...r].join(",")}open(e){this.targetKind="new",this.targetTableId="",this.tables=[],e?.listTables?.().then(n=>{this.tables=n}),this.url="",this.kind=e?.presetKind??"auto",this.pickedSample="",this.loadSamples(),this.editColumns=!1,this.file=null,this.maxRowsInput="",this.mode="copy",this.panelGeneration+=1,this.resetDbList(),this.listDatabases=e?.listDatabases??null;const t=this.loadFormats();return new Promise(n=>{this.resolveFn=n,t.then(()=>this.updateComplete).then(()=>this.dialogEl?.showModal())})}finish(e){this.dialogEl?.close();const t=this.resolveFn;this.resolveFn=null,queueMicrotask(()=>t?.(e))}get sampleList(){return pS(ES,this.userSamples,this.hiddenSamples)}get pickedEntry(){return this.pickedSample?this.sampleList.find(e=>e.key===this.pickedSample):void 0}onPresetChange(e){this.pickedSample=e.target.value,this.resetDbList();const t=this.pickedEntry;t&&(this.url=t.url,this.kind=t.kind??"auto")}async loadSamples(){try{const e=await J(),[t,n]=await Promise.all([e.store.settings.findOne(lh),e.store.settings.findOne(ch)]);this.userSamples=mS(t?.value),this.hiddenSamples=gS(n?.value)}catch{this.userSamples=[],this.hiddenSamples=[]}}async writeSamples(){const e=await J();await e.store.settings.upsert({name:lh,value:[...this.userSamples]}),await e.store.settings.upsert({name:ch,value:[...this.hiddenSamples]})}async saveAsSample(){const e=this.url.trim(),t=lt.instance;if(!e||!t)return;const n=this.pickedEntry?.label??Ht(e),r=await t.prompt("Name this sample — it appears in the Sample source list.",n,"Add to samples");if(r===null||!r.trim())return;const i=this.kind==="auto"?void 0:this.kind,s={id:_e(),label:r.trim(),url:e,...i?{kind:i}:{}};this.userSamples=wS(this.userSamples,s),this.pickedSample=`u:${s.id}`,await this.writeSamples()}async deletePickedSample(){const e=this.pickedEntry,t=lt.instance;!e||!t||!await t.confirm(`Delete the sample "${e.label}"? The URL stays in the box.`,"Delete sample")||(e.own?this.userSamples=yS(this.userSamples,e.key.slice(2)):this.hiddenSamples=vS(this.hiddenSamples,e.url),this.pickedSample="",await this.writeSamples())}async restoreSamples(){this.hiddenSamples=[],await this.writeSamples()}onFileChange(e){const n=e.target.files?.[0]??null;this.file=n,n&&(this.url="",this.pickedSample="",this.resetDbList())}renderSamples(){const e=this.sampleList,t=this.pickedEntry,n=this.userSamples.length>0;return v`
+      <label>
+        Sample source
+        <div class="with-btn">
+          <select data-testid="import-sample" .value=${this.pickedSample} @change=${r=>this.onPresetChange(r)}>
+            <option value="" ?selected=${this.pickedSample===""}>${e.length===0?"— no samples —":"— choose a sample —"}</option>
+            ${n?v`
+                  <optgroup label="Shipped">${e.filter(r=>!r.own).map(r=>v`<option value=${r.key} ?selected=${r.key===this.pickedSample}>${r.label}</option>`)}</optgroup>
+                  <optgroup label="Yours">${e.filter(r=>r.own).map(r=>v`<option value=${r.key} ?selected=${r.key===this.pickedSample}>${r.label}</option>`)}</optgroup>
+                `:e.map(r=>v`<option value=${r.key} ?selected=${r.key===this.pickedSample}>${r.label}</option>`)}
+          </select>
+          <button
+            type="button"
+            class="icon danger"
+            data-testid="sample-delete"
+            title=${t?`Delete the sample "${t.label}"`:"Pick a sample to delete it"}
+            ?disabled=${!t}
+            @click=${()=>void this.deletePickedSample()}
+          >
+            🗑
+          </button>
+        </div>
+      </label>
+      ${this.hiddenSamples.length>0?v`<p class="hint">
+            ${this.hiddenSamples.length} shipped sample${this.hiddenSamples.length===1?"":"s"} deleted.
+            <button type="button" class="link" data-testid="sample-restore" @click=${()=>void this.restoreSamples()}>Restore samples</button>
+          </p>`:X}
+    `}renderDbPicker(){return!this.listDatabases||!uh(this.url.trim(),this.resolvedKind)?X:v`
+      <label>
+        Database
+        <div class="row db-row">
+          <select
+            .value=${this.selectedDb}
+            ?disabled=${!this.dbList||this.dbList.length===0}
+            @change=${e=>{this.selectedDb=e.target.value}}
+          >
+            ${this.dbList?v`
+                  <option value="" ?selected=${this.selectedDb===""}>— all databases (choose tables next) —</option>
+                  ${this.dbList.map(e=>v`<option value=${e} ?selected=${e===this.selectedDb}>${e}</option>`)}
+                `:v`<option value="">— not loaded —</option>`}
+          </select>
+          <button type="button" class="ghost db-load" ?disabled=${this.dbLoading} @click=${()=>void this.loadDatabases()}>
+            ${this.dbLoading?"Loading…":this.dbList?"Refresh":"List databases"}
+          </button>
+        </div>
+      </label>
+      ${this.dbError?v`<p class="hint error">${this.dbError}</p>`:X}
+    `}renderTarget(){if(!this.supportsTarget||this.mode==="reference")return X;const e=this.targetKind!=="new";return v`
+      <label>
+        Import into
+        <div class="row db-row">
+          <select
+            data-testid="import-target"
+            .value=${this.targetKind}
+            @change=${t=>{this.targetKind=t.target.value,this.targetKind!=="new"&&!this.targetTableId&&(this.targetTableId=this.tables[0]?.id??"")}}
+          >
+            <option value="new" ?selected=${this.targetKind==="new"}>A new table</option>
+            <option value="append" ?selected=${this.targetKind==="append"}>Append to an existing table</option>
+            <option value="overwrite" ?selected=${this.targetKind==="overwrite"}>Replace the rows of an existing table</option>
+          </select>
+          ${e?v`<select
+                data-testid="import-target-table"
+                .value=${this.targetTableId}
+                @change=${t=>{this.targetTableId=t.target.value}}
+              >
+                ${this.tables.length===0?v`<option value="">— no tables yet —</option>`:this.tables.map(t=>v`<option value=${t.id} ?selected=${t.id===this.targetTableId}>${t.name}</option>`)}
+              </select>`:X}
+        </div>
+      </label>
+      ${e?v`<p class="hint">The table keeps its own columns. Values map onto them the way the format requires — a CSV by column position, so its header names need not match.</p>`:X}
+    `}renderPluginBlock(){const e=this.renderDbPicker();return!!!this.activePanelTag&&e===X?X:v`
+      <fieldset class="block">
+        <legend>${this.activeLabel} options</legend>
+        <div class="panel-slot"></div>
+        ${e}
+      </fieldset>
+    `}render(){return v`
+      <dialog @cancel=${this.onCancel} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${()=>this.finish(null)}>×</button>
+        <form @submit=${this.submit}>
+          <div class="dialog-header">
+            <h2>Import</h2>
+            <div class="header-actions">
+              <button type="button" class="ghost" @click=${()=>this.finish(null)}>Cancel</button>
+              <button type="submit" class="primary">Import</button>
+            </div>
+          </div>
+          <div class="dialog-body">
+            <label>
+              Import as
+              <select
+                data-testid="import-format"
+                .value=${this.kind}
+                @change=${e=>{this.kind=e.target.value,this.resetDbList()}}
+              >
+                <option value="auto" ?selected=${this.kind==="auto"}>Auto-detect</option>
+                ${this.formats.map(e=>v`<option value=${e.id} ?selected=${this.kind===e.id}>${e.label}</option>`)}
+              </select>
+            </label>
+
+            <fieldset class="block">
+              <legend>Source and options</legend>
+              ${this.renderSamples()}
+
+              <label>
+                URL
+                <div class="with-btn">
+                  <input
+                    type="text"
+                    autofocus
+                    placeholder="https://… (JSON dump, .csv/.tsv file, or Datasette table)"
+                    ?disabled=${!!this.file}
+                    .value=${this.url}
+                    @input=${e=>{this.url=e.target.value,this.pickedSample="",this.file=null,this.resetDbList()}}
+                  />
+                  <!-- Next to the URL, not next to the list: it acts on what is in
+                       the box, and that is the thing it should sit beside. -->
+                  <button type="button" class="icon" data-testid="sample-add" title="Add this URL to the sample list" ?disabled=${!this.url.trim()} @click=${()=>void this.saveAsSample()}>+</button>
+                </div>
+              </label>
+
+              <label>
+                …or upload a file
+                <input type="file" accept=${this.acceptAttr} @change=${e=>this.onFileChange(e)} />
+              </label>
+              ${this.file?v`<p class="hint">Importing <strong>${this.file.name}</strong> as ${this.resolvedKind.toUpperCase()}.</p>`:X}
+
+              <label>
+                Import mode
+                <div class="row mode-row">
+                  <label class="check">
+                    <input type="radio" name="import-mode" .checked=${this.mode==="copy"} @change=${()=>this.mode="copy"} />
+                    Copy — a local, editable, synced snapshot you can refresh
+                  </label>
+                  <label class="check">
+                    <input type="radio" name="import-mode" ?disabled=${!!this.file} .checked=${this.mode==="reference"} @change=${()=>this.mode="reference"} />
+                    Reference — live, read-only; rows never stored or synced
+                  </label>
+                </div>
+              </label>
+              ${this.file?v`<p class="hint">Uploaded files can only be imported as a Copy.</p>`:X} ${this.renderTarget()}
+
+              <label class="check">
+                <input type="checkbox" ?disabled=${this.mode==="reference"} .checked=${this.editColumns} @change=${e=>this.editColumns=e.target.checked} />
+                Edit columns before import (rename / hide / fix duplicate names)
+              </label>
+              ${this.mode==="reference"?v`<p class="hint">A Reference keeps the source's own schema, so there is nothing to edit.</p>`:X}
+
+              <label>
+                Limit rows (optional)
+                <input type="number" min="1" step="1" placeholder="import all rows" .value=${this.maxRowsInput} @input=${e=>this.maxRowsInput=e.target.value} />
+              </label>
+            </fieldset>
+
+            ${this.renderPluginBlock()}
+
+            <p class="hint">
+              Paste any URL or pick a sample above — a JSON dump, a <code>.csv</code> or <code>.tsv</code> file, or a Datasette table/database/instance. For a Datasette instance root, click
+              <em>List databases</em> to pick one first. Multi-table sources let you choose which tables to import; Datasette tables are capped at 10,000 rows each.
+            </p>
+          </div>
+        </form>
+      </dialog>
+      ${X}
+    `}};Ae.instance=null;Ae.styles=[mt,Se`
+      dialog {
+        min-width: 420px;
+        max-width: 560px;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        font-size: 0.85rem;
+        color: #374151;
+      }
+      label.check {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      label.check input {
+        width: auto;
+      }
+      input[type='text'],
+      input[type='number'],
+      input[type='file'],
+      select {
+        font: inherit;
+        padding: 0.45rem 0.55rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        width: 100%;
+        box-sizing: border-box;
+        background: white;
+      }
+      input:disabled {
+        background: #f3f4f6;
+        color: #9ca3af;
+      }
+      .row {
+        display: flex;
+        gap: 0.75rem;
+      }
+      .row > * {
+        flex: 1;
+      }
+      .mode-row {
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+      .hint {
+        color: #6b7280;
+        font-size: 0.78rem;
+        margin: 0;
+      }
+      .hint.error {
+        color: #b91c1c;
+      }
+      /*
+       * The dialog is two blocks: the options EVERY importer has (source,
+       * mode, edit-columns, row limit), then the options only the chosen
+       * importer has. Keeping them visually separate is the whole point —
+       * see .claude/plans/2026-07-28-importer-architecture.md.
+       */
+      fieldset.block {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.35rem;
+        padding: 0.85rem 0.9rem 0.9rem;
+        margin: 0;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.85rem;
+      }
+      fieldset.block > legend {
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6b7280;
+        padding: 0 0.35rem;
+      }
+      .db-row {
+        align-items: stretch;
+      }
+      .db-row select {
+        flex: 1;
+      }
+      .db-row .db-load {
+        flex: 0 0 auto;
+        white-space: nowrap;
+      }
+      /* A control with a small button beside it: the sample list + its trash,
+         the URL box + its "add this to the samples" plus. */
+      .with-btn {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .with-btn select,
+      .with-btn input[type='text'] {
+        flex: 1;
+        min-width: 0;
+      }
+      button.icon {
+        background: transparent;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        padding: 0.3rem 0.5rem;
+        font-size: 1rem;
+        line-height: 1;
+        cursor: pointer;
+        flex: 0 0 auto;
+      }
+      button.icon:hover:not([disabled]) {
+        border-color: #bfdbfe;
+        background: #eff6ff;
+      }
+      button.icon.danger:hover:not([disabled]) {
+        border-color: #fecaca;
+        background: #fef2f2;
+      }
+      button.icon[disabled] {
+        opacity: 0.4;
+        cursor: default;
+      }
+      button.link {
+        background: transparent;
+        border: 0;
+        padding: 0;
+        color: #2563eb;
+        font: inherit;
+        font-size: 0.78rem;
+        text-decoration: underline;
+        cursor: pointer;
+        white-space: nowrap;
+        flex: 0 0 auto;
+      }
+      button.link[disabled] {
+        color: #9ca3af;
+        text-decoration: none;
+        cursor: default;
+      }
+    `];qe([j()],Ae.prototype,"url",2);qe([j()],Ae.prototype,"kind",2);qe([j()],Ae.prototype,"pickedSample",2);qe([j()],Ae.prototype,"userSamples",2);qe([j()],Ae.prototype,"hiddenSamples",2);qe([j()],Ae.prototype,"dbList",2);qe([j()],Ae.prototype,"dbLoading",2);qe([j()],Ae.prototype,"dbError",2);qe([j()],Ae.prototype,"selectedDb",2);qe([j()],Ae.prototype,"editColumns",2);qe([j()],Ae.prototype,"file",2);qe([j()],Ae.prototype,"maxRowsInput",2);qe([j()],Ae.prototype,"mode",2);qe([j()],Ae.prototype,"targetKind",2);qe([j()],Ae.prototype,"targetTableId",2);qe([j()],Ae.prototype,"tables",2);qe([j()],Ae.prototype,"formats",2);qe([j()],Ae.prototype,"acceptAttr",2);Ae=qe([Re("import-dialog")],Ae);const FS=Object.freeze(Object.defineProperty({__proto__:null,get ImportDialog(){return Ae},init:TS,meta:_S},Symbol.toStringTag,{value:"Module"})),US={id:"auto-sync",name:"Auto Sync",type:"sync",version:"0.1.0",description:"Pushes the workspace to the server every minute; prompts to pull when the server changes.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/auto-sync.ts"},BS=6e4;let dh=null,yl=!1;const za=new Map;function qS(e){dh===null&&(typeof location<"u"&&new URLSearchParams(location.search).get("test")==="1"||(dh=setInterval(()=>{Mm(e)},BS)))}async function Mm(e){if(yl)return;const t=e.workspaceId();if(!t)return;const n=await zp(e);if(n)try{await HS(e,n,t)}catch(r){console.warn("[auto-sync]",r)}}async function HS(e,t,n){const r=await Co(e),i=await Np(e,n),s=await fetch(`${t}/sync/${encodeURIComponent(n)}`);if(s.status===404){await hh(e,t,n,r,null);return}if(!s.ok)return;const o=Eo(s.headers.get("ETag")),a=await s.text();if(Nd(r)===Nd(a)){o&&o!==i&&await Un(e,n,o);return}if(o&&o===i){await hh(e,t,n,r,i);return}if(!(o&&za.get(n)===o)){yl=!0;try{if(await e.ui.dialogs.confirm(`The server has new data for "${n}". Pull and replace your local copy?`,"auto-sync")){const d=JSON.parse(a),f=await jp(e,n,d);o&&await Un(e,n,o),za.delete(n),e.ui.dialogs.toast(`Pulled ${f} table${f===1?"":"s"} from the server.`,{kind:"success",title:"auto-sync"})}else o&&za.set(n,o)}finally{yl=!1}}}async function hh(e,t,n,r,i){const s={"Content-Type":"application/json"};i&&(s["If-Match"]=`"${i}"`);const o=await fetch(`${t}/sync/${encodeURIComponent(n)}`,{method:"PUT",headers:s,body:r});if(o.ok){const a=Eo(o.headers.get("ETag"));a&&await Un(e,n,a);return}if(o.status===412){const a=await o.json().catch(()=>({}));a.currentEtag&&await Un(e,n,a.currentEtag)}}const Pm=Object.freeze(Object.defineProperty({__proto__:null,load:qS,meta:US,tick:Mm},Symbol.toStringTag,{value:"Module"})),Gs=new Set(["a","about","above","after","again","all","am","an","and","any","are","as","at","be","because","been","before","being","below","between","both","but","by","can","cannot","could","did","do","does","doing","down","during","each","few","for","from","further","had","has","have","having","he","her","here","hers","herself","him","himself","his","how","i","if","in","into","is","it","its","itself","just","me","more","most","my","myself","no","nor","not","now","of","off","on","once","only","or","other","our","ours","ourselves","out","over","own","same","she","should","so","some","such","than","that","the","their","theirs","them","themselves","then","there","these","they","this","those","through","to","too","under","until","up","very","was","we","were","what","when","where","which","while","who","whom","why","will","with","would","you","your","yours","yourself","yourselves","s","t","don","isn","aren","wasn","weren","doesn","didn","won","shouldn","couldn","wouldn"]);function zm(e){if(typeof e!="string")return new Set;const t=new Set;for(const n of e.split(/[,;\s]+/)){const r=n.trim().toLocaleLowerCase();r!==""&&t.add(r)}return t}function VS(){return[...Gs].join(", ")}function fh(e){return e===!1?new Set:e===!0||e==null?Gs:typeof e=="string"?zm(e):Gs}function KS(e){const t=[],n=/\p{L}[\p{L}\p{N}]*(?:['’-][\p{L}\p{N}]+)*|\p{N}+/gu;for(const r of e.matchAll(n))t.push(r[0]);return t}function WS(e,t={}){const n=t.minLength??3,r=t.maxTerms??120,i=t.stopWords??Gs,s=t.keepWords,o=t.includeNumbers??!1,a=new Map,c=f=>{for(const p of KS(f)){const b=p.toLocaleLowerCase();if(!s?.has(b)&&(b.length<n||i.has(b)||!o&&/^\p{N}+$/u.test(b)))continue;let y=a.get(b);y||(y={total:0,spellings:new Map},a.set(b,y)),y.total++,y.spellings.set(p,(y.spellings.get(p)??0)+1)}};for(const f of e)if(typeof f=="string")c(f);else if(typeof f=="number"&&Number.isFinite(f))c(String(f));else if(Array.isArray(f))for(const p of f)(typeof p=="string"||typeof p=="number")&&c(String(p));const d=[...a.entries()].map(([f,p])=>{let b=f,y=-1;for(const[$,k]of p.spellings)(k>y||k===y&&$<b)&&(b=$,y=k);return{term:b,count:p.total}});return d.sort((f,p)=>p.count-f.count||f.term.localeCompare(p.term)),d.slice(0,r)}const cr="viz",Oc="https://tile.openstreetmap.org/{z}/{x}/{y}.png",Lc="© OpenStreetMap contributors";async function GS(e){const t=Number(await e.get(cr,"cloudMinLength")),n=await e.get(cr,"cloudKeepWords"),r=await e.get(cr,"cloudStopWords");return{minLength:Number.isFinite(t)&&t>0?Math.floor(t):3,keepWords:typeof n=="string"?n:"",stopWords:typeof r=="string"?r:VS()}}async function YS(e){const t=await e.get(cr,"tileUrl");return typeof t=="string"&&t.trim()!==""?t.trim():Oc}async function QS(e){const t=await e.get(cr,"tileAttribution");return typeof t=="string"&&t.trim()!==""?t.trim():Lc}function vl(e,t){const n={...e??{}};for(const[r,i]of Object.entries(t??{}))i!==void 0&&(n[r]=i);return n}function JS(e,t){if(e===t)return!0;const n=r=>r==null||r==="";if(n(e)&&n(t))return!0;if(typeof e=="number"||typeof t=="number"){const r=Number(e),i=Number(t);if(Number.isFinite(r)&&Number.isFinite(i))return r===i}return!1}function Nm(e,t){const n=e??{},r={};for(const[i,s]of Object.entries(t??{}))JS(s,n[i])||(r[i]=s);return r}function XS(e,t){return new Set(Object.keys(Nm(e,t)))}const fs="(empty)",ph="Other",ZS={categories:[],series:[],rowCount:0,truncated:!1,skipped:0};function mh(e={}){return{...ZS,categories:[],series:[],...e}}function or(e){return e==null||typeof e=="string"&&e.trim()===""}function jm(e){if(typeof e=="number")return Number.isFinite(e)?e:null;if(typeof e=="string"){const t=e.trim();if(t==="")return null;const n=Number(t);return Number.isFinite(n)?n:null}return null}function eC(e,t){const n=typeof e=="string"||typeof e=="number"?e:null;if(n===null)return null;const r=typeof n=="string"?/^(\d{4})-(\d{2})-(\d{2})$/.exec(n):null;let i,s,o;if(r)i=Number(r[1]),s=Number(r[2])-1,o=Number(r[3]);else{const c=new Date(n);if(Number.isNaN(c.getTime()))return null;i=c.getFullYear(),s=c.getMonth(),o=c.getDate()}const a=c=>String(c).padStart(2,"0");switch(t){case"year":return String(i);case"quarter":return`${i}-Q${Math.floor(s/3)+1}`;case"month":return`${i}-${a(s+1)}`;case"week":{const c=new Date(Date.UTC(i,s,o)),d=c.getUTCDay()||7;c.setUTCDate(c.getUTCDate()+4-d);const f=Date.UTC(c.getUTCFullYear(),0,1),p=Math.ceil(((c.getTime()-f)/864e5+1)/7);return`${c.getUTCFullYear()}-W${a(p)}`}case"day":default:return`${i}-${a(s+1)}-${a(o)}`}}function tC(e,t){const n=jm(e);if(n===null||!(t>0))return null;const r=Math.floor(n/t)*t,i=s=>Number(s.toPrecision(12));return{key:i(r),label:`${i(r)}–${i(r+t)}`}}function nC(e,t,n){const r=e.data[t];if(n?.type==="array"||Array.isArray(r)){const i=ft(r);return i.length>0?i:[null]}return[r]}function rC(e,t){if(e==="count")return{value:t.length,skipped:0};if(e==="countDistinct")return{value:new Set(t.map(s=>or(s)?"":String(s))).size,skipped:0};const n=[];let r=0;for(const i of t){if(or(i))continue;const s=jm(i);s===null?r++:n.push(s)}if(n.length===0)return{value:null,skipped:r};switch(e){case"sum":return{value:n.reduce((i,s)=>i+s,0),skipped:r};case"avg":return{value:n.reduce((i,s)=>i+s,0)/n.length,skipped:r};case"min":return{value:Math.min(...n),skipped:r};case"max":return{value:Math.max(...n),skipped:r};default:return{value:null,skipped:r}}}function iC(e,t){return e==="count"?"Count":e==="countDistinct"?`Distinct ${t}`:`${{sum:"Sum",avg:"Average",min:"Min",max:"Max"}[e]} of ${t}`}function sC(e,t,n,r,i={}){const s=i.truncated===!0,o=new Map(t.map(K=>[K.field,K])),a=r.measures??[],c=r.groupBy??[],d=[];for(const K of c){const ie=n[K];(!ie||!o.has(ie))&&d.push(K)}for(const K of a){if(K.fn==="count")continue;const ie=n[K.channel];(!ie||!o.has(ie))&&d.push(K.channel)}if(d.length>0){const K=[...new Set(d)];return mh({truncated:s,rowCount:e.length,error:`No column mapped for ${K.length>1?"channels":"channel"} ${K.join(", ")}.`})}if(a.length===0)return mh({truncated:s,rowCount:e.length,error:"No measure configured."});const f=r.bin?.channel,p=r.bin?.width,b=r.bin?.unit,y=new Map;let $=0;for(const K of e){let ie=[{values:[],labels:[],sortValue:void 0}];for(const de of c){const H=n[de],te=o.get(H),q=nC(K,H,te),Q=[];for(const ae of ie)for(const we of q){let xe,De=we;if(f===de)if(b){const pe=eC(we,b);pe===null?(xe=fs,De=null):(xe=pe,De=pe)}else if(p){const pe=tC(we,p);pe===null?(xe=fs,De=null):(xe=pe.label,De=pe.key)}else xe=or(we)?fs:String(we);else xe=or(we)?fs:String(we);Q.push({values:[...ae.values,we],labels:[...ae.labels,xe],sortValue:ae.labels.length===0?De:ae.sortValue})}ie=Q}for(const de of ie){const H=de.labels.join("  ");let te=y.get(H);te||(te={key:H,labels:de.labels,values:de.values,measured:a.map(()=>[]),sortValue:de.sortValue},y.set(H,te)),a.forEach((q,Q)=>{if(q.fn==="count"){te.measured[Q]?.push(1);return}const ae=n[q.channel],xe=o.get(ae)?.type==="array"||Array.isArray(K.data[ae])?ft(K.data[ae]):[K.data[ae]];for(const De of xe)te.measured[Q]?.push(De)})}}const C=[...y.values()].map(K=>{const ie=a.map((de,H)=>{const te=rC(de.fn,K.measured[H]??[]);return $+=te.skipped,te.value});return{bucket:K,points:ie}}),_=K=>K.points[0]??Number.NEGATIVE_INFINITY,T=(K,ie)=>K.key.localeCompare(ie.key),Y=c.length>0?o.get(n[c[0]])?.type:void 0,D=r.sort??"category";D==="value"?C.sort((K,ie)=>_(K)-_(ie)||T(K.bucket,ie.bucket)):D==="valueDesc"?C.sort((K,ie)=>_(ie)-_(K)||T(K.bucket,ie.bucket)):C.sort((K,ie)=>{const de=K.bucket.sortValue,H=ie.bucket.sortValue,te=or(de),q=or(H);return te!==q?te?1:-1:te&&q?T(K.bucket,ie.bucket):r.bin&&r.bin.channel===c[0]?typeof de=="number"&&typeof H=="number"?de-H||T(K.bucket,ie.bucket):String(de).localeCompare(String(H))||T(K.bucket,ie.bucket):bm(de,H,Y??"string")||T(K.bucket,ie.bucket)});let ne=C.map(K=>({key:K.bucket.key,label:K.bucket.labels.join(" · "),values:K.bucket.values})),W=C.map(K=>K.points);const I=r.topN;if(I&&I>0&&ne.length>I){const K=[...C].sort((q,Q)=>_(Q)-_(q)||T(q.bucket,Q.bucket)),ie=new Set(K.slice(0,I).map(q=>q.bucket.key)),de=[],H=[],te=[];ne.forEach((q,Q)=>{ie.has(q.key)?(de.push(q),H.push(W[Q]??[])):te.push(W[Q]??[])}),te.length>0&&(de.push({key:ph,label:ph,values:[]}),H.push(a.map((q,Q)=>{const ae=te.map(we=>we[Q]).filter(we=>we!=null);return ae.length===0?null:q.fn==="min"?Math.min(...ae):q.fn==="max"?Math.max(...ae):ae.reduce((we,xe)=>we+xe,0)}))),ne=de,W=H}const V=a.map((K,ie)=>{const de=n[K.channel],H=de?o.get(de)?.label??de:K.channel??"Value";return{key:`${K.channel}:${K.fn}`,label:iC(K.fn,H),points:W.map(te=>te[ie]??null)}});return{categories:ne,series:V,rowCount:e.length,truncated:s,skipped:$}}function oC(e){if(e==null)return"";if(typeof e=="boolean")return e?"true":"false";const t=typeof e=="number"||typeof e=="string"?String(e):JSON.stringify(e);return t===""?"":/[",\r\n]/.test(t)?`"${t.replace(/"/g,'""')}"`:t}function Dc(e){return e.map(t=>t.map(oC).join(",")).join(`\r
+`)}function aC(e){return Dc([["Word","Count"],...e.map(t=>[t.term,t.count])])}function lC(e){const t=["Category",...e.series.map(r=>r.label)],n=e.categories.map((r,i)=>[r.label,...e.series.map(s=>s.points[i]??"")]);return Dc([t,...n])}function cC(e){const t=e.some(s=>s.label!=null&&s.label!==""),n=e.some(s=>s.weight!=null),r=["Latitude","Longitude",...t?["Label"]:[],...n?["Weight"]:[]],i=e.map(s=>[s.lat,s.lon,...t?[s.label??""]:[],...n?[s.weight??""]:[]]);return Dc([r,...i])}function uC(e){const t=e.trim().replace(/[^A-Za-z0-9_-]+/g,"-").replace(/^-+|-+$/g,"");return`${t===""?"visualization":t}.csv`}function dC(e){return e==null?!0:typeof e=="string"?e.trim()==="":Array.isArray(e)?e.length===0:!1}function hC(e,t){let n=0;for(const r of e)dC(r.data[t])||n++;return n}function fC(e,t,n){if(e.length===0)return[];const r=new Map(t.map(s=>[s.field,s])),i=[];for(const s of n)s.field&&r.has(s.field)&&hC(e,s.field)===0&&i.push({label:s.label,column:r.get(s.field)?.label||s.field});return i}const pC=e=>e.toLocaleString();function mC(e,t){if(e.length===0)return null;const n=`${pC(t)} ${t===1?"row":"rows"}`;if(e.length===1){const i=e[0];return`Nothing to show: the column “${i.column}” is empty in all ${n}. Pick a different column for ${i.label} with Edit.`}return`Nothing to show: the columns ${e.map(i=>`“${i.column}”`).join(" and ")} are empty in all ${n}. Pick different columns with Edit.`}function gC(e){const t=[];return e.minLength>1&&t.push(`shorter than ${e.minLength} characters`),e.stopWordsOn&&t.push("a common word (the, and, of…)"),e.numbersExcluded&&t.push("a number"),`No words left to show.${t.length>0?` Every word was ${t.join(", or ")}.`:""} Adjust the word rules with Chart, or map a different column with Edit.`}const bC=["#2563eb","#0891b2","#7c3aed","#db2777","#ea580c","#16a34a","#ca8a04","#dc2626"];function An(e,t,n){const r=e.getPropertyValue(t).trim();return r===""?n:r}function Mc(e){const t=getComputedStyle(e),n=An(t,"--viz-palette","").split(",").map(o=>o.trim()).filter(o=>o!==""),i=(n.length>0?n:bC).map((o,a)=>An(t,`--viz-color-${a+1}`,o)),s=Number.parseFloat(An(t,"--viz-font-size",""));return{palette:i,grid:An(t,"--viz-grid","rgba(127,127,127,0.25)"),text:An(t,"--viz-text",t.color||"#111827"),mutedText:An(t,"--viz-muted-text","rgba(127,127,127,0.9)"),fontFamily:An(t,"--viz-font-family",t.fontFamily||"system-ui, sans-serif"),fontSize:Number.isFinite(s)&&s>0?s:12}}function wC(e,t){const n=/^#([0-9a-f]{6})$/i.exec(e.trim());if(n){const i=Number.parseInt(n[1],16);return`rgba(${i>>16&255}, ${i>>8&255}, ${i&255}, ${t})`}const r=/^#([0-9a-f]{3})$/i.exec(e.trim());if(r){const[i,s,o]=[...r[1]].map(a=>Number.parseInt(a+a,16));return`rgba(${i}, ${s}, ${o}, ${t})`}return e}let ps=null;async function yC(){return ps||(ps=(async()=>{const e=await Ie(()=>import("./chart-Cns13J0s.js"),[]);return e.Chart.register(e.BarController,e.BarElement,e.LineController,e.LineElement,e.PointElement,e.PieController,e.ArcElement,e.CategoryScale,e.LinearScale,e.Tooltip,e.Legend),e.Chart})(),ps)}const gh=new Intl.NumberFormat;class zo extends $e{constructor(){super(...arguments),this.kind="bar",this.data={categories:[],series:[]},this.options={},this.emptyText="No data to chart.",this.chart=null,this.ro=null,this.generation=0}static{this.styles=Se`
+    :host {
+      display: block;
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 80px;
+      container-type: size;
+    }
+    .wrap {
+      position: absolute;
+      inset: 0;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 0.5rem 1rem;
+      text-align: center;
+      font: 12px/1.5 var(--viz-font-family, system-ui, sans-serif);
+      color: var(--viz-muted-text, rgba(127, 127, 127, 0.9));
+    }
+    /* The accessible equivalent of the canvas. Visually hidden rather than
+       display:none, so a screen reader reaches it — a canvas has no readable
+       content of its own. Doubles as the copy-the-numbers affordance. */
+    .a11y {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+  `}static get properties(){return{kind:{type:String},data:{attribute:!1},options:{attribute:!1},emptyText:{type:String}}}connectedCallback(){super.connectedCallback(),this.ro=new ResizeObserver(()=>this.chart?.resize()),this.ro.observe(this)}disconnectedCallback(){super.disconnectedCallback(),this.generation++,this.ro?.disconnect(),this.ro=null,this.chart?.destroy(),this.chart=null}updated(t){(t.has("data")||t.has("options")||t.has("kind"))&&this.draw()}get hasData(){return this.data.categories.length>0&&this.data.series.length>0}buildConfig(t){const n=Mc(this),r=this.options,i=this.kind==="pie",s=this.kind==="line",o=this.kind==="bar",a=r.legend??(i?!0:this.data.series.length>1);t.defaults.font.family=n.fontFamily,t.defaults.font.size=n.fontSize,t.defaults.color=n.text;const c=this.data.series.map((p,b)=>{const y=n.palette[b%n.palette.length]??"#2563eb";return i?{label:p.label,data:p.points,backgroundColor:this.data.categories.map(($,k)=>n.palette[k%n.palette.length]??y),borderColor:n.grid,borderWidth:1}:{label:p.label,data:p.points,backgroundColor:s?wC(y,r.area?.25:0):y,borderColor:y,borderWidth:s?2:0,fill:s?r.area??!1:!1,tension:s&&r.smooth?.35:0,pointRadius:s?2:0,spanGaps:!1}}),d={beginAtZero:r.beginAtZero??!0,stacked:r.stacked??!1,grid:{color:n.grid},border:{color:n.grid},ticks:{color:n.text,callback:p=>typeof p=="number"?gh.format(p):String(p)},title:r.yTitle?{display:!0,text:r.yTitle,color:n.text}:{display:!1}},f={stacked:r.stacked??!1,grid:{display:!1,color:n.grid},border:{color:n.grid},ticks:{color:n.text,autoSkip:!0,maxRotation:0},title:r.xTitle?{display:!0,text:r.xTitle,color:n.text}:{display:!1}};return{type:i?"pie":s?"line":"bar",data:{labels:this.data.categories,datasets:c},options:{responsive:!0,maintainAspectRatio:!1,animation:!1,...o?{indexAxis:"y"}:{},plugins:{legend:{display:a,labels:{color:n.text}},tooltip:{enabled:!0}},...i?{}:{scales:o?{x:d,y:f}:{x:f,y:d}}}}}async draw(){const t=++this.generation;if(!this.hasData){this.chart?.destroy(),this.chart=null;return}const n=await yC();if(t!==this.generation||!this.isConnected)return;const r=this.renderRoot.querySelector("canvas");r&&(this.chart?.destroy(),this.chart=new n(r,this.buildConfig(n)))}summary(){const t=this.data.categories.length,n=this.data.series.map(r=>r.label).join(", ");return`${this.kind} chart, ${t} ${t===1?"category":"categories"}${n?`, showing ${n}`:""}`}render(){return this.hasData?v`
+      <div class="wrap" role="img" aria-label=${this.summary()}>
+        <canvas></canvas>
+      </div>
+      <table class="a11y">
+        <caption>
+          ${this.summary()}
+        </caption>
+        <thead>
+          <tr>
+            <th scope="col">Category</th>
+            ${this.data.series.map(t=>v`<th scope="col">${t.label}</th>`)}
+          </tr>
+        </thead>
+        <tbody>
+          ${this.data.categories.map((t,n)=>v`
+              <tr>
+                <th scope="row">${t}</th>
+                ${this.data.series.map(r=>v`<td>${r.points[n]==null?"":gh.format(r.points[n])}</td>`)}
+              </tr>
+            `)}
+        </tbody>
+      </table>
+      ${X}
+    `:v`<div class="empty">${this.emptyText}</div>`}}class vC extends zo{constructor(){super(...arguments),this.kind="bar"}}class kC extends zo{constructor(){super(...arguments),this.kind="column"}}class $C extends zo{constructor(){super(...arguments),this.kind="line"}}class xC extends zo{constructor(){super(...arguments),this.kind="pie"}}function SC(){const e=[["viz-bar-chart",vC],["viz-column-chart",kC],["viz-line-chart",$C],["viz-pie-chart",xC]];for(const[t,n]of e)customElements.get(t)||customElements.define(t,n)}let ms=null,bh=!1;async function CC(){return ms||(ms=(async()=>{const[e]=await Promise.all([Ie(()=>import("./leaflet-src-CCXt4jqe.js").then(t=>t.l),[]),EC()]);return e.default??e})(),ms)}async function EC(){if(bh||typeof document>"u")return;bh=!0;const e=(await Ie(async()=>{const{default:n}=await import("./leaflet-xBcqXExc.js");return{default:n}},[])).default,t=document.createElement("style");t.dataset.vizLeaflet="",t.textContent=e,document.head.append(t)}class _C extends $e{constructor(){super(...arguments),this.points=[],this.options={},this.emptyText="No points to map.",this.map=null,this.tiles=null,this.markers=[],this.ro=null,this.generation=0,this.tileError=!1}createRenderRoot(){return this}static get properties(){return{points:{attribute:!1},options:{attribute:!1},emptyText:{type:String},tileError:{state:!0}}}connectedCallback(){super.connectedCallback(),this.style.display="block",this.style.position="relative",this.style.height="100%",this.style.minHeight="120px",this.ro=new ResizeObserver(()=>this.map?.invalidateSize()),this.ro.observe(this)}disconnectedCallback(){super.disconnectedCallback(),this.generation++,this.ro?.disconnect(),this.ro=null,this.map?.remove(),this.map=null,this.tiles=null,this.markers=[]}updated(t){(t.has("points")||t.has("options"))&&this.draw()}async draw(){const t=++this.generation,n=this.querySelector(".map");if(!n||this.points.length===0)return;const r=await CC();if(t!==this.generation||!this.isConnected)return;const i=Mc(this);this.map||(this.map=r.map(n,{attributionControl:!0})),this.tiles?this.options.tileUrl&&this.tiles.options.attribution!==void 0&&this.tiles.setUrl(this.options.tileUrl):(this.tiles=r.tileLayer(this.options.tileUrl??"",{attribution:this.options.attribution??"",maxZoom:19}),this.tiles.on("tileerror",()=>{this.tileError||(this.tileError=!0)}),this.tiles.addTo(this.map));for(const f of this.markers)f.remove();this.markers=[];const s=this.points.map(f=>f.weight??0).filter(f=>Number.isFinite(f)&&f>0),o=s.length>0?Math.max(...s):0,a=this.options.radius??6,c=i.palette[0]??"#2563eb";for(const f of this.points){const p=this.options.scaleByWeight&&o>0?Math.sqrt((f.weight??0)/o):1,b=r.circleMarker([f.lat,f.lon],{radius:Math.max(2,a*(p||1)),color:c,weight:1,fillColor:c,fillOpacity:.6});f.label&&b.bindTooltip(String(f.label)),b.addTo(this.map),this.markers.push(b)}const d=r.latLngBounds(this.points.map(f=>[f.lat,f.lon]));d.isValid()&&this.map.fitBounds(d,{padding:[24,24],maxZoom:12}),this.map.invalidateSize()}render(){return this.points.length===0?v`<div style="display:flex;align-items:center;justify-content:center;height:100%;padding:.5rem 1rem;text-align:center;font:12px/1.5 system-ui,sans-serif;color:rgba(127,127,127,.9)">
+        ${this.emptyText}
+      </div>`:v`
+      <div
+        class="map"
+        role="img"
+        aria-label="Map of ${this.points.length} ${this.points.length===1?"point":"points"}"
+        style="position:absolute;inset:0;background:var(--viz-map-bg, #e5e7eb)"
+      ></div>
+      ${this.tileError?v`<div role="status" style="position:absolute;left:0;right:0;bottom:0;z-index:500;padding:3px 8px;font:11px/1.35 system-ui,sans-serif;color:#92400e;background:rgba(255,251,235,.95)">
+            Map tiles could not be loaded — the points are still plotted. Check the tile URL in Settings → Visualizations, or your connection.
+          </div>`:X}
+    `}}function TC(){customElements.get("viz-point-map")||customElements.define("viz-point-map",_C)}function IC(e,t,n){if(e.length===0)return[];const r=e.map(o=>o.count),i=Math.min(...r),s=Math.max(...r);return e.map(o=>{const a=s===i?.5:(Math.sqrt(o.count)-Math.sqrt(i))/(Math.sqrt(s)-Math.sqrt(i));return{...o,size:Math.round(t+a*(n-t))}})}function AC(e,t,n,r){const s=Math.max(1,t)*Math.max(1,n)/Math.max(1,e),o=Math.sqrt(s)*.42,a=Math.min(o,Math.min(t,n)/5);return Math.max(r+4,Math.round(a))}class RC extends $e{constructor(){super(...arguments),this.terms=[],this.options={},this.emptyText="No words to show.",this.placed=[],this.dropped=0,this.w=0,this.h=0,this.generation=0,this.ro=null}static{this.styles=Se`
+    :host {
+      display: block;
+      position: relative;
+      height: 100%;
+      min-height: 100px;
+    }
+    svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    text {
+      font-family: var(--viz-font-family, system-ui, sans-serif);
+      font-weight: 600;
+      cursor: default;
+    }
+    .dropped {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 2px 6px;
+      font: 10px/1.3 var(--viz-font-family, system-ui, sans-serif);
+      color: var(--viz-muted-text, rgba(127, 127, 127, 0.9));
+      background: rgba(127, 127, 127, 0.08);
+      pointer-events: none;
+    }
+    .empty {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 0.5rem 1rem;
+      text-align: center;
+      font: 12px/1.5 var(--viz-font-family, system-ui, sans-serif);
+      color: var(--viz-muted-text, rgba(127, 127, 127, 0.9));
+    }
+  `}static get properties(){return{terms:{attribute:!1},options:{attribute:!1},emptyText:{type:String},placed:{state:!0},dropped:{state:!0}}}connectedCallback(){super.connectedCallback(),this.ro=new ResizeObserver(()=>{const t=this.getBoundingClientRect();Math.abs(t.width-this.w)<8&&Math.abs(t.height-this.h)<8||this.layout()}),this.ro.observe(this)}disconnectedCallback(){super.disconnectedCallback(),this.generation++,this.ro?.disconnect(),this.ro=null}updated(t){(t.has("terms")||t.has("options"))&&this.layout()}async layout(){const t=++this.generation;if(this.terms.length===0){this.placed=[];return}const n=this.getBoundingClientRect(),r=Math.max(80,Math.floor(n.width)),i=Math.max(60,Math.floor(n.height)),s=await Ie(()=>import("./index-1hGAoPTf.js").then(b=>b.i),[]);if(t!==this.generation||!this.isConnected)return;const o=s.default??s,a=Math.max(6,this.options.minFontSize??11),c=this.options.maxFontSize??AC(this.terms.length,r,i,a),d=b=>{const y=IC(this.terms,a,b);return new Promise($=>{o().size([r,i]).words(y.map(k=>({text:k.term,size:k.size,count:k.count}))).padding(2).rotate(k=>this.options.rotate?OC(k.text??"")%2===0?0:90:0).font("system-ui, sans-serif").fontWeight("600").fontSize(k=>k.size??a).on("end",k=>$(k)).start()})};let f=c,p=await d(f);for(let b=0;b<2&&p.length<this.terms.length*.9;b++){const y=Math.max(a+2,Math.round(f*.6));if(y>=f)break;f=y;const $=await d(f);if(t!==this.generation)return;if($.length>p.length)p=$;else break}t!==this.generation||!this.isConnected||(this.placed=p,this.dropped=Math.max(0,this.terms.length-p.length),this.w=r,this.h=i)}render(){if(this.terms.length===0)return v`<div class="empty">${this.emptyText}</div>`;const t=Mc(this),n=this.w||300,r=this.h||200,i=`Word cloud of ${this.terms.length} ${this.terms.length===1?"term":"terms"}, largest ${this.terms[0]?.term??""}`;return v`
+      ${this.dropped>0?v`<div class="dropped" role="status">${this.dropped} more ${this.dropped===1?"word did":"words did"} not fit — make the pane bigger or show fewer words.</div>`:X}
+      <svg viewBox="0 0 ${n} ${r}" role="img" aria-label=${i} preserveAspectRatio="xMidYMid meet">
+        <g transform="translate(${n/2},${r/2})">
+          ${this.placed.map((s,o)=>Cb`
+              <text text-anchor="middle" transform="translate(${s.x},${s.y}) rotate(${s.rotate})" font-size=${s.size} fill=${t.palette[o%t.palette.length]??t.text}>
+                <title>${s.text}: ${s.count.toLocaleString()}</title>
+                ${s.text}
+              </text>
+            `)}
+        </g>
+      </svg>
+      ${X}
+    `}}function OC(e){let t=0;for(let n=0;n<e.length;n++)t=t*31+e.charCodeAt(n)|0;return Math.abs(t)}function LC(){customElements.get("viz-word-cloud")||customElements.define("viz-word-cloud",RC)}var DC=Object.defineProperty,MC=Object.getOwnPropertyDescriptor,gn=(e,t,n,r)=>{for(var i=r>1?void 0:r?MC(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&DC(t,n,i),i};SC();TC();LC();let Vt=class extends $e{constructor(){super(...arguments),this.viewInstanceId="",this.instance=null,this.template=null,this.columns=[],this.frame=null,this.error="",this.loaded=!1,this.rows=[],this.rowColl=null,this.matchingTotal=0,this.truncated=!1,this.searching=!1,this.tileUrl=Oc,this.tileAttribution=Lc,this.registries=null}connectedCallback(){super.connectedCallback(),this.load()}disconnectedCallback(){super.disconnectedCallback(),this.teardown()}teardown(){this.instUnsub?.(),this.rowsUnsub?.(),this.tableUnsub?.(),this.dockUnsub?.(),this.instUnsub=void 0,this.rowsUnsub=void 0,this.tableUnsub=void 0,this.dockUnsub=void 0,this.rowColl=null}exportCsv(){const e=this.instance?.name??"visualization",t=uC(e);if(this.spec?.data==="rows"){const r=this.mapPoints();if(r.length>0)return{filename:t,text:cC(r)};const i=this.cloudTerms();return i.length>0?{filename:t,text:aC(i)}:null}const n=this.frame;return!n||n.categories.length===0?null:{filename:t,text:lC(n)}}async reload(){this.teardown(),await this.load()}get spec(){const e=this.template?.viz?.kind;return e?this.registries?.visualizations.get(e)??null:null}async load(){if(!this.viewInstanceId)return;const e=await J();this.registries=e.registries,this.instUnsub=e.store.viewInstances.subscribe(n=>{const r=n.find(s=>s.id===this.viewInstanceId);if(!r)return;const i=r.tableId!==this.instance?.tableId||r.templateId!==this.instance?.templateId;this.instance=r,i?this.bind():this.refreshTemplateThenRecompute()});const t=await e.store.viewInstances.findOne(this.viewInstanceId);if(!t){this.error="This visualization no longer exists.",this.loaded=!0;return}this.instance=t,await this.bind()}async refreshTemplateThenRecompute(){const e=await J(),t=this.instance;t&&(this.template=await e.store.viewTemplates.findOne(t.templateId)??null,this.recompute())}async bind(){const e=await J(),t=this.instance;if(!t)return;if(this.rowsUnsub?.(),this.tableUnsub?.(),this.dockUnsub?.(),this.tileUrl=await YS(e.api.settings),this.tileAttribution=await QS(e.api.settings),this.template=await e.store.viewTemplates.findOne(t.templateId)??null,!this.template){this.error="The template this visualization uses is gone.",this.loaded=!0;return}if(this.template.kind!=="viz"||!this.template.viz){this.error="This template is not a visualization.",this.loaded=!0;return}const n=await e.store.tables.findOne(t.tableId);if(!n){this.error="The table this visualization reads is gone.",this.loaded=!0;return}if(this.applyTable(n),this.tableUnsub=e.store.tables.subscribe(r=>{const i=r.find(s=>s.id===this.instance?.tableId);i&&(this.applyTable(i),this.recompute())}),t.dock){const r=t.dock.host.kind==="view"?t.dock.host.viewInstanceId:t.dock.host.tableId;this.dockUnsub=I1(r,i=>this.acceptPublishedRows(i)),this.loaded=!0;return}this.rowColl=e.store.rows(t.tableId),this.rowsUnsub=this.rowColl.watch?this.rowColl.watch(()=>void this.loadRows()):this.rowColl.subscribe(()=>void this.loadRows()),await this.loadRows()}applyTable(e){this.columns=e.columns??[]}acceptPublishedRows(e){this.rows=[...e.rows],this.matchingTotal=e.total,this.truncated=e.truncated,this.searching=e.searching,this.loaded=!0,this.recompute()}async loadRows(){const e=this.rowColl,t=this.instance;if(!e||!t)return;const n={columns:this.columns,filters:{...t.filters??{},...t.pillFilters??{}},sort:ml(t),...t.limit&&t.limit>0?{limit:t.limit}:{}},r=await Ai(e,n,Nn);this.rows=r.rows,this.matchingTotal=r.total,this.truncated=r.truncated===!0,this.searching=!1,this.loaded=!0,this.recompute()}get aggregate(){return this.template?.viz?.aggregate??this.spec?.defaultAggregate??null}evaluatedRows(){const e=this.columns.filter(t=>typeof t.script=="string"&&t.script.trim()!=="");return e.length===0?this.rows:this.rows.map(t=>{const n={...t.data};for(const r of e){const i=Er(r.script,t.data);n[r.field]=i.ok?i.value:null}return{...t,data:n}})}recompute(){const e=this.instance;if(this.spec?.data==="rows"){this.frame=null,this.requestUpdate();return}const t=this.aggregate;if(!t||!e){this.frame=null;return}this.frame=sC(this.evaluatedRows(),this.columns,e.mapping??{},t,{truncated:this.truncated})}chartData(){const e=this.frame;return e?{categories:e.categories.map(t=>t.label),series:e.series.map(t=>({label:t.label,points:t.points}))}:{categories:[],series:[]}}get options(){return vl(this.template?.viz?.options,this.instance?.vizOptions)}fieldFor(e){return this.instance?.mapping?.[e]??""}channelOfKind(e){return this.spec?.channels.find(t=>t.kind===e)?.key??null}mapPoints(){const e=this.channelOfKind("lat"),t=this.channelOfKind("lon");if(!e||!t)return[];const n=this.fieldFor(e),r=this.fieldFor(t);if(!n||!r)return[];const i=this.channelOfKind("text"),s=this.channelOfKind("weight"),o=i?this.fieldFor(i):"",a=s?this.fieldFor(s):"",c=f=>{const p=typeof f=="number"?f:typeof f=="string"&&f.trim()!==""?Number(f):NaN;return Number.isFinite(p)?p:null},d=[];for(const f of this.rows){const p=c(f.data[n]),b=c(f.data[r]);if(p===null||b===null||p<-90||p>90||b<-180||b>180)continue;const y=o?f.data[o]:void 0,$=a?c(f.data[a]):null;d.push({lat:p,lon:b,...y==null||y===""?{}:{label:String(y)},...$===null?{}:{weight:$}})}return d}cloudTerms(){const e=this.channelOfKind("text");if(!e||this.channelOfKind("lat"))return[];const t=this.fieldFor(e);if(!t)return[];const n=this.options,r=s=>{const o=Number(n[s]);return Number.isFinite(o)&&o>0?o:void 0},i=zm(typeof n.keepWords=="string"?n.keepWords:"");return WS(this.rows.map(s=>s.data[t]),{...r("minLength")===void 0?{}:{minLength:r("minLength")},...r("maxTerms")===void 0?{}:{maxTerms:r("maxTerms")},includeNumbers:n.includeNumbers===!0,stopWords:fh(n.stopWords),...i.size>0?{keepWords:i}:{}}).map(s=>({term:s.term,count:s.count}))}mappedChannels(){const e=this.spec;if(!e)return[];const t=this.aggregate,n=[];for(const r of e.channels){const i=this.fieldFor(r.key);i&&(e.data==="aggregate"&&t&&!new Set([...t.groupBy??[],...(t.measures??[]).filter(o=>o.fn!=="count").map(o=>o.channel)]).has(r.key)||n.push({channel:r.key,label:r.label,field:i}))}return n}emptyNote(){return this.rows.length===0?null:mC(fC(this.rows,this.columns,this.mappedChannels()),this.rows.length)}elementOptions(){const e={...this.options};return this.channelOfKind("lat")&&(typeof e.tileUrl!="string"||e.tileUrl.trim()==="")&&(e.tileUrl=this.tileUrl,e.attribution=this.tileAttribution),e}note(){const e=this.frame;if(!e)return null;const t=[];if(e.truncated){const n=_c({shown:e.rowCount,total:this.matchingTotal,searching:this.searching,searched:Nn});n&&t.push(n)}return e.skipped>0&&t.push(`${e.skipped.toLocaleString()} ${e.skipped===1?"value was":"values were"} not numeric and were left out.`),t.length>0?t.join(" "):null}render(){if(this.error)return v`<div class="error" role="status">${this.error}</div>`;if(!this.loaded)return v`<div class="placeholder">Loading…</div>`;const e=this.spec;if(!e){const s=this.template?.viz?.kind??"?";return v`<div class="error" role="status">No visualization registered for “${s}”. Its plugin may be disabled.</div>`}if(e.data==="aggregate"){if(!this.aggregate)return v`<div class="error" role="status">This visualization has no measure configured.</div>`;if(this.frame?.error)return v`<div class="error" role="status">${this.frame.error}</div>`}else{const s=e.channels.filter(o=>o.required&&!this.fieldFor(o.key));if(s.length>0)return v`<div class="error" role="status">No column mapped for ${s.map(o=>o.label).join(", ")}.</div>`}const t=this.emptyNote();if(t)return v`<div class="error" role="status">${t}</div>`;if(this.channelOfKind("text")&&!this.channelOfKind("lat")&&this.rows.length>0&&this.cloudTerms().length===0){const s=this.options,o=Number(s.minLength);return v`<div class="error" role="status">
+        ${gC({minLength:Number.isFinite(o)&&o>0?o:3,stopWordsOn:fh(s.stopWords).size>0,numbersExcluded:s.includeNumbers!==!0})}
+      </div>`}const n=fl(e.tag),r=this.note(),i=this.elementOptions();return v`
+      <div class="chart">
+        ${pl`<${n}
+          .data=${this.chartData()}
+          .points=${this.mapPoints()}
+          .terms=${this.cloudTerms()}
+          .options=${i}
+        ></${n}>`}
+      </div>
+      ${r?v`<div class="note" role="status">${r}</div>`:X}
+    `}};Vt.styles=Se`
+    :host {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      min-height: 0;
+      overflow: hidden;
+      box-sizing: border-box;
+      /* The default palette the elements read. Overridable per host. */
+      --viz-palette: #2563eb, #0891b2, #7c3aed, #db2777, #ea580c, #16a34a, #ca8a04, #dc2626;
+      font:
+        12px/1.4 system-ui,
+        sans-serif;
+    }
+    .chart {
+      flex: 1;
+      min-height: 0;
+      padding: 4px 6px;
+    }
+    .note,
+    .error {
+      flex: none;
+      padding: 3px 8px;
+      font-size: 11px;
+      line-height: 1.35;
+      border-top: 1px solid rgba(127, 127, 127, 0.25);
+    }
+    .note {
+      color: #92400e;
+      background: #fffbeb;
+    }
+    .error {
+      color: #b91c1c;
+      background: #fef2f2;
+    }
+    @media (prefers-color-scheme: dark) {
+      .note {
+        color: #fcd34d;
+        background: rgba(120, 53, 15, 0.35);
+      }
+      .error {
+        color: #fca5a5;
+        background: rgba(127, 29, 29, 0.35);
+      }
+    }
+    .placeholder {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem 1rem;
+      text-align: center;
+      color: rgba(127, 127, 127, 0.95);
+    }
+  `;gn([Ye({type:String})],Vt.prototype,"viewInstanceId",2);gn([j()],Vt.prototype,"instance",2);gn([j()],Vt.prototype,"template",2);gn([j()],Vt.prototype,"columns",2);gn([j()],Vt.prototype,"frame",2);gn([j()],Vt.prototype,"error",2);gn([j()],Vt.prototype,"loaded",2);Vt=gn([Re("viz-panel")],Vt);var PC=Object.defineProperty,zC=Object.getOwnPropertyDescriptor,Oi=(e,t,n,r)=>{for(var i=r>1?void 0:r?zC(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&PC(t,n,i),i};const NC=22;let qn=class extends $e{constructor(){super(...arguments),this.viewInstanceId="",this.label="",this.collapsed=!1,this.busy=!1}async reload(){await this.renderRoot.querySelector("viz-panel")?.reload?.()}async patch(e){if(!(this.busy||!this.viewInstanceId)){this.busy=!0;try{await(await J()).store.viewInstances.patch(this.viewInstanceId,{...e,updatedAt:Date.now()})}finally{this.busy=!1}}}toggleCollapse(){this.collapsed=!this.collapsed,this.dispatchEvent(new CustomEvent("viz-pane-collapse",{detail:{collapsed:this.collapsed},bubbles:!0,composed:!0}))}async edit(){if(!this.viewInstanceId)return;const t=await(await J()).store.viewInstances.findOne(this.viewInstanceId);t&&wr(t.tableId,{editInstanceId:this.viewInstanceId})}undock(){this.patch({dock:void 0})}close(){this.patch({open:!1})}render(){return v`
+      <div class="strip">
+        <button @click=${this.toggleCollapse} title=${this.collapsed?"Expand":"Collapse"} aria-label=${this.collapsed?"Expand":"Collapse"} aria-expanded=${this.collapsed?"false":"true"}>
+          <span class="mi sm">${this.collapsed?"chevron_right":"expand_more"}</span>
+        </button>
+        <span class="title" title=${this.label}>${this.label}</span>
+        <button @click=${()=>void this.edit()} title="Edit this visualization" aria-label="Edit visualization">
+          <span class="mi sm">edit</span>
+        </button>
+        <button @click=${this.undock} title="Open in its own window" aria-label="Open in its own window">
+          <span class="mi sm">open_in_new</span>
+        </button>
+        <button @click=${this.close} title="Close" aria-label="Close">
+          <span class="mi sm">close</span>
+        </button>
+      </div>
+      <div class="body">
+        <viz-panel .viewInstanceId=${this.viewInstanceId} style="height:100%"></viz-panel>
+      </div>
+    `}};qn.styles=[Et,Se`
+      :host {
+        display: flex;
+        flex-direction: column;
+        min-height: 0;
+        height: 100%;
+        overflow: hidden;
+        background: var(--eda-pane-bg, transparent);
+        font:
+          11px/1.3 system-ui,
+          sans-serif;
+      }
+      .strip {
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        height: ${NC}px;
+        padding: 0 2px 0 4px;
+        background: rgba(127, 127, 127, 0.12);
+        border-bottom: 1px solid rgba(127, 127, 127, 0.2);
+        user-select: none;
+      }
+      .title {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 600;
+        opacity: 0.85;
+      }
+      button {
+        flex: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        padding: 0;
+        border: 0;
+        border-radius: 3px;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+        opacity: 0.7;
+      }
+      button:hover {
+        background: rgba(127, 127, 127, 0.25);
+        opacity: 1;
+      }
+      button .mi {
+        font-size: 14px;
+        line-height: 1;
+      }
+      .body {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+      }
+      :host([collapsed]) .body {
+        display: none;
+      }
+    `];Oi([Ye({type:String})],qn.prototype,"viewInstanceId",2);Oi([Ye({type:String})],qn.prototype,"label",2);Oi([Ye({type:Boolean,reflect:!0})],qn.prototype,"collapsed",2);Oi([j()],qn.prototype,"busy",2);qn=Oi([Re("viz-pane")],qn);var jC=Object.defineProperty,FC=Object.getOwnPropertyDescriptor,No=(e,t,n,r)=>{for(var i=r>1?void 0:r?FC(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&jC(t,n,i),i};let br=class extends $e{constructor(){super(...arguments),this.viewInstanceId="",this.tableId="",this.kindLabel=""}connectedCallback(){super.connectedCallback(),this.load()}async load(){if(!this.viewInstanceId)return;const e=await J(),t=await e.store.viewInstances.findOne(this.viewInstanceId);if(!t)return;this.tableId=t.tableId;const r=(await e.store.viewTemplates.findOne(t.templateId))?.viz?.kind;this.kindLabel=(r?e.registries.visualizations.get(r)?.label:"")??""}async exportCsv(){const t=this.closest(".jsPanel")?.querySelector("viz-panel")?.exportCsv?.(),n=await J();if(!t){n.api.ui.dialogs.toast("There is nothing drawn to export yet.",{kind:"info"});return}await n.api.backend.saveFile(t.filename,t.text,"text/csv")}edit(){this.tableId&&wr(this.tableId,{editInstanceId:this.viewInstanceId})}async editTemplate(){if(!this.tableId)return;const t=await(await J()).store.viewInstances.findOne(this.viewInstanceId);t&&wr(this.tableId,{editTemplateId:t.templateId})}render(){return v`
+      <button @click=${this.edit} title="Edit this visualization: which columns feed which channel" aria-label="Edit visualization"><span class="mi sm">edit</span>Edit</button>
+      <button @click=${()=>void this.editTemplate()} title="Edit the chart definition: kind, aggregate and options" aria-label="Edit chart definition"><span class="mi sm">tune</span>Chart</button>
+      <button @click=${()=>void this.exportCsv()} title="Save the numbers behind this chart as a CSV file" aria-label="Export as CSV"><span class="mi sm">download</span>CSV</button>
+      <span class="spacer"></span>
+      ${this.kindLabel?v`<span class="kind">${this.kindLabel}</span>`:X}
+    `}};br.styles=[Et,Se`
+      /* Proportions copied from chrome/panel-footer.ts so a visualization
+         window's footer reads as the same piece of furniture as a table
+         window's. It was 11px type with no padding before, which measured 18px
+         tall and did not read as a footer at all. */
+      :host {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        width: 100%;
+        padding: 0.35rem 0.55rem;
+        box-sizing: border-box;
+        font-size: 0.85rem;
+      }
+      .spacer {
+        flex: 1;
+      }
+      .kind {
+        opacity: 0.6;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font: inherit;
+        padding: 0.2rem 0.4rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        background: white;
+        color: inherit;
+        cursor: pointer;
+      }
+      button:hover {
+        background: #f3f4f6;
+      }
+    `];No([Ye({type:String})],br.prototype,"viewInstanceId",2);No([j()],br.prototype,"tableId",2);No([j()],br.prototype,"kindLabel",2);br=No([Re("viz-footer")],br);var UC=Object.defineProperty,BC=Object.getOwnPropertyDescriptor,wt=(e,t,n,r)=>{for(var i=r>1?void 0:r?BC(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&UC(t,n,i),i};let st=class extends $e{constructor(){super(...arguments),this.viewInstanceId="",this.loaded=!1,this.error="",this.instance=null,this.template=null,this.columns=[],this.tableColumns=[],this.rows=[],this.showColsMenu=!1,this.allRows=[],this.rowColl=null,this.loadGeneration=0,this.searchQuery="",this.globalQuery="",this.cellRenderers=new Map,this.truncated=!1,this.onSearch=e=>{const t=e.detail;t.tableId===this.viewInstanceId&&(this.searchQuery=t.query??"",this.recompute())},this.onGlobalSearch=e=>{this.globalQuery=e.detail.query??"",this.recompute()},this.onInputChange=async e=>{const t=e.target;if(!(t instanceof HTMLInputElement)||!t.classList.contains("eda-input")||!this.instance||this.instance.readonly===!0)return;const n=t.getAttribute("data-eda-row"),r=t.getAttribute("data-eda-field"),i=t.getAttribute("data-eda-type")??"string";if(!n||!r)return;const s=this.allRows.find(c=>c.id===n);if(!s)return;let o;if(i==="boolean")o=t.checked;else if(i==="number"){const c=Number(t.value);o=t.value.trim()===""?null:Number.isNaN(c)?t.value:c}else o=t.value;await(await J()).store.rows(this.instance.tableId).patch(n,{data:{...s.data,[r]:o},updatedAt:Date.now()})},this.onPillClick=async e=>{const t=e.target;if(!(t instanceof HTMLElement)||!t.classList.contains("eda-filter-pill")||!this.instance)return;const n=t.getAttribute("data-eda-filter-field"),r=t.getAttribute("data-eda-filter-value");!n||r==null||await this.addPill(n,r)}}get searchIsActive(){return this.searchQuery.trim()!==""||this.globalQuery.trim()!==""}get templateOn(){return this.instance?.templateEnabled!==!1}async connectedCallback(){super.connectedCallback(),document.addEventListener("easydb:table-search",this.onSearch),document.addEventListener("easydb:global-search",this.onGlobalSearch),await this.load()}disconnectedCallback(){super.disconnectedCallback(),document.removeEventListener("easydb:table-search",this.onSearch),document.removeEventListener("easydb:global-search",this.onGlobalSearch),this.rowsUnsub?.(),this.instUnsub?.()}async updated(e){this.mountCellRenderers(),e.has("viewInstanceId")&&(this.rowsUnsub?.(),this.loaded=!1,await this.load())}mountCellRenderers(){const e=this.renderRoot?.querySelectorAll?.(`.${Ep}:not([data-eda-mounted])`);if(!e?.length)return;const t=new Map(this.rows.map(i=>[i.id,i])),n=new Map(this.tableColumns.map(i=>[i.field,i])),r=this.instance?.tokenScripts??{};for(const i of e){const s=i;s.dataset.edaMounted="1";const o=t.get(s.dataset.edaRow??""),a=s.dataset.edaField??"",c=s.dataset.edaTag??"",d=n.get(a);if(!o||!d||!c)continue;const f=document.createElement(c);f.value=vk(o,a,r[s.dataset.edaToken??""])??"",f.column=d,f.row=o.data,f.readonly=!0,f.sourceReadonly=!0,s.replaceChildren(f)}}async reload(){this.rowsUnsub?.(),this.loaded=!1,await this.load()}async load(){if(!this.viewInstanceId)return;this.rowsUnsub?.(),this.instUnsub?.();const e=await J(),t=await e.store.viewInstances.findOne(this.viewInstanceId);if(!t){this.error="This view no longer exists.",this.loaded=!0;return}this.instance=t,this.cellRenderers=new Map(e.registries.cellRenderers),e.events.on("app:ready",()=>this.cellRenderers=new Map(e.registries.cellRenderers)),this.template=await e.store.viewTemplates.findOne(t.templateId)??null;const n=await e.store.tables.findOne(t.tableId);this.tableColumns=n?.columns??[],n&&t.tableName!==n.name&&e.store.viewInstances.patch(t.id,{tableName:n.name});const r=new Map(this.tableColumns.map(i=>[i.field,i]));this.columns=t.visibleColumns.map(i=>r.get(i)??{field:i,label:i,type:"string"}),this.instUnsub=e.store.viewInstances.subscribe(i=>{const s=i.find(a=>a.id===this.viewInstanceId);if(!s)return;if(s.tableId!==this.instance?.tableId){this.instance=s,this.reload();return}const o=wh(this.instance);this.instance=s,wh(s)!==o?this.loadRows():this.recompute()}),this.rowColl=e.store.rows(t.tableId),this.rowsUnsub=this.rowColl.watch?this.rowColl.watch(()=>void this.loadRows()):this.rowColl.subscribe(()=>void this.loadRows()),await this.loadRows(),this.loaded=!0}async loadRows(){const e=this.rowColl,t=this.instance;if(!e||!t)return;const n=++this.loadGeneration,r=new Set(this.tableColumns.filter(d=>d.script).map(d=>d.field)),i=Object.fromEntries(Object.entries(t.filters??{}).filter(([d])=>!r.has(d))),o=(t.sortBy?.length?t.sortBy:t.sortColumn?[{field:t.sortColumn,asc:t.sortAsc!==!1}]:[]).filter(d=>!r.has(d.field)),a={columns:this.tableColumns,...Object.keys(i).length>0?{filters:i}:{},...o.length>0?{sort:o}:{}},c=await Ai(e,a,Nn);n===this.loadGeneration&&(this.truncated=c.truncated===!0,this.allRows=c.rows,this.recompute())}recompute(){if(!this.instance)return;const e=Md(this.allRows,this.tableColumns),t=il(e,this.instance,this.tableColumns);let n=t;const r=this.searchQuery.trim(),i=this.globalQuery.trim();r&&(n=wi(n,r,this.tableColumns)),i&&(n=wi(n,i,this.tableColumns));const s=this.instance.limit??0;s>0&&n.length>s&&(n=n.slice(0,s)),this.rows=n,this.templateOn&&cm(this.viewInstanceId,n.length,t.length)}async addPill(e,t){if(!this.instance)return;const n=Ek(this.instance.pillFilters?.[e],t),r={...this.instance.pillFilters??{},[e]:n};await(await J()).store.viewInstances.patch(this.instance.id,{pillFilters:r,updatedAt:Date.now()}),this.instance={...this.instance,pillFilters:r},this.recompute()}rowsFacetedFor(e){if(!this.instance)return[];const t={...this.instance.pillFilters??{}};return delete t[e],il(Md(this.allRows,this.tableColumns),{...this.instance,pillFilters:t},this.tableColumns)}async setPillFilter(e,t){if(!this.instance)return;const n={...this.instance.pillFilters??{}};t.trim()===""?delete n[e]:n[e]=t,await(await J()).store.viewInstances.patch(this.instance.id,{pillFilters:n,updatedAt:Date.now()}),this.instance={...this.instance,pillFilters:n},this.recompute()}async cyclePill(e,t){await this.setPillFilter(e,Ik(this.instance?.pillFilters?.[e],t))}async openPillValues(e,t){const n=dt.instance;if(!n)return;const r=this.rowsFacetedFor(e),i=this.tableColumns.find(c=>c.field===e)?.type;if(!$m(r,e,{type:i}))return;const{values:s,blanks:o}=xm(r,e,{type:i});if(s.length===0)return;const a=await n.open(t.getBoundingClientRect(),s,this.instance?.pillFilters?.[e]??"",o,c=>void this.setPillFilter(e,c),{exact:!0});a!==null&&(typeof a=="object"&&"clear"in a?await this.setPillFilter(e,""):typeof a=="string"&&await this.setPillFilter(e,a))}async removePill(e,t){if(!this.instance)return;const n=_k(this.instance.pillFilters?.[e],t),r={...this.instance.pillFilters??{}};n===""?delete r[e]:r[e]=n,await(await J()).store.viewInstances.patch(this.instance.id,{pillFilters:r,updatedAt:Date.now()}),this.instance={...this.instance,pillFilters:r},this.recompute()}async setSortColumn(e){if(!this.instance)return;await(await J()).store.viewInstances.patch(this.instance.id,{sortColumn:e||void 0,updatedAt:Date.now()}),this.instance={...this.instance,sortColumn:e||void 0},this.recompute()}async toggleSortDir(){if(!this.instance?.sortColumn)return;const e=!(this.instance.sortAsc??!0);await(await J()).store.viewInstances.patch(this.instance.id,{sortAsc:e,updatedAt:Date.now()}),this.instance={...this.instance,sortAsc:e},this.recompute()}async toggleTemplate(){if(!this.instance)return;const e=!this.templateOn;await(await J()).store.viewInstances.patch(this.instance.id,{templateEnabled:e,updatedAt:Date.now()}),this.instance={...this.instance,templateEnabled:e},this.showColsMenu=!1}editTemplate(){!this.instance||!this.template||wr(this.instance.tableId,{editTemplateId:this.template.id})}editView(){this.instance&&wr(this.instance.tableId,{editInstanceId:this.instance.id})}async deleteView(){if(!this.instance)return;const e=await J();await e.api.ui.dialogs.confirm(`Delete the view "${this.instance.name}"? The table and its rows stay.`,"Delete view")&&await e.store.viewInstances.remove(this.instance.id)}async toggleColumn(e){if(!this.instance)return;const t=this.instance.visibleColumns,r=t.includes(e)?t.filter(s=>s!==e):[...t,e];if(r.length===0)return;await(await J()).store.viewInstances.patch(this.instance.id,{visibleColumns:r,updatedAt:Date.now()}),this.instance={...this.instance,visibleColumns:r}}renderTable(){return this.rows.length===0?v`<div class="vw-empty">No rows.</div>`:v`
+      <table class="vw-table">
+        <thead>
+          <tr>
+            ${this.columns.map(e=>v`<th>${e.label||e.field}</th>`)}
+          </tr>
+        </thead>
+        <tbody>
+          ${this.rows.map(e=>v`<tr>
+                ${this.columns.map(t=>{const n=e.data[t.field],r=n==null?"":String(n);return v`<td title=${r}>${r}</td>`})}
+              </tr>`)}
+        </tbody>
+      </table>
+    `}renderTemplated(){const e=this.template;if(!e)return v`<div class="vw-empty">This view's template is missing.</div>`;if(Rk(e.rowHtml)){const t=this.instance?.mapping??{},n=new Map(this.tableColumns.map(c=>[c.field,c])),r=this.instance?.readonly===!0,i=this.instance?.tokenScripts??{},s=this.instance?.tokenRaw??{},o=this.rows.map(c=>xk(e.rowHtml,c,t,{columns:n,readonly:r,scripts:i,renderers:this.cellRenderers,raw:s})).join(""),a=(e.headerHtml??"")+o+(e.footerHtml??"");return v`<div class="vw-root">${ar(a)}</div>`}return v`<div class="vw-root">
+      ${e.headerHtml?.trim()?v`<div class="vw-html">${ar(e.headerHtml)}</div>`:X} ${this.renderTable()}
+      ${e.footerHtml?.trim()?v`<div class="vw-html">${ar(e.footerHtml)}</div>`:X}
+    </div>`}renderSortBar(){if(!this.instance)return X;const e=this.renderPillChips(),t=Array.isArray(e)&&e.length>0;if(!this.templateOn)return t?v`<div class="vw-sortbar">${e}</div>`:X;const n=this.tableColumns.filter(s=>s.sortable!==!1),r=this.instance.sortColumn??"",i=this.instance.sortAsc??!0;return v`<div class="vw-sortbar">
+      <span class="mi" title="Sort">sort</span>
+      <select aria-label="Sort by" @change=${s=>void this.setSortColumn(s.target.value)}>
+        <option value="" ?selected=${!r}>— unsorted —</option>
+        ${n.map(s=>v`<option value=${s.field} ?selected=${r===s.field}>${s.label||s.field}</option>`)}
+      </select>
+      <button aria-label="Toggle sort direction" title=${i?"Ascending (click for descending)":"Descending (click for ascending)"} ?disabled=${!r} @click=${()=>void this.toggleSortDir()}>
+        <span class="mi">${i?"arrow_upward":"arrow_downward"}</span>
+      </button>
+      ${e}
+    </div>`}get chipFields(){if(!this.template||!this.templateOn)return[];const e=this.instance?.mapping??{},t=pk(this.template.headerHtml??"",this.template.rowHtml??"",this.template.footerHtml??"").map(n=>e[n]).filter(n=>!!n);return[...new Set(t)]}renderPillChips(){const e=this.instance?.pillFilters??{},t=this.chipFields;if(Object.keys(e).length===0&&t.length===0)return X;const n=[],r=new Set;for(const s of[...new Set([...t,...Object.keys(e)])]){const o=e[s];if(o)for(const a of Hn(o))a.term&&(r.add(s),n.push({field:s,value:a.term,state:a.negate?"not":"on"}))}return[...t.filter(s=>!r.has(s)).map(s=>v`<span class="eda-pill-chip off">
+            <button type="button" class="eda-pill-chip-value" title=${`Filter this view by ${s}`} @click=${o=>void this.openPillValues(s,o.currentTarget)}>
+              ${s} ▾
+            </button>
+          </span>`),...n.map(s=>v`<span class=${`eda-pill-chip${s.state==="not"?" not":""}`}>
+            <button
+              type="button"
+              class="eda-pill-chip-field"
+              title=${s.state==="not"?`Excluding this value — click to stop filtering on ${s.field}`:"Only this value — click to EXCLUDE it instead"}
+              @click=${()=>void this.cyclePill(s.field,s.value)}
+            >
+              ${s.field}${s.state==="not"?" ≠":" ="}
+            </button>
+            <button type="button" class="eda-pill-chip-value" title=${`Other values of ${s.field}`} @click=${o=>void this.openPillValues(s.field,o.currentTarget)}>
+              ${s.value}
+            </button>
+            <button type="button" class="eda-pill-chip-remove" aria-label=${`Remove filter ${s.field}: ${s.value}`} title="Remove this filter" @click=${()=>void this.removePill(s.field,s.value)}>
+              ×
+            </button>
+          </span>`)]}renderFooter(){if(!this.instance)return X;const e=this.templateOn,t=new Set(this.instance.visibleColumns);return v`<div class="vw-footer">
+      ${!e&&this.showColsMenu?v`<div class="cols-menu">
+            ${this.tableColumns.map(n=>v`<label><input type="checkbox" .checked=${t.has(n.field)} @change=${()=>void this.toggleColumn(n.field)} />${n.label||n.field}</label>`)}
+          </div>`:X}
+      ${e?X:v`<button title="Show / hide columns" aria-label="Columns" @click=${()=>this.showColsMenu=!this.showColsMenu}>
+            <span class="mi">view_column</span>
+          </button>`}
+      <button aria-label="Edit view" title="Edit this view (rename, re-map columns)" @click=${()=>this.editView()}>
+        <span class="mi">edit</span>
+      </button>
+      ${this.template?v`<button class="edit-template" aria-label="Edit template" title=${`Edit the "${this.template.name}" template`} @click=${()=>this.editTemplate()}>
+            <span class="mi">code</span>
+          </button>`:X}
+      <button
+        class=${e?"":"active"}
+        title=${e?"Show as a table (turn the template off)":"Show through the template"}
+        aria-label="Toggle template"
+        aria-pressed=${e?"false":"true"}
+        @click=${()=>void this.toggleTemplate()}
+      >
+        <span class="mi">table_view</span>
+      </button>
+      <button class="danger" aria-label="Delete view" title="Delete this view (the table stays)" @click=${()=>void this.deleteView()}>
+        <span class="mi">delete</span>
+      </button>
+    </div>`}render(){if(!this.loaded)return v`<div class="vw-body scroll"><div class="vw-loading">Loading…</div></div>`;if(this.error)return v`<div class="vw-body scroll"><div class="vw-empty">${this.error}</div></div>`;const e=this.templateOn,t=e?v`<div class="vw-body scroll" @change=${this.onInputChange} @click=${this.onPillClick}>${this.renderTemplated()}</div>`:v`<div class="vw-body grid">
+          <data-table .tableId=${this.instance?.tableId??""} .viewInstanceId=${this.viewInstanceId}></data-table>
+        </div>`,n=e&&this.truncated?_c({shown:this.rows.length,total:this.allRows.length,searching:this.searchIsActive,searched:Nn}):null;return v`${this.renderSortBar()}${n?v`<div class="vw-note" role="status">${n}</div>`:X}${t}${this.renderFooter()}`}};st.styles=[Et,Se`
+      :host {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background: #f8fafc;
+        font-family: system-ui, sans-serif;
+      }
+      .vw-body {
+        flex: 1;
+        min-height: 0;
+      }
+      .vw-body.scroll {
+        overflow: auto;
+      }
+      /* Grid mode: let the data-table fill the body and scroll internally. */
+      .vw-body.grid {
+        display: flex;
+      }
+      .vw-body.grid data-table {
+        flex: 1;
+        min-height: 0;
+        max-height: none;
+      }
+      .vw-root {
+        min-height: 100%;
+      }
+      .vw-loading,
+      .vw-empty {
+        padding: 1rem;
+        color: #6b7280;
+        font-size: 0.9rem;
+      }
+      /* Says the view is showing a slice of its table. Mirrors the grid's
+         .truncated-note — same colours, same job. (No backticks in here: this
+         is a template literal, and one would end it.) */
+      .vw-note {
+        flex: 0 0 auto;
+        padding: 0.25rem 0.5rem;
+        background: #fef3c7;
+        border-bottom: 1px solid #fcd34d;
+        color: #92400e;
+        font-size: 0.75rem;
+      }
+      /* Fallback read-only table (used when a template has no row HTML). */
+      table.vw-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+      }
+      table.vw-table th,
+      table.vw-table td {
+        border: 1px solid #e5e7eb;
+        padding: 0.25rem 0.5rem;
+        text-align: left;
+        vertical-align: top;
+        white-space: nowrap;
+        /* Clip a long value to the column instead of stretching the table past
+           the window; the cell's title attribute carries the whole thing.
+           Matches the grid (data-table). */
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 40ch;
+      }
+      table.vw-table th {
+        background: #f9fafb;
+        position: sticky;
+        top: 0;
+      }
+      .vw-html {
+        padding: 0.5rem 0.75rem;
+      }
+      /* Editable $input.TOKEN controls injected into a template's row HTML. */
+      .eda-input-field {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        cursor: pointer;
+        font-size: 0.82rem;
+        color: #374151;
+      }
+      .eda-input-field input[disabled] {
+        cursor: not-allowed;
+      }
+      .eda-input-field .eda-input-label:empty {
+        display: none;
+      }
+      /* $filter.TOKEN pill rendered inline in a template's row HTML — looks
+         clickable, sits in the flow of the text around it. */
+      .eda-filter-pill {
+        font: inherit;
+        display: inline;
+        padding: 0.05rem 0.5rem;
+        margin: 0 0.1rem;
+        border: none;
+        border-radius: 1rem;
+        background: #e0f2fe;
+        color: #0369a1;
+        cursor: pointer;
+      }
+      .eda-filter-pill:hover {
+        background: #bae6fd;
+      }
+      /* A token script that will not compile, or that throws. Marked in place —
+         a blank card would read as "no data" and hide the broken script. */
+      .eda-script-error {
+        display: inline-block;
+        padding: 0 0.35rem;
+        border-radius: 0.25rem;
+        background: #fee2e2;
+        color: #b91c1c;
+        font-size: 0.8rem;
+        cursor: help;
+      }
+      .eda-pill-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.1rem 0.3rem 0.1rem 0.55rem;
+        border-radius: 1rem;
+        background: #e0f2fe;
+        color: #0369a1;
+        font-size: 0.8rem;
+      }
+      /* A chip is two buttons, because it does two things: the FIELD (with the
+         operator) cycles = / != / off, and the VALUE opens the field's other
+         values as a checklist. */
+      .eda-pill-chip-field,
+      .eda-pill-chip-value {
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+      }
+      .eda-pill-chip-field {
+        font-weight: 600;
+      }
+      .eda-pill-chip-field:hover,
+      .eda-pill-chip-value:hover {
+        text-decoration: underline;
+      }
+      /* Idle: the template offers this filter, nothing is filtering on it. Quiet
+         and dashed so it reads as an offer, not as an active filter. */
+      .eda-pill-chip.off {
+        background: transparent;
+        border: 1px dashed #7dd3fc;
+        color: #0369a1;
+        opacity: 0.75;
+        padding: 0 0.3rem;
+      }
+      .eda-pill-chip.off:hover {
+        opacity: 1;
+        border-style: solid;
+      }
+      /* An excluded value reads as excluded at a glance, not only by its ≠. */
+      .eda-pill-chip.not {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .eda-pill-chip.not .eda-pill-chip-remove:hover {
+        background: rgba(185, 28, 28, 0.15);
+      }
+      .eda-pill-chip-remove {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.1rem;
+        height: 1.1rem;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: inherit;
+        cursor: pointer;
+        line-height: 1;
+      }
+      .eda-pill-chip-remove:hover {
+        background: rgba(3, 105, 161, 0.15);
+      }
+      /* One toolbar at the top of a view: the sort controls (template mode) and
+         the active filter chips, which used to sit in a second bar of their own. */
+      .vw-sortbar {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+        padding: 0.3rem 0.5rem;
+        border-bottom: 1px solid #e5e7eb;
+        background: #ffffff;
+        font-size: 0.82rem;
+        color: #6b7280;
+      }
+      .vw-sortbar select {
+        font: inherit;
+        padding: 0.15rem 0.3rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        background: white;
+        color: #374151;
+      }
+      .vw-sortbar button {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.15rem 0.3rem;
+        border: 1px solid #d1d5db;
+        background: white;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        color: #374151;
+      }
+      .vw-sortbar button:hover {
+        background: #f3f4f6;
+      }
+      .vw-sortbar button[disabled] {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .vw-sortbar .mi {
+        font-size: 1.05rem;
+      }
+      /* Footer toolbar: the template on/off toggle sits at the bottom-right. */
+      .vw-footer {
+        flex: 0 0 auto;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 0.35rem;
+        padding: 0.25rem 0.4rem;
+        border-top: 1px solid #e5e7eb;
+        background: #ffffff;
+      }
+      .vw-footer button {
+        font: inherit;
+        display: inline-flex;
+        align-items: center;
+        padding: 0.2rem 0.4rem;
+        border: 1px solid #d1d5db;
+        background: white;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        color: #374151;
+      }
+      .vw-footer button:hover {
+        background: #f3f4f6;
+      }
+      /* Same dark red as the delete-table trash icon (panel-footer). */
+      .vw-footer button.danger {
+        color: #b91c1c;
+      }
+      /* Active = template is OFF (showing the raw table). */
+      .vw-footer button.active {
+        background: #0891b2;
+        border-color: #0891b2;
+        color: white;
+      }
+      .vw-footer .mi {
+        font-size: 1.05rem;
+      }
+      .cols-menu {
+        position: absolute;
+        right: 0.4rem;
+        bottom: 100%;
+        margin-bottom: 0.25rem;
+        max-height: 40vh;
+        overflow: auto;
+        background: white;
+        border: 1px solid #d1d5db;
+        border-radius: 0.35rem;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+        padding: 0.3rem;
+        z-index: 5;
+        min-width: 10rem;
+      }
+      .cols-menu label {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.2rem 0.3rem;
+        font-size: 0.82rem;
+        color: #374151;
+        white-space: nowrap;
+        cursor: pointer;
+      }
+      .cols-menu label:hover {
+        background: #f3f4f6;
+        border-radius: 0.2rem;
+      }
+    `];wt([Ye({type:String})],st.prototype,"viewInstanceId",2);wt([j()],st.prototype,"loaded",2);wt([j()],st.prototype,"error",2);wt([j()],st.prototype,"instance",2);wt([j()],st.prototype,"template",2);wt([j()],st.prototype,"columns",2);wt([j()],st.prototype,"tableColumns",2);wt([j()],st.prototype,"rows",2);wt([j()],st.prototype,"showColsMenu",2);wt([j()],st.prototype,"searchQuery",2);wt([j()],st.prototype,"globalQuery",2);wt([j()],st.prototype,"cellRenderers",2);wt([j()],st.prototype,"truncated",2);st=wt([Re("view-window")],st);function wh(e){if(!e)return"";const t=e.sortBy?.length?e.sortBy.map(n=>`${n.field}:${n.asc!==!1}`).join(","):`${e.sortColumn??""}:${e.sortAsc!==!1}`;return`${JSON.stringify(e.filters??{})}|${t}`}const Fm=480,Um=520,at=new Map,kl=new Set;function qC(e){return kl.has(e)}function Pc(e){return qC(e.templateId)}async function HC(){await Promise.all([...at.keys()].map(e=>Rs(e)))}function Bm(e){const t=at.get(e);return t?(fm(t.panel),!0):!1}const $l=new Set;async function zc(e){if(Bm(e))return;$l.add(e);const t=await J(),n=await t.store.viewInstances.findOne(e);if(!n){$l.delete(e);return}if(n.open){As(n,t),qm(e);return}await t.store.viewInstances.patch(e,{open:!0,updatedAt:Date.now()})}function qm(e){$l.delete(e)&&Bm(e)}let yh=!1;function xl(e){e.panel.setHeaderTitle(e.name+um(e.count,e.total))}function VC(){return document.getElementById("easydb-panels-viewport")??document.getElementById("easydb-panels")??document.body}function KC(e){return e.replace(/[^a-zA-Z0-9_-]/g,"_")}function WC(e){return`view-panel-${KC(e)}`}async function GC(){if(yh)return;yh=!0;const e=await J(),t=s=>s.filter(o=>o.workspaceId===e.workspaceId&&o.open&&!o.dock),n=s=>{kl.clear();for(const o of s)o.kind==="viz"&&kl.add(o.id)};n(await e.store.viewTemplates.find()),e.store.viewTemplates.subscribe(n);const r=t(await e.store.viewInstances.find()).sort(qs);for(const s of r)As(s,e);let i=[];e.store.viewInstances.subscribe(s=>{i=s;const o=new Map(t(s).map(c=>[c.id,c]));for(const c of[...at.keys()])o.has(c)||$h(c);const a=[...o.values()].filter(c=>!at.has(c.id)).sort(qs);for(const c of a)As(c,e);kh(s,e)}),Zx(()=>kh(i,e)),e.store.viewTemplates.subscribe(()=>{for(const[s,o]of[...at.entries()]){const a=i.find(f=>f.id===s);if(!a)continue;const c=Pc(a),d=o.el?.tagName.toLowerCase()==="viz-panel";o.el&&c!==d&&($h(s),As(a,e))}}),e.store.tables.subscribe(s=>void QC(e,s)),document.addEventListener(Ks,s=>{const o=s.detail,a=at.get(o.key);a&&a.el&&(a.count=o.count,a.total=o.total,xl(a))}),document.addEventListener("easydb:reload-view",s=>{const o=s.detail?.instanceId;if(!o)return;const a=at.get(o);a&&(async()=>{const c=await e.store.viewInstances.findOne(o);c&&(a.name=c.name,xl(a)),a.el?.reload()})()}),document.addEventListener("easydb:reload-view",s=>{const o=s.detail?.instanceId;o&&vh(o)}),document.addEventListener("easydb:reload-views",()=>{for(const{el:s}of at.values())s?.reload();vh()})}const Is=new Map;function vh(e){for(const t of Is.keys()){if(e&&t!==e)continue;document.querySelector(`viz-pane[data-instance="${CSS.escape(t)}"]`)?.reload?.()}}function kh(e,t){const n=new Map;for(const r of e)r.workspaceId===t.workspaceId&&(!r.open||!r.dock||Pc(r)&&n.set(r.id,r));for(const[r,i]of[...Is.entries()]){const s=n.get(r);s&&s.dock&&Yd(s.dock.host)===i||(Qd(i)?.removePane(r),Is.delete(r))}for(const r of n.values()){const i=r.dock,s=Yd(i.host),o=Qd(s);if(!o||o.hasPane(r.id))continue;const a=document.createElement("viz-pane");a.viewInstanceId=r.id,a.label=r.name,a.dataset.instance=r.id,o.addPane({id:r.id,el:a,edge:i.edge,size:i.size,order:i.order,onResized:c=>void YC(r.id,c)}),Is.set(r.id,s)}}function YC(e,t){return _r(`view:${e}`,async()=>{try{const n=await J(),r=await n.store.viewInstances.findOne(e);if(!r?.dock||r.dock.size===t)return;await n.store.viewInstances.patch(e,{dock:{...r.dock,size:t},updatedAt:Date.now()})}catch{}})}async function QC(e,t){const n=t.filter(o=>o.workspaceId===e.workspaceId),r=new Set(n.map(o=>o.id)),i=new Map;for(const o of n)i.has(o.name)||i.set(o.name,o);const s=await e.store.viewInstances.find();for(const o of s){if(o.workspaceId!==e.workspaceId||r.has(o.tableId)||!o.tableName)continue;const a=i.get(o.tableName);a&&await e.store.viewInstances.patch(o.id,{tableId:a.id,updatedAt:Date.now()})}}function As(e,t){if(at.has(e.id))return;const n=WC(e.id),r=e.windowGeometry,i=r?.minimized===!0,s=Pc(e),o=()=>{const Y=document.createElement(s?"viz-panel":"view-window");return Y.viewInstanceId=e.id,Y.style.height="100%",Y};let a=null,c=null;const d=`view:${e.id}`,f=Y=>(c=Y,a=om(),a.setPrimary(Y),am(d,a),a.root),p=i?document.createElement("div"):f(o());let b;const y=()=>{b&&(Vs(d),a?.destroy(),a=null,b.el?.remove(),b.el=null,b.count=-1,b.total=-1,xl(b))},$=()=>{if(!b||b.el)return;const Y=document.getElementById(n)?.querySelector(".jsPanel-content");if(!Y)return;Y.replaceChildren();const D=o();Y.appendChild(f(D)),b.el=D};let k;if(s){const Y=document.createElement("viz-footer");Y.viewInstanceId=e.id,k=Y}const C=Ro({id:n,container:VC(),title:e.name,logo:s?Fx:jx,color:s?"#7c3aed":"#0891b2",...k?{footerToolbar:k}:{},content:p,...r?{panelSize:{w:r.w,h:r.h},position:{x:r.x,y:r.y}}:{contentSize:{w:Fm,h:Um},position:{centerTopOffset:60}},minimizeTo:"#easydb-minimized-dock",viewport:Oo(),boot:{minimized:r?.minimized===!0,maximized:r?.maximized===!0,smallified:r?.smallified===!0},onmoved:()=>void Rs(e.id),onresized:()=>void Rs(e.id),onfronted:()=>void JC(e.id,t),onstatuschange:Y=>{Y.status==="minimized"?y():(Y.status==="normalized"||Y.status==="maximized")&&$(),Rs(e.id)},onclosed:()=>{Vs(d),a?.destroy(),a=null,at.delete(e.id),Mo(e.id),t.store.viewInstances.patch(e.id,{open:!1,updatedAt:Date.now()}).catch(()=>{})}});b={panel:C,el:i?null:c,name:e.name,count:-1,total:-1},at.set(e.id,b),hm(e.id,()=>C.front(void 0,!1));const _=document.getElementById(n),T=document.createElement("panel-search");T.tableId=e.id,_?.querySelector(".jsPanel-controlbar")?.append(T),qm(e.id)}function $h(e){const t=at.get(e);if(t){at.delete(e),Mo(e);try{t.panel.status!=="closed"&&t.panel.close()}catch{}}}function JC(e,t){return _r(`view:${e}`,()=>XC(e,t))}async function XC(e,t){try{const n=await t.store.viewInstances.findOne(e);if(!n)return;const r=n.windowGeometry??{...at.get(e)?.panel.persistRect()??{x:0,y:0,w:Fm,h:Um},z:0,minimized:!1,maximized:!1};await t.store.viewInstances.patch(e,{windowGeometry:{...r,z:dm()},updatedAt:Date.now()})}catch{}}function Rs(e){return _r(`view:${e}`,()=>ZC(e))}async function ZC(e){const t=at.get(e);if(!t)return;const{minimized:n,maximized:r,smallified:i}=t.panel.persistFlags(),s=t.panel.persistRect();try{const o=await J(),a=(await o.store.viewInstances.findOne(e))?.windowGeometry,c={...s,z:a?.z??0,minimized:n,maximized:r,smallified:i};await o.store.viewInstances.patch(e,{windowGeometry:c,updatedAt:Date.now()})}catch{}}const Hm="scripts:samples";function eE(e){return e==="validate"?aE:oE}function tE(e){const t=typeof e=="string"?nE(e):e;if(!Array.isArray(t))return[];const n=[];for(const r of t){if(!r||typeof r!="object")continue;const{id:i,kind:s,label:o,source:a}=r;typeof i!="string"||!i||typeof o!="string"||!o.trim()||typeof a!="string"||!a.trim()||n.push({id:i,kind:s==="validate"?"validate":"render",label:o.trim(),source:a})}return n}function nE(e){try{return JSON.parse(e)}catch{return null}}function rE(e,t){return e.filter(n=>n.kind===t)}function iE(e,t){return[...e,t]}function sE(e,t){return e.filter(n=>n.id!==t)}const oE=[{label:"Join two fields into one",source:`function render(row) {
+  // The simplest useful script: read any field by name off \`row\`.
+  return [row.first, row.last].filter(Boolean).join(' ');
+}
+`},{label:"Markdown → formatted text (markdownToHtml)",source:`function render(row) {
+  // Set this column's renderer to \`html\`, or the cell shows the HTML source.
+  // markdownToHtml SANITISES: formatting in the data survives, a <script>
+  // or an onerror= arriving from a CSV does not.
+  return markdownToHtml(row.notes ?? '');
+}
+`},{label:"Markdown summary — first line, bolded label",source:`function render(row) {
+  // Renderer: \`html\`. Builds the Markdown first, then converts it — easier to
+  // read than assembling tags by hand, and the sanitising comes for free.
+  if (!row.title && !row.notes) return ''; // nothing to summarise yet
+  const first = String(row.notes ?? '').split('\\n')[0] ?? '';
+  return markdownToHtml(\`**\${row.title ?? 'Untitled'}** — \${first}\`);
+}
+`},{label:"Build a URL from a field",source:`function render(row) {
+  // Renderer: \`link\`, which turns the returned URL into a clickable anchor.
+  const BASE = 'https://github.com/';
+  if (!row.repo) return '';
+  return BASE + encodeURIComponent(String(row.repo));
+}
+`},{label:"Build a URL with query parameters",source:"function render(row) {\n  // Renderer: `link`. `URL` + `searchParams` encodes the values for you, so\n  // spaces and & in the data can't break the link.\n  if (!row.city) return '';\n  const url = new URL('https://www.openstreetmap.org/search');\n  url.searchParams.set('query', `${row.street ?? ''} ${row.city}`.trim());\n  return url.toString();\n}\n"},{label:"Mailto link with a prefilled subject",source:"function render(row) {\n  // Renderer: `link`.\n  if (!row.email) return '';\n  const subject = encodeURIComponent(`Re: ${row.title ?? 'your enquiry'}`);\n  return `mailto:${row.email}?subject=${subject}`;\n}\n"},{label:"Maths — line total (quantity × price)",source:`function render(row) {
+  // Blank, not "0.00", until both parts are there — a column of zeroes down a
+  // half-filled table looks like data.
+  const qty = Number(row.qty);
+  const price = Number(row.price);
+  if (row.qty == null || row.qty === '' || !Number.isFinite(qty)) return '';
+  if (row.price == null || row.price === '' || !Number.isFinite(price)) return '';
+  return (qty * price).toFixed(2);
+}
+`},{label:"Maths — amount as money (Intl.NumberFormat)",source:`function render(row) {
+  const CURRENCY = 'CHF';
+  const LOCALE = 'de-CH';
+  const n = Number(row.amount);
+  if (!Number.isFinite(n)) return '';
+  return new Intl.NumberFormat(LOCALE, { style: 'currency', currency: CURRENCY }).format(n);
+}
+`},{label:"Maths — percentage of a total",source:`function render(row) {
+  const part = Number(row.done ?? 0);
+  const whole = Number(row.total ?? 0);
+  if (!whole) return ''; // no divide-by-zero, and no "NaN%" in the grid
+  return Math.round((part / whole) * 100) + '%';
+}
+`},{label:"Days between a date and today",source:`function render(row) {
+  const FIELD = 'due';
+  if (!row[FIELD]) return '';
+  const then = new Date(String(row[FIELD]));
+  if (Number.isNaN(then.getTime())) return '';
+  // Whole days, not elapsed hours: a date-only value must read the same at
+  // 09:00 and at 23:00, or "today" turns into "1 days ago" over lunch.
+  const day = (d) => Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) / 86400000;
+  const days = day(then) - day(new Date());
+  if (days === 0) return 'today';
+  return days > 0 ? \`in \${days} days\` : \`\${-days} days ago\`;
+}
+`}],aE=[{label:"Required — reject an empty cell",source:`function validate(value, row) {
+  if (value === null || value === undefined || String(value).trim() === '') {
+    throw new Error('This field is required.');
+  }
+}
+`},{label:"Email address",source:`function validate(value, row) {
+  if (value == null || value === '') return; // blank is allowed
+  if (!/^[^@\\s]+@[^@\\s]+\\.[^@\\s]{2,}$/.test(String(value))) {
+    throw new Error(\`"\${value}" is not a valid email address.\`);
+  }
+}
+`},{label:"Web address (http / https)",source:`function validate(value, row) {
+  if (value == null || value === '') return;
+  let url;
+  try {
+    url = new URL(String(value));
+  } catch {
+    throw new Error(\`"\${value}" is not a valid URL.\`);
+  }
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    throw new Error('Only http:// and https:// addresses are allowed.');
+  }
+}
+`},{label:"Whole number in a range",source:`function validate(value, row) {
+  const MIN = 1;
+  const MAX = 100;
+  if (value == null || value === '') return;
+  const n = Number(value);
+  if (!Number.isInteger(n)) throw new Error(\`"\${value}" is not a whole number.\`);
+  if (n < MIN || n > MAX) throw new Error(\`Must be between \${MIN} and \${MAX} (got \${n}).\`);
+}
+`},{label:"Positive number",source:`function validate(value, row) {
+  if (value == null || value === '') return;
+  const n = Number(value);
+  if (Number.isNaN(n)) throw new Error(\`"\${value}" is not a number.\`);
+  if (n <= 0) throw new Error('Must be greater than zero.');
+}
+`},{label:"Text length between two limits",source:"function validate(value, row) {\n  const MIN = 3;\n  const MAX = 40;\n  if (value == null || value === '') return;\n  const len = String(value).trim().length;\n  if (len < MIN) throw new Error(`Too short — at least ${MIN} characters (got ${len}).`);\n  if (len > MAX) throw new Error(`Too long — at most ${MAX} characters (got ${len}).`);\n}\n"},{label:"One of a fixed list of values",source:`function validate(value, row) {
+  const ALLOWED = ['draft', 'review', 'published'];
+  if (value == null || value === '') return;
+  if (!ALLOWED.includes(String(value))) {
+    throw new Error(\`"\${value}" is not allowed. Pick one of: \${ALLOWED.join(', ')}.\`);
+  }
+}
+`},{label:"Matches a pattern (regular expression)",source:`function validate(value, row) {
+  const PATTERN = /^[A-Z]{2}-\\d{4}$/; // e.g. AB-1234
+  if (value == null || value === '') return;
+  if (!PATTERN.test(String(value))) {
+    throw new Error(\`"\${value}" doesn't match the required format (e.g. AB-1234).\`);
+  }
+}
+`},{label:"A real date, not in the future",source:`function validate(value, row) {
+  if (value == null || value === '') return;
+  const d = new Date(String(value));
+  if (Number.isNaN(d.getTime())) throw new Error(\`"\${value}" is not a date.\`);
+  // Compare whole days, so "today" is never rejected by a few hours.
+  const today = new Date();
+  today.setHours(23, 59, 59, 999);
+  if (d > today) throw new Error('The date cannot be in the future.');
+}
+`},{label:"Depends on another column (end after start)",source:`function validate(value, row) {
+  // \`row\` is the whole row, so a rule can compare fields. Rename 'start' to
+  // whichever column this one has to come after.
+  const OTHER = 'start';
+  if (value == null || value === '') return;
+  const other = row?.[OTHER];
+  if (other == null || other === '') return; // nothing to compare against yet
+  if (new Date(String(value)) < new Date(String(other))) {
+    throw new Error(\`Must not be earlier than \${OTHER} (\${other}).\`);
+  }
+}
+`}];var lE=Object.defineProperty,cE=Object.getOwnPropertyDescriptor,Kn=(e,t,n,r)=>{for(var i=r>1?void 0:r?cE(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&lE(t,n,i),i};const uE=`function render(row) {
+  // \`row\` is the full row object — access any field by name (row.field).
+  // Return the value this column should display.
+  return row.name ?? '';
+}
+`;function dE(e){return`function render(row) {
+  // \`row\` is the full row object — access any field by name (row.field).
+  // Return what this token should show; HTML is rendered, not escaped.
+  return ${e?`row.${e}`:"row.name"} ?? '';
+}
+`}const hE=`function validate(value, row) {
+  // \`value\` is what the user just typed; \`row\` is the rest of the row.
+  // THROW to reject the edit — the message is what they will see.
+  if (false) throw new Error('Explain what is wrong here.');
+}
+`;function fE(){return globalThis.crypto?.randomUUID?.()??`${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`}async function pE(){try{const t=await(await J()).store.settings.findOne(Hm);return tE(t?.value)}catch{return[]}}async function xh(e){await(await J()).store.settings.upsert({name:Hm,value:[...e]})}let it=class extends $e{constructor(){super(...arguments),this.text="",this.columnLabel="",this.kind="render",this.undoText=null,this.userSamples=[],this.pickedUserId=null,this.dialogEl=null,this.resolver=null,this.onCancel=()=>this.resolve(null),this.onSubmit=e=>{e.preventDefault(),this.resolve(this.text)}}connectedCallback(){super.connectedCallback(),it.instance=this}disconnectedCallback(){super.disconnectedCallback(),it.instance===this&&(it.instance=null)}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e),this.dialogEl&&Xt("script-editor",this.dialogEl)}async open(e,t,n="render",r){return this.resolver&&(this.resolver(null),this.resolver=null),this.kind=n,this.undoText=null,this.pickedUserId=null,this.text=e&&e.trim()?e:this.blankFor(n,r?.field??""),this.columnLabel=t??"",this.userSamples=await pE(),await this.updateComplete,this.dialogEl?.showModal(),new Promise(i=>{this.resolver=i})}blankFor(e,t){return e==="validate"?hE:e==="token"?dE(t):uE}resolve(e){const t=this.resolver;this.resolver=null,this.dialogEl?.close(),t&&t(e)}get sampleKind(){return this.kind==="validate"?"validate":"render"}get samples(){return eE(this.sampleKind)}get mySamples(){return rE(this.userSamples,this.sampleKind)}applySample(e){const t=e.target,n=t.value;t.value="";const r=n.startsWith("u:")?this.mySamples.find(i=>i.id===n.slice(2)):this.samples[Number(n.slice(2))];r&&(this.undoText=this.text,this.text=r.source,this.pickedUserId=n.startsWith("u:")?n.slice(2):null)}undoSample(){this.undoText!==null&&(this.text=this.undoText,this.undoText=null)}onInput(e){this.text=e.target.value,this.undoText=null}async saveAsSample(){if(!this.text.trim())return;const e=lt.instance;if(!e)return;const t=await e.prompt("Name this sample — it appears in the dropdown for every script of this kind.","","Add to samples");if(t===null||!t.trim())return;const n={id:fE(),kind:this.sampleKind,label:t.trim(),source:this.text};this.userSamples=iE(this.userSamples,n),this.pickedUserId=n.id,await xh(this.userSamples)}async deletePickedSample(){const e=this.pickedUserId,t=e?this.mySamples.find(i=>i.id===e):void 0,n=lt.instance;!e||!t||!n||!await n.confirm(`Delete the sample "${t.label}"? The script in the editor stays as it is.`,"Delete sample")||(this.userSamples=sE(this.userSamples,e),this.pickedUserId=null,await xh(this.userSamples))}renderHints(){return this.kind==="token"?v`
+        <p class="hint">
+          Define <code>function render(row) { … }</code>. <code>row</code> is the full row object. What you return is what this token shows — the stored cell is never changed. The result goes into the
+          template as HTML, so <code>markdownToHtml(row.body)</code> shows formatted text and <code>new Date(row.date).toLocaleString()</code> shows a local date.
+        </p>
+        <p class="hint">
+          Only a plain <code>$TOKEN</code> runs the script. <code>$input.TOKEN</code> and <code>$filter.TOKEN</code> keep reading the mapped column, because one writes the cell back and the other must
+          match the stored value. A scripted token needs no column at all.
+        </p>
+      `:this.kind==="validate"?v`
+        <p class="hint">
+          Define <code>function validate(value, row) { … }</code>. It runs when someone edits a cell in this column by hand, after the Max / Unique / Not-null boxes have had their say.
+          <strong>Throw to reject the edit</strong> — your message is what they are shown, and the cell snaps back. Return without throwing to accept it; the return value is ignored.
+        </p>
+        <p class="hint">
+          <code>value</code> is the proposed new value, <code>row</code> the rest of the row, so a rule can compare columns. Imports, refreshes and sync are not edits and never run it.
+        </p>
+      `:v`
+      <p class="hint">
+        Define <code>function render(row) { … }</code>. <code>row</code> is the full row object. What you return is passed to the column's renderer, so the cell shows a computed value instead of the
+        stored one — and the cell becomes read-only. A script that throws shows a small error chip in the cell.
+      </p>
+      <p class="hint">
+        Besides the JS globals you can call <code>markdownToHtml(text)</code> (also <code>easydb.markdownToHtml</code>) — set this column's renderer to <code>html</code> so the result shows as
+        formatted text rather than as its own source. A sample that needs a particular renderer says so in its first line; the dropdown can't set it for you.
+      </p>
+    `}render(){const e=this.kind==="validate",t=this.mySamples,n=this.pickedUserId?t.find(r=>r.id===this.pickedUserId):void 0;return v`
+      <dialog @cancel=${this.onCancel} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${this.onCancel}>×</button>
+        <form @submit=${this.onSubmit}>
+          <div class="dialog-header">
+            <h2>${e?"Edit validation":"Edit script"}${this.columnLabel?` — ${this.columnLabel}`:""}</h2>
+            <div class="header-actions">
+              <button type="button" class="ghost" @click=${this.onCancel}>Cancel</button>
+              <button type="submit" class="primary">Save</button>
+            </div>
+          </div>
+          <div class="dialog-body">
+            ${this.renderHints()}
+            <div class="samples">
+              <label for="sample">Start from a sample</label>
+              <select
+                id="sample"
+                title=${e?"Replace the editor contents with a ready-made rule":"Replace the editor contents with a ready-made script"}
+                @change=${r=>this.applySample(r)}
+              >
+                <option value="">— choose —</option>
+                ${t.length?v`<optgroup label="Your samples">${t.map(r=>v`<option value=${`u:${r.id}`}>${r.label}</option>`)}</optgroup>`:null}
+                <optgroup label="Built in">${this.samples.map((r,i)=>v`<option value=${`b:${i}`}>${r.label}</option>`)}</optgroup>
+              </select>
+              <button
+                type="button"
+                class="icon danger"
+                title=${n?`Delete the sample "${n.label}"`:"Pick one of your own samples to delete it"}
+                ?disabled=${!n}
+                @click=${()=>void this.deletePickedSample()}
+              >
+                🗑
+              </button>
+              <button
+                type="button"
+                class="icon"
+                data-testid="sample-add"
+                title="Add what is in the editor to the sample list for this kind of script"
+                ?disabled=${!this.text.trim()}
+                @click=${()=>void this.saveAsSample()}
+              >
+                +
+              </button>
+              ${this.undoText!==null?v`<button type="button" class="link" @click=${()=>this.undoSample()}>Undo</button>`:null}
+            </div>
+            <textarea spellcheck="false" autofocus .value=${this.text} @input=${r=>this.onInput(r)}></textarea>
+          </div>
+        </form>
+      </dialog>
+    `}};it.instance=null;it.styles=[mt,Se`
+      dialog {
+        width: 720px;
+        max-width: 92vw;
+      }
+      p.hint {
+        margin: 0;
+        color: #6b7280;
+        font-size: 0.85rem;
+      }
+      p.hint code {
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        background: #f3f4f6;
+        padding: 0.05rem 0.25rem;
+        border-radius: 0.2rem;
+      }
+      .samples {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: #374151;
+      }
+      .samples select {
+        font: inherit;
+        padding: 0.3rem 0.4rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        flex: 1;
+        min-width: 0;
+      }
+      button.link {
+        background: transparent;
+        border: 0;
+        padding: 0;
+        color: #2563eb;
+        font: inherit;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      button.link[disabled] {
+        color: #9ca3af;
+        text-decoration: none;
+        cursor: default;
+      }
+      /* Beside the dropdown: 🗑 deletes the user sample currently loaded (disabled
+         — not hidden — for a built-in, so the row's shape does not jump as you
+         browse it), + keeps what is in the editor. Same pair, same glyphs, as the
+         Import dialog's sample row. */
+      button.icon {
+        background: transparent;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        padding: 0.3rem 0.5rem;
+        font-size: 1rem;
+        line-height: 1;
+        cursor: pointer;
+        flex: 0 0 auto;
+      }
+      button.icon:hover:not([disabled]) {
+        border-color: #bfdbfe;
+        background: #eff6ff;
+      }
+      button.icon.danger:hover:not([disabled]) {
+        border-color: #fecaca;
+        background: #fef2f2;
+      }
+      button.icon[disabled] {
+        opacity: 0.4;
+        cursor: default;
+      }
+      textarea {
+        font:
+          0.85rem ui-monospace,
+          SFMono-Regular,
+          monospace;
+        padding: 0.6rem 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        min-height: 320px;
+        resize: vertical;
+        tab-size: 2;
+      }
+    `];Kn([j()],it.prototype,"text",2);Kn([j()],it.prototype,"columnLabel",2);Kn([j()],it.prototype,"kind",2);Kn([j()],it.prototype,"undoText",2);Kn([j()],it.prototype,"userSamples",2);Kn([j()],it.prototype,"pickedUserId",2);it=Kn([Re("script-editor-dialog")],it);var mE=Object.defineProperty,gE=Object.getOwnPropertyDescriptor,Ir=(e,t,n,r)=>{for(var i=r>1?void 0:r?gE(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&mE(t,n,i),i};function wr(e,t){($t.instance??bE()).open(e,t)}function bE(){const e=document.createElement("views-dialog");return document.body.appendChild(e),e}function Na(){return globalThis.crypto?.randomUUID?.()??`${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`}let $t=class extends $e{constructor(){super(...arguments),this.mode="list",this.instances=[],this.templates=[],this.tDraft=null,this.iDraft=null,this.tableId="",this.table=null,this.columns=[],this.dialogEl=null,this.deepLinked=!1,this.registries=null,this.cloudDefaults=null,this.close=()=>{this.dialogEl?.close()},this.onSubmit=e=>{e.preventDefault(),this.mode==="template"?this.saveTemplate():this.mode==="instance"?this.saveInstance():this.close()}}connectedCallback(){super.connectedCallback(),$t.instance=this}disconnectedCallback(){super.disconnectedCallback(),$t.instance===this&&($t.instance=null)}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e),this.dialogEl&&Xt("views",this.dialogEl)}async open(e,t){if(this.tableId=e,this.mode="list",this.tDraft=null,this.iDraft=null,this.deepLinked=!!(t?.editTemplateId||t?.editInstanceId),await this.refresh(),t?.editTemplateId){const n=this.templates.find(r=>r.id===t.editTemplateId);n&&this.editTemplate(n)}else if(t?.editInstanceId){const n=this.instances.find(r=>r.id===t.editInstanceId);n&&await this.editInstance(n)}await this.updateComplete,this.dialogEl?.showModal()}async refresh(){const e=await J(),t=e.workspaceId;this.registries=e.registries,this.cloudDefaults=await GS(e.api.settings),this.table=await e.store.tables.findOne(this.tableId),this.columns=this.table?.columns??[],this.instances=(await e.store.viewInstances.find({workspaceId:t})).filter(n=>n.tableId===this.tableId),this.templates=(await e.store.viewTemplates.find({workspaceId:t})).sort((n,r)=>n.name.localeCompare(r.name))}doneEditing(){this.deepLinked?this.close():this.mode="list"}async openInstance(e){this.close(),await zc(e)}async editInstance(e){const n=await(await J()).store.viewTemplates.findOne(e.templateId),r=n?.kind==="viz"?this.vizSpecOf(n.viz?.kind):null,i=r?r.channels.map(s=>s.key):n?.kind==="viz"?Object.keys(e.mapping):n?Od(n.headerHtml,n.rowHtml,n.footerHtml):Object.keys(e.mapping);this.iDraft={id:e.id,templateId:e.templateId,templateName:n?.name??"template",name:e.name,tokens:i,mapping:{...e.mapping},tokenScripts:{...e.tokenScripts??{}},tokenRaw:{...e.tokenRaw??{}},limit:e.limit??0,dock:e.dock?e.dock.edge:"window",vizOptions:vl(n?.viz?.options,e.vizOptions),readonly:e.readonly??!1},this.mode="instance"}async deleteInstance(e){await(await J()).store.viewInstances.remove(e),await this.refresh()}async copyInstance(e){const t=await J(),n=this.columns.filter(i=>!i.hidden).map(i=>i.field),r={...e,id:Na(),name:`${e.name} copy`,visibleColumns:n,open:!1,windowGeometry:void 0,updatedAt:Date.now()};await t.store.viewInstances.insert(r),await this.refresh()}newTemplate(e="html"){const t=e==="viz"?this.visualizations()[0]:void 0;this.tDraft={id:null,name:"",headerHtml:"",rowHtml:"",footerHtml:"",kind:e,viz:t?{kind:t.id,aggregate:t.defaultAggregate,options:this.seedOptions(t.id)}:null},this.mode="template"}seedOptions(e){if(e!=="wordcloud"||!this.cloudDefaults)return{};const t=this.cloudDefaults;return{minLength:t.minLength,...t.keepWords.trim()===""?{}:{keepWords:t.keepWords},stopWords:t.stopWords}}visualizations(){return[...this.registries?.visualizations.values()??[]]}vizSpecOf(e){return e?this.registries?.visualizations.get(e)??null:null}editTemplate(e){this.tDraft={id:e.id,name:e.name,headerHtml:e.headerHtml,rowHtml:e.rowHtml,footerHtml:e.footerHtml,kind:e.kind==="viz"?"viz":"html",viz:e.viz?{...e.viz}:null},this.mode="template"}copyTemplate(e){this.tDraft={id:null,name:`${e.name} copy`,headerHtml:e.headerHtml,rowHtml:e.rowHtml,footerHtml:e.footerHtml,kind:e.kind==="viz"?"viz":"html",viz:e.viz?{...e.viz}:null},this.mode="template"}async deleteTemplate(e){const t=await J();await t.api.ui.dialogs.confirm(e.builtin?`Delete the built-in template "${e.name}"? It will not be seeded again in this workspace. Views already created from it keep working.`:`Delete the template "${e.name}"? Views already created from it keep working.`,e.builtin?"Delete built-in template":"Delete template")&&(await t.store.viewTemplates.remove(e.id),document.dispatchEvent(new CustomEvent("easydb:reload-views")),await this.refresh())}async saveTemplate(){if(!this.tDraft)return;const e=this.tDraft;if(!e.name.trim())return;const t=await J(),n=this.templates.find(r=>r.id!==e.id&&r.name.trim().toLowerCase()===e.name.trim().toLowerCase());if(n){await t.api.ui.dialogs.alert(`A template called “${n.name}” already exists. Pick another name.`,"Duplicate template name");return}if(e.id){const r=this.templates.find(i=>i.id===e.id)?.builtin;await t.store.viewTemplates.patch(e.id,{name:e.name.trim(),headerHtml:e.headerHtml,rowHtml:e.rowHtml,footerHtml:e.footerHtml,kind:e.kind,viz:e.kind==="viz"&&e.viz?e.viz:void 0,...r?{builtin:!1}:{},updatedAt:Date.now()})}else await t.store.viewTemplates.insert({id:Na(),workspaceId:t.workspaceId,name:e.name.trim(),headerHtml:e.headerHtml,rowHtml:e.rowHtml,footerHtml:e.footerHtml,kind:e.kind,...e.kind==="viz"&&e.viz?{viz:e.viz}:{},updatedAt:Date.now()});document.dispatchEvent(new CustomEvent("easydb:reload-views")),await this.refresh(),this.doneEditing()}useTemplate(e){const t=e.kind==="viz"?this.vizSpecOf(e.viz?.kind):null,n=t?t.channels.map(i=>i.key):Od(e.headerHtml,e.rowHtml,e.footerHtml),r={};for(const i of n){const s=t?.channels.find(o=>o.key===i);r[i]=s?this.autoMapChannel(s):this.autoMap(i)}this.iDraft={id:null,templateId:e.id,templateName:e.name,name:`${e.name} — ${this.table?.name??"table"}`,tokens:n,mapping:r,tokenScripts:{},tokenRaw:{},limit:0,readonly:!1,dock:"window",vizOptions:vl(e.viz?.options,void 0)},this.mode="instance"}autoMapChannel(e){const t=i=>!e.accepts||e.accepts.length===0||e.accepts.includes(i.type),n=this.autoMap(e.key);if(n&&this.columns.some(i=>i.field===n&&t(i)))return n;const r=i=>this.columns.find(o=>t(o)&&i.some(a=>`${o.field} ${o.label??""}`.toLowerCase().includes(a)))?.field??"";switch(e.kind){case"lat":return r(["latitude","lat"])||this.firstColumn(i=>t(i));case"lon":return r(["longitude","lon","lng"])||this.firstColumn(i=>t(i));case"time":return this.firstColumn(i=>t(i)&&(i.type==="date"||i.type==="datetime"))||this.firstColumn(t);case"value":case"weight":return this.firstColumn(i=>t(i)&&i.type==="number")||"";case"text":return r(["description","text","body","comment","notes","title","name"])||this.firstColumn(i=>t(i)&&i.type==="string");case"category":return this.firstColumn(i=>t(i)&&(i.type==="string"||i.type==="array"))||this.firstColumn(t);default:return""}}firstColumn(e){const t=this.columns.find(e);return t?t.field:""}autoMap(e){const t=e.toLowerCase(),n=this.columns.find(p=>p.field.toLowerCase()===t||(p.label??"").toLowerCase()===t);if(n)return n.field;const r=/^check(\d+)$/i.exec(e);if(r){const p=Number(r[1])-1;return this.columns.filter(y=>y.type==="boolean")[p]?.field??""}if(["done","complete","completed","checked","check","read","active","enabled","starred","flag","ok"].includes(t))return this.firstColumn(p=>p.type==="boolean");const s=this.table?.labelColumn;if(s&&(t==="title"||t==="name"||t==="label"))return s;if(["date","datetime","time","created","updated","modified","timestamp","day","when"].includes(t))return this.firstColumn(p=>p.type==="date"||p.type==="datetime");const a=["url","link","href","website","homepage","uri","site","web"];if(a.includes(t)){const p=this.firstColumn(b=>b.renderer==="link");return p||this.firstColumn(b=>{const y=b.field.toLowerCase(),$=(b.label??"").toLowerCase();return a.some(k=>y.includes(k)||$.includes(k))})}const c=p=>b=>{const y=b.field.toLowerCase(),$=(b.label??"").toLowerCase();return p.some(k=>y.includes(k)||$.includes(k))},d=["image","img","photo","picture","pic","thumbnail","thumb","avatar","cover","poster","logo","icon"];if(d.includes(t)){const p=this.firstColumn(y=>y.renderer==="image");if(p)return p;const b=this.firstColumn(c(d));return b||this.firstColumn(c(["url","src","href","link"]))}if(["email","mail","e-mail"].includes(t))return this.firstColumn(c(["mail"]));if(["phone","tel","telephone","mobile","cell","cellphone"].includes(t))return this.firstColumn(c(["phone","tel","mobile","cell"]));const f=["description","desc","notes","note","body","text","summary","about","comment","comments","details","detail","remarks"];if(f.includes(t)){const p=this.firstColumn(k=>{if(k.type!=="string")return!1;const C=k.field.toLowerCase(),_=(k.label??"").toLowerCase();return f.some(T=>C.includes(T)||_.includes(T))});if(p)return p;const b=this.columns.filter(k=>k.type==="string"),y=b[0];if(!y)return"";let $=y;for(const k of b)(k.max??0)>($.max??0)&&($=k);return $.field}return""}draftScripts(e){const t=Object.entries(e.tokenScripts).filter(([,n])=>n.trim());return t.length?Object.fromEntries(t):void 0}draftRaw(e){const t=Object.entries(e.tokenRaw).filter(([,n])=>n===!0);return t.length?Object.fromEntries(t):void 0}toggleTokenRaw(e){const t=this.iDraft;if(!t)return;const n={...t.tokenRaw};n[e]?delete n[e]:n[e]=!0,this.iDraft={...t,tokenRaw:n}}async editTokenScript(e){const t=it.instance,n=this.iDraft;if(!t||!n)return;const r=await t.open(n.tokenScripts[e]??"",`$${e}`,"token",{field:n.mapping[e]??""});if(r===null)return;const i={...n.tokenScripts};r.trim()?i[e]=r:delete i[e],this.iDraft={...n,tokenScripts:i}}vizDelta(e){const t=this.templates.find(r=>r.id===e.templateId);if(t?.kind!=="viz")return;const n=Nm(t.viz?.options,e.vizOptions);return Object.keys(n).length>0?n:void 0}specOfDraft(e){const t=this.templates.find(n=>n.id===e.templateId);return t?.kind==="viz"?this.vizSpecOf(t.viz?.kind):null}isVizDraft(e){return this.templates.find(t=>t.id===e.templateId)?.kind==="viz"}channelLabel(e,t){const n=this.templates.find(i=>i.id===e.templateId);return this.vizSpecOf(n?.viz?.kind)?.channels.find(i=>i.key===t)?.label??t}async saveInstance(){if(!this.iDraft||!this.table)return;const e=this.iDraft;if(!e.name.trim())return;const t=await J(),n=this.draftScripts(e),r=this.draftRaw(e);if(e.id){await t.store.viewInstances.patch(e.id,{name:e.name.trim(),mapping:{...e.mapping},tokenScripts:n,tokenRaw:r,limit:e.limit>0?e.limit:void 0,readonly:e.readonly,dock:this.dockFor(e),vizOptions:this.vizDelta(e),updatedAt:Date.now()}),document.dispatchEvent(new CustomEvent("easydb:reload-view",{detail:{instanceId:e.id}})),await this.refresh(),this.doneEditing();return}const i=this.columns.filter(o=>!o.hidden).map(o=>o.field),s={id:Na(),workspaceId:t.workspaceId,tableId:this.tableId,tableName:this.table.name,templateId:e.templateId,name:e.name.trim(),sortColumn:this.table.sortColumn,sortAsc:this.table.sortAsc,filters:{...this.table.filters??{}},visibleColumns:i,mapping:{...e.mapping},updatedAt:Date.now(),...e.limit>0?{limit:e.limit}:{},...e.readonly?{readonly:!0}:{},...n?{tokenScripts:n}:{},...r?{tokenRaw:r}:{},...this.dockFor(e)?{dock:this.dockFor(e)}:{},...Object.keys(this.vizDelta(e)??{}).length>0?{vizOptions:this.vizDelta(e)}:{}};await t.store.viewInstances.insert(s),e.dock==="window"?await this.openInstance(s.id):(await t.store.viewInstances.patch(s.id,{open:!0,updatedAt:Date.now()}),await this.refresh(),this.close())}dockFor(e){if(e.dock==="window")return;const t=this.instances.filter(r=>r.id!==e.id&&r.dock?.edge===e.dock&&r.dock?.host.kind==="table"&&r.dock.host.tableId===this.tableId).length,n=e.id?this.instances.find(r=>r.id===e.id)?.dock:void 0;return{host:{kind:"table",tableId:this.tableId},edge:e.dock,size:n?.size??160,order:n?.order??t}}renderList(){return v`
+      <div class="section">
+        <h3>Views of “${this.table?.name??""}”</h3>
+        <ul class="list">
+          ${this.instances.map(e=>v`<li>
+                <span class="name">${e.name}</span>
+                <button type="button" class="mini" @click=${()=>this.openInstance(e.id)}>Open</button>
+                <button type="button" class="mini" @click=${()=>void this.editInstance(e)}>Edit</button>
+                <button type="button" class="mini" title="Duplicate this view, picking up columns added to the table since" @click=${()=>void this.copyInstance(e)}>Copy</button>
+                <button type="button" class="mini danger" @click=${()=>void this.deleteInstance(e.id)}>Delete</button>
+              </li>`)}
+        </ul>
+      </div>
+      <div class="section">
+        <h3>View templates (workspace)</h3>
+        <ul class="list">
+          ${this.templates.map(e=>v`<li>
+                <span class="name">${e.name}</span>
+                ${e.builtin?v`<span class="badge">built-in</span>`:X}
+                <button type="button" class="mini" @click=${()=>this.useTemplate(e)}>Use</button>
+                <button type="button" class="mini" @click=${()=>this.editTemplate(e)}>Edit</button>
+                <button type="button" class="mini" @click=${()=>this.copyTemplate(e)}>Copy</button>
+                <button
+                  type="button"
+                  class="mini danger"
+                  title=${e.builtin?"Delete this built-in template (it will not be seeded again)":"Delete this template"}
+                  @click=${()=>void this.deleteTemplate(e)}
+                >
+                  Delete
+                </button>
+              </li>`)}
+        </ul>
+        <div>
+          <button type="button" class="mini" @click=${()=>this.newTemplate("html")}>+ New template</button>
+          ${this.visualizations().length>0?v`<button type="button" class="mini" @click=${()=>this.newTemplate("viz")}>+ New chart</button>`:X}
+        </div>
+        <p class="hint">
+          A template's row HTML uses <code>$TOKEN</code> placeholders (e.g. <code>$TITLE</code>). Leave row HTML blank to show a read-only columns table with the header/footer HTML around it.
+        </p>
+        <p class="hint">A chart template draws instead — bar, line, pie, a map or a word cloud — in its own window or docked above or below the table.</p>
+      </div>
+    `}renderTemplate(){const e=this.tDraft,t=n=>r=>{this.tDraft={...e,[n]:r.target.value}};return v`
+      <label class="field">
+        Name
+        <input type="text" .value=${e.name} @input=${t("name")} placeholder="e.g. Cards" />
+      </label>
+      ${e.kind==="viz"?this.renderVizTemplate(e):this.renderHtmlTemplate(e,t)}
+    `}renderHtmlTemplate(e,t){return v`
+      <label class="field">
+        Header HTML
+        <textarea .value=${e.headerHtml} @input=${t("headerHtml")}></textarea>
+      </label>
+      <label class="field">
+        Row HTML <span class="hint">(blank ⇒ read-only table)</span>
+        <textarea .value=${e.rowHtml} @input=${t("rowHtml")} placeholder="&lt;div&gt;$TITLE&lt;/div&gt;"></textarea>
+      </label>
+      <label class="field">
+        Footer HTML
+        <textarea .value=${e.footerHtml} @input=${t("footerHtml")}></textarea>
+      </label>
+    `}setViz(e){const t=this.tDraft;t?.viz&&(this.tDraft={...t,viz:{...t.viz,...e}})}setAggregate(e){const t=this.tDraft;if(!t?.viz)return;const n=this.vizSpecOf(t.viz.kind),r=t.viz.aggregate??n?.defaultAggregate??{groupBy:["CATEGORY"],measures:[{channel:"VALUE",fn:"count"}]};this.tDraft={...t,viz:{...t.viz,aggregate:{...r,...e}}}}renderVizTemplate(e){const t=this.visualizations();if(t.length===0)return v`<p class="hint">No visualizations are registered. Enable the Charts, Map or Word cloud plugins in the Plugin Manager.</p>`;const n=this.vizSpecOf(e.viz?.kind)??t[0];if(!n)return X;const r=e.viz?.aggregate??n.defaultAggregate??null,i=r?.measures[0],s=e.viz?.options??{};return v`
+      <label class="field">
+        Visualization
+        <select
+          @change=${o=>{const a=this.vizSpecOf(o.target.value);a&&this.setViz({kind:a.id,aggregate:a.defaultAggregate,options:this.seedOptions(a.id)})}}
+        >
+          ${t.map(o=>v`<option value=${o.id} ?selected=${o.id===n.id}>${o.label}</option>`)}
+        </select>
+      </label>
+      ${n.data==="aggregate"&&r?v`
+            <div class="section">
+              <h3>What it measures</h3>
+              <label class="field">
+                Aggregate
+                <select @change=${o=>this.setAggregate({measures:[{channel:"VALUE",fn:o.target.value}]})}>
+                  ${[["count","Count of rows"],["sum","Sum of the value column"],["avg","Average of the value column"],["min","Minimum of the value column"],["max","Maximum of the value column"],["countDistinct","Distinct values of the value column"]].map(([o,a])=>v`<option value=${o} ?selected=${i?.fn===o}>${a}</option>`)}
+                </select>
+              </label>
+              <label class="field">
+                Order
+                <select @change=${o=>this.setAggregate({sort:o.target.value})}>
+                  <option value="category" ?selected=${r.sort==="category"}>By category</option>
+                  <option value="valueDesc" ?selected=${r.sort==="valueDesc"}>Largest first</option>
+                  <option value="value" ?selected=${r.sort==="value"}>Smallest first</option>
+                </select>
+              </label>
+              <label class="field">
+                Show at most (groups, 0 = all)
+                <span class="hint">The rest are folded into one “Other”, never dropped.</span>
+                <input
+                  type="number"
+                  min="0"
+                  .value=${String(r.topN??0)}
+                  @input=${o=>{const a=Math.max(0,Number(o.target.value)||0);this.setAggregate(a>0?{topN:a}:{topN:void 0})}}
+                />
+              </label>
+            </div>
+          `:X}
+      ${n.options&&n.options.length>0?v`
+            <div class="section">
+              <h3>Options</h3>
+              ${n.options.map(o=>this.renderVizOption(o,s))}
+            </div>
+          `:X}
+      <p class="hint">Columns are mapped when you create a view from this template, so one chart works on any table with matching columns.</p>
+    `}renderVizOption(e,t){return this.renderVizOptionField(e,t,(n,r)=>this.setViz({options:{...t,[n]:r}}))}renderVizOptionField(e,t,n){const r=t[e.key]??e.default,i=o=>n(e.key,o),s=e.description?v`<span class="hint">${e.description}</span>`:X;return e.type==="boolean"?v`<label class="field-inline">
+        <input type="checkbox" .checked=${r===!0} @change=${o=>i(o.target.checked)} />
+        ${e.label}
+      </label>`:e.type==="number"?v`<label class="field">
+        ${e.label} ${s}
+        <input type="number" .value=${r==null?"":String(r)} @input=${o=>i(Number(o.target.value)||0)} />
+      </label>`:e.type==="option"&&e.options?v`<label class="field">
+        ${e.label}
+        <select @change=${o=>i(o.target.value)}>
+          ${e.options.map(o=>v`<option value=${o} ?selected=${r===o}>${o}</option>`)}
+        </select>
+      </label>`:e.type==="text"?v`<label class="field">
+        ${e.label} ${s}
+        <textarea rows="3" .value=${r==null?"":String(r)} @input=${o=>i(o.target.value)}></textarea>
+      </label>`:v`<label class="field">
+      ${e.label} ${s}
+      <input type="text" .value=${r==null?"":String(r)} @input=${o=>i(o.target.value)} />
+    </label>`}renderInstance(){const e=this.iDraft;return v`
+      <label class="field">
+        View name
+        <input type="text" .value=${e.name} @input=${t=>this.iDraft={...e,name:t.target.value}} />
+      </label>
+      <label class="field">
+        Show at most (rows, 0 = all)
+        <input
+          type="number"
+          min="0"
+          .value=${String(e.limit)}
+          @input=${t=>this.iDraft={...e,limit:Math.max(0,Number(t.target.value)||0)}}
+        />
+      </label>
+      ${this.isVizDraft(e)?v`<label class="field">
+            Where to show it
+            <select @change=${t=>this.iDraft={...e,dock:t.target.value}}>
+              <option value="window" ?selected=${e.dock==="window"}>In its own window</option>
+              <option value="above" ?selected=${e.dock==="above"}>Docked above the table</option>
+              <option value="below" ?selected=${e.dock==="below"}>Docked below the table</option>
+            </select>
+            <span class="hint">A docked chart follows the table's filters and search as you change them.</span>
+          </label>`:v`<label class="field-inline">
+            <input type="checkbox" .checked=${e.readonly} @change=${t=>this.iDraft={...e,readonly:t.target.checked}} />
+            Readonly (show values without editors in the table view)
+          </label>`}
+      <div class="section">
+        <h3>${this.isVizDraft(e)?"Map data to columns":"Map placeholders to columns"}</h3>
+        ${e.tokens.length===0?this.isVizDraft(e)?v`<p class="hint">This visualization needs no columns mapped.</p>`:v`<p class="hint">This template has no <code>$TOKEN</code> placeholders — it will show the read-only table with your current sort, filter and visible columns.</p>`:e.tokens.map(t=>v`<div class="map-row">
+                  ${this.isVizDraft(e)?v`<span class="channel">${this.channelLabel(e,t)}</span>`:v`<code>$${t}</code>`}
+                  <select
+                    @change=${n=>this.iDraft={...e,mapping:{...e.mapping,[t]:n.target.value}}}
+                  >
+                    <option value="" ?selected=${!e.mapping[t]}>— none —</option>
+                    ${this.columns.map(n=>v`<option value=${n.field} ?selected=${e.mapping[t]===n.field}>${n.label||n.field}</option>`)}
+                  </select>
+                  ${this.isVizDraft(e)?X:v`<button
+                          type="button"
+                          class=${e.tokenRaw[t]?"mini":"mini scripted"}
+                          title=${e.tokenRaw[t]?`$${t} shows the plain value — click to render it with the column's renderer`:`$${t} is shown by the column's renderer — click for the plain value`}
+                          @click=${()=>this.toggleTokenRaw(t)}
+                        >
+                          ${e.tokenRaw[t]?"🔤":"🎨"}
+                        </button>
+                        <button
+                          type="button"
+                          class=${e.tokenScripts[t]?.trim()?"mini scripted":"mini"}
+                          title=${e.tokenScripts[t]?.trim()?`Edit the script formatting $${t}`:`Format $${t} with a script (e.g. a local date, markdown as HTML)`}
+                          @click=${()=>void this.editTokenScript(t)}
+                        >
+                          ƒ(x)
+                        </button>`}
+                </div>`)}
+      </div>
+      ${this.isVizDraft(e)?X:v`<p class="hint">
+            🎨 shows the token through the column's own cell renderer, so the view looks like the table; 🔤 shows the plain value instead (the same as writing <code>$raw.TOKEN</code>). A token inside
+            a tag, as in <code>&lt;img src="$IMAGE"&gt;</code>, always stays plain.
+          </p>`}
+      ${this.isVizDraft(e)?X:v`<p class="hint">
+            <code>ƒ(x)</code> gives a token a <code>render(row)</code> script, so the view can show a formatted value — a local date, markdown as HTML — without changing the stored cell. It applies to
+            <code>$TOKEN</code> only, not to <code>$input.</code> or <code>$filter.</code>.
+          </p>`}
+      <p class="hint">
+        ${this.isVizDraft(e)?e.id?v`Editing this visualization. Use <strong>Chart</strong> in the window footer to change the kind or the aggregate, which every view of this chart shares.`:v`The visualization reads this table's rows; a docked one follows the grid's filters live.`:e.id?v`Editing name and column mapping. The snapshotted sort, filters and visible columns are kept.`:v`The view snapshots this table's current sort, filters and visible columns.`}
+      </p>
+      ${this.renderInstanceVizOptions(e)}
+    `}renderInstanceVizOptions(e){const t=this.specOfDraft(e);if(!t?.options||t.options.length===0)return X;const n=this.templates.find(o=>o.id===e.templateId),r=XS(n?.viz?.options,e.vizOptions),i=(o,a)=>{this.iDraft={...e,vizOptions:{...e.vizOptions,[o]:a}}},s=o=>{const a={...e.vizOptions};a[o]=(n?.viz?.options??{})[o],this.iDraft={...e,vizOptions:a}};return v`
+      <div class="section">
+        <h3>Settings for this view</h3>
+        <p class="hint">Changed here, they apply to this view only; left alone, they follow the “${n?.name??"chart"}” definition.</p>
+        ${t.options.map(o=>v`
+            <div class="viz-override ${r.has(o.key)?"changed":""}">
+              ${this.renderVizOptionField(o,e.vizOptions,i)}
+              ${r.has(o.key)?v`<button type="button" class="mini" title="Go back to the chart definition's value" @click=${()=>s(o.key)}>Reset</button>`:X}
+            </div>
+          `)}
+      </div>
+    `}render(){const e=this.mode==="template"?this.tDraft?.id?"Edit template":"New template":this.mode==="instance"?`${this.iDraft?.id?"Edit":"New"} view — ${this.iDraft?.templateName??""}`:"Views",t=this.mode==="template"?v`<button type="button" class="ghost" @click=${()=>this.mode="list"}>Back</button> <button type="submit" class="primary">Save</button>`:this.mode==="instance"?v`<button type="button" class="ghost" @click=${()=>this.mode="list"}>Back</button> <button type="submit" class="primary">${this.iDraft?.id?"Save":"Create view"}</button>`:v`<button type="submit" class="ghost">Close</button>`;return v`
+      <dialog @cancel=${this.close} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${this.close}>×</button>
+        <form @submit=${this.onSubmit}>
+          <div class="dialog-header">
+            <h2>${e}</h2>
+            <div class="header-actions">${t}</div>
+          </div>
+          <div class="dialog-body">${this.mode==="template"?this.renderTemplate():this.mode==="instance"?this.renderInstance():this.renderList()}</div>
+        </form>
+      </dialog>
+    `}};$t.instance=null;$t.styles=[mt,Se`
+      dialog {
+        min-width: 520px;
+        max-width: 680px;
+      }
+      h3 {
+        margin: 0 0 0.4rem;
+        font-size: 0.9rem;
+        color: #374151;
+      }
+      .section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+      }
+      ul.list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.35rem;
+        max-height: 30vh;
+        overflow: auto;
+      }
+      ul.list:empty::after {
+        content: 'None yet.';
+        display: block;
+        padding: 0.5rem 0.7rem;
+        color: #9ca3af;
+        font-size: 0.85rem;
+      }
+      li {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 0.6rem;
+        border-bottom: 1px solid #f1f5f9;
+      }
+      li:last-child {
+        border-bottom: 0;
+      }
+      li .name {
+        flex: 1;
+        font-weight: 500;
+        color: #111827;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .badge {
+        font-size: 0.7rem;
+        color: #6b7280;
+        border: 1px solid #d1d5db;
+        border-radius: 0.6rem;
+        padding: 0 0.4rem;
+      }
+      button.mini {
+        font: inherit;
+        font-size: 0.8rem;
+        padding: 0.15rem 0.5rem;
+        border: 1px solid #d1d5db;
+        background: white;
+        border-radius: 0.25rem;
+        cursor: pointer;
+      }
+      button.mini:hover {
+        background: #f3f4f6;
+      }
+      button.mini.danger {
+        color: #b91c1c;
+        border-color: #fecaca;
+      }
+      label.field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.82rem;
+        color: #374151;
+      }
+      label.field-inline {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.82rem;
+        color: #374151;
+      }
+      input[type='text'],
+      textarea,
+      select {
+        font: inherit;
+        padding: 0.4rem 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      textarea {
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        font-size: 0.8rem;
+        min-height: 4.5rem;
+        resize: vertical;
+      }
+      .hint {
+        color: #6b7280;
+        font-size: 0.78rem;
+        margin: 0;
+      }
+      .map-row {
+        display: grid;
+        grid-template-columns: 8rem 1fr auto auto;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .map-row code {
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        color: #2563eb;
+      }
+      /* A visualization's slot is a named data CHANNEL, not a $TOKEN, so it
+         reads as prose rather than as code. */
+      .map-row .channel {
+        font-weight: 600;
+      }
+      /* A token whose script is set says so on the button itself — the script
+         lives in a modal, so nothing else in the row would show it. */
+      /* An overridden option is marked so "this view differs from the chart" is
+         visible without opening the chart definition to compare. */
+      .viz-override {
+        display: flex;
+        align-items: flex-end;
+        gap: 0.4rem;
+      }
+      .viz-override > label {
+        flex: 1;
+        min-width: 0;
+      }
+      .viz-override.changed > label {
+        border-left: 2px solid #2563eb;
+        padding-left: 0.4rem;
+      }
+      button.mini.scripted {
+        border-color: #2563eb;
+        color: #2563eb;
+        background: #eff6ff;
+      }
+    `];Ir([j()],$t.prototype,"mode",2);Ir([j()],$t.prototype,"instances",2);Ir([j()],$t.prototype,"templates",2);Ir([j()],$t.prototype,"tDraft",2);Ir([j()],$t.prototype,"iDraft",2);$t=Ir([Re("views-dialog")],$t);const wE={id:"views",name:"Views",type:"ui",version:"0.1.0",description:"Display tables through HTML view templates in read-only windows.",author:"easyDBAccess built-ins",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/views.ts"},yE="grid_view",vE={slug:"rss",name:"RSS Feed",header:'<div style="display:flex;flex-direction:column;gap:12px;padding:12px;">',row:['<div style="border:1px solid #e5e7eb;border-radius:12px;padding:12px 16px;background:#ffffff;box-shadow:0 1px 2px rgba(0,0,0,0.06);">','<a href="$URL" target="_blank" rel="noopener noreferrer" style="font-size:1.05rem;font-weight:600;color:#2563eb;text-decoration:none;">$TITLE</a>','<div style="color:#6b7280;font-size:0.78rem;margin:4px 0;">$DATE</div>','<div style="color:#374151;font-size:0.9rem;line-height:1.45;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:20;line-clamp:20;overflow:hidden;">$DESCRIPTION</div>','<div style="display:flex;gap:16px;margin-top:8px;">$input.CHECK1$input.CHECK2</div>',"</div>"].join(""),footer:"</div>"},kE={slug:"todo-list",name:"Todo List",header:'<div style="display:flex;flex-direction:column;gap:6px;padding:12px;max-width:720px;margin:0 auto;">',row:['<div style="display:flex;align-items:center;gap:10px;border:1px solid #e5e7eb;border-radius:8px;padding:8px 12px;background:#ffffff;">',"$input.DONE",'<span style="flex:1;font-weight:500;color:#111827;">$TITLE</span>','<span style="color:#6b7280;font-size:0.8rem;white-space:nowrap;">$DUE</span>',"</div>"].join(""),footer:"</div>"},$E={slug:"gallery",name:"Gallery",header:'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;padding:12px;">',row:['<figure style="margin:0;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;background:#ffffff;box-shadow:0 1px 2px rgba(0,0,0,0.06);">','<a href="$LINK" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;color:inherit;">','<img src="$IMAGE" alt="$TITLE" loading="lazy" style="width:100%;height:150px;object-fit:cover;display:block;background:#f3f4f6;" />','<figcaption style="padding:6px 8px;font-size:0.85rem;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">$TITLE</figcaption>',"</a>","</figure>"].join(""),footer:"</div>"},xE={slug:"contact-cards",name:"Contact Cards",header:'<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;padding:12px;">',row:['<div style="border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;background:#ffffff;box-shadow:0 1px 2px rgba(0,0,0,0.06);">','<div style="font-weight:600;color:#111827;font-size:0.95rem;">$NAME</div>','<a href="mailto:$EMAIL" style="color:#2563eb;text-decoration:none;font-size:0.85rem;word-break:break-all;">$EMAIL</a>','<div style="color:#6b7280;font-size:0.85rem;margin-top:2px;">$PHONE</div>',"</div>"].join(""),footer:"</div>"},SE=[vE,kE,$E,xE];function CE(e){e.ui.registerTableButton({id:"views:open",label:"Views",icon:yE,tooltip:"Views -- display this table through a template",onClick:(t,{tableId:n})=>wr(n)})}async function EE(e){await TE(e)}function _E(e){let t=5381;const n=`${e.header} ${e.row} ${e.footer}`;for(let r=0;r<n.length;r++)t=(t<<5)+t+n.charCodeAt(r)|0;return(t>>>0).toString(36)}async function TE(e){const t=e.workspaceId();if(!t)return;const n=await e.store.viewTemplates.find({workspaceId:t});for(const r of SE)await IE(e,t,r,n)}async function IE(e,t,n,r){const i=`views:seeded:${n.slug}:${t}`,s=`views:sig:${n.slug}:${t}`,o=_E(n),a=r.find(d=>d.builtin&&d.name===n.name);if(a){(await e.store.settings.findOne(s))?.value!==o&&(await e.store.viewTemplates.patch(a.id,{headerHtml:n.header,rowHtml:n.row,footerHtml:n.footer,updatedAt:Date.now()}),await e.store.settings.upsert({name:s,value:o})),await e.store.settings.upsert({name:i,value:!0});return}(await e.store.settings.findOne(i))?.value||(await e.store.viewTemplates.insert({id:AE(),workspaceId:t,name:n.name,headerHtml:n.header,rowHtml:n.row,footerHtml:n.footer,builtin:!0,updatedAt:Date.now()}),await e.store.settings.upsert({name:i,value:!0}),await e.store.settings.upsert({name:s,value:o}))}function AE(){return globalThis.crypto?.randomUUID?.()??`${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`}const RE=Object.freeze(Object.defineProperty({__proto__:null,init:CE,load:EE,meta:wE},Symbol.toStringTag,{value:"Module"})),OE={id:"settings",name:"Settings",type:"ui",fixed:!0,version:"0.1.0",description:"Header gear button that opens the tabbed Settings dialog; imports dropped secrets.txt.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/settings.ts"};function LE(e){e.ui.registerSettings(Po,"Table grid",[{key:"sortDescFirst",label:"Sort descending first",type:"boolean",default:!0,scope:"workspace",description:"Clicking a column header sorts descending, then ascending, then off. Turn this off to start ascending. Dates, scores and counts are usually read from the high end down, which took two clicks before."},{key:"highlightNulls",label:"Highlight empty cells",type:"boolean",default:!0,scope:"workspace",description:"An empty cell gets a pink background, so a gap in the data is visible whatever the column draws. Turn it off for a table that is mostly empty on purpose, where the colour is noise. A value that does not fit its column type stays marked red either way."}]),e.ui.registerSettings(cr,"Visualizations",[{key:"tileUrl",label:"Map tile URL template",type:"string",default:Oc,scope:"workspace",description:"Where map visualizations fetch their background tiles. The default is OpenStreetMap, whose tile policy asks that heavy or commercial use runs its own server — point this at that server, or at a local one for an offline install. A map still plots its points when tiles cannot be loaded.",helpUrl:"https://operations.osmfoundation.org/policies/tiles/",helpLinkLabel:"OpenStreetMap tile usage policy"},{key:"tileAttribution",label:"Map attribution",type:"string",default:Lc,scope:"workspace",description:"Credit shown in the map corner. Most tile providers require this."},{key:"cloudMinLength",label:"Word cloud: ignore words shorter than",type:"number",default:3,scope:"workspace",description:"A new word cloud starts with this. Three suits prose; raise it for noisy text, lower it for a column of codes."},{key:"cloudKeepWords",label:"Word cloud: always keep these words",type:"text",scope:"workspace",description:"The exception to the length limit above — and to the ignore list below. Acronyms are often the most interesting terms in a column and the first thing a length limit throws away: AI, UI, CH, SQL. Separate with commas, spaces or new lines."},{key:"cloudStopWords",label:"Word cloud: ignore these common words",type:"text",scope:"workspace",description:'Words too common to be interesting. Left as shipped this is an English function-word list, which is what stops "the" being the biggest word in every cloud — replace it wholesale for another language, or clear it to count everything. Separate with commas, spaces or new lines.'},{key:"cloudMaxTerms",label:"Word cloud: most words to lay out",type:"number",default:120,scope:"workspace",description:"The cloud layout runs on the main thread, so this is capped — a very high number makes the window unresponsive while it settles."}]),e.ui.registerHeaderButton({id:"settings:open",label:"Settings",icon:"settings",tooltip:"Workspace and plugin settings",variant:"secondary",onClick:()=>e.ui.openSettings()}),e.ui.registerDropHandler(async(t,n)=>{const i=Array.from(t.dataTransfer?.files??[]).find(a=>a.name.toLowerCase()==="secrets.txt");if(!i)return!1;const s=await i.text(),o=Object.keys(dr(s)).length;return di().trim().length>0&&!await n.ui.dialogs.confirm(`Replace your current secrets with ${o} secret${o===1?"":"s"} from "${i.name}"?`,"Import secrets")||(Yh(s),n.ui.dialogs.toast(`Imported ${o} secret${o===1?"":"s"}.`,{kind:"success",title:"Secrets"})),!0})}const DE=Object.freeze(Object.defineProperty({__proto__:null,init:LE,meta:OE},Symbol.toStringTag,{value:"Module"}));class ln extends Error{constructor(t="this cell is derived"){super(`Projection is read-only — ${t}. Edit a base-table column, or import a copy.`),this.name="ProjectionReadOnlyError"}}function ME(e){const t=e;return!t||!Array.isArray(t.sources)||!Array.isArray(t.columns)?{version:1,sources:[],columns:[]}:t}function PE(e,t){for(const[n,r]of Object.entries(t))if(n!=="data"&&e[n]!==r)return!1;return!0}function zE(e,t){const n=ME(t.source?.config),r=new Set;let i=[],s=new Map,o=!1,a=null;const c=new Map;let d=null,f=!1;function p(W){const I=new Map;for(const K of W)I.has(K.name)||I.set(K.name,K);const V=new Map;for(const K of n.sources){const ie=I.get(K.tableName);ie&&V.set(K.alias,ie.id)}return V}async function b(){return p(await e.tables.find({workspaceId:t.workspaceId}))}async function y(){const W=await e.tables.find({workspaceId:t.workspaceId}),I={rows:[],provenance:new Map};if(gv(t.id,W))return I;const V=p(W),K=new Map(W.map(te=>[te.id,te])),ie=av(n),de={};for(const te of n.sources){const q=V.get(te.alias);if(!q)return I;const Q=ie[te.alias]??[],ae=await Ai(e.rows(q),{columns:K.get(q)?.columns??[],fields:Q.length>0?Q:["id"]});de[te.alias]=ae.rows}const H=lv(n,de);return{rows:H.rows.map(te=>({...te,tableId:t.id})),provenance:H.provenance}}async function $(){const{rows:W,provenance:I}=await y();return i=W,s=I,o=!0,W}function k(){return a||(a=(async()=>{try{return await $()}finally{a=null}})(),a)}async function C(){const W=await b(),I=new Set(W.values());for(const[V,K]of c)I.has(V)||(K(),c.delete(V));for(const V of I)if(!c.has(V)){const K=e.rows(V);c.set(V,K.watch?K.watch(_):K.subscribe(_))}}function _(){f||(f=!0,queueMicrotask(async()=>{f=!1,await C();const W=o?await $():await k();for(const I of r)I(W)}))}function T(W,I){return W===I||W==null&&I==null?!0:W==null||I==null?!1:String(W)===String(I)}async function Y(W,I){o||await k();const V=i.find(te=>te.id===W)?.data,K=s.get(W),ie=new Map,de=[];for(const[te,q]of Object.entries(I)){if(V&&T(V[te],q))continue;const Q=vv(n,W,te,K);if(!Q){de.push(te);continue}const ae=ie.get(Q.alias)??{rowId:Q.rowId,updates:{}};ae.updates[Q.field]=q,ie.set(Q.alias,ae)}if(de.length>0)throw new ln(ne(de,K));if(ie.size===0)return{id:W,tableId:t.id,data:I,updatedAt:Date.now()};const H=await b();for(const[te,{rowId:q,updates:Q}]of ie){const ae=H.get(te);if(!ae)throw new ln(`the "${D(te)}" table is not available`);const we=e.rows(ae),xe=await we.findOne(q);if(!xe)throw new ln("the underlying row no longer exists");await we.patch(q,{data:{...xe.data,...Q},updatedAt:Date.now()})}return{id:W,tableId:t.id,data:I,updatedAt:Date.now()}}function D(W){return n.sources.find(I=>I.alias===W)?.tableName??W}function ne(W,I){const V=W[0],K=n.columns.find(ie=>ie.field===V);return!K||K.from.kind==="script"?`"${V}" is computed by a script, so there is no cell to save it in`:I&&!I[K.from.alias]?`this row has no matching "${D(K.from.alias)}" row, so there is nowhere to save "${V}"`:`"${V}" cannot be written back to its source`}return{async find(W){const I=o?i:await k();return!W||Object.keys(W).length===0?I:I.filter(V=>PE(V,W))},async findOne(W){return(o?i:await k()).find(V=>V.id===W)??null},async insert(){throw new ln("rows are derived from other tables")},async bulkInsert(){throw new ln("rows are derived from other tables")},async upsert(W){return Y(W.id,W.data)},async patch(W,I){if(!I.data)throw new ln("a cell edit must carry row data");return Y(W,I.data)},async remove(){throw new ln("rows are derived from other tables")},async bulkRemove(){throw new ln("rows are derived from other tables")},subscribe(W){return r.add(W),d||(d=e.tables.subscribe(_)),o?W(i):_(),()=>{if(r.delete(W),r.size===0){d?.(),d=null;for(const I of c.values())I();c.clear(),o=!1}}},async refresh(){await C();const W=await $();for(const I of r)I(W)}}}function NE(e,t){const n=e.trim().toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_+|_+$/g,"")||"col";let r=n,i=2;for(;t.has(r);)r=`${n}_${i++}`;return t.add(r),r}function jE(e){for(let t=0;;t++){const n=String.fromCharCode(97+t%26)+(t>=26?String(Math.floor(t/26)):"");if(!e.some(r=>r.alias===n))return n}}function FE(e,t,n){const r=t.sources.map(a=>{const c=n.find(b=>b.name===a.tableName),d={alias:a.alias,tableId:c?.id??"",tableName:a.tableName,columns:c?.columns??[]},f=a.join?.on??[],p=f[0];return a.join&&p&&(d.join={type:a.join.type,thisField:p.field,otherAlias:p.eqAlias,otherField:p.eqField},f.length>1&&(d.extraOn=f.slice(1))),d}),i=t.columns.map(a=>{const c={include:!0,outField:a.field,label:a.label??a.field};return a.from.kind==="source"?{...c,alias:a.from.alias,field:a.from.field,computed:!1}:{...c,script:a.from.script,computed:!0}}),s=[],o=new Set;r.forEach((a,c)=>{const d=r.slice(0,c).filter(f=>f.tableName===a.tableName).length;for(const f of a.columns){const p=i.filter(b=>!b.computed&&b.alias===a.alias&&b.field===f.field&&!o.has(b));if(p.length>0)for(const b of p)o.add(b),s.push(b);else s.push({include:!1,alias:a.alias,field:f.field,computed:!1,label:d>0?`${f.label} (${a.alias})`:f.label})}});for(const a of i)!a.computed&&!o.has(a)&&s.push(a);for(const a of i)a.computed&&s.push(a);return{name:e,sources:r,columns:s,...t.limit?{limit:t.limit}:{},original:t}}function UE(e,t){const n=jE(e.sources),r=e.sources.length===0,i=e.sources.filter(a=>a.tableName===t.name).length;let s;if(!r){const a=e.sources.flatMap(d=>d.join?[{alias:d.join.otherAlias,field:d.join.otherField},...(d.extraOn??[]).map(f=>({alias:f.eqAlias,field:f.eqField}))]:[]),c=wv({tableName:t.name,fields:t.columns.map(d=>d.field),pks:t.columns.filter(d=>d.unique).map(d=>d.field)},e.sources.map(d=>({alias:d.alias,tableName:d.tableName,fields:d.columns.map(f=>f.field),pks:d.columns.filter(f=>f.unique).map(f=>f.field)})),a);s={type:"left",thisField:c?.thisField??t.columns[0]?.field??"",otherAlias:c?.otherAlias??e.sources[0]?.alias??"",otherField:c?.otherField??""}}const o={alias:n,tableId:t.id,tableName:t.name,columns:t.columns,...s?{join:s}:{}};return{...e,sources:[...e.sources,o],columns:[...e.columns,...t.columns.map(a=>({include:!0,alias:n,field:a.field,computed:!1,label:i>0?`${a.label} (${n})`:a.label}))]}}function BE(e,t){const n=new Set([t]);for(let r=!0;r;){r=!1;for(const i of e.sources){if(n.has(i.alias)||!i.join)continue;[i.join.otherAlias,...(i.extraOn??[]).map(o=>o.eqAlias)].some(o=>n.has(o))&&(n.add(i.alias),r=!0)}}return{...e,sources:e.sources.filter(r=>!n.has(r.alias)),columns:e.columns.filter(r=>r.computed||!r.alias||!n.has(r.alias))}}function qE(e){return{...e,columns:[...e.columns,{include:!0,computed:!0,label:"computed",script:`function render(row) {
+  return "";
+}`}]}}function HE(e){const t=e.name.trim();if(!t)return{ok:!1,error:"Give the projection a name."};if(e.sources.length===0)return{ok:!1,error:"Add at least one source table."};const n=e.columns.filter(c=>c.include);if(n.length===0)return{ok:!1,error:"Select at least one column."};for(let c=0;c<e.sources.length;c++){const d=e.sources[c];if(!d?.join)continue;if(!d.join.thisField||!d.join.otherField)return{ok:!1,error:`Set both join keys for "${d.tableName}".`};const f=new Set(e.sources.slice(0,c).map(b=>b.alias));if([d.join.otherAlias,...(d.extraOn??[]).map(b=>b.eqAlias)].some(b=>!f.has(b)))return{ok:!1,error:`The join for "${d.tableName}" refers to a table that is no longer part of this projection.`}}const r=new Set(e.sources.map(c=>c.alias)),i=new Set,s=[];for(const c of n){let d;if(c.outField&&!i.has(c.outField)?(d=c.outField,i.add(d)):d=NE(c.computed?"computed":c.field??"col",i),c.computed){s.push({field:d,from:{kind:"script",script:c.script??""}});continue}const f=c.alias,p=c.field;if(!f||!p||!r.has(f))return{ok:!1,error:`Column "${c.label??c.field}" belongs to a table that is no longer part of this projection.`};s.push({field:d,from:{kind:"source",alias:f,field:p}})}const o=e.sources.map(c=>{const d={alias:c.alias,tableName:c.tableName};return c.join&&(d.join={type:c.join.type,on:[{field:c.join.thisField,eqAlias:c.join.otherAlias,eqField:c.join.otherField},...c.extraOn??[]]}),d}),a={...e.original??{},version:1,sources:o,columns:s};return e.limit!=null&&e.limit>0?a.limit=Math.floor(e.limit):delete a.limit,{ok:!0,name:t,spec:a}}var VE=Object.defineProperty,KE=Object.getOwnPropertyDescriptor,Ar=(e,t,n,r)=>{for(var i=r>1?void 0:r?KE(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&VE(t,n,i),i};let xt=class extends $e{constructor(){super(...arguments),this.name="",this.limit="",this.sources=[],this.columns=[],this.error="",this.candidates=[],this.editing=!1,this.originalSpec=null,this.dialogEl=null,this.submit=async e=>{e.preventDefault(),this.error="";const t=this.buildSpec();if(!(!t||!this.onSave)){try{await this.onSave(t.name,t.spec)}catch(n){this.error=n?.message??String(n);return}this.dialogEl?.close()}}}connectedCallback(){super.connectedCallback(),xt.instance=this}disconnectedCallback(){super.disconnectedCallback(),xt.instance===this&&(xt.instance=null)}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e),this.dialogEl&&Xt("projection",this.dialogEl)}open(e){this.candidates=e.candidates,this.onSave=e.onSave,this.error="",this.editing=!!e.initial,this.originalSpec=null,this.name="",this.limit="",this.sources=[],this.columns=[],e.initial?this.loadFrom(e.initial.name,e.initial.spec):e.base&&(this.name=`${e.base.name} view`,this.addCandidateAsSource(e.base)),this.updateComplete.then(()=>this.dialogEl?.showModal())}modelOf(){const e=Number(this.limit);return{name:this.name,sources:this.sources,columns:this.columns,...this.limit.trim()!==""&&Number.isFinite(e)&&e>0?{limit:Math.floor(e)}:{},...this.originalSpec?{original:this.originalSpec}:{}}}applyModel(e){this.name=e.name,this.sources=e.sources,this.columns=e.columns,this.limit=e.limit!=null&&e.limit>0?String(e.limit):""}loadFrom(e,t){this.originalSpec=t,this.applyModel(FE(e,t,this.candidates))}addSource(e){const t=this.candidates.find(n=>n.id===e);t&&this.addCandidateAsSource(t)}addCandidateAsSource(e){this.applyModel(UE(this.modelOf(),e))}removeSource(e){this.applyModel(BE(this.modelOf(),e))}addComputed(){this.applyModel(qE(this.modelOf()))}patchSource(e,t){this.sources=this.sources.map(n=>n.alias===e&&n.join?{...n,join:{...n.join,...t}}:n)}buildSpec(){const e=HE(this.modelOf());return e.ok?{name:e.name,spec:e.spec}:(this.error=e.error,null)}aliasesBefore(e){const t=this.sources.findIndex(n=>n.alias===e);return this.sources.slice(0,t)}render(){const e=this.sources[0];return v`
+      <dialog @cancel=${()=>this.dialogEl?.close()} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${()=>this.dialogEl?.close()}>×</button>
+        <form @submit=${this.submit}>
+          <div class="dialog-header">
+            <h2>${this.editing?"Edit Projection":"New Projection"}</h2>
+            <div class="header-actions">
+              <button type="button" class="ghost" @click=${()=>this.dialogEl?.close()}>Cancel</button>
+              <button type="submit" class="primary">Save</button>
+            </div>
+          </div>
+          <div class="dialog-body">
+            <div class="head-row">
+              <label>
+                Name
+                <input id="proj-name" .value=${this.name} @input=${t=>this.name=t.target.value} />
+              </label>
+              <label>
+                Row limit
+                <input
+                  id="proj-limit"
+                  type="number"
+                  min="0"
+                  placeholder="all"
+                  .value=${this.limit}
+                  title="Cap the number of rows (TOP N). Blank or 0 shows every row."
+                  @input=${t=>this.limit=t.target.value}
+                />
+              </label>
+            </div>
+
+            <section>
+              <div class="section-head">
+                <h3>Sources</h3>
+                <span class="hint">The base table, plus a join for each table hung off it.</span>
+              </div>
+              <div class="sources">${this.sources.map((t,n)=>this.renderSource(t,n===0))}</div>
+              <div class="add-row">
+                <select id="add-src" ?disabled=${this.candidates.length===0}>
+                  ${this.candidates.map(t=>v`<option value=${t.id}>${t.name}</option>`)}
+                </select>
+                <button
+                  type="button"
+                  class="ghost sm"
+                  @click=${()=>{const t=this.shadowRoot?.getElementById("add-src");t?.value&&this.addSource(t.value)}}
+                >
+                  ${e?"+ Join table":"+ Base table"}
+                </button>
+                ${e?v`<span class="hint">A table may be joined more than once.</span>`:X}
+              </div>
+            </section>
+
+            <section>
+              <div class="section-head">
+                <h3>Columns</h3>
+                <span class="hint"> Tick what the projection includes. Labels, types and formatting are inherited from the source and edited with “Edit columns”. </span>
+              </div>
+              ${this.sources.map(t=>this.renderSourceColumns(t))} ${this.renderComputedColumns()}
+            </section>
+
+            <div class="err">${this.error}</div>
+          </div>
+        </form>
+      </dialog>
+    `}renderSource(e,t){return v`
+      <div class="src">
+        <div class="src-head">
+          <span class="badge ${t?"base":""}">${t?"Base":"Join"}</span>
+          <span class="name">${e.tableName}</span>
+          <code class="alias" title="Alias used by the join keys below">${e.alias}</code>
+          <span class="spacer"></span>
+          ${t?X:v`<button type="button" class="icon-btn" title="Remove this join" aria-label="Remove ${e.tableName}" @click=${()=>this.removeSource(e.alias)}>×</button>`}
+        </div>
+        ${e.join?v`<div class="join-grid">
+              <select .value=${e.join.type} @change=${n=>this.patchSource(e.alias,{type:n.target.value})}>
+                <option value="left">LEFT JOIN</option>
+                <option value="inner">INNER JOIN</option>
+              </select>
+              <span class="kw">ON</span>
+              <select .value=${e.join.thisField} @change=${n=>this.patchSource(e.alias,{thisField:n.target.value})}>
+                ${e.columns.map(n=>v`<option value=${n.field} ?selected=${n.field===e.join?.thisField}>${e.alias}.${n.field}</option>`)}
+              </select>
+              <span class="kw">=</span>
+              <select
+                .value=${`${e.join.otherAlias}.${e.join.otherField}`}
+                @change=${n=>{const[r,i]=n.target.value.split(".");this.patchSource(e.alias,{otherAlias:r??"",otherField:i??""})}}
+              >
+                ${this.aliasesBefore(e.alias).flatMap(n=>n.columns.map(r=>v`<option value=${`${n.alias}.${r.field}`} ?selected=${n.alias===e.join?.otherAlias&&r.field===e.join?.otherField}>${n.alias}.${r.field}</option>`))}
+              </select>
+            </div>`:""}
+      </div>
+    `}renderSourceColumns(e){const t=this.columns.map((r,i)=>({c:r,i})).filter(({c:r})=>!r.computed&&r.alias===e.alias);if(t.length===0)return X;const n=t.every(({c:r})=>r.include);return v`
+      <div class="col-group">
+        <div class="group-head">
+          <code class="alias">${e.alias}</code>
+          <span class="group-name">${e.tableName}</span>
+          <button
+            type="button"
+            class="link-btn"
+            @click=${()=>{const r=!n,i=new Set(t.map(({i:s})=>s));this.columns=this.columns.map((s,o)=>i.has(o)?{...s,include:r}:s)}}
+          >
+            ${n?"none":"all"}
+          </button>
+        </div>
+        <div class="ticks">
+          ${t.map(({c:r,i})=>v`
+              <label class="tick ${r.include?"":"off"}" title=${`${r.alias}.${r.field}`}>
+                <input type="checkbox" .checked=${r.include} @change=${s=>this.setColumn(i,{include:s.target.checked})} />
+                <span class="tick-name">${r.field}</span>
+              </label>
+            `)}
+        </div>
+      </div>
+    `}renderComputedColumns(){const e=this.columns.map((t,n)=>({c:t,i:n})).filter(({c:t})=>t.computed);return v`
+      <div class="col-group">
+        <div class="group-head">
+          <span class="chip">computed</span>
+          <button type="button" class="link-btn" @click=${()=>this.addComputed()}>+ add</button>
+        </div>
+        ${e.length===0?v`<span class="hint">None. A computed column derives its value from the row.</span>`:e.map(({c:t,i:n})=>v`
+                <div class="computed-row ${t.include?"":"off"}">
+                  <input type="checkbox" .checked=${t.include} aria-label="Include computed column" @change=${r=>this.setColumn(n,{include:r.target.checked})} />
+                  <textarea
+                    class="script"
+                    aria-label="Computed column script"
+                    spellcheck="false"
+                    .value=${t.script??""}
+                    @input=${r=>this.setColumn(n,{script:r.target.value})}
+                  ></textarea>
+                  <button
+                    type="button"
+                    class="icon-btn"
+                    title="Remove this computed column"
+                    aria-label="Remove computed column"
+                    @click=${()=>{this.columns=this.columns.filter((r,i)=>i!==n)}}
+                  >
+                    ×
+                  </button>
+                </div>
+              `)}
+      </div>
+    `}setColumn(e,t){this.columns=this.columns.map((n,r)=>r===e?{...n,...t}:n)}};xt.instance=null;xt.styles=[mt,Se`
+      dialog {
+        width: 760px;
+        max-width: 96vw;
+      }
+      /* -- shared controls (mirrors the column editor's look) -------------- */
+      input,
+      select,
+      textarea {
+        font: inherit;
+        padding: 0.4rem 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        background: white;
+        color: #111827;
+        min-width: 0; /* let a grid cell shrink instead of overflowing */
+      }
+      input:focus-visible,
+      select:focus-visible,
+      textarea:focus-visible {
+        outline: none;
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.18);
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.85rem;
+        color: #374151;
+      }
+      button.ghost.sm {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.82rem;
+      }
+      button.icon-btn {
+        background: transparent;
+        border: 0;
+        color: #9ca3af;
+        cursor: pointer;
+        padding: 0;
+        font-size: 1.05rem;
+        line-height: 1;
+      }
+      button.icon-btn:hover {
+        color: #ef4444;
+      }
+
+      /* -- sections -------------------------------------------------------- */
+      section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+        border-top: 1px solid #e5e7eb;
+        padding-top: 0.9rem;
+      }
+      .section-head {
+        display: flex;
+        align-items: baseline;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      h3 {
+        margin: 0;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #6b7280;
+      }
+      .hint {
+        color: #9ca3af;
+        font-size: 0.78rem;
+      }
+      .add-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .add-row select {
+        max-width: 14rem;
+      }
+      /* Name takes the space; the row cap is a narrow field beside it. */
+      .head-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 7rem;
+        gap: 0.6rem;
+        align-items: end;
+      }
+      @media (max-width: 640px) {
+        .head-row {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* -- sources --------------------------------------------------------- */
+      .sources {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .src {
+        border: 1px solid #e5e7eb;
+        border-radius: 0.4rem;
+        background: #f9fafb;
+        padding: 0.6rem 0.7rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+      }
+      .src-head {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .src-head .name {
+        font-weight: 600;
+        color: #111827;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .src-head .spacer {
+        flex: 1;
+      }
+      .badge {
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        padding: 0.15rem 0.4rem;
+        border-radius: 0.2rem;
+        background: #e5e7eb;
+        color: #4b5563;
+      }
+      .badge.base {
+        background: #dbeafe;
+        color: #1d4ed8;
+      }
+      code.alias {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.72rem;
+        background: #eef2f7;
+        color: #4b5563;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.2rem;
+        padding: 0.05rem 0.3rem;
+      }
+      /* One grid for every join row, so the two field pickers line up down the
+         list however long the table names are. */
+      .join-grid {
+        display: grid;
+        grid-template-columns: 8rem auto minmax(0, 1fr) auto minmax(0, 1fr);
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .kw {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: #9ca3af;
+        letter-spacing: 0.04em;
+      }
+
+      /* -- columns: a dense tick list per source --------------------------- */
+      .col-group {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+      .group-head {
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.78rem;
+        color: #6b7280;
+      }
+      .group-name {
+        font-weight: 600;
+        color: #374151;
+      }
+      button.link-btn {
+        background: none;
+        border: 0;
+        padding: 0;
+        font: inherit;
+        font-size: 0.75rem;
+        color: #2563eb;
+        cursor: pointer;
+        text-decoration: underline;
+      }
+      .ticks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem 0.4rem;
+      }
+      /* Each column is a compact pill, so a wide table costs a couple of rows
+         instead of one row per column. */
+      label.tick {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.8rem;
+        color: #111827;
+        border: 1px solid #e5e7eb;
+        border-radius: 1rem;
+        padding: 0.1rem 0.5rem 0.1rem 0.35rem;
+        background: #f9fafb;
+        cursor: pointer;
+        max-width: 14rem;
+      }
+      label.tick:hover {
+        border-color: #cbd5e1;
+      }
+      label.tick input {
+        margin: 0;
+      }
+      label.tick .tick-name {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.74rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      label.tick.off {
+        opacity: 0.55;
+        background: transparent;
+      }
+      .chip {
+        font-size: 0.68rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #1d4ed8;
+        background: #dbeafe;
+        border-radius: 0.2rem;
+        padding: 0.1rem 0.35rem;
+      }
+      .computed-row {
+        display: grid;
+        grid-template-columns: 1.1rem minmax(0, 1fr) 1.3rem;
+        gap: 0.4rem;
+        align-items: start;
+      }
+      .computed-row.off {
+        opacity: 0.55;
+      }
+      .computed-row input[type='checkbox'] {
+        margin: 0.4rem 0 0;
+      }
+      textarea.script {
+        width: 100%;
+        box-sizing: border-box;
+        min-height: 2.9rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.75rem;
+      }
+
+      .err {
+        color: #b91c1c;
+        font-size: 0.82rem;
+        min-height: 1.1em;
+      }
+      .err:not(:empty) {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 0.25rem;
+        padding: 0.4rem 0.55rem;
+      }
+
+      /* Phones: the dialog is full-screen (see dialog-chrome), so let the
+         multi-column grids stack rather than squeeze. */
+      @media (max-width: 640px) {
+        .join-grid,
+        .col-header,
+        .col-row {
+          grid-template-columns: 1fr;
+        }
+        .col-header {
+          display: none;
+        }
+        .col-row {
+          border: 1px solid #f3f4f6;
+          border-radius: 0.3rem;
+          padding: 0.45rem;
+        }
+        /* Stacked, the centred checkbox floats mid-row — align it with the rest. */
+        .col-row input[type='checkbox'] {
+          justify-self: start;
+        }
+        textarea.script {
+          grid-column: 1;
+        }
+      }
+    `];Ar([j()],xt.prototype,"name",2);Ar([j()],xt.prototype,"limit",2);Ar([j()],xt.prototype,"sources",2);Ar([j()],xt.prototype,"columns",2);Ar([j()],xt.prototype,"error",2);xt=Ar([Re("projection-dialog")],xt);const WE={id:"projection",name:"Projection (virtual tables)",type:"source",version:"0.1.0",description:'Virtual tables ("Projections") whose rows are derived live from other tables — database views and JOINs that look and act like tables.',author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h7v10H4z"/><path d="M13 7h7v10h-7z"/><path d="M11 12h2"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/projection.ts"};function GE(e){typeof e.registerRowSource=="function"&&e.registerRowSource({type:"projection",create:t=>(Vm(e,t),zE(e.store,t))}),e.ui.registerTableButton({id:"projection:new",label:"New Projection",icon:"add_box",tooltip:"Create a virtual table using THIS table as the base (view / JOIN)",onClick:(t,{tableId:n})=>void Sh(t,{baseTableId:n})}),e.ui.registerTableButton({id:"projection:edit",label:"Edit Join",icon:"call_merge",tooltip:"Edit this projection’s sources, joins and which columns it includes",visible:t=>t.source?.type==="projection",onClick:(t,{tableId:n})=>void Sh(t,{editTableId:n})})}async function Vm(e,t){if(t.source?.type!=="projection")return;const n=t.source.config;if(!n||!Array.isArray(n.sources))return;const r=co(n),i=t.columns.map(a=>{const c=!r.has(a.field);if(c===(a.readonly===!0))return a;if(c)return{...a,readonly:!0};const d={...a};return delete d.readonly,d}),s=r.size===0;i.every((a,c)=>a===t.columns[c])&&(t.readonly??!1)===s||await e.store.tables.patch(t.id,{columns:i,readonly:s,updatedAt:Date.now()})}async function YE(e){const t=e.workspaceId();if(t)for(const n of await e.store.tables.find({workspaceId:t}))await Vm(e,n)}async function QE(e){await YE(e)}async function JE(e,t,n,r,i){const s=await e.store.tables.find({workspaceId:t}),o=new Map;for(const c of s)o.has(c.name)||o.set(c.name,c);const a={};for(const c of n.sources)a[c.alias]=o.get(c.tableName)?.columns??[];return jf(n,a,r,i)}async function Sh(e,t){const n=e.workspaceId();if(!n)return;const r=await e.store.tables.find({workspaceId:n}),i=a=>({id:a.id,name:a.name,columns:a.columns}),s=xt.instance??XE();if(t.editTableId){const a=r.find(c=>c.id===t.editTableId)??null;if(!a||a.source?.type!=="projection")return;s.open({candidates:r.filter(c=>c.id!==a.id).map(i),initial:{name:a.name,spec:a.source.config},onSave:Ch(e,n,a)});return}const o=r.find(a=>a.id===t.baseTableId);o&&s.open({base:i(o),candidates:r.map(i),onSave:Ch(e,n,null,o)})}function Ch(e,t,n,r){return async(i,s)=>{const o=await JE(e,t,s,n?.columns??[],n?.deletedColumns??[]),a=co(s).size===0,c={type:"projection",config:s};n?await e.store.tables.patch(n.id,{name:i,columns:o,source:c,readonly:a,updatedAt:Date.now()}):await e.store.tables.insert({id:_e(),workspaceId:t,name:i,code:Ne(i),columns:o,view:"table",source:c,readonly:a,...r?pv(s,r):{},updatedAt:Date.now()})}}function XE(){const e=document.createElement("projection-dialog");return document.body.appendChild(e),e}const ZE=Object.freeze(Object.defineProperty({__proto__:null,init:GE,load:QE,meta:WE},Symbol.toStringTag,{value:"Module"})),e_={id:"viz-charts",name:"Charts (bar, line, pie)",type:"ui",version:"0.1.0",description:"Bar, column, line and pie visualizations of a table, in a window or docked to the grid.",icon:"bar_chart"},gs={key:"CATEGORY",label:"Category (group by)",kind:"category",required:!0},bs={key:"VALUE",label:"Value (measure)",kind:"value"},ja={key:"SERIES",label:"Split into series (optional)",kind:"series"},Fa=[{key:"xTitle",label:"X axis title",type:"string"},{key:"yTitle",label:"Y axis title",type:"string"},{key:"beginAtZero",label:"Start the value axis at zero",type:"boolean",default:!0},{key:"legend",label:"Show the legend",type:"boolean"}];function t_(e){const t={groupBy:["CATEGORY"],measures:[{channel:"VALUE",fn:"count"}],sort:"valueDesc"};e.ui.registerVisualization({id:"bar",label:"Bar chart",icon:"bar_chart",tag:"viz-bar-chart",channels:[gs,bs,ja],data:"aggregate",defaultAggregate:t,options:[...Fa,{key:"stacked",label:"Stack the bars",type:"boolean"}]}),e.ui.registerVisualization({id:"column",label:"Column chart",icon:"insert_chart",tag:"viz-column-chart",channels:[gs,bs,ja],data:"aggregate",defaultAggregate:t,options:[...Fa,{key:"stacked",label:"Stack the columns",type:"boolean"}]}),e.ui.registerVisualization({id:"line",label:"Line chart",icon:"show_chart",tag:"viz-line-chart",channels:[{...gs,label:"X axis (group by)",kind:"time"},bs,ja],data:"aggregate",defaultAggregate:{...t,sort:"category"},options:[...Fa,{key:"area",label:"Fill under the line",type:"boolean"},{key:"smooth",label:"Curve the line",type:"boolean"},{key:"stacked",label:"Stack the series",type:"boolean"}]}),e.ui.registerVisualization({id:"pie",label:"Pie chart",icon:"pie_chart",tag:"viz-pie-chart",channels:[gs,bs],data:"aggregate",defaultAggregate:{...t,topN:8},options:[{key:"legend",label:"Show the legend",type:"boolean",default:!0}]})}const n_=Object.freeze(Object.defineProperty({__proto__:null,init:t_,meta:e_},Symbol.toStringTag,{value:"Module"})),r_={id:"viz-map",name:"Map",type:"ui",version:"0.1.0",description:"Plot rows with latitude/longitude columns as points on a map.",icon:"public"};function i_(e){e.ui.registerVisualization({id:"map",label:"Map",icon:"public",tag:"viz-point-map",channels:[{key:"LAT",label:"Latitude",kind:"lat",accepts:["number"],required:!0},{key:"LON",label:"Longitude",kind:"lon",accepts:["number"],required:!0},{key:"LABEL",label:"Tooltip label (optional)",kind:"text"},{key:"WEIGHT",label:"Size by (optional)",kind:"weight",accepts:["number"]}],data:"rows",options:[{key:"radius",label:"Marker size (px)",type:"number",default:6},{key:"scaleByWeight",label:"Scale markers by the size column",type:"boolean"},{key:"tileUrl",label:"Tile URL template",type:"string",description:"Leave blank to use the Settings → Visualizations default."}]})}const s_=Object.freeze(Object.defineProperty({__proto__:null,init:i_,meta:r_},Symbol.toStringTag,{value:"Module"})),o_={id:"viz-wordcloud",name:"Word cloud",type:"ui",version:"0.1.0",description:"Show the most frequent words in a text column, sized by how often they occur.",icon:"cloud"};function a_(e){e.ui.registerVisualization({id:"wordcloud",label:"Word cloud",icon:"cloud",tag:"viz-word-cloud",channels:[{key:"TEXT",label:"Text column",kind:"text",required:!0}],data:"rows",options:[{key:"minLength",label:"Ignore words shorter than",type:"number",default:3},{key:"keepWords",label:"Always keep these words",type:"text",description:"The exception to the limit above, and to the ignore list below. Commas, spaces or new lines."},{key:"stopWords",label:"Ignore these common words",type:"text",description:"Clear it to count every word. Commas, spaces or new lines."},{key:"maxTerms",label:"Most words to show",type:"number",default:120},{key:"includeNumbers",label:"Include numbers",type:"boolean"},{key:"rotate",label:"Allow sideways words",type:"boolean"}]})}const l_=Object.freeze(Object.defineProperty({__proto__:null,init:a_,meta:o_},Symbol.toStringTag,{value:"Module"})),c_={id:"command-palette-button",name:"Command Palette Button",type:"ui",version:"0.1.0",description:"Header “>” button that opens the command palette (also Ctrl/⌘K).",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/command-palette-button.ts"};function u_(e){e.ui.registerHeaderButton({id:"command-palette:open",label:"Commands",icon:"chevron_right",tooltip:"Open the command palette (Ctrl/⌘K)",variant:"secondary",onClick:()=>e.ui.openCommandPalette()})}const d_=Object.freeze(Object.defineProperty({__proto__:null,init:u_,meta:c_},Symbol.toStringTag,{value:"Module"})),Ua="electron-db:pendingImport",Km=15*1024*1024;function Wm(e){const t=Math.max(e.lastIndexOf("/"),e.lastIndexOf("\\"));return t>=0&&e.slice(t+1)||e}function Gm(e){return e>=1024*1024?`${(e/(1024*1024)).toFixed(1)} MB`:e>=1024?`${Math.round(e/1024)} KB`:`${e} bytes`}let ai=null;const h_={id:"electron-db",name:"Database File",type:"ui",version:"0.1.0",description:"Open, Save As, or Import a .db file (Electron desktop build only).",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.66 3.58 3 8 3s8-1.34 8-3V5"/><path d="M4 11v6c0 1.66 3.58 3 8 3s8-1.34 8-3v-6"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/electron-db.ts"},f_=/\.(edb|db|sqlite|sqlite3)$/i,p_=/\.edb$/i;function m_(e){const t=window.easydb?.db;t&&(e.ui.registerDropHandler(async n=>{const r=[...n.dataTransfer?.files??[]].find(s=>f_.test(s.name));if(!r)return!1;const i=t.pathForFile(r);return i?(await Qm(e,t,i,p_.test(r.name)),!0):(await e.ui.dialogs.alert(`"${r.name}" could not be located on disk, so it cannot be opened.`,"Database file"),!0)}),t.onImportProgress(n=>{if(document.dispatchEvent(new CustomEvent(hl,{detail:{tableId:n.tableId,rows:n.rows,total:n.total,...n.done?{done:!0}:{}}})),!ai)return;const{tracker:r,label:i}=ai;n.done?r.complete(n.tableId):r.observe(n.tableId,n.rows),uo({label:i,fraction:r.fraction(),detail:`${r.completedTables()} of ${r.tableCount} table${r.tableCount===1?"":"s"}`})}),e.ui.registerFooterButton({id:"electron-db:menu",label:"Database",icon:"storage",tooltip:"Open, Save As, or Import a .db file",onClick:async(n,r)=>{const{AnchoredMenu:i}=await Ie(async()=>{const{AnchoredMenu:a}=await Promise.resolve().then(()=>fr);return{AnchoredMenu:a}},void 0),s=r?.anchor?.getBoundingClientRect()??new DOMRect(16,window.innerHeight-48,0,0),o=await i.open(s,[{id:"open",label:"Open…",icon:"folder_open"},{id:"saveAs",label:"Save As…",icon:"save"},{id:"import",label:"Import…",icon:"file_download"},...tg()?[{id:"stop",label:"Stop importing",icon:"cancel"}]:[]]);if(o)try{o==="open"?await Ym(n,t):o==="saveAs"?await w_(n,t):o==="import"?await jo(n,t):o==="stop"&&ng()}catch(a){n.ui.dialogs.toast(`${o} failed: ${a.message}`,{kind:"error",title:"Database file"})}}}))}function g_(e){const t=window.easydb?.db;t&&rg(e,t).catch(n=>{e.ui.dialogs.toast(`Finishing the conversion failed: ${n.message}`,{kind:"error",title:"Convert to EDA"})})}async function Ym(e,t){const n=await t.openDb();n.ok&&await Nc(e,t,n.path,n.kind)}async function Qm(e,t,n,r){if(!r){await jo(e,t,n);return}const i=await t.probeDb(n);if(i==="easydb"){await Jm(e,t,n,i);return}e.ui.dialogs.toast(`"${n}" is named as a workspace but does not contain one.`,{kind:"warning",title:"Open workspace"}),await Nc(e,t,n,i)}async function Nc(e,t,n,r){if(r==="unreadable"){await e.ui.dialogs.alert(`"${n}" is not a SQLite database — it could not be read.`,"Database file");return}const i=await e.ui.dialogs.choice(`What would you like to do with "${n}"?`,["Open Workspace","Browse .db file","Import data"],"Database file");if(i){if(i==="Import data"){await jo(e,t,n);return}if(i==="Browse .db file"){await Xm(e,t,n);return}await Jm(e,t,n,r)}}async function Jm(e,t,n,r){if(r==="foreign"){const s=await e.ui.dialogs.choice(`"${n}" is a SQLite database, but not an easyDBAccess workspace — there is no workspace in it to open.
+
+It can be converted into one (a new file is written; this one is left exactly as it is), or opened read-only for a look.`,["Convert to EDA","Browse"],"Open workspace");s==="Convert to EDA"?await b_(e,t,n):s==="Browse"&&await Xm(e,t,n);return}await e.ui.dialogs.confirm(`Open "${n}"?
+
+This replaces the current workspace view with that file's data. Nothing is deleted — the file you have open now is left exactly as it is on disk.`,"Open workspace")&&await t.openDbCommit(n)}async function b_(e,t,n){const r=await t.browseList(n);if(r.length===0){await e.ui.dialogs.alert(`"${n}" has no tables or views to convert.`,"Convert to EDA");return}const i=await Zm(e,r,"Convert to EDA",{offerTablesOnly:!0});i.length===0||(await t.convertDb(n,i.map(o=>o.name))).ok}async function w_(e,t){const n=await t.saveDbAs();n.ok&&e.ui.dialogs.toast(`Saved a copy to "${n.path}" — that file is now the active database.`,{kind:"success",title:"Save database as"})}async function Xm(e,t,n){const r=e.workspaceId();if(!r)throw new Error("no active workspace");const i=await t.browseList(n);if(i.length===0){await e.ui.dialogs.alert(`"${n}" has no tables or views to browse.`,"Browse database");return}const s=await Zm(e,i,"Browse database");if(s.length===0)return;const o=new Set((await e.store.tables.find()).filter(c=>c.workspaceId===r).map(c=>c.name.toLowerCase()));for(const c of s){const d=sg(c.name,o);o.add(d.toLowerCase()),await e.store.tables.insert({id:crypto.randomUUID(),workspaceId:r,name:d,columns:c.columns,view:"table",readonly:!0,source:{type:"sqlitefile",config:{path:n,objectName:c.name,isView:c.kind==="view"},writable:!1},updatedAt:Date.now()})}const a=s.filter(c=>c.kind==="view").length;e.ui.dialogs.toast(`Browsing ${s.length} object${s.length===1?"":"s"} from "${n}"${a?` (${a} view${a===1?"":"s"})`:""} — read-only.`,{kind:"success",title:"Browse database"})}async function Zm(e,t,n,r){if(t.length===1)return t;const i=t.filter(p=>p.kind==="table"),s=`All ${t.length}`,o=r?.offerTablesOnly&&i.length>0&&i.length<t.length?`All ${i.length} table${i.length===1?"":"s"} (skip the views)`:null,a=t.map(p=>`${p.name}${p.kind==="view"?" (view)":""}${p.rowCount==null?"":` — ${p.rowCount} rows`}`),c=await e.ui.dialogs.choice("Which tables or views?",[...o?[o]:[],s,...a],n);if(!c)return[];if(c===o)return i;if(c===s)return t;const d=a.indexOf(c),f=t[d];return f?[f]:[]}async function jo(e,t,n){const r=e.workspaceId();if(!r)throw new Error("no active workspace");const i=await t.importDb(r,n);if(!i.ok)return;const{preview:s}=i;if(s.candidates.length===0){await e.ui.dialogs.alert(`No importable tables were found in "${i.path}".`,"Import database");return}const o=s.sizeBytes??0,a=await ig.pickCandidates(e,s.candidates);if(a.length===0)return;const c=a.filter(_=>_.mode==="projection"),d=a.filter(_=>_.mode!=="projection").map(_=>_.candidate),f=new Set(d.map(_=>_.name));if(d.length===0&&c.length===0)return;const p=new Set((await e.store.tables.find()).filter(_=>_.workspaceId===r).map(_=>_.name.toLowerCase())),b={};for(const _ of s.candidates){if(!f.has(_.name)){b[_.name]={action:"skip"};continue}if(!_.collides)continue;const T=await e.ui.dialogs.choice(`A table named "${_.name}" already exists in this workspace.`,["Append","Overwrite","Rename","Skip"],"Import — table already exists");if(!T||T==="Skip"){b[_.name]={action:"skip"};continue}if(T==="Append"){const D=await k_(e,_,r);b[_.name]=D??{action:"skip"};continue}if(T==="Overwrite"){b[_.name]={action:"overwrite"};continue}const Y=sg(_.name,p);p.add(Y.toLowerCase()),b[_.name]={action:"rename",renameTo:Y}}const{plan:y,skipped:$}=await t.importPrepare(i.path,r,b);if(y.length===0){Sl(e,i.path,$);return}e.ui.dialogs.toast(`Importing ${y.length} object${y.length===1?"":"s"} from "${i.path}" — the windows are there now and fill in as the rows arrive.`,{kind:"info",title:"Import database"});const k=Wm(i.path),C=await eg(e,t,i.path,y,$,`Importing ${k}${o>0?` (${Gm(o)})`:""}`);Sl(e,i.path,C),c.length>0&&await y_(e,r,c,o>Km)}async function y_(e,t,n,r=!1){const[{parseSqlScript:i},{createProjectionTable:s}]=await Promise.all([Ie(()=>Promise.resolve().then(()=>Ov),void 0),Ie(()=>Promise.resolve().then(()=>kv),void 0)]),o=[],a=[];for(const{candidate:c}of n){const d=c.sql??"";if(!d){a.push({name:c.name,why:"its definition could not be read"});continue}const f=i(d),p=f.projections[0];if(!p){a.push({name:c.name,why:f.unsupported[0]??"its SELECT could not be modelled as a projection"});continue}const b=(await e.store.tables.find()).filter(k=>k.workspaceId===t),y=new Map(b.map(k=>[k.name.toLowerCase(),k])),$=await s(e,t,{name:c.name,spec:p.spec,...p.sortBy?{sortBy:p.sortBy}:{}},{resolve:k=>y.get(k.toLowerCase()),taken:b.map(k=>k.name)});if(!$){const k=p.spec.sources.map(C=>C.tableName).join(", ");a.push({name:c.name,why:`it reads tables this workspace does not have (${k}) — import them too`});continue}if(r){const k=o.length;await e.store.tables.patch($.id,{windowGeometry:{x:40+k%10*24,y:40+k%10*24,w:640,h:360,z:k,minimized:!0,maximized:!1},updatedAt:Date.now()})}o.push($.name)}o.length>0&&e.ui.dialogs.toast(`Created ${o.length} projection${o.length===1?"":"s"} from views: ${o.join(", ")}.${r?" Left minimized — this file is big enough that opening them all would stall the app.":""}`,{kind:"success",title:"Import database"}),a.length>0&&e.ui.dialogs.toast(`${a.length} view${a.length===1?"":"s"} could not become a projection — ${a.map(c=>`${c.name}: ${c.why}`).join("; ")}. Import them as Data instead.`,{kind:"warning",title:"Import database"})}async function eg(e,t,n,r,i=[],s="Importing"){const o=[...i];Dn={cancelled:!1};const a=Dn,c=new ep(r.map(d=>({tableId:d.tableId,total:d.total})));ai={tracker:c,label:s},uo({label:s,detail:`0 of ${r.length} table${r.length===1?"":"s"}`});try{for(const d of r){if(a.cancelled){e.ui.dialogs.toast(`Stopped. ${o.length} of ${r.length} table${r.length===1?"":"s"} were filled; the rest are still empty.`,{kind:"warning",title:"Import database"});break}try{const f=await t.importRows(n,d);o.push({sourceName:d.sourceName,action:d.action,finalName:d.finalName,tableId:d.tableId,rowCount:f})}catch(f){e.ui.dialogs.toast(`"${d.finalName}" failed: ${f.message}`,{kind:"error",title:"Import database"})}}}finally{Dn===a&&(Dn=null),ai?.tracker===c&&(ai=null),Zf()}return o}let Dn=null;function tg(){return Dn!==null}function ng(){Dn&&(Dn.cancelled=!0)}async function rg(e,t){const r=(await e.store.settings.findOne(Ua))?.value;if(!r?.sourcePath||!r.plan?.length)return;const i=r.plan.length,s=r.plan.reduce((b,y)=>b+(y.total>0?y.total:0),0),o="Fill them in now",a="Leave them empty",c=await e.ui.dialogs.choice(`${i} table${i===1?"":"s"} in this workspace ${i===1?"is":"are"} still empty — ${i===1?"its":"their"} rows were being copied from "${r.sourcePath}" when the app last stopped.
+
+${s>0?`About ${s.toLocaleString()} rows are left. `:""}Copying can be stopped from the Database menu once it starts.`,[o,a],"Unfinished import");if(c!==o){c===a&&await e.store.settings.remove(Ua);return}const d=Wm(r.sourcePath),f=r.sizeBytes??0,p=await eg(e,t,r.sourcePath,r.plan,[],`Converting ${d}${f>0?` (${Gm(f)})`:""}`);await e.store.settings.remove(Ua),Sl(e,r.sourcePath,p)}const ig={pickCandidates:(e,t)=>v_(e,t)};async function v_(e,t){const{chooseDatabaseObjects:n}=await Ie(async()=>{const{chooseDatabaseObjects:s}=await Promise.resolve().then(()=>hy);return{chooseDatabaseObjects:s}},void 0),r=t.map(s=>({name:s.name,size:s.rowCount<0?null:s.rowCount,kind:s.isView?"view":"table",...s.collides?{detail:"⚠ name already in use"}:{}})),i=await n(r,{title:"Import database",message:"Tables bring their rows. A view can come in as a Projection — its query, recomputed — or as Data, a snapshot you can edit.",confirmLabel:"Import",offerViewModes:!0});return i?i.map(s=>({candidate:t[s.index],mode:s.mode})):[]}async function k_(e,t,n){const r=t.columns??[],s=(await e.store.tables.find()).find(d=>d.workspaceId===n&&d.name.toLowerCase()===t.name.toLowerCase())?.columns??[],o=new Set(s.map(d=>d.field.toLowerCase()));if(r.length===0||s.length===0||r.every(d=>o.has(d.toLowerCase())))return{action:"append"};const{mapColumnsToTable:a}=await Ie(async()=>{const{mapColumnsToTable:d}=await import("./column-map-dialog-rL70ht7J.js");return{mapColumnsToTable:d}},[]),c=await a([...r],[...s],t.name);return c?{action:"append",mapping:c}:null}function sg(e,t){if(!t.has(e.toLowerCase()))return e;for(let n=2;;n++){const r=`${e} (${n})`;if(!t.has(r.toLowerCase()))return r}}function Sl(e,t,n){const r={created:n.filter(o=>o.action==="created").length,renamed:n.filter(o=>o.action==="renamed").length,overwritten:n.filter(o=>o.action==="overwritten").length,skipped:n.filter(o=>o.action==="skipped").length},i=n.reduce((o,a)=>o+a.rowCount,0),s=[];if(r.created&&s.push(`${r.created} new`),r.renamed&&s.push(`${r.renamed} renamed`),r.overwritten&&s.push(`${r.overwritten} overwritten`),r.skipped&&s.push(`${r.skipped} skipped`),s.length===0){e.ui.dialogs.toast(`Nothing imported from "${t}".`,{kind:"warning",title:"Import database"});return}e.ui.dialogs.toast(`Imported from "${t}": ${s.join(", ")} (${i} row${i===1?"":"s"} total).`,{kind:"success",title:"Import database"})}const $_=Object.freeze(Object.defineProperty({__proto__:null,LARGE_SOURCE_BYTES:Km,cancelImport:ng,handleDatabaseFile:Nc,handleDroppedFile:Qm,importDeps:ig,importFlow:jo,init:m_,isImporting:tg,load:g_,meta:h_,openFlow:Ym,resumePendingImport:rg},Symbol.toStringTag,{value:"Module"})),x_={id:"sqlitefile-source",name:"Browse a database file",type:"source",version:"0.1.0",description:"Reads tables and views out of a .db file, read-only (Electron desktop build only).",author:"Marc Cawood",repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/sqlitefile-source.ts"};function og(e){const t=e.source?.config;return!t||typeof t.path!="string"||typeof t.objectName!="string"?null:{path:t.path,objectName:t.objectName,isView:!!t.isView}}function Rn(e){throw new Error(`This table is a read-only browse of a database file — ${e} is not possible. Use Import to bring the data into your workspace first.`)}function S_(e,t){const n=og(e),r=new Set;let i=null;async function s(){return n?(i=(await t.browseRows(n.path,n.objectName,e.columns)).map(c=>({id:c.id,tableId:e.id,data:c.data,updatedAt:0})),i):[]}function o(a){for(const c of r)c(a)}return{async find(){return i??await s()},async findOne(a){return(i??await s()).find(c=>c.id===a)},async count(){return(i??await s()).length},async refresh(){o(await s())},subscribe(a){return r.add(a),(i?Promise.resolve(i):s()).then(a),()=>void r.delete(a)},insert:()=>Rn("adding a row"),bulkInsert:()=>Rn("adding rows"),upsert:()=>Rn("changing a row"),patch:()=>Rn("changing a row"),remove:()=>Rn("deleting a row"),bulkRemove:()=>Rn("deleting rows"),clear:()=>Rn("clearing the table")}}function C_(e){const t=window.easydb?.db;t&&typeof e.registerRowSource=="function"&&e.registerRowSource({type:"sqlitefile",create:n=>S_(n,t),schemaEditable:!1})}const E_=Object.freeze(Object.defineProperty({__proto__:null,init:C_,meta:x_,parseConfig:og},Symbol.toStringTag,{value:"Module"})),__=[{id:"press-ctrl-k-to-run-commands",text:"Press Ctrl+K to run commands"},{id:"drag-in-a-file-to-import-csv-json",text:"Drag in a file to import (.csv, .json)"},{id:"right-click-and-drag-the-workspace-to-pan-deskto",text:"Right-click and drag the workspace to pan (Desktop)"}],T_={tips:__},yr={id:"tips",name:"Tips",type:"ui",version:"0.1.0",description:'Shows one unseen tip on startup, plus a "Show tip" command. Compiled from docs/help/tips.md.',author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21h6"/><path d="M10 18h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.3.3.5.7.5 1.1v0h6v0c0-.4.2-.8.5-1.1A6 6 0 0 0 12 3z"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/tips.ts"},Ys="seen",Qs=T_.tips;function I_(){if(typeof location>"u")return!0;const e=new URLSearchParams(location.search);return e.get("tips")==="1"?!1:e.get("test")==="1"}async function jc(e){const t=await e.settings.get(yr.id,Ys);return Array.isArray(t)?t.filter(n=>typeof n=="string"):[]}async function A_(e){const t=Ns(yr.id),n=await e.store.plugins.findOne(t);await e.store.plugins.upsert({...n??{url:t,lastFetched:0},url:t,enabled:!1,lastFetched:n?.lastFetched??0}),await e.settings.set(yr.id,Ys,[],"user")}async function ag(e,t){const n=await jc(e),r=Qs[t];if(!r)return;await e.settings.set(yr.id,Ys,[...new Set([...n,r.id])],"user");const{TipsDialog:i}=await Ie(async()=>{const{TipsDialog:o}=await import("./tips-dialog-CfWWwMKn.js");return{TipsDialog:o}},[]),s=await i.open({tips:Qs,startIndex:t});if(s.dontShowAgain){await A_(e);return}await e.settings.set(yr.id,Ys,[...new Set([...n,...s.viewed])],"user")}function R_(e){e.ui.registerCommand({id:"tips:show",title:"Show tip",group:"Help",icon:"lightbulb",keywords:["tip","hint","help"],run:async t=>{const n=await jc(t),r=Qs.findIndex(i=>!n.includes(i.id));await ag(t,r===-1?0:r)}})}async function O_(e){if(I_())return;const t=await jc(e),n=Qs.findIndex(r=>!t.includes(r.id));n!==-1&&await ag(e,n)}const L_=Object.freeze(Object.defineProperty({__proto__:null,init:R_,load:O_,meta:yr},Symbol.toStringTag,{value:"Module"}));var D_=Object.defineProperty,M_=Object.getOwnPropertyDescriptor,Fc=(e,t,n,r)=>{for(var i=r>1?void 0:r?M_(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&D_(t,n,i),i};const Uc="https://github.com/cawoodm/easydbaccess/blob/main/docs/help/commandlets.md";let ws=null;function P_(){return ws||(ws=document.createElement("commandlet-dialog"),document.body.appendChild(ws)),ws}let vr=class extends $e{constructor(){super(...arguments),this.value="",this.verdict=null,this.check=null,this.checkSeq=0,this.dialogEl=null,this.resolveFn=null,this.onInput=e=>{this.value=e.target.value,this.revalidate()},this.onSubmit=e=>{e.preventDefault();const t=this.value.trim();!t||this.verdict?.ok===!1||this.finish(t)},this.onCancel=e=>{e.preventDefault(),this.finish(null)}}static open(e,t=""){return P_().openDialog(e,t)}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e),this.dialogEl&&Xt("commandlet",this.dialogEl)}openDialog(e,t){return this.check=e,this.value=t,this.verdict=null,t&&this.revalidate(),new Promise(n=>{this.resolveFn=n,this.updateComplete.then(()=>{this.dialogEl?.showModal();const r=this.shadowRoot?.querySelector("input.commandlet");r?.focus(),r?.select()})})}async revalidate(){const e=++this.checkSeq,t=this.value.trim();if(!t||!this.check){this.verdict=null;return}const n=await this.check(t);e===this.checkSeq&&(this.verdict=n)}finish(e){this.dialogEl?.close();const t=this.resolveFn;this.resolveFn=null,queueMicrotask(()=>t?.(e))}render(){const e=this.verdict;return v`
+      <dialog @cancel=${this.onCancel} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${()=>this.finish(null)}>×</button>
+        <form @submit=${this.onSubmit}>
+          <div class="dialog-header">
+            <h2>Run commandlet</h2>
+            <div class="header-actions">
+              <a class="help" href=${Uc} target="_blank" rel="noopener noreferrer" title="What is a commandlet?">?</a>
+              <button type="button" class="ghost" @click=${()=>this.finish(null)}>Cancel</button>
+              <button type="submit" class="primary" ?disabled=${e?.ok===!1||this.value.trim()===""}>Run</button>
+            </div>
+          </div>
+          <div class="dialog-body">
+            <input class="commandlet" type="text" spellcheck="false" placeholder="goto/bible?Book=Matthew" .value=${this.value} @input=${this.onInput} />
+            <div class="verdict ${e?e.ok?"ok":"bad":""}">${e?v`<span class="mark">${e.ok?"✓":"✕"}</span><span>${e.message}</span>`:X}</div>
+            <p class="hint">
+              <code>goto/&lt;table&gt;?&lt;Column&gt;=&lt;filter&gt;</code> — add <code>@sort=-Field</code>, <code>@search=…</code> or <code>@clear=1</code>; chain with <code>;</code>. Also
+              <code>search/…</code>, <code>view/…</code> and <code>cmd/&lt;id&gt;</code>.
+            </p>
+          </div>
+        </form>
+      </dialog>
+    `}};vr.styles=[mt,Se`
+      dialog {
+        min-width: 460px;
+        max-width: 620px;
+      }
+      input.commandlet {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 0.9rem;
+        padding: 0.5rem 0.6rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      input.commandlet:focus {
+        outline: 2px solid #3b82f6;
+        outline-offset: -1px;
+      }
+      /* The verdict line keeps its height whatever it says, so the dialog does
+         not jump around while the user types. */
+      .verdict {
+        min-height: 1.4rem;
+        font-size: 0.85rem;
+        line-height: 1.4;
+        display: flex;
+        gap: 0.4rem;
+        align-items: baseline;
+      }
+      .verdict.ok {
+        color: #047857;
+      }
+      .verdict.bad {
+        color: #b91c1c;
+      }
+      .verdict .mark {
+        font-weight: 700;
+      }
+      .hint {
+        margin: 0;
+        font-size: 0.82rem;
+        color: #6b7280;
+        line-height: 1.5;
+      }
+      .hint code {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        background: #f3f4f6;
+        padding: 0.05rem 0.25rem;
+        border-radius: 0.2rem;
+      }
+      a.help {
+        display: inline-grid;
+        place-items: center;
+        width: 1.3rem;
+        height: 1.3rem;
+        border-radius: 50%;
+        border: 1px solid #6b7280;
+        color: #e5e7eb;
+        text-decoration: none;
+        font-size: 0.8rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+      a.help:hover {
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+        border-color: #9ca3af;
+      }
+    `];Fc([j()],vr.prototype,"value",2);Fc([j()],vr.prototype,"verdict",2);vr=Fc([Re("commandlet-dialog")],vr);const z_=Object.freeze(Object.defineProperty({__proto__:null,COMMANDLET_HELP_URL:Uc,get CommandletDialog(){return vr}},Symbol.toStringTag,{value:"Module"}));let lg;const N_=new Promise(e=>{lg=e});function j_(){lg()}function F_(){return N_}async function U_(e,t={}){const n=Pf(e),r=await cg(t);for(const i of n)await H_(zf(i,r),t)}async function B_(e,t={}){const n=e.trim();if(!n)return{ok:!1,message:""};let r;try{r=Pf(n)}catch(o){return{ok:!1,message:o instanceof Error?o.message:String(o)}}const i=await cg(t),s=[];for(const o of r)try{s.push(await q_(zf(o,i),t))}catch(a){return{ok:!1,message:a instanceof Error?a.message:String(a)}}return{ok:!0,message:s.join(", then ")}}async function q_(e,t={}){switch(e.verb){case"goto":{const n=await fg(e.targets[0]??""),r=Object.keys(e.filters).map(o=>kr(n,o)),i=Js(e.options.sort,n),s=[`open ${n.name}`];return r.length>0&&s.push(`filter ${r.join(" + ")}`),e.options.clear!==void 0&&s.push("clear filters"),e.options.search!==void 0&&s.push(`search "${e.options.search}"`),i&&i.length>0&&s.push(`sort by ${i.map(o=>`${o.field}${o.asc?"":" ↓"}`).join(", ")}`),s.join(", ")}case"search":return`search all tables for "${e.targets[0]??""}"`;case"view":{const n=await ug(e,t),r=await dg(n),i=Object.keys(e.filters).map(a=>kr(r,a)),s=Js(e.options.sort,r),o=[`open view "${n.name}"`];return i.length>0&&o.push(`filter ${i.join(" + ")}`),e.options.clear!==void 0&&o.push("clear filters"),e.options.search!==void 0&&o.push(`search "${e.options.search}"`),s&&s.length>0&&o.push(`sort by ${s.map(a=>`${a.field}${a.asc?"":" ↓"}`).join(", ")}`),o.join(", ")}case"cmd":return`run "${(await hg(e.targets[0]??"")).title}"`;case"preview":case"ui":throw new ct(`"${e.verb}" is not wired up yet.`)}}async function cg(e){const t=await J(),n={WORKSPACE:t.workspaceId,...e.vars??{}};if(e.field!==void 0&&(n.FIELD=e.field),e.value!==void 0&&(n.VALUE=e.value),e.tableId){const r=await t.store.tables.findOne(e.tableId);r&&(n.TABLE=r.name)}return n}async function H_(e,t={}){switch(e.verb){case"goto":return V_(e);case"search":return K_(e);case"view":return W_(e,t);case"cmd":return G_(e);case"preview":case"ui":throw new ct(`"${e.verb}" is not wired up yet.`)}}async function V_(e){const t=e.targets[0]??"",n=await fg(t),r={},i=e.options.clear===void 0?{...n.filters??{}}:{};for(const[a,c]of Object.entries(e.filters)){const d=kr(n,a);c===""?delete i[d]:i[d]=c}(Object.keys(e.filters).length>0||e.options.clear!==void 0)&&(r.filters=Object.keys(i).length>0?i:void 0);const s=Js(e.options.sort,n);s&&(r.sortBy=s.length>0?s:void 0,r.sortColumn=s[0]?.field,r.sortAsc=s[0]?s[0].asc:void 0),Object.keys(r).length>0&&await(await J()).store.tables.patch(n.id,{...r,updatedAt:Date.now()}),Tc(n.id);const o=e.options.search;o!==void 0&&document.dispatchEvent(new CustomEvent("easydb:table-search",{detail:{tableId:n.id,query:o}}))}function Js(e,t){return e===void 0?null:e.split(",").map(n=>n.trim()).filter(Boolean).map(n=>n.startsWith("-")?{field:kr(t,n.slice(1)),asc:!1}:{field:kr(t,n),asc:!0})}function kr(e,t){const n=new Map;for(const i of e.columns??[])n.set(i.field.toLowerCase(),i.field),i.label&&n.set(i.label.toLowerCase(),i.field);const r=n.get(t.trim().toLowerCase());if(!r){const i=(e.columns??[]).map(s=>s.field).join(", ");throw new ct(`"${e.name}" has no column "${t}"${i?` — it has ${i}`:""}.`)}return r}function K_(e){const t=e.targets[0]??"";document.dispatchEvent(new CustomEvent("easydb:set-search",{detail:{query:t}}))}async function W_(e,t){const n=await ug(e,t),r=await dg(n),i={},s=e.options.clear===void 0?{...n.pillFilters??{}}:{};for(const[c,d]of Object.entries(e.filters)){const f=kr(r,c);d===""?delete s[f]:s[f]=d}(Object.keys(e.filters).length>0||e.options.clear!==void 0)&&(i.pillFilters=Object.keys(s).length>0?s:void 0);const o=Js(e.options.sort,r);o&&(i.sortBy=o.length>0?o:void 0,i.sortColumn=o[0]?.field,i.sortAsc=o[0]?o[0].asc:void 0),Object.keys(i).length>0&&await(await J()).store.viewInstances.patch(n.id,{...i,updatedAt:Date.now()}),await zc(n.id);const a=e.options.search;a!==void 0&&document.dispatchEvent(new CustomEvent("easydb:table-search",{detail:{tableId:n.id,query:a}}))}async function ug(e,t){const n=(e.targets[0]??"").trim();if(n)return Y_(n);if(!t.viewInstanceId)throw new ct('"view" with no name means the view you are in — this was not run from one, so name the view.');const i=await(await J()).store.viewInstances.findOne(t.viewInstanceId);if(!i)throw new ct("That view no longer exists.");return i}async function dg(e){const n=await(await J()).store.tables.findOne(e.tableId);if(!n)throw new ct(`The view "${e.name}" has no table.`);return n}async function G_(e){const t=await hg(e.targets[0]??""),n=await J();await t.run(n.api)}async function Y_(e){const t=e.trim(),n=await J(),r=(await n.store.viewInstances.find()).filter(s=>s.workspaceId===n.workspaceId),i=r.find(s=>s.name===t)??r.find(s=>s.name.toLowerCase()===t.toLowerCase());if(!i)throw new ct(`No view called "${t}".`);return i}async function hg(e){const t=await J(),n=t.registries.commands.find(r=>r.id===e)??t.registries.commands.find(r=>r.id.toLowerCase()===e.toLowerCase());if(!n)throw new ct(`No command with id "${e}".`);return n}async function fg(e){const t=e.trim();if(!t)throw new ct("No table name given.");const n=await J(),r=(await n.store.tables.find()).filter(s=>s.workspaceId===n.workspaceId),i=r.find(s=>s.name===t)??r.find(s=>s.name.toLowerCase()===t.toLowerCase());if(!i)throw new ct(`No table called "${t}".`);return i}const Bc={id:"commandlets",name:"Commandlets",type:"ui",version:"0.1.0",description:"Run URL-shaped actions like goto/bible?Book=Matthew — from a link, a #hash, ?cmdlet= or the palette.",author:"Marc Cawood",icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>',repo:"https://github.com/cawoodm/easydbaccess/blob/main/packages/renderer/src/plugins/commandlets.ts"},Q_="cmdlet",pg="default";function J_(e){e.ui.registerSettings(Bc.id,"Commandlets",[{key:pg,label:"Default commandlet",type:"string",scope:"workspace",description:"Run this when the URL hash is not a commandlet itself. Blank ⇒ a plain #anchor is ignored, as before.",help:"Anchors like #Matthew carry no verb, so nothing runs unless this template says what to do with one. $HASH is the whole anchor text and $1…$9 are its /-separated parts, e.g. goto/bible?Title=$HASH&@sort=Title turns #Matthew into goto/bible?Title=Matthew&@sort=Title. The text is substituted after parsing, so an anchor containing & or ; cannot break the command.",helpUrl:Uc,helpLinkLabel:"Commandlets guide"}]),e.ui.registerCommand({id:"commandlets:run",title:"Run commandlet…",group:"App",icon:"terminal",keywords:["command","goto","action","link","url"],run:t=>e2(t)}),e.ui.registerCommandFallback?.(t=>Xl(t)?{id:"commandlets:run-this",title:`Run this commandlet: ${t}`,group:"Commands",icon:"terminal",run:n=>$r(n,t)}:null)}function X_(e){document.addEventListener("click",t=>void n2(e,t),!0),window.addEventListener("hashchange",()=>void mg(e)),F_().then(()=>Z_(e))}async function Z_(e){const t=new URLSearchParams(location.search).get(Q_);t&&await $r(e,t),await mg(e)}async function e2(e,t=""){const{CommandletDialog:n}=await Ie(async()=>{const{CommandletDialog:i}=await Promise.resolve().then(()=>z_);return{CommandletDialog:i}},void 0),r=await n.open(i=>B_(i),t);r!==null&&await $r(e,r)}async function mg(e){const t=location.hash.replace(/^#/,"");if(!t)return;if(Xl(t)){Eh(),await $r(e,t);return}const n=(await e.settings.get(Bc.id,pg))?.trim();if(!n)return;const r=t2(t),i=r.split("/"),s={HASH:r};i.forEach((o,a)=>{s[String(a+1)]=o}),Eh(),await $r(e,n,{vars:s})}function Eh(){history.replaceState(null,"",location.pathname+location.search)}function t2(e){try{return decodeURIComponent(e)}catch{return e}}async function n2(e,t){if(t.defaultPrevented||t.button!==0||t.ctrlKey||t.metaKey||t.shiftKey||t.altKey)return;const n=t.composedPath(),r=n.find(o=>o instanceof HTMLAnchorElement);if(!r)return;const i=r.getAttribute("href")??"";if(!i.startsWith("#"))return;const s=i.slice(1);Xl(s)&&(t.preventDefault(),await $r(e,s,r2(n)))}function r2(e){const t={};for(const n of e){if(!t.tableId){const r=Im(n);r&&(t.tableId=r)}if(!t.viewInstanceId&&n instanceof HTMLElement&&n.tagName==="VIEW-WINDOW"){const r=n.viewInstanceId;r&&(t.viewInstanceId=r)}if(t.field===void 0&&n instanceof HTMLElement){const r=n;r.column?.field&&(t.field=r.column.field,r.value!=null&&(t.value=String(r.value)))}}return t}async function $r(e,t,n){try{await U_(t,n??{})}catch(r){const i=r instanceof ct||r instanceof Error?r.message:String(r);e.ui.dialogs.toast(i,{kind:"error",title:"Commandlet"})}}const i2=Object.freeze(Object.defineProperty({__proto__:null,init:J_,load:X_,meta:Bc},Symbol.toStringTag,{value:"Module"})),s2=[DE,s$,ny,Iy,jv,Vv,D0,X0,sk,ay,Mk,fk,Qk,n$,p$,y$,x$,_$,N$,lx,hx,gx,xx,Tx,Mx,nS,lS,FS,Pm,RE,ZE,n_,s_,l_,d_,$_,E_,L_,i2];function o2(e){if(!e.meta)throw new Error("Built-in plugin is missing meta");return e.meta}const gg=s2.map(e=>{const t=o2(e);return{id:t.id,meta:t,module:e}}),a2=gg;async function l2(e){const t=[];for(const n of gg)if(!await c2(e,n)){t.push(n);try{await n.module.init?.(e)}catch(r){e.events.emit("plugin:error",{url:n.id,phase:"init",error:r})}}return async()=>{for(const n of t)try{await n.module.load?.(e)}catch(r){e.events.emit("plugin:error",{url:n.id,phase:"load",error:r})}}}async function c2(e,t){return t.meta.fixed?!1:Tt==="all-optional"?!0:(await e.store.plugins.findOne(Ns(t.id)))?.enabled===!1}function bg(e){return e.filter(t=>t.status!=="minimized")}function u2(e,t,n){if(e<=0)return[];const r=Math.ceil(Math.sqrt(e)),i=Math.ceil(e/r),s=(t.w-n*(r+1))/r,o=(t.h-n*(i+1))/i;return Array.from({length:e},(a,c)=>{const d=c%r,f=Math.floor(c/r);return{x:t.x+n+d*(s+n),y:t.y+n+f*(o+n),w:s,h:o}})}function Rr(){return X$()}function d2(){for(const e of Rr())e.close?.()}function h2(){for(const e of Rr())e.minimize?.()}function f2(){for(const e of Rr())e.normalize?.()}function p2(){for(const e of Rr())e.maximize?.()}function wg(){const e=document.getElementById("easydb-panels"),t=e?.clientWidth??window.innerWidth,n=e?.clientHeight??window.innerHeight,r=Hs()?.snapshot(),i=r?.scale&&r.scale>0?r.scale:1,s=r?.x??0,o=r?.y??0;return{x:-s/i,y:-o/i,w:t/i,h:n/i}}function yg(e,t,n,r,i){e.style.left=`${Math.round(t)}px`,e.style.top=`${Math.round(n)}px`,e.style.width=`${Math.round(r)}px`,e.style.height=`${Math.round(i)}px`}function m2(){const e=bg(Rr()).reverse();if(e.length===0)return;const t=wg(),n=32,r=Math.min(680,Math.max(320,t.w*.6)),i=Math.min(480,Math.max(240,t.h*.6));e.forEach((s,o)=>{s.normalize?.(),yg(s,t.x+24+o*n,t.y+24+o*n,r,i)}),vg()}function vg(){Cm(),HC()}function g2(){const e=bg(Rr()).reverse();if(e.length===0)return;const n=u2(e.length,wg(),8);e.forEach((r,i)=>{r.normalize?.();const s=n[i];s&&yg(r,s.x,s.y,s.w,s.h)}),vg()}function ys(){return globalThis.crypto?.randomUUID?.()??`${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`}async function b2(e,t){const{from:n,to:r,name:i,mode:s}=t,o=await e.workspaces.get(n);if(await e.workspaces.put({id:r,name:i,createdAt:Date.now(),pluginUrls:s==="empty"?[]:[...o?.pluginUrls??[]]}),s==="empty")return r;if(s==="all"){const c=await e.tables.where("workspaceId").equals(n).toArray(),d=new Map;for(const y of c){const $=ys();d.set(y.id,$),await e.tables.put({...y,id:$,workspaceId:r,updatedAt:Date.now()})}for(const[y,$]of d){const k=await e.rows.where("tableId").equals(y).toArray();k.length>0&&await e.rows.bulkPut(k.map(C=>({...C,id:ys(),tableId:$})))}const f=await e.viewTemplates.where("workspaceId").equals(n).toArray(),p=new Map;for(const y of f){const $=ys();p.set(y.id,$),await e.viewTemplates.put({...y,id:$,workspaceId:r})}const b=await e.viewInstances.where("workspaceId").equals(n).toArray();for(const y of b){const $=d.get(y.tableId);$&&await e.viewInstances.put({...y,id:ys(),workspaceId:r,tableId:$,templateId:p.get(y.templateId)??y.templateId})}}const a=await e.settings.where("workspaceId").equals(n).toArray();for(const c of a)await e.settings.put({...c,key:It(r,c.name),workspaceId:r,name:c.name});return r}async function kg(e,t){return(await e.tables.where("workspaceId").equals(t).toArray()).map(r=>r.id)}async function $g(e,t){const n=await kg(e,t),r=n.length===0?0:await e.rows.where("tableId").anyOf(n).count();return{tables:n.length,rows:r,views:await e.viewInstances.where("workspaceId").equals(t).count(),templates:await e.viewTemplates.where("workspaceId").equals(t).count(),settings:await e.settings.where("workspaceId").equals(t).count()}}async function w2(e,t){const n=await $g(e,t),r=await kg(e,t);if(r.length>0){const a=await e.rows.where("tableId").anyOf(r).toArray();await e.rows.bulkDelete(a.map(c=>c.id)),await e.tables.bulkDelete(r)}const i=await e.viewInstances.where("workspaceId").equals(t).toArray();await e.viewInstances.bulkDelete(i.map(a=>a.id));const s=await e.viewTemplates.where("workspaceId").equals(t).toArray();await e.viewTemplates.bulkDelete(s.map(a=>a.id));const o=await e.settings.where("workspaceId").equals(t).toArray();return await e.settings.bulkDelete(o.map(a=>a.key).filter(a=>typeof a=="string")),await e.workspaces.delete(t),n}const _h="Clone everything (tables, views, settings)",Th="Clone settings only (no data)",y2="Empty workspace";function Fo(e){const t=new URLSearchParams(location.search);t.set("space",e),location.assign(`${location.pathname}?${t.toString()}${location.hash}`)}function v2(){const e=new URLSearchParams(location.search);e.delete("space");const t=e.toString();location.assign(`${location.pathname}${t?`?${t}`:""}${location.hash}`)}async function k2(){const e=await J(),t=(await e.store.workspaces.find()).filter(r=>r.id!==e.workspaceId);if(t.length===0){e.api.ui.dialogs.toast("This is the only workspace.",{kind:"info",title:"Workspaces"});return}const n=await e.api.ui.dialogs.choice("Open which workspace?",t.map(r=>r.name),"Switch workspace");n&&Fo(n)}async function xg(){const e=await J(),t=await e.api.ui.dialogs.prompt("Name the new workspace. It will become active after creation.","","New workspace");if(!t||!t.trim())return;const n=await e.api.ui.dialogs.choice(`What should "${t.trim()}" start with?`,[_h,Th,y2],"New workspace");if(!n)return;const r=n===_h?"all":n===Th?"settings":"empty";await b2(Ps(),{from:e.workspaceId,to:Eg(t.trim()),name:t.trim(),mode:r}),Fo(t.trim())}async function Sg(){const e=await J(),t=await e.store.workspaces.find();let n=t.find(c=>c.id===e.workspaceId)??t[0];if(!n)return;if(t.length>1){const c=await e.api.ui.dialogs.choice("Delete which workspace? Everything in it goes with it.",t.map(d=>d.name),"Delete workspace");if(!c)return;n=t.find(d=>d.name===c)??n}const r=await $g(Ps(),n.id),i=[`${r.tables} table${r.tables===1?"":"s"}`,`${r.rows.toLocaleString()} row${r.rows===1?"":"s"}`,`${r.views} view${r.views===1?"":"s"}`,`${r.settings} setting${r.settings===1?"":"s"}`].join(", "),s=t.length===1;if(!await e.api.ui.dialogs.confirm(`Delete the workspace "${n.name}"?
+
+${i} will be deleted. This cannot be undone.`+(s?`
+
+It is the only workspace, so an empty one will be created in its place.`:""),"Delete workspace"))return;if(await w2(Ps(),n.id),T2(n.id),n.id!==e.workspaceId){e.api.ui.dialogs.toast(`Deleted "${n.name}" (${i}).`,{kind:"success",title:"Workspace deleted"});return}const a=t.find(c=>c.id!==n.id);a?Fo(a.name):v2()}function $2(e){const t=[{id:"windows:minimize-all",title:"Minimize all windows",icon:"remove",run:h2},{id:"windows:restore-all",title:"Restore all windows",icon:"crop_square",run:f2},{id:"windows:maximize-all",title:"Maximize all windows",icon:"fullscreen",run:p2},{id:"windows:cascade",title:"Cascade windows",icon:"view_agenda",run:m2},{id:"windows:tile",title:"Tile windows",icon:"grid_view",run:g2},{id:"windows:close-all",title:"Close all windows",icon:"close",run:d2}];for(const s of t)e.ui.registerCommand({id:s.id,title:s.title,group:"Windows",icon:s.icon,run:s.run});const n=[{id:"workspace:switch",title:"Switch workspace",icon:"swap_horiz",keywords:["space","open","change"],run:k2},{id:"workspace:new",title:"New workspace",icon:"add",keywords:["space","add","create","clone"],run:xg},{id:"workspace:delete",title:"Delete workspace",icon:"delete",keywords:["space","remove","drop"],run:Sg}];for(const s of n)e.ui.registerCommand({id:s.id,title:s.title,group:"Workspace",icon:s.icon,keywords:s.keywords,run:s.run});const r="https://github.com/cawoodm/easydbaccess/blob/main/CHANGELOG.md",i="https://github.com/cawoodm/easydbaccess/tree/main/docs";e.ui.registerCommand({id:"app:search",title:"Search all tables",group:"App",icon:"search",keywords:["find","global search","filter"],run:()=>{document.dispatchEvent(new CustomEvent("easydb:focus-search"))}}),e.ui.registerCommand({id:"app:plugins",title:"Plugins",group:"App",icon:"extension",keywords:["plugin manager","install","extensions"],run:s=>s.ui.openPluginManager()}),e.ui.registerCommand({id:"app:changelog",title:"Changelog",group:"App",icon:"history",keywords:["releases","version","whats new"],run:()=>{window.open(r,"_blank","noopener")}}),e.ui.registerCommand({id:"app:docs",title:"Documentation",group:"App",icon:"menu_book",keywords:["docs","help","guide","manual"],run:()=>{window.open(i,"_blank","noopener")}})}async function x2(e){if(Tt==="url-plugins"||Tt==="all-optional")return async()=>{};const t=e.workspaceId();if(!t)return async()=>{};const r=(await e.store.workspaces.findOne(t))?.pluginUrls??[],i=[];for(const s of r)try{const o=await e.store.plugins.findOne(s);if(o&&o.enabled===!1)continue;let a=o?.cachedBody??"";if(a)S2(e,s,a);else{try{a=await Cg(s)}catch(f){await e.store.plugins.upsert({url:s,enabled:o?.enabled??!0,lastFetched:Date.now(),lastError:`fetch: ${f.message}`}),e.events.emit("plugin:error",{url:s,phase:"fetch",error:f});continue}await e.store.plugins.upsert({url:s,enabled:!0,lastFetched:Date.now(),cachedBody:a})}const c=new Blob([a],{type:"text/javascript"}),d=URL.createObjectURL(c);try{const f=await import(d);await f.init?.(e),i.push({url:s,mod:f})}finally{setTimeout(()=>URL.revokeObjectURL(d),5e3)}}catch(o){await e.store.plugins.upsert({url:s,enabled:!0,lastFetched:Date.now(),lastError:`init: ${o.message}`}),e.events.emit("plugin:error",{url:s,phase:"init",error:o})}return async()=>{for(const{url:s,mod:o}of i)try{await o.load?.(e)}catch(a){await e.store.plugins.upsert({url:s,enabled:!0,lastFetched:Date.now(),lastError:`load: ${a.message}`}),e.events.emit("plugin:error",{url:s,phase:"load",error:a})}}}async function Cg(e){const t=await fetch(e);if(!t.ok)throw new Error(`HTTP ${t.status} ${t.statusText}`);const n=await t.text();if((t.headers.get("content-type")??"").toLowerCase().includes("text/html")||/^\s*<(!doctype|html|head|body)/i.test(n))throw new Error("response is HTML, not a JS module (URL likely 404 → SPA fallback)");return n}function S2(e,t,n){return(async()=>{try{const r=await Cg(t);if(r===n)return;await e.store.plugins.upsert({url:t,enabled:!0,lastFetched:Date.now(),cachedBody:r})}catch{}})()}let Ba=null;function J(){return Ba||(Ba=C2()),Ba}async function C2(){let e="";const t=window.easydb?.store?aw(window.easydb.store,()=>e):nw(await Ps(),()=>e),n=lw(),r=uw(),i=new Map;t.tables.subscribe(C=>{i.clear();for(const _ of C)i.set(_.id,_)});const s=iw(t.tables),o={...s,insert:async C=>{const _=await s.insert(C);return i.set(_.id,_),_},upsert:async C=>{const _=await s.upsert(C);return i.set(_.id,_),_}};let a=null;const c={get backend(){if(!a)throw new Error("[host] row-source ctx used before app init completed");return a.backend},events:n,settings:t.settings,workspaceId:()=>b},d=rw({base:{...t,tables:o},providers:r.rowSources,tableById:C=>i.get(C),ctx:c}),f=E2(),p=await d.workspaces.find();let b;if(f){const C=Eg(f),_=p.find(T=>T.id===C||T.name===f);_?b=_.id:b=(await d.workspaces.insert({id:C,name:f,createdAt:Date.now(),pluginUrls:[]})).id}else{const C=_2(),_=C?p.find(T=>T.id===C):void 0;_?b=_.id:p.length>0?b=p[0].id:b=(await d.workspaces.insert({id:"default",name:"default",createdAt:Date.now(),pluginUrls:[]})).id}e=b,I2(b);const y=yw({store:d,events:n,registries:r,workspaceId:()=>b});a=y,$2(y),n.on("import:after",({source:C,tableId:_,rowCount:T})=>{C!=="datasette"&&y.store.tables.findOne(_).then(Y=>{y.ui.dialogs.toast(`Imported ${T} row${T===1?"":"s"} into "${Y?.name??_}".`,{kind:"success",title:C.toUpperCase()+" import"})})}),n.on("plugin:error",({url:C,phase:_,error:T})=>{y.ui.dialogs.toast(`[${_}] ${T?.message??String(T)}`,{kind:"error",title:`Plugin: ${C}`})});const $=await l2(y),k=await x2(y);return queueMicrotask(async()=>{n.emit("app:ready",{workspaceId:b}),await $(),await k(),Tt==="all-optional"?y.ui.dialogs.toast("Safe mode is ON: only fixed built-ins (Settings, core rendering) loaded. All other built-in plugins and URL-installed plugins are disabled for this session only — nothing was changed. Disable the culprit below, then reload without ?safemode.",{kind:"warning",title:"Safe mode"}):Tt==="url-plugins"&&y.ui.dialogs.toast("Safe mode (URL plugins) is ON: URL-installed plugins were not loaded this session. Built-in plugins are unaffected. Reload without ?safemode1 to restore them.",{kind:"warning",title:"Safe mode"}),Tt!=="off"&&y.ui.openPluginManager()}),globalThis.api=y,{store:d,events:n,workspaceId:b,registries:r,api:y}}function E2(){if(typeof location>"u")return null;const t=new URLSearchParams(location.search).get("space");return t&&t.trim().length>0?t.trim():null}const Xs="eda:lastWorkspaceId";function _2(){try{return globalThis.localStorage?.getItem(Xs)??null}catch{return null}}function T2(e){try{globalThis.localStorage?.getItem(Xs)===e&&globalThis.localStorage.removeItem(Xs)}catch{}}function I2(e){try{globalThis.localStorage?.setItem(Xs,e)}catch{}}function Eg(e){return e.toLowerCase().trim().replace(/[^a-z0-9_-]+/g,"-").replace(/^-+|-+$/g,"")||"default"}var A2=Object.defineProperty,R2=Object.getOwnPropertyDescriptor,Uo=(e,t,n,r)=>{for(var i=r>1?void 0:r?R2(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&A2(t,n,i),i};let xr=class extends $e{constructor(){super(...arguments),this.name="",this.text="",this.errorMsg="",this.dialogEl=null}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e),this.dialogEl&&Xt("csv-paste",this.dialogEl)}async open(){this.name="",this.text="",this.errorMsg="",await this.updateComplete,this.dialogEl?.showModal()}close(){this.dialogEl?.close()}async submit(e){e.preventDefault();const t=this.name.trim()||"pasted";if(this.text.trim().length===0){this.errorMsg="Paste some CSV first.";return}let n;try{n=Cr(this.text)}catch(o){this.errorMsg=`Couldn't parse the CSV: ${o.message}`;return}if(n.columns.length===0||n.rows.length===0){this.errorMsg="No data found in the pasted text.";return}const r=await J(),i=crypto.randomUUID();await r.store.tables.insert({id:i,workspaceId:r.workspaceId,name:t,code:Ne(t),columns:n.columns,view:"table",updatedAt:Date.now()});const s=n.rows.map(o=>({id:crypto.randomUUID(),tableId:i,data:o,updatedAt:Date.now()}));await r.store.rows(i).bulkInsert(s),r.api.ui.dialogs.toast(`Imported ${n.rows.length} row${n.rows.length===1?"":"s"} into "${t}".`,{kind:"success",title:"CSV paste"}),this.close()}render(){return v`
+      <dialog @cancel=${this.close} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${this.close}>×</button>
+        <form @submit=${this.submit}>
+          <div class="dialog-header">
+            <h2>Paste CSV</h2>
+            <div class="header-actions">
+              <button type="button" class="ghost" @click=${this.close}>Cancel</button>
+              <button type="submit" class="primary">Import</button>
+            </div>
+          </div>
+          <div class="dialog-body">
+            <p class="hint">First line is treated as the header. Separator is auto-detected (comma / semicolon / tab). Column types are inferred from data.</p>
+            <label>
+              Table name
+              <input type="text" autofocus .value=${this.name} placeholder="pasted" @input=${e=>this.name=e.target.value} />
+            </label>
+            <label>
+              CSV
+              <textarea spellcheck="false" .value=${this.text} @input=${e=>this.text=e.target.value}></textarea>
+            </label>
+            ${this.errorMsg?v`<div class="error">${this.errorMsg}</div>`:""}
+          </div>
+        </form>
+      </dialog>
+    `}};xr.styles=[mt,Se`
+      dialog {
+        width: 640px;
+        max-width: 90vw;
+      }
+      p.hint {
+        margin: 0;
+        color: #6b7280;
+        font-size: 0.85rem;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        font-size: 0.85rem;
+        color: #374151;
+      }
+      input[type='text'] {
+        font: inherit;
+        padding: 0.4rem 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+      }
+      textarea {
+        font:
+          0.85rem ui-monospace,
+          SFMono-Regular,
+          monospace;
+        padding: 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        min-height: 240px;
+        resize: vertical;
+      }
+      .error {
+        color: #ef4444;
+        font-size: 0.85rem;
+      }
+    `];Uo([j()],xr.prototype,"name",2);Uo([j()],xr.prototype,"text",2);Uo([j()],xr.prototype,"errorMsg",2);xr=Uo([Re("csv-paste-dialog")],xr);function Ih(e){const t={...e.orig??{},field:e.field.trim(),label:e.label.trim()||e.field.trim(),type:e.type};return e.renderer?t.renderer=e.renderer:delete t.renderer,e.script?t.script=e.script:delete t.script,e.validate?t.validate=e.validate:delete t.validate,e.max!=null&&e.max>0?t.max=e.max:delete t.max,e.unique?t.unique=!0:delete t.unique,e.notnull?t.notnull=!0:delete t.notnull,e.hidden?t.hidden=!0:delete t.hidden,e.sortable===!1?t.sortable=!1:delete t.sortable,e.filterable===!1?t.filterable=!1:delete t.filterable,t}const _g={unique:{get:e=>!!e.unique,set:e=>({unique:e?!0:void 0})},notnull:{get:e=>!!e.notnull,set:e=>({notnull:e?!0:void 0})},visible:{get:e=>!e.hidden,set:e=>({hidden:e?void 0:!0})},sortable:{get:e=>e.sortable!==!1,set:e=>({sortable:e?void 0:!1})},filterable:{get:e=>e.filterable!==!1,set:e=>({filterable:e?void 0:!1})}};function Tg(e,t){return e.every(n=>_g[t].get(n))}function O2(e,t){const n=!Tg(e,t);return e.map(r=>({...r,..._g[t].set(n)}))}function qc(e){if(e.source?.type!=="projection")return null;const t=e.source.config;return t&&Array.isArray(t.sources)?t:null}function L2(e,t,n,r){return{projections:t.filter(s=>{if(s.id===r)return!1;const o=qc(s);return!!o&&o.sources.some(a=>a.tableName===e)}),views:n.filter(s=>s.tableName===e)}}function D2(e,t,n){return e.sources.some(r=>r.tableName===t)?{...e,sources:e.sources.map(r=>r.tableName===t?{...r,tableName:n}:r)}:null}function Hc(e){return new Map(e.filter(t=>t.from!==t.to).map(t=>[t.from,t.to]))}function Cl(e,t){if(!e||!Object.keys(e).some(i=>t.has(i)))return null;const r={};for(const[i,s]of Object.entries(e))r[t.get(i)??i]=s;return r}function M2(e,t){const n=Hc(t);if(n.size===0)return null;const r=e.columns.map(o=>n.has(o.field)?{...o,field:n.get(o.field)}:o),i=Cl(e.filters,n);return r.some((o,a)=>o!==e.columns[a])||i!==null?{...e,columns:r,...i?{filters:i}:{}}:null}function P2(e,t){const n=Hc(t);if(n.size===0)return null;const r={},i=e.mapping??{},s={};let o=!1;for(const[d,f]of Object.entries(i)){const p=n.get(f);s[d]=p??f,p&&(o=!0)}if(o&&(r.mapping=s),Array.isArray(e.visibleColumns)){const d=e.visibleColumns.map(f=>n.get(f)??f);d.some((f,p)=>f!==e.visibleColumns[p])&&(r.visibleColumns=d)}const a=Cl(e.filters,n);a&&(r.filters=a);const c=Cl(e.pillFilters,n);if(c&&(r.pillFilters=c),e.columnWidths){const d={};let f=!1;for(const[p,b]of Object.entries(e.columnWidths)){const y=n.get(p);d[y??p]=b,y&&(f=!0)}f&&(r.columnWidths=d)}if(e.sortColumn&&n.has(e.sortColumn)&&(r.sortColumn=n.get(e.sortColumn)),Array.isArray(e.sortBy)){const d=e.sortBy.map(f=>n.has(f.field)?{...f,field:n.get(f.field)}:f);d.some((f,p)=>f!==e.sortBy?.[p])&&(r.sortBy=d)}return Object.keys(r).length>0?r:null}function z2(e,t,n){const r=Hc(n);if(r.size===0)return null;const i=new Set(e.sources.filter(c=>c.tableName===t).map(c=>c.alias));if(i.size===0)return null;const s=e.columns.map(c=>c.from.kind==="source"&&i.has(c.from.alias)&&r.has(c.from.field)?{...c,from:{...c.from,field:r.get(c.from.field)}}:c),o=e.sources.map(c=>{if(!c.join)return c;const d=i.has(c.alias),f=c.join.on.map(p=>{const b=d&&r.has(p.field)?r.get(p.field):p.field,y=i.has(p.eqAlias)&&r.has(p.eqField)?r.get(p.eqField):p.eqField;return b===p.field&&y===p.eqField?p:{...p,field:b,eqField:y}});return f.some((p,b)=>p!==c.join.on[b])?{...c,join:{...c.join,on:f}}:c});return s.some((c,d)=>c!==e.columns[d])||o.some((c,d)=>c!==e.sources[d])?{...e,columns:s,sources:o}:null}function N2(e){const t=[];return e.projections.length>0&&t.push(`${Ah(e.projections.length,"projection")} (${Rh(e.projections.map(n=>n.name))})`),e.views.length>0&&t.push(`${Ah(e.views.length,"view")} (${Rh(e.views.map(n=>n.name||"untitled"))})`),t.length>0?t.join(" and "):null}function Ah(e,t){return`${e} ${t}${e===1?"":"s"}`}function Rh(e){const t=e.slice(0,3).map(n=>`"${n}"`);return e.length>3?`${t.join(", ")} and ${e.length-3} more`:t.join(", ")}var j2=Object.defineProperty,F2=Object.getOwnPropertyDescriptor,Ze=(e,t,n,r)=>{for(var i=r>1?void 0:r?F2(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&j2(t,n,i),i};const U2=["string","number","boolean","date","datetime","array"],Oh=100;function Lh(e){return[...e.keys()].filter(t=>!cw.has(t)).sort()}function B2(e,t){return t&&!e.includes(t)?[...e,t]:[...e]}async function q2(e,t,n,r){const i=await J(),s=(await i.store.viewInstances.find()).filter(o=>o.tableId===e||o.tableName===t);for(const o of s)o.tableName!==n&&await i.store.viewInstances.patch(o.id,{tableName:n,updatedAt:Date.now()});for(const o of r?.projections??[]){const a=qc(o),c=a&&D2(a,t,n);c&&await i.store.tables.patch(o.id,{source:{type:"projection",config:c},updatedAt:Date.now()})}}async function H2(e,t,n,r){if(n.length===0)return;const i=await J(),s=(await i.store.viewInstances.find({workspaceId:i.workspaceId})).filter(a=>a.tableId===e);for(const a of s){const c=P2(a,n);c&&await i.store.viewInstances.patch(a.id,{...c,updatedAt:Date.now()})}s.length>0&&document.dispatchEvent(new CustomEvent("easydb:reload-views"));const o=async(a,c)=>{await i.store.tables.patch(a.id,{source:{type:"projection",config:c},updatedAt:Date.now()})};for(const a of r){const c=qc(a);if(!c)continue;const d=a.id===e?M2(c,n):z2(c,t,n);d&&await o(a,d)}}function V2(e,t,n){const r=`Renaming "${e}" to "${t}" affects ${n}.
+
+They reference this table by name, so they will be updated to point at "${t}". Continue?`,i=lt.instance;return i?i.confirm(r,"Rename table"):Promise.resolve(window.confirm(r))}let Be=class extends $e{constructor(){super(...arguments),this.mode="new",this.editTableId=null,this.name="",this.tableTitle="",this.tableReadonly=!1,this.deletedFields=[],this.columns=[],this.errorMsg="",this.noticeMsg="",this.dragSrcIdx=null,this.dropTargetIdx=null,this.dropEdge=null,this.previewRows=[],this.previewState="none",this.previewToken=0,this.rendererOptions=[],this.columnActions=[],this.dialogEl=null}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e),this.dialogEl&&Xt("columns-editor",this.dialogEl)}async open(e,t){this.errorMsg="",this.noticeMsg=t?.notice??"";const n=await J();if(this.rendererOptions=Lh(n.registries.cellRenderers),this.rendererSubUnsub?.(),this.columnActions=[...n.registries.columnEditorActions],this.rendererSubUnsub=n.events.on("app:ready",()=>{this.rendererOptions=Lh(n.registries.cellRenderers),this.columnActions=[...n.registries.columnEditorActions]}),e){const i=await(await J()).store.tables.findOne(e);if(!i)return;this.mode="edit",this.editTableId=e,this.name=i.name,this.tableTitle=i.title??"",this.tableReadonly=!!i.readonly,this.deletedFields=[...i.deletedColumns??[]],this.columns=i.columns.map(s=>({field:s.field,label:s.label,type:s.type,renderer:s.renderer,script:s.script,validate:s.validate,max:s.max,unique:s.unique,notnull:s.notnull,hidden:s.hidden,sortable:s.sortable,filterable:s.filterable,origField:s.field,orig:s})),this.loadPreview(e,i.columns)}else this.mode="new",this.editTableId=null,this.name="",this.tableTitle="",this.tableReadonly=!1,this.deletedFields=[],this.columns=[{field:"name",label:"Name",type:"string"},{field:"note",label:"Note",type:"string"}],this.previewRows=[],this.previewState="none",this.previewToken++;await this.updateComplete,this.dialogEl?.showModal()}async loadPreview(e,t){const n=++this.previewToken;this.previewRows=[],this.previewState="loading";try{const r=await J(),i=await Ai(r.store.rows(e),{columns:t,limit:Oh},Oh);if(n!==this.previewToken)return;this.previewRows=i.rows,this.previewState="ready"}catch(r){if(n!==this.previewToken)return;this.previewRows=[],this.previewState="error",console.warn("[columns-editor] the preview rows could not be read",r)}}close(){this.dialogEl?.close(),this.rendererSubUnsub?.(),this.rendererSubUnsub=void 0}touchDirty(){this.dialogEl&&gp("columns-editor",this.dialogEl)}addColumn(){const e=this.columns.length+1;this.columns=[...this.columns,{field:`field_${e}`,label:`Field ${e}`,type:"string"}],this.touchDirty()}removeColumn(e){this.columns=this.columns.filter((t,n)=>n!==e),this.touchDirty()}moveColumn(e,t){const n=e+t;if(n<0||n>=this.columns.length)return;const r=[...this.columns],[i]=r.splice(e,1);r.splice(n,0,i),this.columns=r,this.touchDirty()}onRowDragStart(e,t){this.dragSrcIdx=t,e.dataTransfer&&(e.dataTransfer.effectAllowed="move",e.dataTransfer.setData("text/x-easydb-coleditor-row",String(t)))}onRowDragOver(e,t,n){if(this.dragSrcIdx===null||this.dragSrcIdx===t)return;e.preventDefault();const r=n.getBoundingClientRect(),i=e.clientY<r.top+r.height/2;this.dropTargetIdx=t,this.dropEdge=i?"before":"after"}onRowDragLeave(e){this.dropTargetIdx===e&&(this.dropTargetIdx=null,this.dropEdge=null)}onRowDrop(e,t){e.preventDefault();const n=this.dragSrcIdx,r=this.dropEdge;if(this.dragSrcIdx=null,this.dropTargetIdx=null,this.dropEdge=null,n===null||n===t||!r)return;const i=[...this.columns],[s]=i.splice(n,1);let o=t+(n<t?-1:0);r==="after"&&(o+=1),i.splice(o,0,s),this.columns=i,this.touchDirty()}onRowDragEnd(){this.dragSrcIdx=null,this.dropTargetIdx=null,this.dropEdge=null}patchColumn(e,t){this.columns=this.columns.map((n,r)=>r===e?{...n,...t}:n),this.touchDirty()}renderFlagHead(e,t,n){const r=Tg(this.columns,e);return v`<button
+      type="button"
+      class="flag-label flag-head"
+      title=${`${n} — click to ${r?"clear":"set"} every column`}
+      aria-pressed=${r?"true":"false"}
+      @click=${()=>{this.columns=O2(this.columns,e),this.touchDirty()}}
+    >
+      ${t}
+    </button>`}async runColumnAction(e){this.errorMsg="";const t=await J();try{const n=await e.run(t.api,{columns:this.columns.map(i=>Ih(i)),...this.editTableId?{tableId:this.editTableId}:{}});if(!n)return;const r=new Map(n.map(i=>[i.field,i]));this.columns=this.columns.map(i=>{const s=r.get(i.field);return s?{...i,label:s.label??i.label,type:s.type??i.type,renderer:s.renderer,script:s.script,validate:s.validate}:i}),this.touchDirty()}catch(n){this.errorMsg=`${e.label} failed: ${n.message}`}}async editScript(e){const t=it.instance;if(!t)return;const n=this.columns[e];if(!n)return;const r=await t.open(n.script??"",n.label||n.field);r!==null&&this.patchColumn(e,{script:r.trim()?r:void 0})}async editValidate(e){const t=it.instance;if(!t)return;const n=this.columns[e];if(!n)return;const r=await t.open(n.validate??"",n.label||n.field,"validate");r!==null&&this.patchColumn(e,{validate:r.trim()?r:void 0})}async submit(e){e.preventDefault();const t=this.name.trim();if(!t){this.errorMsg="Table name is required.";return}const n=await J(),r=(await n.store.tables.find()).filter(d=>d.workspaceId===n.workspaceId),i=t.toLowerCase(),s=r.find(d=>d.name.toLowerCase()===i&&d.id!==this.editTableId);if(s){this.errorMsg=`A table named "${s.name}" already exists — names must be unique.`;return}if(this.columns.length===0){this.errorMsg="At least one column is required.";return}const o=new Set;for(const d of this.columns){const f=d.field.trim();if(!f){this.errorMsg="Column field names cannot be empty.";return}if(o.has(f)){this.errorMsg=`Duplicate column field: ${f}`;return}o.add(f)}const a=this.tableTitle.trim(),c=this.columns.map(Ih);if(this.mode==="edit"&&this.editTableId){const d=this.editTableId,f=await n.store.tables.findOne(d),p=new Map((f?.columns??[]).map(I=>[I.field,I])),b=c.filter(I=>{const V=p.get(I.field);return I.unique&&!V?.unique||I.notnull&&!V?.notnull||I.max&&I.max>0&&I.max!==V?.max});if(b.length>0){const I=await n.store.rows(d).find(),V=G2(b,I);if(V.length>0){this.errorMsg=`Cannot save: ${V.length} existing ${V.length===1?"row violates":"rows violate"} the new constraints.
+${V.slice(0,5).join(`
+`)}${V.length>5?`
+…and ${V.length-5} more.`:""}`;return}}const y=new Set(this.columns.map(I=>I.origField).filter(I=>!!I)),$=new Set(c.map(I=>I.field)),k=(f?.columns??[]).map(I=>I.field).filter(I=>!y.has(I)),C=f?.deletedColumns??[],_=[...new Set([...C,...k])].filter(I=>!$.has(I));let T=null;if(f&&f.name!==t){const I=(await n.store.viewInstances.find()).filter(K=>K.workspaceId===n.workspaceId);T=L2(f.name,r,I,d);const V=N2(T);if(V&&!await V2(f.name,t,V))return}const Y={name:t,title:a,columns:c,readonly:this.tableReadonly,updatedAt:Date.now()};(_.length>0||C.length>0)&&(Y.deletedColumns=_);const D=f?.name;await n.store.tables.patch(d,Y);const ne=k.filter(I=>!$.has(I)),W=this.fieldRenames();if(!f?.source&&(ne.length>0||W.length>0)){const I=await n.store.rows(d).find();for(const V of I){let K=!1,ie={...V.data};const de=ed(ie,W);de&&(ie=de,K=!0);for(const H of ne)H in ie&&(delete ie[H],K=!0);K&&await n.store.rows(d).patch(V.id,{data:ie,updatedAt:Date.now()})}}await H2(d,D??t,W,r),D!==void 0&&D!==t&&await q2(d,D,t,T)}else await n.store.tables.insert({id:_e(),workspaceId:n.workspaceId,name:t,title:a,code:Ne(t),columns:c,view:"table",updatedAt:Date.now()});this.close()}renderPreview(){if(this.previewRows.length===0){const i=this.previewState==="loading"?"Reading rows for the preview…":this.previewState==="error"?"The rows could not be read, so there is no preview. Your column changes still save.":"No rows to preview.";return v`<div class="preview"><div class="empty" data-testid="preview-empty">${i}</div></div>`}const e=this.fieldRenames(),t=e.length>0?this.previewRows.map(i=>({...i,data:ed(i.data,e)??i.data})):this.previewRows,n=new Map;for(const i of this.columns){if(!i.unique)continue;const s=new Set,o=new Set;for(const a of t){const c=a.data[i.field];c==null||c===""||(s.has(c)&&o.add(c),s.add(c))}n.set(i.field,o)}const r=this.columns.filter(i=>!i.hidden);return v`
+      <div class="preview">
+        <h3>Live preview — first ${this.previewRows.length} row${this.previewRows.length===1?"":"s"}</h3>
+        <table>
+          <thead>
+            <tr>
+              ${r.map(i=>v`<th title=${i.field}>${i.label||i.field}</th>`)}
+            </tr>
+          </thead>
+          <tbody>
+            ${t.map(i=>v`
+                <tr>
+                  ${r.map(s=>{const o=i.data[s.field],a=W2(s,o,n.get(s.field));return v`<td class=${a?"violation":""} title=${a??""}>${K2(o)}</td>`})}
+                </tr>
+              `)}
+          </tbody>
+        </table>
+      </div>
+    `}renderDeleted(){return this.mode!=="edit"||this.deletedFields.length===0?"":v`<div class="deleted-cols">
+      <span class="hint">Removed earlier:</span>
+      ${this.deletedFields.map(e=>v`<button type="button" class="add" title=${`Add the column "${e}" back`} @click=${()=>this.restoreColumn(e)}>↩ ${e}</button>`)}
+      <div class="hint">These are not re-added by a refresh. Restoring one adds the column back empty — its values were removed with it, unless the table refreshes from a source.</div>
+    </div>`}restoreColumn(e){this.deletedFields=this.deletedFields.filter(t=>t!==e),!this.columns.some(t=>t.field.trim().toLowerCase()===e.toLowerCase())&&(this.columns=[...this.columns,{field:e,label:e,type:"string"}])}fieldRenames(){return this.mode!=="edit"?[]:this.columns.filter(e=>e.origField&&e.origField!==e.field.trim()).map(e=>({from:e.origField,to:e.field.trim()}))}renameDetected(){return this.fieldRenames().length>0}render(){const e=this.mode==="edit"?"Edit columns":"New table",t=this.mode==="edit"?"Save":"Create";return v`
+      <dialog @cancel=${this.close} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${this.close}>
+          <span class="mi sm">close</span>
+        </button>
+        <form @submit=${this.submit}>
+          <div class="dialog-header">
+            <h2>${e}</h2>
+            <div class="header-actions">
+              <button type="button" class="ghost" @click=${this.close}>Cancel</button>
+              <button type="submit" class="primary">${t}</button>
+            </div>
+          </div>
+          <div class="dialog-body">
+            ${this.noticeMsg?v`<div class="notice">${this.noticeMsg}</div>`:""}
+            <label>
+              Name
+              <input type="text" autofocus .value=${this.name} @input=${n=>this.name=n.target.value} />
+            </label>
+            <label>
+              Title <span style="color:#9ca3af">(optional — shown in the window title)</span>
+              <input type="text" .value=${this.tableTitle} @input=${n=>this.tableTitle=n.target.value} />
+            </label>
+            <label class="inline">
+              <input type="checkbox" data-testid="table-readonly" .checked=${this.tableReadonly} @change=${n=>this.tableReadonly=n.target.checked} />
+              Read-only
+              <span style="color:#9ca3af">(show values, no editing or add/delete row)</span>
+            </label>
+
+            <div class="columns">
+              <div class="col-header">
+                <span></span>
+                ${this.renderFlagHead("visible","👁","Visible")}
+                <span>Field</span>
+                <span>Label</span>
+                <span>Type</span>
+                <span>Renderer</span>
+                <span></span>
+                <span class="flag-label">Max</span>
+                <span></span>
+                ${this.renderFlagHead("unique","U","Unique")} ${this.renderFlagHead("notnull","!","Not null")} ${this.renderFlagHead("sortable","⇅","Sortable")}
+                ${this.renderFlagHead("filterable","⚲","Filterable (includes search)")}
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              ${this.columns.map((n,r)=>{const i=this.dragSrcIdx===r,s=this.dropTargetIdx===r,o=s&&this.dropEdge==="before"?" drop-before":s&&this.dropEdge==="after"?" drop-after":"";return v`
+                  <div
+                    class=${`col-row${i?" drag-source":""}${o}`}
+                    @dragover=${a=>this.onRowDragOver(a,r,a.currentTarget)}
+                    @dragleave=${()=>this.onRowDragLeave(r)}
+                    @drop=${a=>this.onRowDrop(a,r)}
+                  >
+                    <span class="drag-handle" title="Drag to reorder" draggable="true" @dragstart=${a=>this.onRowDragStart(a,r)} @dragend=${()=>this.onRowDragEnd()}>
+                      <span class="mi sm">drag_indicator</span>
+                    </span>
+                    <span class="flag">
+                      <input
+                        type="checkbox"
+                        title="Visible — uncheck to hide the column without losing its data"
+                        .checked=${!n.hidden}
+                        @change=${a=>this.patchColumn(r,{hidden:!a.target.checked})}
+                      />
+                    </span>
+                    <input
+                      type="text"
+                      title="Field — the key this column is stored under in each row"
+                      .value=${n.field}
+                      @input=${a=>this.patchColumn(r,{field:a.target.value})}
+                    />
+                    <input
+                      type="text"
+                      title="Label — the heading shown above the column"
+                      .value=${n.label}
+                      @input=${a=>this.patchColumn(r,{label:a.target.value})}
+                    />
+                    <select
+                      .value=${n.type}
+                      @change=${a=>this.patchColumn(r,{type:a.target.value})}
+                    >
+                      ${U2.map(a=>v`<option value=${a} ?selected=${a===n.type}>${a}</option>`)}
+                    </select>
+                    <select
+                      title="Renderer — how cells in this column display. Read-only HTML-encoded text when blank."
+                      .value=${n.renderer??""}
+                      @change=${a=>{const c=a.target.value;this.patchColumn(r,{renderer:c||void 0})}}
+                    >
+                      <option value="" ?selected=${!n.renderer}>— none —</option>
+                      ${B2(this.rendererOptions,n.renderer).map(a=>v`<option value=${a} ?selected=${a===n.renderer}>${a}</option>`)}
+                    </select>
+                    <button
+                      type="button"
+                      class=${`icon-btn script-btn${n.script?.trim()?" has-script":""}`}
+                      title=${n.script?.trim()?"Edit the script — its render(row) output is what this column displays":"Add a script: render(row) computes what this column displays"}
+                      @click=${()=>this.editScript(r)}
+                    >
+                      <span class="mi sm">edit</span>
+                    </button>
+                    <input
+                      type="number"
+                      min="0"
+                      placeholder="—"
+                      title="Max length (strings) or max value (numbers)"
+                      .value=${n.max==null?"":String(n.max)}
+                      @input=${a=>{const c=a.target.value;this.patchColumn(r,{max:c===""?void 0:Number(c)})}}
+                    />
+                    <button
+                      type="button"
+                      class=${`icon-btn validate-btn${n.validate?.trim()?" has-validate":""}`}
+                      title=${n.validate?.trim()?"Edit the validation — validate(value, row) throws to reject a manual cell edit":"Add validation: validate(value, row) throws to reject a manual cell edit"}
+                      @click=${()=>this.editValidate(r)}
+                    >
+                      <span class="mi sm">edit</span>
+                    </button>
+                    <span class="flag">
+                      <input type="checkbox" title="Unique" .checked=${!!n.unique} @change=${a=>this.patchColumn(r,{unique:a.target.checked})} />
+                    </span>
+                    <span class="flag">
+                      <input type="checkbox" title="Not null" .checked=${!!n.notnull} @change=${a=>this.patchColumn(r,{notnull:a.target.checked})} />
+                    </span>
+                    <span class="flag">
+                      <input
+                        type="checkbox"
+                        title="Sortable — uncheck to disable sorting on this column"
+                        .checked=${n.sortable!==!1}
+                        @change=${a=>this.patchColumn(r,{sortable:a.target.checked?void 0:!1})}
+                      />
+                    </span>
+                    <span class="flag">
+                      <input
+                        type="checkbox"
+                        title="Filterable — uncheck to disable filtering and search on this column"
+                        .checked=${n.filterable!==!1}
+                        @change=${a=>this.patchColumn(r,{filterable:a.target.checked?void 0:!1})}
+                      />
+                    </span>
+                    <button type="button" class="icon-btn" title="Move up" ?disabled=${r===0} @click=${()=>this.moveColumn(r,-1)}>
+                      <span class="mi sm">arrow_upward</span>
+                    </button>
+                    <button type="button" class="icon-btn" title="Move down" ?disabled=${r===this.columns.length-1} @click=${()=>this.moveColumn(r,1)}>
+                      <span class="mi sm">arrow_downward</span>
+                    </button>
+                    <button type="button" class="icon-btn row-del" title="Remove column" @click=${()=>this.removeColumn(r)}>
+                      <span class="mi sm">delete</span>
+                    </button>
+                  </div>
+                `})}
+            </div>
+
+            <button type="button" class="add" @click=${this.addColumn}>+ Add column</button>
+            ${this.columnActions.map(n=>v`<button type="button" class="add" title=${n.tooltip??n.label} @click=${()=>void this.runColumnAction(n)}>${n.label}</button>`)}
+            ${this.renderDeleted()} ${this.renameDetected()?v`<div class="hint">Existing rows are re-keyed on save, so renamed fields keep their data.</div>`:""}
+            ${this.errorMsg?v`<div class="error">${this.errorMsg}</div>`:""} ${this.mode==="edit"?this.renderPreview():""}
+          </div>
+        </form>
+      </dialog>
+    `}};Be.styles=[Et,mt,Se`
+      dialog {
+        max-width: 96vw;
+        width: 1180px;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        font-size: 0.85rem;
+        color: #374151;
+      }
+      /* A checkbox reads as one line with its text, not stacked above it. */
+      label.inline {
+        flex-direction: row;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      label.inline input[type='checkbox'] {
+        width: auto;
+        margin: 0;
+      }
+      input,
+      select {
+        font: inherit;
+        padding: 0.4rem 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+      }
+      .columns {
+        display: grid;
+        gap: 0.5rem;
+      }
+      .col-header,
+      .col-row {
+        display: grid;
+        /* drag | 👁 | field | label | type | renderer | script | max | validate | U ! ⇅ ⚲ | up down del */
+        grid-template-columns:
+          1.25rem 1.5rem 1fr 1fr 7rem 7rem 1.5rem 4rem 1.5rem 1.5rem 1.5rem 1.5rem 1.5rem 1.5rem
+          1.5rem 1.5rem;
+        gap: 0.4rem;
+        align-items: center;
+      }
+      .drag-handle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        cursor: grab;
+        user-select: none;
+      }
+      .drag-handle:active {
+        cursor: grabbing;
+      }
+      .drag-handle:hover {
+        color: #374151;
+      }
+      .col-row.drag-source {
+        opacity: 0.4;
+      }
+      .col-row.drop-before {
+        box-shadow: inset 0 3px 0 #3b82f6;
+      }
+      .col-row.drop-after {
+        box-shadow: inset 0 -3px 0 #3b82f6;
+      }
+      .col-row input[type='number'] {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .col-row .flag {
+        display: inline-flex;
+        justify-content: center;
+      }
+      .col-header .flag-label {
+        font-size: 0.7rem;
+        text-align: center;
+      }
+      /* A header that toggles its whole column. Styled to sit in the header row
+         like the plain labels beside it — the hover and the pointer are what say
+         it does something. */
+      .col-header button.flag-head {
+        background: transparent;
+        border: 0;
+        padding: 0;
+        color: inherit;
+        font: inherit;
+        font-size: 0.7rem;
+        cursor: pointer;
+        line-height: 1;
+      }
+      .col-header button.flag-head:hover {
+        color: #374151;
+      }
+      .col-header button.flag-head:focus-visible {
+        outline: 2px solid #3b82f6;
+        outline-offset: 1px;
+      }
+      .col-header {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6b7280;
+      }
+      button.icon-btn {
+        background: transparent;
+        border: 0;
+        color: #6b7280;
+        cursor: pointer;
+        padding: 0;
+        font-size: 1rem;
+      }
+      button.icon-btn:hover:not(:disabled) {
+        color: #111827;
+      }
+      button.icon-btn:disabled {
+        color: #d1d5db;
+        cursor: not-allowed;
+      }
+      /* A column that already carries a script — blue so it is obvious which
+       columns are computed without opening each editor. The glyph itself
+       never changes (always the pencil); colour alone carries the state. */
+      button.icon-btn.has-script {
+        color: #2563eb;
+      }
+      /* Without this, the plain :hover rule above (color: #111827) would win
+       and a script-set pencil would go near-black on hover, losing the blue
+       state cue. A darker blue keeps hover feedback without discarding it. */
+      button.icon-btn.has-script:hover:not(:disabled) {
+        color: #1d4ed8;
+      }
+      /* The validation pencil is the same glyph in the next column along, so
+       its "set" state needs a colour of its OWN — two blue pencils would read
+       as one wide control. Amber says "this column polices its edits". */
+      button.icon-btn.has-validate {
+        color: #d97706;
+      }
+      button.icon-btn.has-validate:hover:not(:disabled) {
+        color: #b45309;
+      }
+      button.row-del {
+        color: #9ca3af;
+        font-size: 1.1rem;
+      }
+      button.row-del:hover:not(:disabled) {
+        color: #ef4444;
+      }
+      /* The removed-columns offer: chips on one wrapping line under the list. */
+      .deleted-cols {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.4rem;
+        margin-top: 0.35rem;
+      }
+      .deleted-cols button.add {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.85rem;
+      }
+      button.add {
+        align-self: start;
+        background: #f3f4f6;
+        border: 1px dashed #9ca3af;
+        padding: 0.4rem 0.75rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+      }
+      .error {
+        color: #ef4444;
+        font-size: 0.85rem;
+      }
+      .notice {
+        background: #fef9c3;
+        border: 1px solid #fde047;
+        color: #713f12;
+        border-radius: 0.35rem;
+        padding: 0.45rem 0.6rem;
+        font-size: 0.85rem;
+        margin-bottom: 0.6rem;
+      }
+      .hint {
+        color: #6b7280;
+        font-size: 0.78rem;
+      }
+      .mi.sm {
+        font-size: 0.95rem;
+      }
+      /* Live preview table: shows the first 100 rows so the user can see
+       which cells would fail validation under the edited column specs. */
+      .preview {
+        border-top: 1px solid #e5e7eb;
+        margin-top: 0.5rem;
+        max-height: 36vh;
+        overflow: auto;
+      }
+      .preview h3 {
+        margin: 0;
+        padding: 0.6rem 0.4rem 0.4rem;
+        font-size: 0.85rem;
+        color: #6b7280;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+      .preview table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.8rem;
+      }
+      .preview th,
+      .preview td {
+        border: 1px solid #e5e7eb;
+        padding: 0.2rem 0.4rem;
+        text-align: left;
+        vertical-align: top;
+        white-space: nowrap;
+        max-width: 18rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .preview th {
+        background: #f9fafb;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+      }
+      .preview td.violation {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .preview .empty {
+        padding: 0.75rem 0.4rem;
+        color: #9ca3af;
+        font-style: italic;
+      }
+    `];Ze([j()],Be.prototype,"mode",2);Ze([j()],Be.prototype,"editTableId",2);Ze([j()],Be.prototype,"name",2);Ze([j()],Be.prototype,"tableTitle",2);Ze([j()],Be.prototype,"tableReadonly",2);Ze([j()],Be.prototype,"deletedFields",2);Ze([j()],Be.prototype,"columns",2);Ze([j()],Be.prototype,"errorMsg",2);Ze([j()],Be.prototype,"noticeMsg",2);Ze([j()],Be.prototype,"dragSrcIdx",2);Ze([j()],Be.prototype,"dropTargetIdx",2);Ze([j()],Be.prototype,"dropEdge",2);Ze([j()],Be.prototype,"previewRows",2);Ze([j()],Be.prototype,"previewState",2);Ze([j()],Be.prototype,"rendererOptions",2);Ze([j()],Be.prototype,"columnActions",2);Be=Ze([Re("new-table-dialog")],Be);function K2(e){return e==null?"":typeof e=="string"?e:typeof e=="boolean"?e?"true":"false":String(e)}function W2(e,t,n){const r=t==null||typeof t=="string"&&t.trim()==="";if(e.notnull&&r)return`${e.label}: empty`;if(r)return null;if(e.type==="number"&&typeof t!="number"){const i=Number(t);if(!Number.isFinite(i))return`${e.label}: not a number`}if(e.type==="boolean"&&typeof t!="boolean"&&!/^(true|false|yes|no|0|1)$/i.test(String(t)))return`${e.label}: not boolean`;if((e.type==="date"||e.type==="datetime")&&!r){const i=new Date(String(t));if(Number.isNaN(i.getTime()))return`${e.label}: not a date`}if(e.max!=null&&e.max>0){if(typeof t=="string"&&t.length>e.max)return`${e.label}: length > ${e.max}`;if(typeof t=="number"&&t>e.max)return`${e.label}: > ${e.max}`}return e.unique&&n?.has(t)?`${e.label}: duplicate`:null}function G2(e,t){const n=[];for(const r of e)if(r.notnull&&t.forEach((i,s)=>{const o=i.data[r.field];(o==null||typeof o=="string"&&o.trim()==="")&&n.push(`Row ${s+1}: ${r.label} is empty.`)}),r.max!=null&&r.max>0&&t.forEach((i,s)=>{const o=i.data[r.field];typeof o=="string"&&o.length>r.max?n.push(`Row ${s+1}: ${r.label} length ${o.length} > max ${r.max}.`):typeof o=="number"&&o>r.max&&n.push(`Row ${s+1}: ${r.label} value ${o} > max ${r.max}.`)}),r.unique){const i=new Map;t.forEach((s,o)=>{const a=s.data[r.field];a==null||a===""||(i.has(a)?n.push(`Row ${o+1}: ${r.label} duplicates row ${i.get(a)+1} ("${String(a)}").`):i.set(a,o))})}return n}var Y2=Object.defineProperty,Q2=Object.getOwnPropertyDescriptor,ut=(e,t,n,r)=>{for(var i=r>1?void 0:r?Q2(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&Y2(t,n,i),i};const J2='<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58 0-.29-.01-1.04-.02-2.05-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.21.09 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.34-5.47-5.95 0-1.31.47-2.39 1.24-3.23-.12-.3-.54-1.53.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.77.84 1.24 1.92 1.24 3.23 0 4.62-2.81 5.64-5.49 5.94.43.37.81 1.1.81 2.22 0 1.6-.01 2.9-.01 3.29 0 .32.22.7.83.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z"/></svg>',X2=v`<span class="mi sm">extension</span>`,Dh="plugin:catalogUrls";function vs(){return new URL("/easydbaccess3/plugins/catalog.json",location.origin).toString()}const Z2=[["installed","Installed"],["built-in","Built-in"],["fixed","Fixed"]],Ig=[["importer","Importer"],["exporter","Exporter"],["cell-renderer","Cell renderer"],["sync","Sync"],["source","Source"],["ui","UI"]],eT=new Map(Ig),tT={off:"Filter by status — click: only enabled → only disabled → off",on:"Showing only enabled plugins — click to show only disabled",not:"Showing only disabled plugins — click to clear"};let Xe=class extends $e{constructor(){super(...arguments),this.urls=[],this.records=new Map,this.addUrl="",this.catalog=[],this.catalogError=null,this.serverCatalog=[],this.serverCatalogError=null,this.installing=new Set,this.catalogUrls=[vs()],this.activeCatalogUrl=vs(),this.search="",this.filterStates=new Map,this.typeFilters=new Map,this.statusFilter=void 0,this.dialogEl=null}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e)}async open(){const e=await J(),t=await e.store.workspaces.findOne(e.workspaceId);this.urls=t?.pluginUrls??[];const n=await e.store.plugins.find();this.records=new Map(n.map(s=>[s.url,s]));const r=await e.store.settings.findOne(Dh),i=Array.isArray(r?.value)?r.value.filter(s=>typeof s=="string"):[];this.catalogUrls=i.length>0?i:[vs()],this.activeCatalogUrl=this.catalogUrls[0]??vs(),this.addUrl="",this.search="",this.filterStates=new Map,this.typeFilters=new Map,this.statusFilter=void 0,await this.updateComplete,this.dialogEl?.showModal(),this.refreshCatalog(this.activeCatalogUrl),this.refreshServerRegistry()}async refreshCatalog(e){try{const t=await fetch(e,{cache:"no-store"});if(!t.ok)throw new Error(`HTTP ${t.status}`);const n=await t.json(),r=Array.isArray(n.plugins)?n.plugins:[];this.catalog=r.map(i=>({...i,absUrl:new URL(i.url,e).toString()})),this.catalogError=null}catch(t){this.catalog=[],this.catalogError=t.message}}async refreshServerRegistry(){const n=(await(await J()).store.settings.findOne("server-sync:url"))?.value;if(typeof n!="string"||n.length===0){this.serverCatalog=[],this.serverCatalogError=null;return}const i=`${n.replace(/\/+$/,"")}/plugins/registry`;try{const s=await fetch(i,{cache:"no-store"});if(!s.ok)throw new Error(`HTTP ${s.status}`);const o=await s.json(),a=Array.isArray(o.plugins)?o.plugins:[];this.serverCatalog=a.map(c=>({...c,absUrl:new URL(c.url,i).toString()})),this.serverCatalogError=null}catch(s){this.serverCatalog=[],this.serverCatalogError=s.message}}async reloadCatalogSource(){const e=this.activeCatalogUrl.trim();e&&(this.catalogUrls.includes(e)||(this.catalogUrls=[...this.catalogUrls,e],await(await J()).store.settings.upsert({name:Dh,value:this.catalogUrls})),await this.refreshCatalog(e))}close(){this.dialogEl?.close()}async addPlugin(e){e.preventDefault();const t=this.addUrl.trim();if(!t)return;if(!/^https?:\/\//i.test(t)){await(await J()).api.ui.dialogs.alert("Plugin URL must be an absolute http(s) URL.","Invalid URL");return}if(this.urls.includes(t))return;this.urls=[...this.urls,t];const n=await J();await n.store.workspaces.patch(n.workspaceId,{pluginUrls:this.urls}),await n.store.plugins.upsert({url:t,enabled:!0,lastFetched:0}),this.records=new Map(this.records),this.addUrl=""}async toggleEnabled(e,t){const n=await J(),r=this.records.get(e);await n.store.plugins.upsert({...r??{url:e,lastFetched:0},enabled:t}),this.records=new Map(this.records.set(e,{...r,url:e,enabled:t,lastFetched:r?.lastFetched??0}))}async removePlugin(e){const t=await J();this.urls=this.urls.filter(n=>n!==e),await t.store.workspaces.patch(t.workspaceId,{pluginUrls:this.urls}),await t.store.plugins.remove(e),this.records.delete(e),this.records=new Map(this.records)}reload(){location.reload()}async toggleBuiltin(e,t){const n=await J(),r=Ns(e),i=this.records.get(r);await n.store.plugins.upsert({...i??{url:r,lastFetched:0},url:r,enabled:t,lastFetched:i?.lastFetched??0}),this.records=new Map(this.records.set(r,{...i,url:r,enabled:t,lastFetched:i?.lastFetched??0}))}async onRowToggle(e,t){if(e.categories.has("built-in"))await this.toggleBuiltin(e.id,t);else if(e.url)await this.toggleEnabled(e.url,t);else return;(await J()).api.ui.dialogs.toast("Reload to apply this change.",{kind:"info",title:"Plugin updated"})}async installFromCatalog(e){if(this.urls.includes(e.absUrl)||this.installing.has(e.absUrl))return;this.installing=new Set(this.installing).add(e.absUrl);const t=await J();try{const n=await fetch(e.absUrl,{cache:"no-store"});if(!n.ok)throw new Error(`HTTP ${n.status} ${n.statusText}`);const r=await n.text();await t.store.workspaces.patch(t.workspaceId,{pluginUrls:[...this.urls,e.absUrl]}),await t.store.plugins.upsert({url:e.absUrl,enabled:!0,lastFetched:Date.now(),cachedBody:r});const i=new Blob([r],{type:"text/javascript"}),s=URL.createObjectURL(i);try{const a=await import(s);await a.init?.(t.api),await a.load?.(t.api)}finally{setTimeout(()=>URL.revokeObjectURL(s),5e3)}t.events.emit("app:ready",{workspaceId:t.workspaceId}),this.urls=[...this.urls,e.absUrl];const o=await t.store.plugins.find();this.records=new Map(o.map(a=>[a.url,a])),t.api.ui.dialogs.toast(`Activated "${e.name}".`,{kind:"success",title:"Plugin installed"})}catch(n){await t.store.plugins.upsert({url:e.absUrl,enabled:!0,lastFetched:Date.now(),lastError:`install: ${n.message}`}),t.api.ui.dialogs.toast(`Could not install ${e.name}: ${n.message}`,{kind:"error",title:"Plugin error"})}finally{const n=new Set(this.installing);n.delete(e.absUrl),this.installing=n}}renderTri(e,t,n,r="",i){const s=i?i[t??"off"]:t==="on"?`Showing only ${e} plugins — click to exclude`:t==="not"?`Hiding ${e} plugins — click to clear`:`Filter by ${e} — click: show only → exclude → off`;return v`
+      <button type="button" class=${`tri${r?` ${r}`:""}${t?` ${t}`:""}`} title=${s} aria-pressed=${t!==void 0} @click=${n}>
+        <span class="tri-mark">${t==="on"?"✓":t==="not"?"≠":""}</span>${e}
+      </button>
+    `}cycleState(e,t){const n=e.get(t),r=new Map(e);return n===void 0?r.set(t,"on"):n==="on"?r.set(t,"not"):r.delete(t),r}cycleFilter(e){this.filterStates=this.cycleState(this.filterStates,e)}cycleTypeFilter(e){this.typeFilters=this.cycleState(this.typeFilters,e)}cycleStatusFilter(){this.statusFilter=this.statusFilter===void 0?"on":this.statusFilter==="on"?"not":void 0}buildRows(){const e=new Map,t=new Map;for(const{id:n,meta:r}of a2){const i=r.fixed?!0:this.records.get(Ns(n))?.enabled!==!1,s=!r.fixed&&Tt==="all-optional",o=r.fixed?["built-in","fixed","installed"]:["built-in","installed"];e.set(`builtin:${n}`,{id:n,name:r.name,...r.type?{type:r.type}:{},...r.description?{meta:r.description}:{meta:"Built-in plugin"},...r.author?{author:r.author}:{},...r.icon?{icon:r.icon}:{},...r.repo?{repo:r.repo}:{},categories:new Set(o),enabled:i,status:i&&!s?"enabled":"disabled",fixed:!!r.fixed,...s?{skipped:!0}:{}})}for(const n of[...this.catalog,...this.serverCatalog]){const r=this.urls.includes(n.absUrl),i=this.records.get(n.absUrl),s=r?["available","installed"]:["available"],o=e.get(n.id),a=i?.enabled!==!1,c=r&&Tt!=="off";e.set(n.id,{id:n.id,name:n.name,url:n.absUrl,...n.type?{type:n.type}:{},...n.icon?{icon:n.icon}:{},...n.repo?{repo:n.repo}:{},...n.author?{author:n.author}:{},meta:n.description??n.absUrl,categories:o?new Set([...o.categories,...s]):new Set(s),enabled:a,...r?{status:a&&!c?"enabled":"disabled"}:{},...c?{skipped:!0}:{},installing:this.installing.has(n.absUrl)}),t.set(n.absUrl,n.id)}for(const n of this.urls){const r=t.get(n);if(r){e.get(r).categories.add("installed");continue}const i=this.records.get(n),s=i?.lastFetched?new Date(i.lastFetched).toLocaleString():"never",o=i?.enabled!==!1;e.set(`url:${n}`,{id:n,name:n,urlOnly:!0,url:n,meta:i?.lastError??`Last fetched: ${s}`,metaIsError:!!i?.lastError,categories:new Set(["installed"]),enabled:o,status:o&&Tt==="off"?"enabled":"disabled",...Tt!=="off"?{skipped:!0}:{}})}return[...e.values()]}get filteredRows(){const e=this.buildRows(),t=this.search.trim().toLowerCase(),n=[],r=[];for(const[c,d]of this.filterStates)(d==="on"?n:r).push(c);const i=[],s=[];for(const[c,d]of this.typeFilters)(d==="on"?i:s).push(c);const o=this.statusFilter==="on"?"enabled":this.statusFilter==="not"?"disabled":void 0,a=e.filter(c=>!(n.length&&!n.some(d=>c.categories.has(d))||r.some(d=>c.categories.has(d))||i.length&&!(c.type&&i.includes(c.type))||c.type&&s.includes(c.type)||o&&c.status!==o));return t?a.filter(c=>[c.id,c.name,c.type,c.meta,c.author].some(d=>d?.toLowerCase().includes(t))):a}renderRow(e){const t=e.categories.has("built-in")||e.categories.has("installed"),n=!!e.url&&e.categories.has("installed"),r=!!e.url&&!e.categories.has("installed");return v`
+      <div class=${`row${e.categories.has("built-in")?" builtin":""}${e.metaIsError?" error":""}${e.skipped?" skipped":""}`}>
+        <span class="row-icon">${e.icon?ar(e.icon):X2}</span>
+        <div class="row-main">
+          <div class=${`row-title${e.urlOnly?" mono":""}`}>
+            ${e.name}${e.id!==e.name?v`<span class="row-id">${e.id}</span>`:""}${e.type?v`<span class="row-type" title="Plugin type">${eT.get(e.type)??e.type}</span>`:""}${e.skipped?v`<span class="row-skipped" title="Safe mode kept this plugin from loading this session — your saved setting is unchanged">skipped</span>`:""}
+          </div>
+          ${e.meta?v`<div class=${`meta${e.metaIsError?" err":""}`}>${e.meta}</div>`:""}
+        </div>
+        <div class="row-author">${e.author??""}</div>
+        ${e.repo?v`<a class="row-repo" href=${e.repo} target="_blank" rel="noopener noreferrer" title="View source on GitHub">${ar(J2)}</a>`:v`<span></span>`}
+        ${e.fixed?v`<span class="mi sm lock-icon" title="Always on — cannot be disabled">lock</span>`:t?v`<label class="switch" title=${e.skipped?"Your saved setting — safe mode is what stopped this plugin loading now":"Enable / disable"}>
+                <input type="checkbox" .checked=${e.enabled} @change=${i=>this.onRowToggle(e,i.target.checked)} />
+                <span class="slider"></span>
+              </label>`:v`<span></span>`}
+        ${r?v`<button type="button" class="install" ?disabled=${e.installing} @click=${()=>this.installFromCatalog({absUrl:e.url,name:e.name})}>
+              <span class="mi sm">${e.installing?"hourglass_empty":"download"}</span>
+              ${e.installing?"Installing…":"Install"}
+            </button>`:n?v`<button type="button" class="uninstall" @click=${()=>this.removePlugin(e.url)}><span class="mi sm">delete</span> Uninstall</button>`:v`<span></span>`}
+      </div>
+    `}render(){const e=this.filteredRows;return v`
+      <dialog @cancel=${this.close} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${this.close}>
+          <span class="mi sm">close</span>
+        </button>
+        <form @submit=${this.addPlugin}>
+          <div class="dialog-header">
+            <h2>Plugins</h2>
+            <div class="header-actions">
+              <button type="button" class="ghost" @click=${this.close}>Close</button>
+              <button type="button" class="primary" @click=${this.reload}><span class="mi sm">refresh</span> Reload to apply</button>
+            </div>
+          </div>
+          <div class="dialog-body">
+            <p class="hint">Plugins are JavaScript modules loaded by URL into this workspace. Enable/disable changes take effect after reload; installing a plugin activates it immediately.</p>
+            ${Tt!=="off"?v`<p class="safemode">
+                  <strong>Safe mode is on.</strong>
+                  ${Tt==="all-optional"?v`<code>?safemode</code> skipped every URL plugin and every optional built-in for this session.`:v`<code>?safemode1</code> skipped every URL plugin for this session.`}
+                  Plugins marked <span class="row-skipped">skipped</span> are not running. The toggles below still show — and change — your saved settings, which safe mode never touches. Reload
+                  without the flag to run them again.
+                </p>`:""}
+
+            <div class="filters">
+              <div class="chips">
+                ${Z2.map(([t,n])=>this.renderTri(n,this.filterStates.get(t),()=>this.cycleFilter(t)))}
+                ${this.renderTri("Enabled",this.statusFilter,()=>this.cycleStatusFilter(),"status",tT)}
+              </div>
+              <div class="search">
+                <input type="text" placeholder="Search plugins…" .value=${this.search} @input=${t=>this.search=t.target.value} />
+              </div>
+            </div>
+
+            <div class="type-filters">
+              <span class="filter-label">Type</span>
+              ${Ig.map(([t,n])=>this.renderTri(n,this.typeFilters.get(t),()=>this.cycleTypeFilter(t)))}
+            </div>
+
+            <div class="catalog-source">
+              <input
+                type="text"
+                list="catalog-url-options"
+                .value=${this.activeCatalogUrl}
+                @input=${t=>this.activeCatalogUrl=t.target.value}
+                placeholder="Catalog source URL"
+              />
+              <datalist id="catalog-url-options">${this.catalogUrls.map(t=>v`<option value=${t}></option>`)}</datalist>
+              <button type="button" class="ghost" @click=${this.reloadCatalogSource}><span class="mi sm">refresh</span> Reload</button>
+            </div>
+            ${this.catalogError?v`<div class="meta err">Catalog unavailable: ${this.catalogError}</div>`:""}
+            ${this.serverCatalogError?v`<div class="meta err">Server registry unavailable: ${this.serverCatalogError}</div>`:""}
+
+            <div class="plugin-list">${e.length===0?v`<p class="hint">No plugins match the current filters/search.</p>`:""} ${e.map(t=>this.renderRow(t))}</div>
+
+            <div class="add">
+              <input type="text" placeholder="https://example.com/my-plugin.js" .value=${this.addUrl} @input=${t=>this.addUrl=t.target.value} />
+              <button type="submit" class="primary"><span class="mi sm">add</span> Add</button>
+            </div>
+          </div>
+        </form>
+      </dialog>
+    `}};Xe.styles=[Et,mt,Se`
+      dialog {
+        width: 720px;
+        max-width: 94vw;
+      }
+      p.hint {
+        margin: 0;
+        color: #6b7280;
+        font-size: 0.85rem;
+      }
+
+      .filters {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem;
+      }
+      .filters .chips,
+      .type-filters {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .type-filters .filter-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #9ca3af;
+        margin-right: 0.1rem;
+      }
+      /* Tri-state filter chip: off (neutral) → on (blue, ✓) → not (red, ≠). */
+      .filters .tri,
+      .type-filters .tri {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.8rem;
+        padding: 0.2rem 0.6rem;
+        border-radius: 999px;
+        border: 1px solid #d1d5db;
+        background: #fff;
+        color: #6b7280;
+        cursor: pointer;
+        user-select: none;
+      }
+      .filters .tri .tri-mark,
+      .type-filters .tri .tri-mark {
+        font-weight: 700;
+        line-height: 1;
+      }
+      .filters .tri.on,
+      .type-filters .tri.on {
+        border-color: #2563eb;
+        background: #eff6ff;
+        color: #1d4ed8;
+      }
+      .filters .tri.not,
+      .type-filters .tri.not {
+        border-color: #dc2626;
+        background: #fef2f2;
+        color: #b91c1c;
+      }
+      /* Safe-mode notice: explains why nothing is loaded despite the toggles. */
+      p.safemode {
+        margin: 0;
+        padding: 0.5rem 0.7rem;
+        border: 1px solid #fcd34d;
+        background: #fffbeb;
+        color: #92400e;
+        border-radius: 0.35rem;
+        font-size: 0.85rem;
+      }
+      .row-skipped {
+        display: inline-block;
+        font-size: 0.68rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        color: #92400e;
+        background: #fef3c7;
+        border: 1px solid #fcd34d;
+        border-radius: 0.25rem;
+        padding: 0.05rem 0.35rem;
+        margin-left: 0.35rem;
+        vertical-align: middle;
+      }
+      /* A toggle whose plugin isn't running this boot: still editable (it edits
+         the persisted setting) but dimmed so it doesn't read as "active". */
+      .row.skipped .switch {
+        opacity: 0.55;
+      }
+      .row-type {
+        display: inline-block;
+        font-size: 0.68rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        color: #6b7280;
+        background: #e5e7eb;
+        border-radius: 0.25rem;
+        padding: 0.05rem 0.35rem;
+        margin-left: 0.35rem;
+        vertical-align: middle;
+      }
+      .search {
+        flex: 1;
+        min-width: 160px;
+      }
+      .search input {
+        width: 100%;
+        font: inherit;
+        padding: 0.4rem 0.6rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        box-sizing: border-box;
+      }
+
+      .catalog-source {
+        display: flex;
+        gap: 0.4rem;
+        align-items: center;
+      }
+      .catalog-source input {
+        flex: 1;
+        font: inherit;
+        font-size: 0.85rem;
+        padding: 0.35rem 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+      }
+
+      .plugin-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        max-height: 42vh;
+        overflow: auto;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 22px 1fr auto 22px 44px auto;
+        gap: 0.6rem;
+        align-items: center;
+        padding: 0.45rem 0.6rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.3rem;
+        background: #f9fafb;
+      }
+      .row.builtin {
+        background: #f3f4f6;
+      }
+      .row.error {
+        background: #fef2f2;
+        border-color: #fecaca;
+      }
+      .row-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        color: #6b7280;
+      }
+      .row-icon svg {
+        width: 100%;
+        height: 100%;
+      }
+      .row-main {
+        min-width: 0;
+      }
+      .row-title {
+        font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row-title.mono {
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        font-weight: 400;
+        font-size: 0.8rem;
+      }
+      .row-id {
+        font-weight: 400;
+        color: #9ca3af;
+        font-size: 0.75rem;
+        margin-left: 0.35rem;
+      }
+      .row-author {
+        font-size: 0.78rem;
+        color: #6b7280;
+        max-width: 110px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .row-repo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        color: #6b7280;
+      }
+      .row-repo svg {
+        width: 100%;
+        height: 100%;
+      }
+      .row-repo:hover {
+        color: #111;
+      }
+      .lock-icon {
+        color: #9ca3af;
+        text-align: center;
+      }
+      .meta {
+        font-size: 0.75rem;
+        color: #6b7280;
+      }
+      .meta.err {
+        color: #b91c1c;
+      }
+
+      /* iOS-style toggle switch. */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 36px;
+        height: 20px;
+        flex: none;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .switch .slider {
+        position: absolute;
+        inset: 0;
+        background-color: #d1d5db;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: background-color 0.15s ease;
+      }
+      .switch .slider::before {
+        content: '';
+        position: absolute;
+        height: 16px;
+        width: 16px;
+        left: 2px;
+        bottom: 2px;
+        background-color: white;
+        border-radius: 50%;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        transition: transform 0.15s ease;
+      }
+      .switch input:checked + .slider {
+        background-color: #3b82f6;
+      }
+      .switch input:checked + .slider::before {
+        transform: translateX(16px);
+      }
+      .switch input:disabled + .slider {
+        background-color: #e5e7eb;
+        cursor: default;
+      }
+      .switch.sm {
+        width: 30px;
+        height: 17px;
+      }
+      .switch.sm .slider::before {
+        height: 13px;
+        width: 13px;
+      }
+      .switch.sm input:checked + .slider::before {
+        transform: translateX(13px);
+      }
+
+      button.install,
+      button.uninstall {
+        border: 0;
+        padding: 0.3rem 0.7rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        font: inherit;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        white-space: nowrap;
+      }
+      button.install {
+        background: #10b981;
+        color: white;
+      }
+      button.install:hover {
+        background: #059669;
+      }
+      button.install:disabled {
+        background: #d1d5db;
+        cursor: default;
+      }
+      button.uninstall {
+        background: transparent;
+        border: 1px solid #d1d5db;
+        color: #6b7280;
+      }
+      button.uninstall:hover {
+        background: #fef2f2;
+        border-color: #fecaca;
+        color: #b91c1c;
+      }
+
+      .add {
+        display: flex;
+        gap: 0.4rem;
+      }
+      .add input {
+        flex: 1;
+        font: inherit;
+        padding: 0.4rem 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+      }
+    `];ut([j()],Xe.prototype,"urls",2);ut([j()],Xe.prototype,"records",2);ut([j()],Xe.prototype,"addUrl",2);ut([j()],Xe.prototype,"catalog",2);ut([j()],Xe.prototype,"catalogError",2);ut([j()],Xe.prototype,"serverCatalog",2);ut([j()],Xe.prototype,"serverCatalogError",2);ut([j()],Xe.prototype,"installing",2);ut([j()],Xe.prototype,"catalogUrls",2);ut([j()],Xe.prototype,"activeCatalogUrl",2);ut([j()],Xe.prototype,"search",2);ut([j()],Xe.prototype,"filterStates",2);ut([j()],Xe.prototype,"typeFilters",2);ut([j()],Xe.prototype,"statusFilter",2);Xe=ut([Re("plugin-manager-dialog")],Xe);var nT=Object.defineProperty,rT=Object.getOwnPropertyDescriptor,Zt=(e,t,n,r)=>{for(var i=r>1?void 0:r?rT(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&nT(t,n,i),i};const ti="__general__";let ht=class extends $e{constructor(){super(...arguments),this.tabs=[],this.active=ti,this.values={},this.placements={},this.secretsText="",this.workspaceTitle="",this.secretError="",this.openHelp="",this.dialogEl=null,this.attemptClose=e=>{const t=this.invalidSecrets();if(t.length>0){e?.preventDefault();const r=t[0];this.active=r.tab.id,this.secretError=`“${r.field.label}” must be empty or a \${secret:name} reference. Move the value into the secrets store (General tab) and reference it, so the raw secret is never saved or synced.`;return}const n=this.danglingSecrets();if(n.length>0){e?.preventDefault();const r=n[0];this.active=r.tab.id;const i=r.names.map(s=>`“${s}”`).join(", ");this.secretError=`“${r.field.label}” references ${i}, which the secrets store does not have. Add it in the General tab or correct the name — an unknown reference is passed on as the literal \${secret:name} text.`;return}this.secretError="",this.dialogEl?.close()},this.onSubmit=e=>{e.preventDefault(),this.attemptClose()}}firstUpdated(){this.dialogEl=this.shadowRoot?.querySelector("dialog")??null;const e=this.shadowRoot?.querySelector(".dialog-header");this.dialogEl&&e&&bt(this.dialogEl,e),this.dialogEl&&Xt("settings",this.dialogEl)}async open(){const e=await J(),t=[...e.registries.settings];this.tabs=t.map(([s,o])=>({id:s,name:o.name,fields:o.fields}));const n=await e.store.workspaces.findOne(e.workspaceId);this.workspaceTitle=n?.title??"";const r={},i={};for(const s of this.tabs)for(const o of s.fields){const a=`${s.id}:${o.key}`,c=await e.api.settings.placement(s.id,o.key);c==="user"?(r[a]=zs(a),i[a]="user"):c==="workspace"?(r[a]=(await e.store.settings.findOne(a))?.value,i[a]="workspace"):(r[a]=o.default,i[a]=o.scope??"workspace")}this.values=r,this.placements=i,this.secretsText=di(),this.active=ti,await this.updateComplete,this.dialogEl?.showModal()}static rawSecret(e){return typeof e=="string"&&e!==""&&!e.includes("${secret:")}invalidSecrets(){const e=[];for(const t of this.tabs)for(const n of t.fields)n.type==="secret"&&ht.rawSecret(this.values[`${t.id}:${n.key}`])&&e.push({tab:t,field:n});return e}static secretRefs(e){return typeof e!="string"?[]:[...e.matchAll(/\$\{secret:([^}]*)\}/g)].map(t=>(t[1]??"").trim())}missingRefs(e){const t=new Set(Object.keys(dr(this.secretsText)));return ht.secretRefs(e).filter(n=>!t.has(n))}danglingSecrets(){const e=[];for(const t of this.tabs)for(const n of t.fields){const r=this.missingRefs(this.values[`${t.id}:${n.key}`]);r.length>0&&e.push({tab:t,field:n,names:r})}return e}async setValue(e,t,n){const r=`${e.id}:${t.key}`;this.values={...this.values,[r]:n},this.clearSecretErrorIfFixed(),await(await J()).api.settings.set(e.id,t.key,n,this.placements[r]),_1(e.id,t.key)}async toggleScope(e,t,n){const r=`${e.id}:${t.key}`,i=n?"user":"workspace";this.placements={...this.placements,[r]:i},await(await J()).api.settings.set(e.id,t.key,this.values[r],i)}clearSecretErrorIfFixed(){this.secretError&&this.invalidSecrets().length===0&&this.danglingSecrets().length===0&&(this.secretError="")}onSecretsInput(e){this.secretsText=e.target.value,Yh(this.secretsText),this.clearSecretErrorIfFixed()}downloadSecrets(){const e=new Blob([this.secretsText],{type:"text/plain;charset=utf-8"}),t=URL.createObjectURL(e),n=document.createElement("a");n.href=t,n.download="secrets.txt",n.click(),URL.revokeObjectURL(t)}async setWorkspaceTitle(e){this.workspaceTitle=e;const t=await J();await t.store.workspaces.patch(t.workspaceId,{title:e.trim()||void 0})}renderControl(e,t){const n=`${e.id}:${t.key}`,r=this.values[n];switch(t.type){case"text":return v`<textarea .value=${String(r??"")} @change=${i=>this.setValue(e,t,i.target.value)}></textarea>`;case"number":return v`<input
+          type="number"
+          .value=${r==null?"":String(r)}
+          @change=${i=>{const s=i.target.value;this.setValue(e,t,s===""?void 0:Number(s))}}
+        />`;case"boolean":return v`<label class="scope"><input type="checkbox" .checked=${!!r} @change=${i=>this.setValue(e,t,i.target.checked)} /> enabled</label>`;case"date":return v`<input type="date" .value=${String(r??"")} @change=${i=>this.setValue(e,t,i.target.value)} />`;case"secret":return this.renderSecretControl(e,t,r);case"option":return v`<div class="radios">
+          ${(t.options??[]).map(i=>v`<label><input type="radio" name=${n} .checked=${r===i} @change=${()=>this.setValue(e,t,i)} />${i}</label>`)}
+        </div>`;case"selection":{const i=Array.isArray(r)?r:[];return v`<div class="checks">
+          ${(t.options??[]).map(s=>v`<label
+                ><input
+                  type="checkbox"
+                  .checked=${i.includes(s)}
+                  @change=${o=>{const c=o.target.checked?[...i,s]:i.filter(d=>d!==s);this.setValue(e,t,c)}}
+                />${s}</label
+              >`)}
+        </div>`}case"string":default:return v`<input type="text" .value=${String(r??"")} @change=${i=>this.setValue(e,t,i.target.value)} />`}}renderSecretControl(e,t,n){const r=Object.keys(dr(this.secretsText)),i=ht.rawSecret(n)||this.missingRefs(n).length>0;return v`<div class="secret-row">
+      <input
+        type="text"
+        class=${i?"invalid":""}
+        placeholder="value or \${secret:name}"
+        .value=${String(n??"")}
+        @change=${s=>this.setValue(e,t,s.target.value)}
+      />
+      ${r.length>0?v`<select
+            title="Insert a secret reference"
+            @change=${s=>{const o=s.target.value;o&&this.setValue(e,t,`\${secret:${o}}`),s.target.value=""}}
+          >
+            <option value="">🔑 secret…</option>
+            ${r.map(s=>v`<option value=${s}>${s}</option>`)}
+          </select>`:X}
+    </div>`}renderField(e,t){const n=`${e.id}:${t.key}`,r=!!(t.help||t.helpUrl),i=this.openHelp===n;return v`<div class="field">
+      <div class="field-head">
+        <label>${t.label}</label>
+        ${r?v`<button
+              type="button"
+              class="help-btn"
+              aria-label=${`Help for ${t.label}`}
+              aria-expanded=${i?"true":"false"}
+              title=${t.help??"More about this setting"}
+              @click=${()=>this.openHelp=i?"":n}
+            >
+              <span class="mi sm" aria-hidden="true">info</span>
+            </button>`:X}
+        <label class="scope" title="Store on this device only (not synced)">
+          <input type="checkbox" .checked=${this.placements[n]==="user"} @change=${s=>this.toggleScope(e,t,s.target.checked)} />
+          user
+        </label>
+      </div>
+      ${r&&i?v`<div class="help-panel">
+            ${t.help?v`<p>${t.help}</p>`:X} ${t.helpUrl?v`<a href=${t.helpUrl} target="_blank" rel="noopener noreferrer">${t.helpLinkLabel||iT(t.helpUrl)}</a>`:X}
+          </div>`:X}
+      ${this.renderControl(e,t)} ${t.description?v`<p class="desc">${t.description}</p>`:X}
+    </div>`}renderGeneral(){return v`
+      <h3>General</h3>
+      <p class="blurb">
+        Workspace settings sync with this workspace; values marked
+        <em>user</em> stay on this device only.
+      </p>
+      <div class="field">
+        <div class="field-head"><label>Workspace title</label></div>
+        <p class="desc">Shown in the header instead of "easyDBAccess". Leave blank to use the default.</p>
+        <input type="text" placeholder="easyDBAccess" .value=${this.workspaceTitle} @change=${e=>this.setWorkspaceTitle(e.target.value)} />
+      </div>
+      <div class="field">
+        <div class="field-head"><label>Secrets</label></div>
+        <p class="desc">
+          Cross-workspace, device-local. One <code>name: value</code> per line. Reference a secret from any field with <code>\${secret:name}</code>. Drag a <code>secrets.txt</code> onto the app to
+          re-import.
+        </p>
+        <textarea placeholder="githubPAT: ghp_…" .value=${this.secretsText} @input=${this.onSecretsInput}></textarea>
+        <div class="secrets-actions">
+          <button type="button" class="ghost" ?disabled=${this.secretsText.trim().length===0} @click=${this.downloadSecrets}><span class="mi sm">download</span> Download secrets.txt</button>
+        </div>
+      </div>
+    `}renderPanel(){if(this.active===ti)return this.renderGeneral();const e=this.tabs.find(t=>t.id===this.active);return e?v`
+      <h3>${e.name}</h3>
+      ${e.fields.length===0?v`<p class="empty">This plugin registered no settings.</p>`:e.fields.map(t=>this.renderField(e,t))}
+    `:X}render(){return v`
+      <dialog @cancel=${this.attemptClose} @keydown=${gt}>
+        <button type="button" class="close-x" title="Close" @click=${()=>this.attemptClose()}>
+          <span class="mi sm">close</span>
+        </button>
+        <form @submit=${this.onSubmit}>
+          <div class="dialog-header">
+            <h2>Settings</h2>
+            <div class="header-actions">
+              <button type="submit" class="primary">Done</button>
+            </div>
+          </div>
+          ${this.secretError?v`<div class="secret-error" role="alert">${this.secretError}</div>`:X}
+          <div class="dialog-body">
+            <div class="layout">
+              <nav class="tabs">
+                <button type="button" class=${this.active===ti?"active":""} @click=${()=>this.active=ti}>General</button>
+                ${this.tabs.map(e=>v`<button type="button" class=${this.active===e.id?"active":""} @click=${()=>this.active=e.id}>${e.name}</button>`)}
+              </nav>
+              <section class="panel">${this.renderPanel()}</section>
+            </div>
+          </div>
+        </form>
+      </dialog>
+    `}};ht.styles=[Et,mt,Se`
+      dialog {
+        width: 720px;
+        max-width: 94vw;
+      }
+      .layout {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        gap: 1rem;
+        min-height: 340px;
+      }
+      .tabs {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+        border-right: 1px solid #e5e7eb;
+        padding-right: 0.5rem;
+      }
+      .tabs button {
+        text-align: left;
+        background: transparent;
+        border: 0;
+        border-radius: 0.3rem;
+        padding: 0.45rem 0.6rem;
+        cursor: pointer;
+        font: inherit;
+        color: #374151;
+      }
+      .tabs button:hover {
+        background: #f3f4f6;
+      }
+      .tabs button.active {
+        background: #eff6ff;
+        color: #1d4ed8;
+        font-weight: 600;
+      }
+      .panel {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        min-width: 0;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+      .field-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+      }
+      .field-head label {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+      .scope {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.75rem;
+        color: #6b7280;
+        cursor: pointer;
+        user-select: none;
+      }
+      .desc {
+        font-size: 0.78rem;
+        color: #6b7280;
+        margin: 0;
+      }
+      /* (i) next to the label — opens the field's help panel. */
+      .help-btn {
+        background: transparent;
+        border: 0;
+        padding: 0;
+        margin-right: auto;
+        color: #6b7280;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        line-height: 1;
+      }
+      .help-btn:hover,
+      .help-btn[aria-expanded='true'] {
+        color: #1d4ed8;
+      }
+      .help-panel {
+        font-size: 0.8rem;
+        color: #374151;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 0.3rem;
+        padding: 0.45rem 0.6rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+      }
+      .help-panel p {
+        margin: 0;
+      }
+      .help-panel a {
+        color: #1d4ed8;
+        align-self: flex-start;
+      }
+      input[type='text'],
+      input[type='number'],
+      input[type='date'],
+      textarea,
+      select {
+        font: inherit;
+        padding: 0.4rem 0.5rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      textarea {
+        min-height: 4.5rem;
+        resize: vertical;
+        font-family: ui-monospace, SFMono-Regular, monospace;
+        font-size: 0.85rem;
+      }
+      .secrets-actions {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 0.4rem;
+      }
+      button.ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font: inherit;
+        font-size: 0.85rem;
+        background: #f3f4f6;
+        border: 1px solid #d1d5db;
+        border-radius: 0.25rem;
+        padding: 0.3rem 0.6rem;
+        color: #374151;
+        cursor: pointer;
+      }
+      button.ghost:hover:not(:disabled) {
+        background: #e5e7eb;
+      }
+      button.ghost:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      .secret-row {
+        display: flex;
+        gap: 0.4rem;
+        align-items: center;
+      }
+      .secret-row select {
+        width: auto;
+        flex: 0 0 auto;
+      }
+      .secret-row input.invalid {
+        border-color: #dc2626;
+        background: #fef2f2;
+      }
+      .secret-error {
+        margin: 0.5rem 1rem 0;
+        padding: 0.5rem 0.7rem;
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: 0.35rem;
+        color: #b91c1c;
+        font-size: 0.82rem;
+      }
+      .radios,
+      .checks {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1rem;
+      }
+      .radios label,
+      .checks label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.9rem;
+        font-weight: 400;
+      }
+      .radios input,
+      .checks input {
+        width: auto;
+      }
+      .empty {
+        color: #6b7280;
+        font-size: 0.9rem;
+      }
+      .blurb {
+        color: #4b5563;
+        font-size: 0.9rem;
+        margin: 0;
+      }
+      h3 {
+        margin: 0;
+        font-size: 1rem;
+      }
+    `];Zt([j()],ht.prototype,"tabs",2);Zt([j()],ht.prototype,"active",2);Zt([j()],ht.prototype,"values",2);Zt([j()],ht.prototype,"placements",2);Zt([j()],ht.prototype,"secretsText",2);Zt([j()],ht.prototype,"workspaceTitle",2);Zt([j()],ht.prototype,"secretError",2);Zt([j()],ht.prototype,"openHelp",2);ht=Zt([Re("settings-dialog")],ht);function iT(e){try{return new URL(e).host}catch{return e}}const Ag=5,qa="palette:recent",Rg="Recent";function sT(e,t,n=Ag){return[t,...e.filter(r=>r!==t)].slice(0,n)}function oT(e){return Array.isArray(e)?e.filter(t=>typeof t=="string").slice(0,Ag):[]}function aT(e,t){const n=t instanceof Set?t:new Set(t);return e.filter(r=>n.has(r))}function lT(e,t){if(t.length===0)return e;const n=new Map(e.map(s=>[s.id,s])),r=[];for(const s of t){const o=n.get(s);o&&r.push({...o,group:Rg})}if(r.length===0)return e;const i=new Set(r.map(s=>s.id));return[...r,...e.filter(s=>!i.has(s.id))]}var cT=Object.defineProperty,uT=Object.getOwnPropertyDescriptor,Or=(e,t,n,r)=>{for(var i=r>1?void 0:r?uT(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&cT(t,n,i),i};const dT={[Rg]:-1,Windows:0,Actions:1,App:2,Tables:3,Views:4};function Mh(e){return dT[e]??3}function hT(e){return e?e.trimStart().startsWith("<svg")?v`<span class="cmd-svg">${Ol(e)}</span>`:v`<span class="mi sm">${e}</span>`:v`<span class="mi sm">chevron_right</span>`}let pn=class extends $e{constructor(){super(...arguments),this.search="",this.items=[],this.selected=0,this.api=null,this.commandFallbacks=[],this.recentIds=[],this.onDialogClick=e=>{if(e.detail===0||!this.dialogEl)return;const t=this.dialogEl.getBoundingClientRect();e.clientX>=t.left&&e.clientX<=t.right&&e.clientY>=t.top&&e.clientY<=t.bottom||this.close()}}async open(){const e=await J();this.api=e.api,this.commandFallbacks=e.registries.commandFallbacks,this.recentIds=oT((await e.api.store.settings.findOne(qa))?.value),this.items=await this.buildItems(),await this.forgetVanished(),this.search="",this.selected=0,await this.updateComplete,this.dialogEl&&!this.dialogEl.open&&this.dialogEl.showModal(),this.inputEl?.focus()}async buildItems(){const e=await J(),t=e.api,n=[];for(const s of e.registries.commands)n.push({id:s.id,title:s.title,group:s.group??"Commands",...s.icon?{icon:s.icon}:{},haystack:[s.title,s.group,...s.keywords??[]].join(" ").toLowerCase(),run:()=>s.run(t)});for(const s of[...e.registries.headerButtons,...e.registries.footerButtons])n.push({id:`button:${s.id}`,title:s.label,group:"Actions",...s.icon?{icon:s.icon}:{},haystack:`${s.label} ${s.tooltip??""}`.toLowerCase(),run:()=>s.onClick(t)});const r=await t.store.tables.find({workspaceId:e.workspaceId});r.sort((s,o)=>s.name.localeCompare(o.name));for(const s of r)n.push({id:`goto:${s.id}`,title:`Go to: ${s.name}`,group:"Tables",icon:"table_chart",haystack:`${s.name} go to table`.toLowerCase(),run:()=>{Tc(s.id)}});const i=await t.store.viewInstances.find({workspaceId:e.workspaceId});i.sort((s,o)=>s.name.localeCompare(o.name));for(const s of i)n.push({id:`goto-view:${s.id}`,title:`Go to view: ${s.name}`,group:"Views",icon:"view_quilt",haystack:`${s.name} go to view`.toLowerCase(),run:async()=>{await zc(s.id)}});return lT(n,this.recentIds).map((s,o)=>({it:s,i:o})).sort((s,o)=>Mh(s.it.group)-Mh(o.it.group)||s.i-o.i).map(({it:s})=>s)}get filtered(){const e=this.search.trim();if(!e)return this.items;const t=this.items.filter(n=>n.haystack.includes(e.toLowerCase()));return t.length>0?t:this.fallbackItems(e)}fallbackItems(e){const t=this.api;if(!t)return[];const n=[];for(const r of this.commandFallbacks){let i;try{i=r(e)}catch{continue}i&&n.push({id:i.id,title:i.title,group:i.group??"Commands",...i.icon?{icon:i.icon}:{},haystack:i.title.toLowerCase(),run:()=>i.run(t)})}return n}close(){this.dialogEl?.close()}onInput(e){this.search=e.target.value,this.selected=0}onKeydown(e){const t=this.filtered;if(e.key==="ArrowDown")e.preventDefault(),this.selected=t.length?(this.selected+1)%t.length:0;else if(e.key==="ArrowUp")e.preventDefault(),this.selected=t.length?(this.selected-1+t.length)%t.length:0;else if(e.key==="Enter"){e.preventDefault();const n=t[this.selected];n&&this.execute(n)}}async execute(e){this.close(),this.remember(e.id);try{await e.run()}catch(t){console.error(`[command:${e.id}]`,t)}}async forgetVanished(){const e=aT(this.recentIds,this.items.map(t=>t.id));if(e.length!==this.recentIds.length){this.recentIds=e;try{await this.api?.store.settings.upsert({name:qa,value:e})}catch{}}}async remember(e){this.recentIds=sT(this.recentIds,e);try{await this.api?.store.settings.upsert({name:qa,value:this.recentIds})}catch(t){console.warn("[command-palette] could not save recent commands",t)}}render(){const e=this.filtered;let t="";return v`
+      <dialog @keydown=${this.onKeydown} @click=${this.onDialogClick} @close=${()=>this.search=""}>
+        <div class="search-row">
+          <span class="mi">search</span>
+          <input type="text" placeholder="Type a command…  (windows, go to, import, export)" .value=${this.search} @input=${this.onInput} />
+        </div>
+        <div class="list">
+          ${e.length===0?v`<div class="empty">No matching commands.</div>`:e.map((n,r)=>{const i=n.group!==t?(t=n.group,n.group):null;return v`
+                  ${i?v`<div class="group-head">${i}</div>`:""}
+                  <div class=${`item${r===this.selected?" sel":""}`} @mousemove=${()=>this.selected=r} @click=${()=>this.execute(n)}>
+                    ${hT(n.icon)}
+                    <span class="title">${n.title}</span>
+                  </div>
+                `})}
+        </div>
+      </dialog>
+    `}};pn.styles=[Et,Se`
+      dialog {
+        width: 560px;
+        max-width: 94vw;
+        padding: 0;
+        border: 1px solid #d1d5db;
+        border-radius: 0.6rem;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        margin-top: 12vh;
+      }
+      dialog::backdrop {
+        background: rgba(0, 0, 0, 0.25);
+      }
+      .search-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.7rem 0.9rem;
+        border-bottom: 1px solid #eee;
+      }
+      .search-row .mi {
+        color: #9ca3af;
+      }
+      input {
+        flex: 1;
+        font: inherit;
+        font-size: 1rem;
+        border: 0;
+        outline: none;
+        background: transparent;
+      }
+      .list {
+        max-height: 52vh;
+        overflow: auto;
+        padding: 0.35rem;
+      }
+      .group-head {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #9ca3af;
+        padding: 0.5rem 0.6rem 0.25rem;
+      }
+      .item {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.45rem 0.6rem;
+        border-radius: 0.35rem;
+        cursor: pointer;
+        color: #111827;
+      }
+      .item .cmd-svg {
+        display: inline-flex;
+        width: 1.05rem;
+        height: 1.05rem;
+        color: #6b7280;
+      }
+      .item .cmd-svg svg {
+        width: 100%;
+        height: 100%;
+      }
+      .item .mi {
+        color: #6b7280;
+      }
+      .item .title {
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .item.sel {
+        background: #eff6ff;
+        color: #1d4ed8;
+      }
+      .item.sel .mi,
+      .item.sel .cmd-svg {
+        color: #1d4ed8;
+      }
+      .empty {
+        padding: 1rem 0.9rem;
+        color: #6b7280;
+        font-size: 0.9rem;
+      }
+    `];Or([j()],pn.prototype,"search",2);Or([j()],pn.prototype,"items",2);Or([j()],pn.prototype,"selected",2);Or([Kt("dialog")],pn.prototype,"dialogEl",2);Or([Kt("input")],pn.prototype,"inputEl",2);pn=Or([Re("command-palette-dialog")],pn);var fT=Object.defineProperty,pT=Object.getOwnPropertyDescriptor,Bo=(e,t,n,r)=>{for(var i=r>1?void 0:r?pT(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&fT(t,n,i),i};let Sr=class extends $e{constructor(){super(...arguments),this.label="",this.fraction=void 0,this.detail="",this.onProgress=e=>{const t=e.detail;this.label=t.label??"",this.fraction=t.fraction,this.detail=t.detail??""}}connectedCallback(){super.connectedCallback(),document.addEventListener(nl,this.onProgress)}disconnectedCallback(){document.removeEventListener(nl,this.onProgress),super.disconnectedCallback()}render(){if(!this.label)return X;const e=this.fraction==null?null:Math.round(Math.min(1,Math.max(0,this.fraction))*100);return v`
+      <div class="wrap" role="status" aria-live="polite">
+        <span class="label">${this.label}</span>
+        <span class="bar">
+          <span class="fill ${e==null?"":"determinate"}" style=${e==null?"":`width:${e}%`}></span>
+        </span>
+        ${this.detail?v`<span class="detail">${this.detail}</span>`:X}
+        <span class="pct">${e==null?"":`${e}%`}</span>
+      </div>
+    `}};Sr.styles=Se`
+    :host {
+      display: block;
+    }
+    .wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.3rem 0.75rem;
+      background: #eef2ff;
+      border-bottom: 1px solid #c7d2fe;
+      font-size: 0.78rem;
+      color: #3730a3;
+    }
+    .label {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .detail {
+      color: #6366f1;
+      white-space: nowrap;
+    }
+    .bar {
+      flex: 1;
+      height: 4px;
+      border-radius: 2px;
+      background: #c7d2fe;
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      background: #4f46e5;
+    }
+    /* Indeterminate: work has started but nothing has reported yet. A sliding
+       sliver says "running" without claiming a position it does not know. */
+    .fill:not(.determinate) {
+      width: 30%;
+      animation: eda-app-progress 1.1s ease-in-out infinite;
+    }
+    .fill.determinate {
+      transition: width 0.15s linear;
+    }
+    .pct {
+      min-width: 2.5rem;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    @keyframes eda-app-progress {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(333%);
+      }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .fill:not(.determinate) {
+        animation: none;
+        width: 100%;
+        opacity: 0.5;
+      }
+    }
+  `;Bo([j()],Sr.prototype,"label",2);Bo([j()],Sr.prototype,"fraction",2);Bo([j()],Sr.prototype,"detail",2);Sr=Bo([Re("app-progress")],Sr);var mT=Object.defineProperty,gT=Object.getOwnPropertyDescriptor,Og=(e,t,n,r)=>{for(var i=r>1?void 0:r?gT(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&mT(t,n,i),i};let Zs=class extends $e{constructor(){super(...arguments),this.tables=[],this.workspaceId=""}async connectedCallback(){super.connectedCallback();const e=await J();this.workspaceId=e.workspaceId,this.unsubscribe=e.store.tables.subscribe(n=>this.tables=n.filter(r=>r.workspaceId===this.workspaceId));const t=await e.store.tables.find();this.tables=t.filter(n=>n.workspaceId===this.workspaceId),await _m(),await GC(),j_()}disconnectedCallback(){super.disconnectedCallback(),this.unsubscribe?.()}render(){return this.tables.length>0?v``:v`<div class="empty">No tables yet. Drop a <strong>.csv</strong> or <strong>.json</strong> file anywhere on the page, or click <strong>+ New Table</strong> above.</div>`}};Zs.styles=Se`
+    :host {
+      display: block;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .empty {
+      color: #6b7280;
+      text-align: center;
+      padding: 4rem 1rem;
+      font-size: 0.95rem;
+    }
+  `;Og([j()],Zs.prototype,"tables",2);Zs=Og([Re("table-list")],Zs);var bT=Object.defineProperty,wT=Object.getOwnPropertyDescriptor,Vc=(e,t,n,r)=>{for(var i=r>1?void 0:r?wT(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&bT(t,n,i),i};let yi=class extends $e{constructor(){super(...arguments),this.workspaces=[],this.current=""}async connectedCallback(){super.connectedCallback();const e=await J();this.current=e.workspaceId,this.unsubscribe=e.store.workspaces.subscribe(t=>this.workspaces=t),this.workspaces=await e.store.workspaces.find()}disconnectedCallback(){super.disconnectedCallback(),this.unsubscribe?.()}switchWorkspace(e){const t=this.workspaces.find(n=>n.id===e);t&&Fo(t.name)}render(){return v`
+      <select .value=${this.current} @change=${e=>this.switchWorkspace(e.target.value)}>
+        ${this.workspaces.map(e=>v`<option value=${e.id} ?selected=${e.id===this.current}>${e.name}</option>`)}
+      </select>
+      <button @click=${xg} title="New workspace">
+        <span class="mi sm">add</span>
+      </button>
+      <button @click=${Sg} title="Delete workspace">
+        <span class="mi sm">delete</span>
+      </button>
+    `}};yi.styles=[Et,Se`
+      :host {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      select,
+      button {
+        background: #374151;
+        color: white;
+        border: 1px solid #4b5563;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+        font: inherit;
+      }
+      button:hover {
+        background: #4b5563;
+      }
+      .mi.sm {
+        font-size: 1rem;
+      }
+    `];Vc([j()],yi.prototype,"workspaces",2);Vc([j()],yi.prototype,"current",2);yi=Vc([Re("workspace-selector")],yi);var Ph=Object.freeze,Lg=Object.defineProperty,yT=Object.getOwnPropertyDescriptor,Lt=(e,t,n,r)=>{for(var i=r>1?void 0:r?yT(t,n):t,s=e.length-1,o;s>=0;s--)(o=e[s])&&(i=(r?o(t,n,i):o(i))||i);return r&&i&&Lg(t,n,i),i},vT=(e,t)=>Ph(Lg(e,"raw",{value:Ph(e.slice())})),zh;Ub();Kb();function Nh(e){return e?e.trimStart().startsWith("<svg")?v`<span class="icon-svg" aria-hidden="true">${Ol(e)}</span>`:v`<span class="mi sm" aria-hidden="true">${e}</span>`:""}let pt=class extends $e{constructor(){super(...arguments),this.footerButtons=[],this.headerButtons=[],this.searchQuery="",this.searchOpen=!1,this.workspaceTitle="",this.api=null,this.searchTimer=null,this.searchFocusPending=!1,this.onEditColumns=e=>{const t=e;this.dialog?.open(t.detail.tableId,{notice:t.detail.notice})},this.onOpenNewTable=()=>{this.dialog?.open()},this.onOpenCsvPaste=()=>{this.csvPasteDialog?.open()},this.onOpenPluginManager=()=>{this.pluginManagerDialog?.open()},this.onOpenSettings=()=>{this.settingsDialog?.open()},this.onOpenCommandPalette=()=>{this.commandPaletteDialog?.open()},this.onGlobalKeydown=e=>{(e.ctrlKey||e.metaKey)&&!e.altKey&&(e.key==="k"||e.key==="K")&&(e.preventDefault(),this.commandPaletteDialog?.open())},this.openSearch=()=>{this.searchOpen=!0,this.searchFocusPending=!0},this.onSetSearch=e=>{this.searchQuery=e.detail?.query??"",this.searchTimer!=null&&window.clearTimeout(this.searchTimer),this.searchQuery&&(this.searchOpen=!0),this.broadcastSearch(this.searchQuery)},this.closeSearchOnBlur=()=>{this.searchOpen=!1},this.onSearchInput=e=>{this.searchQuery=e.target.value,this.searchTimer!=null&&window.clearTimeout(this.searchTimer),this.searchTimer=window.setTimeout(()=>this.broadcastSearch(this.searchQuery),200)},this.clearSearch=e=>{e.preventDefault(),this.searchTimer!=null&&window.clearTimeout(this.searchTimer),this.searchQuery="",this.broadcastSearch(""),this.searchFocusPending=!0},this.onDragOver=e=>{Fh(e)&&(e.preventDefault(),this.classList.add("drag-over"))},this.onDragLeave=e=>{const t=e.relatedTarget;t&&(this.contains(t)||$T()?.contains(t))||this.classList.remove("drag-over")},this.onDrop=async e=>{if(this.classList.remove("drag-over"),!Fh(e))return;e.preventDefault();const t=await J(),n=Array.from(e.dataTransfer?.files??[]);t.events.emit("drop:files",{files:n,event:e});for(const r of[...t.registries.dropHandlers])try{if(await r(e,t.api))return}catch(i){t.events.emit("plugin:error",{url:"(drop-handler)",phase:"runtime",error:i})}},this.runSlot=(e,t)=>{if(!this.api)return;const n=t?.currentTarget??void 0;Promise.resolve(e.onClick(this.api,{anchor:n})).catch(r=>{console.error(`[footer-button:${e.id}]`,r)})}}connectedCallback(){super.connectedCallback(),document.addEventListener("dragover",this.onDragOver),document.addEventListener("dragleave",this.onDragLeave),document.addEventListener("drop",this.onDrop),document.addEventListener("easydb:edit-columns",this.onEditColumns),document.addEventListener("easydb:open-new-table",this.onOpenNewTable),document.addEventListener("easydb:open-csv-paste",this.onOpenCsvPaste),document.addEventListener("easydb:open-plugin-manager",this.onOpenPluginManager),document.addEventListener("easydb:open-settings",this.onOpenSettings),document.addEventListener("easydb:open-command-palette",this.onOpenCommandPalette),document.addEventListener("easydb:focus-search",this.openSearch),document.addEventListener("easydb:set-search",this.onSetSearch),document.addEventListener("keydown",this.onGlobalKeydown),this.bindRegistries()}disconnectedCallback(){super.disconnectedCallback(),document.removeEventListener("dragover",this.onDragOver),document.removeEventListener("dragleave",this.onDragLeave),document.removeEventListener("drop",this.onDrop),document.removeEventListener("easydb:edit-columns",this.onEditColumns),document.removeEventListener("easydb:open-new-table",this.onOpenNewTable),document.removeEventListener("easydb:open-csv-paste",this.onOpenCsvPaste),document.removeEventListener("easydb:open-plugin-manager",this.onOpenPluginManager),document.removeEventListener("easydb:open-settings",this.onOpenSettings),document.removeEventListener("easydb:open-command-palette",this.onOpenCommandPalette),document.removeEventListener("easydb:focus-search",this.openSearch),document.removeEventListener("easydb:set-search",this.onSetSearch),document.removeEventListener("keydown",this.onGlobalKeydown),this.workspaceUnsub?.()}updated(){this.searchFocusPending&&this.searchInput&&(this.searchInput.focus(),this.searchFocusPending=!1)}broadcastSearch(e){document.dispatchEvent(new CustomEvent("easydb:global-search",{detail:{query:e}}))}async bindRegistries(){const e=await J();this.api=e.api,this.snapshotRegistries(e),e.events.on("app:ready",()=>this.snapshotRegistries(e)),this.workspaceUnsub=e.store.workspaces.subscribe(t=>{const n=t.find(r=>r.id===e.workspaceId);this.workspaceTitle=n?.title?.trim()??"",kT(this.workspaceTitle)})}snapshotRegistries(e){this.footerButtons=[...e.registries.footerButtons],this.headerButtons=[...e.registries.headerButtons]}renderSlotButton(e,t){if(e.variant==="secondary")return v` <button class="icon-btn" title=${e.tooltip??e.label} aria-label=${e.tooltip??e.label} @click=${()=>this.runSlot(e)}>${Nh(e.icon)}</button> `;const n=t==="header"||e.variant==="primary"?"primary":"slot";return v`
+      <button class=${n} title=${e.tooltip??e.label} @click=${r=>this.runSlot(e,r)}>
+        ${Nh(e.icon)}
+        <span class="btn-label">${e.label}</span>
+      </button>
+    `}render(){return v(zh||(zh=vT([`
+      <header>
+        <strong
+          >`,`
+          <a class="version-link" href="https://github.com/cawoodm/easydbaccess/blob/main/CHANGELOG.md" target="_blank" rel="noopener" title="View the changelog on GitHub"
+            ><span class="version">v0.0.355</span></a
+          ></strong
+        >
+        `,`
+        `,`
+        <button class="icon-btn" title="Add, disable, or remove plugins" aria-label="Plugins" @click=`,`>
+          <span class="mi" aria-hidden="true">extension</span>
+        </button>
+        <a
+          class="icon-btn"
+          href="https://github.com/cawoodm/easydbaccess/blob/main/docs/help/INDEX.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Help — open the user guide"
+          aria-label="Help — open the user guide"
+        >
+          <span class="mi" aria-hidden="true">help</span>
+        </a>
+        `,`
+      </header>
+      <app-progress></app-progress>
+      <main><table-list></table-list></main>
+      <footer>
+        <workspace-selector></workspace-selector>
+        <span class="spacer"></span>
+        `,`
+      </footer>
+      <new-table-dialog></new-table-dialog>
+      <csv-paste-dialog></csv-paste-dialog>
+      <plugin-manager-dialog></plugin-manager-dialog>
+      <settings-dialog></settings-dialog>
+      <command-palette-dialog></command-palette-dialog>
+      <script-editor-dialog><\/script-editor-dialog>
+      <host-dialogs></host-dialogs>
+      <toast-host></toast-host>
+    `])),this.workspaceTitle||"easyDBAccess",this.headerButtons.filter(e=>e.variant!=="secondary").map(e=>this.renderSlotButton(e,"header")),this.searchOpen?v`<span class="search-wrap">
+              <input class="search" type="search" placeholder="search all tables…" .value=${this.searchQuery} @input=${this.onSearchInput} @blur=${this.closeSearchOnBlur} />
+              ${this.searchQuery.length>0?v`<button class="search-clear" title="Clear search" aria-label="Clear search" @mousedown=${this.clearSearch}>×</button>`:""}
+            </span>`:v`<button
+              class="icon-btn ${this.searchQuery.trim().length>0?"active":""}"
+              title=${this.searchQuery.trim().length>0?`Filtering all tables: ${this.searchQuery}`:"Search across all tables in this workspace"}
+              aria-label="Search"
+              @click=${this.openSearch}
+            >
+              <span class="mi" aria-hidden="true">search</span>
+            </button>`,()=>this.api?.ui.openPluginManager(),this.headerButtons.filter(e=>e.variant==="secondary").map(e=>this.renderSlotButton(e,"header")),this.footerButtons.map(e=>this.renderSlotButton(e,"footer")))}};pt.styles=[Et,Se`
+      :host {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        font-family: system-ui, sans-serif;
+        background: #f3f4f6;
+      }
+      header,
+      footer {
+        background: #1f2937;
+        color: white;
+        padding: 0.5rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        position: relative;
+        z-index: 100000;
+      }
+      header strong,
+      footer .spacer {
+        flex: 1;
+      }
+      footer button.slot {
+        background: transparent;
+        color: white;
+        border: 1px solid #4b5563;
+        padding: 0.3rem 0.7rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        font: inherit;
+      }
+      footer button.slot:hover {
+        background: #374151;
+      }
+      header .version-link {
+        color: inherit;
+        text-decoration: none;
+        cursor: pointer;
+      }
+      header .version-link:hover .version {
+        opacity: 1;
+        text-decoration: underline;
+      }
+      header .version {
+        opacity: 0.5;
+        font-size: 0.75rem;
+        margin-left: 0.5rem;
+      }
+      button.primary,
+      button.slot {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+      }
+      button.primary {
+        background: #3b82f6;
+        color: white;
+        border: 0;
+        padding: 0.4rem 0.75rem;
+        border-radius: 0.25rem;
+        cursor: pointer;
+        font: inherit;
+      }
+      button.primary:hover {
+        background: #2563eb;
+      }
+      .search-wrap {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+      }
+      input.search {
+        background: #374151;
+        color: white;
+        border: 1px solid #4b5563;
+        padding: 0.3rem 1.7rem 0.3rem 0.6rem;
+        border-radius: 0.25rem;
+        font: inherit;
+        width: 14rem;
+      }
+      input.search::placeholder {
+        color: #9ca3af;
+      }
+      input.search:focus {
+        outline: 2px solid #3b82f6;
+        outline-offset: -1px;
+      }
+      /* Hide the browser's native search clear glyph — we render our own × so
+         it's visible on the dark header and works in every browser. */
+      input.search::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      .search-clear {
+        position: absolute;
+        right: 0.3rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: transparent;
+        border: 0;
+        color: #9ca3af;
+        cursor: pointer;
+        font-size: 1.1rem;
+        line-height: 1;
+        padding: 0 0.2rem;
+      }
+      .search-clear:hover {
+        color: white;
+      }
+      button.icon-btn,
+      a.icon-btn {
+        background: transparent;
+        color: white;
+        border: 1px solid #4b5563;
+        padding: 0.3rem 0.6rem;
+        border-radius: 0.25rem;
+        font: inherit;
+        cursor: pointer;
+        line-height: 1;
+        /* a.icon-btn is a link, not a button — strip the underline/default
+           link colour so it renders identically to its button siblings. */
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+      }
+      button.icon-btn:hover,
+      a.icon-btn:hover {
+        background: #374151;
+      }
+      /* Highlight the collapsed search icon while a global filter is active, so
+         a live search stays discoverable after the box collapses. */
+      button.icon-btn.active {
+        color: #93c5fd;
+        border-color: #3b82f6;
+      }
+      /* Inline-SVG button icons (icon strings that start with "<svg"). The svg
+         inherits the button's text colour via fill/stroke: currentColor. */
+      .icon-svg {
+        display: inline-flex;
+        align-items: center;
+      }
+      .icon-svg svg {
+        width: 1.05rem;
+        height: 1.05rem;
+        display: block;
+      }
+      main {
+        flex: 1;
+        overflow: hidden;
+        position: relative;
+      }
+      :host(.drag-over) main::after {
+        content: 'Drop CSV or JSON here';
+        position: absolute;
+        inset: 0.75rem;
+        border: 3px dashed #3b82f6;
+        border-radius: 0.75rem;
+        display: grid;
+        place-items: center;
+        background: rgba(59, 130, 246, 0.12);
+        color: #1e3a8a;
+        font-weight: 700;
+        font-size: 1.6rem;
+        letter-spacing: 0.04em;
+        pointer-events: none;
+        z-index: 90000;
+        animation: pulse-overlay 1.4s ease-in-out infinite;
+      }
+      @keyframes pulse-overlay {
+        0%,
+        100% {
+          background: rgba(59, 130, 246, 0.08);
+        }
+        50% {
+          background: rgba(59, 130, 246, 0.18);
+        }
+      }
+      /* Mobile / narrow: the header wraps. The app name + version take their
+         own line; the buttons wrap below as icon-only chips (labels hidden on
+         any button that carries an icon, so nothing goes blank). */
+      @media (max-width: 640px) {
+        header {
+          flex-wrap: wrap;
+          row-gap: 0.4rem;
+        }
+        header > strong {
+          flex: 1 0 100%;
+        }
+        input.search {
+          width: 100%;
+        }
+        button.primary:has(.icon-svg) .btn-label,
+        button.primary:has(.mi) .btn-label,
+        button.slot:has(.icon-svg) .btn-label,
+        button.slot:has(.mi) .btn-label {
+          display: none;
+        }
+      }
+    `];Lt([Kt("new-table-dialog")],pt.prototype,"dialog",2);Lt([Kt("csv-paste-dialog")],pt.prototype,"csvPasteDialog",2);Lt([Kt("plugin-manager-dialog")],pt.prototype,"pluginManagerDialog",2);Lt([Kt("settings-dialog")],pt.prototype,"settingsDialog",2);Lt([Kt("command-palette-dialog")],pt.prototype,"commandPaletteDialog",2);Lt([Kt("input.search")],pt.prototype,"searchInput",2);Lt([j()],pt.prototype,"footerButtons",2);Lt([j()],pt.prototype,"headerButtons",2);Lt([j()],pt.prototype,"searchQuery",2);Lt([j()],pt.prototype,"searchOpen",2);Lt([j()],pt.prototype,"workspaceTitle",2);pt=Lt([Re("app-shell")],pt);const jh=document.title;function kT(e){const t=e.trim();document.title=t?`${t} — ${jh}`:jh}function $T(){return document.getElementById("easydb-panels")}function Fh(e){const t=e.dataTransfer;return t?t.types&&Array.from(t.types).includes("Files")?!0:(t.files?.length??0)>0:!1}typeof location<"u"&&new URLSearchParams(location.search).get("test")==="1"&&Promise.all([J(),Ie(()=>Promise.resolve().then(()=>Pm),[])]).then(([e,t])=>{Object.assign(window,{__easydb:e,__autoSyncTick:()=>t.tick(e.api)}),document.dispatchEvent(new CustomEvent("easydb:test-ready"))});export{X as A,Gb as a,v as b,gt as c,mt as d,zT as e,Se as f,ET as g,$e as i,bt as m,j as r,Re as t,Xt as w};
+//# sourceMappingURL=index-DW2usQQA.js.map

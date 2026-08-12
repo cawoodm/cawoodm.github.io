@@ -1,4 +1,4 @@
-import{i as u,A as h,b as c,f as m,r as p,t as b}from"./index-BUHUHvmv.js";var d=Object.defineProperty,v=Object.getOwnPropertyDescriptor,n=(e,s,r,l)=>{for(var t=l>1?void 0:l?v(s,r):s,a=e.length-1,i;a>=0;a--)(i=e[a])&&(t=(l?i(s,r,t):i(t))||t);return l&&t&&d(s,r,t),t};const f=[{value:"",label:"Auto-detect"},{value:",",label:"Comma  ,"},{value:";",label:"Semicolon  ;"},{value:"	",label:"Tab"},{value:"|",label:"Pipe  |"},{value:"custom",label:"Other…"}];let o=class extends u{constructor(){super(...arguments),this.choice="",this.custom=""}get value(){const e=this.choice==="custom"?this.custom:this.choice;return e?{separator:e}:{}}emit(){this.dispatchEvent(new Event("change",{bubbles:!0,composed:!0}))}render(){return c`
+import{i as u,A as h,b as c,f as m,r as p,t as b}from"./index-AX3FEZ0x.js";var d=Object.defineProperty,v=Object.getOwnPropertyDescriptor,n=(e,s,r,l)=>{for(var t=l>1?void 0:l?v(s,r):s,a=e.length-1,i;a>=0;a--)(i=e[a])&&(t=(l?i(s,r,t):i(t))||t);return l&&t&&d(s,r,t),t};const f=[{value:"",label:"Auto-detect"},{value:",",label:"Comma  ,"},{value:";",label:"Semicolon  ;"},{value:"	",label:"Tab"},{value:"|",label:"Pipe  |"},{value:"custom",label:"Other…"}];let o=class extends u{constructor(){super(...arguments),this.choice="",this.custom=""}get value(){const e=this.choice==="custom"?this.custom:this.choice;return e?{separator:e}:{}}emit(){this.dispatchEvent(new Event("change",{bubbles:!0,composed:!0}))}render(){return c`
       <div class="row">
         <label>
           Separator
@@ -58,4 +58,4 @@ import{i as u,A as h,b as c,f as m,r as p,t as b}from"./index-BUHUHvmv.js";var d
       margin: 0.4rem 0 0;
     }
   `;n([p()],o.prototype,"choice",2);n([p()],o.prototype,"custom",2);o=n([b("csv-import-options")],o);export{o as CsvImportOptions};
-//# sourceMappingURL=csv-import-options-CORJ84Ke.js.map
+//# sourceMappingURL=csv-import-options-BV37c8ap.js.map

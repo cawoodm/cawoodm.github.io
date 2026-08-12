@@ -1,4 +1,4 @@
-import{i as c,m as g,c as u,b as p,d as b,f,r as h,t as v}from"./index-AX3FEZ0x.js";var m=Object.defineProperty,w=Object.getOwnPropertyDescriptor,r=(t,e,l,s)=>{for(var i=s>1?void 0:s?w(e,l):e,a=t.length-1,d;a>=0;a--)(d=t[a])&&(i=(s?d(e,l,i):d(i))||i);return s&&i&&m(e,l,i),i};const x=p`
+import{i as c,m as g,c as u,b as p,d as b,f,r as h,t as v}from"./index-Dwdkph9w.js";var m=Object.defineProperty,w=Object.getOwnPropertyDescriptor,r=(t,e,l,s)=>{for(var i=s>1?void 0:s?w(e,l):e,a=t.length-1,d;a>=0;a--)(d=t[a])&&(i=(s?d(e,l,i):d(i))||i);return s&&i&&m(e,l,i),i};const x=p`
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M9 18h6" />
     <path d="M10 21h4" />
@@ -131,4 +131,4 @@ import{i as c,m as g,c as u,b as p,d as b,f,r as h,t as v}from"./index-AX3FEZ0x.
         padding-top: 0.9rem;
       }
     `];r([h()],o.prototype,"tips",2);r([h()],o.prototype,"index",2);r([h()],o.prototype,"dontShowAgain",2);o=r([v("tips-dialog")],o);export{o as TipsDialog};
-//# sourceMappingURL=tips-dialog-D1v7AP8F.js.map
+//# sourceMappingURL=tips-dialog-Be4WrtaH.js.map

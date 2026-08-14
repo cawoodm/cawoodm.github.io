@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Music for Life Openair 2026 — Samstag & Sonntag</title>
+<title>Music for Life Openair 2026 — Freitag bis Sonntag</title>
 <style>
   :root{
     --ink:#241F30;
@@ -31,7 +31,7 @@
     font-family:var(--display);
     -webkit-font-smoothing:antialiased;
   }
-  .wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+  .wrap{max-width:1380px;margin:0 auto;padding:0 20px 80px}
 
   /* ---- Kopf ---- */
   .head{padding:56px 0 26px}
@@ -49,6 +49,13 @@
     display:flex;flex-wrap:wrap;gap:8px 34px;
     font-family:var(--utility);font-size:12px;letter-spacing:.06em;color:var(--ink-soft)
   }
+  .place{
+    color:var(--ink);text-decoration:none;
+    border-bottom:1px solid var(--line);padding-bottom:3px
+  }
+  .place:hover{border-bottom-color:var(--c-konzert)}
+  .place .pin{margin-left:7px;opacity:.6}
+  .place:focus-visible{outline:2px solid var(--c-konzert);outline-offset:4px;border-radius:2px}
 
   /* ---- Legende ---- */
   .legend{
@@ -61,7 +68,7 @@
   .note{margin-left:auto;font-style:normal;opacity:.85}
 
   /* ---- Board ---- */
-  .board{display:flex;gap:22px;align-items:flex-start}
+  .board{display:flex;gap:18px;align-items:flex-start}
   .dayblock{display:flex;flex:1;min-width:0}
   .dayblock + .dayblock .axis{display:none}
 
@@ -71,7 +78,6 @@
     position:absolute;left:0;right:10px;text-align:right;transform:translateY(-50%);
     font-family:var(--utility);font-size:11px;letter-spacing:.08em;color:var(--ink-soft)
   }
-  .tick.dark{color:rgba(255,255,255,.62)}
 
   .day{flex:1;min-width:0}
   .dayname{
@@ -90,12 +96,13 @@
   }
   .rule{position:absolute;left:0;right:0;height:1px;background:var(--line)}
   .rule.dark{background:var(--line-night)}
-  .dusk{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,.55)}
+  .dusk{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,.55);z-index:4}
   .dusk::after{
     content:"Sonnenuntergang ≈ 20 Uhr";
-    position:absolute;right:8px;top:-16px;
+    position:absolute;right:8px;top:-18px;
+    background:rgba(20,16,40,.5);padding:2px 6px;border-radius:3px;
     font-family:var(--utility);font-size:10px;letter-spacing:.12em;
-    color:rgba(255,255,255,.8)
+    color:rgba(255,255,255,.86)
   }
 
   /* ---- Karten ---- */
@@ -114,11 +121,45 @@
     font-family:var(--utility);font-size:10.5px;letter-spacing:.07em;
     color:var(--ink-soft);display:block;margin-bottom:3px
   }
-  .ev .n{font-size:14px;font-weight:600;line-height:1.22;letter-spacing:.01em;display:block}
+  .ev .n{
+    font-size:14px;font-weight:600;line-height:1.22;letter-spacing:.01em;display:block;
+    overflow-wrap:anywhere;hyphens:auto
+  }
   .ev .s{font-size:12px;line-height:1.3;color:var(--ink-soft);display:block;margin-top:2px}
   .ev.konzert .n{letter-spacing:.09em;text-transform:uppercase;font-size:13.5px}
   .ev.short{padding-top:6px;padding-bottom:6px}
   .ev.short .s{display:none}
+  /* Ab drei parallelen Spuren wird die Spalte zu schmal für die Grundgrösse */
+  .ev.tight{padding:6px 7px 6px 11px}
+  .ev.tight .n{font-size:12.5px}
+  .ev.tight.konzert .n{font-size:12px;letter-spacing:.06em}
+  .ev.tight .s{font-size:11px}
+
+  .marker{position:absolute;left:0;right:0;border-top:1px dashed rgba(36,31,48,.42)}
+  .marker a{
+    position:absolute;left:6px;top:-9px;text-decoration:none;
+    background:rgba(255,255,255,.62);padding:2px 7px;border-radius:3px;
+    font-family:var(--utility);font-size:10px;letter-spacing:.12em;color:var(--ink-soft)
+  }
+  .marker a:hover{color:var(--ink);background:rgba(255,255,255,.9)}
+  .marker a:focus-visible{outline:2px solid var(--c-konzert);outline-offset:2px}
+
+  /* Termin in Google Calendar anlegen */
+  .cal{
+    position:absolute;top:4px;right:4px;width:20px;height:20px;border-radius:4px;
+    display:flex;align-items:center;justify-content:center;text-decoration:none;
+    font-family:var(--utility);font-size:14px;line-height:1;
+    color:var(--ink-soft);opacity:.45;transition:opacity .15s,background .15s
+  }
+  .ev:hover .cal{opacity:1;background:rgba(36,31,48,.08)}
+  .cal:focus-visible{opacity:1;outline:2px solid var(--c-konzert);outline-offset:1px}
+  .ev.night .cal{color:rgba(243,237,255,.85)}
+  .ev.night:hover .cal{background:rgba(255,255,255,.16)}
+  .ev .t{padding-right:20px}
+  .plus{
+    display:inline-block;width:16px;height:16px;line-height:15px;text-align:center;
+    border:1px solid var(--line);border-radius:3px;margin-right:2px
+  }
 
   /* Abendkarten: heller Text auf dunklem Grund */
   .ev.night{
@@ -149,11 +190,34 @@
   .foot a{color:var(--ink);text-decoration-thickness:1px;text-underline-offset:3px}
   .foot a:focus-visible{outline:2px solid var(--c-konzert);outline-offset:3px;border-radius:2px}
 
-  @media (max-width:820px){
-    :root{--hour:78px}
+  @media (max-width:1040px){
+    :root{--hour:86px}
     .board{flex-direction:column;gap:34px}
     .dayblock + .dayblock .axis{display:block}
     .axis{width:52px}
+  }
+
+  /* Auf dem Telefon ist eine Spalte zu schmal für vier parallele Spuren:
+     das Zeitraster weicht einer chronologischen Liste, der Tagesverlauf bleibt als Verlauf. */
+  @media (max-width:620px){
+    .dayblock .axis,.dayblock + .dayblock .axis{display:none}
+    .rule,.dusk{display:none}
+    .canvas{
+      height:auto!important;padding:12px;
+      display:flex;flex-direction:column;gap:9px
+    }
+    .ev{
+      position:static!important;top:auto!important;left:auto!important;
+      width:auto!important;height:auto!important;min-height:0;
+      padding:9px 11px 10px 14px
+    }
+    .ev.short .s{display:block}
+    .ev.tight .n{font-size:14px}
+    .ev.tight.konzert .n{font-size:13.5px}
+    .ev.tight .s{font-size:12px}
+    .ev.open{-webkit-mask-image:none;mask-image:none}
+    .marker{position:static!important;border-top:0;margin:2px 0 0}
+    .marker a{position:static;display:inline-block}
   }
 </style>
 </head>
@@ -161,11 +225,15 @@
 <div class="wrap">
 
   <header class="head">
-    <p class="eyebrow">Biohof Guyer · Ottenhausen, Seegräben ZH</p>
-    <h1 class="title">Music for Life Openair<b>Samstag &amp; Sonntag</b></h1>
+    <p class="eyebrow">
+      <a class="place" href="https://www.google.com/maps/search/?api=1&amp;query=Biohof%20Guyer%2C%20Ottenhausen%2C%20Seegr%C3%A4ben%20ZH" target="_blank" rel="noopener">
+        Biohof Guyer · Ottenhausen, Seegräben ZH<span class="pin" aria-hidden="true">↗</span>
+      </a>
+    </p>
+    <h1 class="title">Music for Life Openair<b>Freitag bis Sonntag</b></h1>
     <div class="meta">
-      <span>5.–6. September 2026</span>
-      <span>23 Programmpunkte</span>
+      <span>4.–6. September 2026</span>
+      <span>28 Programmpunkte</span>
       <span>Zeitraster 07:00 – 01:00</span>
     </div>
   </header>
@@ -175,7 +243,8 @@
   <div class="board" id="board"></div>
 
   <p class="foot">
-    Karten mit weichem unterem Rand: Ende nicht publiziert, Dauer im Raster geschätzt.
+    <span class="plus" aria-hidden="true">+</span> auf einer Karte legt den Termin in Google Calendar an (Zeitzone Europe/Zurich).
+    Karten mit weichem unterem Rand: Ende nicht publiziert, Dauer im Raster und im Kalendereintrag geschätzt.
     Quelle: <a href="https://musicforlife-openair.ch/">musicforlife-openair.ch</a>
   </p>
 </div>
@@ -191,7 +260,14 @@ const CATS = {
 
 // end === null: kein publiziertes Ende, `plan` ist die im Raster gezeigte Dauer in Minuten
 const DAYS = [
-  {key:"sa", name:"Samstag", date:"5. September 2026", events:[
+  {key:"fr", name:"Freitag", date:"4. September 2026", d:"2026-09-04", events:[
+    {s:"16:00", type:"marker", n:"Einlass", c:"zeremonie"},
+    {s:"17:30", e:"19:00", n:"Eröffnungszeremonie + Ecstatic Dance", w:"mit ZEBA", c:"zeremonie"},
+    {s:"19:30", e:null, plan:120, n:"Moia", w:"Konzert", c:"konzert"},
+    {s:"21:30", e:null, plan:120, n:"Facesoul", w:"Konzert", c:"konzert"},
+    {s:"23:30", e:null, plan:90, n:"Soundhealing", w:"mit Marc Grüninger", c:"zeremonie"}
+  ]},
+  {key:"sa", name:"Samstag", date:"5. September 2026", d:"2026-09-05", events:[
     {s:"07:30", e:"09:00", n:"Kundalini Yoga", w:"mit Birgit Wenzel & Karin Thomsson", c:"bewegung"},
     {s:"10:00", e:"11:45", n:"Breathwork", w:"mit Halil Capri", c:"bewegung"},
     {s:"10:00", e:"11:45", n:"Singcircle", w:"mit Machapapas", c:"stimme"},
@@ -206,7 +282,7 @@ const DAYS = [
     {s:"21:00", e:null, plan:120, n:"Hanuman Project", w:"Konzert", c:"konzert"},
     {s:"23:30", e:null, plan:90, n:"Meditatives Konzert", w:"mit Shai Peri", c:"zeremonie"}
   ]},
-  {key:"so", name:"Sonntag", date:"6. September 2026", events:[
+  {key:"so", name:"Sonntag", date:"6. September 2026", d:"2026-09-06", events:[
     {s:"07:30", e:"08:30", n:"Morning Yoga", w:"mit Bettina Keller", c:"bewegung"},
     {s:"09:00", e:"10:30", n:"Intuitives Malen", w:"mit Brit Cordes", c:"natur"},
     {s:"10:00", e:"11:45", n:"5Rhythms®", w:"mit Susanna Dobos", c:"bewegung"},
@@ -229,6 +305,34 @@ const min = t => { const [h,m] = t.split(":").map(Number); return h*60+m; };
 const fmt = m => String(Math.floor(m/60)%24).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
 const y = m => (m-START)*PPM;
 
+const VENUE = "Biohof Guyer, Ottenhausen, Seegräben ZH, Schweiz";
+
+// Google Calendar erwartet lokale Zeit ohne Zonensuffix, die Zone kommt über ctz.
+// Minuten ≥ 1440 rollen dabei automatisch auf den Folgetag (Konzerte nach Mitternacht).
+const stamp = (dateStr, m) => {
+  const d = new Date(dateStr + "T00:00:00");
+  d.setMinutes(d.getMinutes() + m);
+  const p = n => String(n).padStart(2,"0");
+  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}T${p(d.getHours())}${p(d.getMinutes())}00`;
+};
+
+const gcal = (day, ev) => {
+  const details = [
+    ev.w,
+    ev.e === null ? "Ende nicht publiziert, Dauer geschätzt." : "",
+    "Programm: https://musicforlife-openair.ch/"
+  ].filter(Boolean).join("\n");
+  const q = new URLSearchParams({
+    action:"TEMPLATE",
+    text:`${ev.n} — Music for Life Openair`,
+    dates:`${stamp(day.d, ev.s)}/${stamp(day.d, ev.end)}`,
+    details,
+    location:VENUE,
+    ctz:"Europe/Zurich"
+  });
+  return ("https://calendar.google.com/calendar/render?" + q).replace(/&/g,"&amp;");
+};
+
 // Legende
 document.getElementById("legend").innerHTML =
   Object.values(CATS).map(k=>`<span class="key"><i class="swatch" style="--k:${k.c}"></i>${k.label}</span>`).join("")
@@ -238,7 +342,7 @@ const board = document.getElementById("board");
 
 DAYS.forEach(day=>{
   // Minuten auflösen und Spuren für parallele Programmpunkte vergeben
-  const evs = day.events.map(e=>{
+  const evs = day.events.filter(e=>e.type!=="marker").map(e=>{
     const s = min(e.s);
     const raw = e.e ? min(e.e) : s + e.plan;
     return {...e, s, e:e.e?min(e.e):null, end:raw, view:Math.max(raw, s+40)};
@@ -266,15 +370,28 @@ DAYS.forEach(day=>{
     const w = 100/ev.lanes, night = ev.s >= 19*60;
     const k = CATS[ev.c];
     const time = ev.e ? `${fmt(ev.s)} – ${fmt(ev.e)}` : `${fmt(ev.s)} →`;
-    const cls = ["ev", ev.c, night?"night":"", ev.e===null?"open":"", (ev.view-ev.s)<55?"short":""].join(" ");
+    const cls = ["ev", ev.c, night?"night":"", ev.e===null?"open":"",
+                 (ev.view-ev.s)<55?"short":"", ev.lanes>=3?"tight":""].join(" ");
     return `<div class="${cls}" style="
         --k:${k.c};--kl:${k.l};
         top:${y(ev.s)}px;height:${(ev.view-ev.s)*PPM-4}px;
         left:calc(${ev.lane*w}% + 2px);width:calc(${w}% - 4px);
         animation-delay:${40+i*38}ms">
+        <a class="cal" href="${gcal(day,ev)}" target="_blank" rel="noopener"
+           title="Zu Google Calendar hinzufügen"
+           aria-label="${ev.n} zu Google Calendar hinzufügen">+</a>
         <span class="t">${time}</span>
         <span class="n">${ev.n}</span>
         ${ev.w?`<span class="s">${ev.w}</span>`:""}
+      </div>`;
+  }).join("");
+
+  const markers = day.events.filter(e=>e.type==="marker").map(e=>{
+    const s = min(e.s);
+    const link = gcal(day, {s, end:s+60, n:e.n, w:"Türöffnung", e:""});
+    return `<div class="marker" style="top:${y(s)}px">
+        <a href="${link}" target="_blank" rel="noopener"
+           aria-label="${e.n} zu Google Calendar hinzufügen">${fmt(s)} ${e.n} +</a>
       </div>`;
   }).join("");
 
@@ -282,7 +399,7 @@ DAYS.forEach(day=>{
   for(let m = START; m <= END; m += 60){
     const dark = m >= 21*60;
     rules += `<div class="rule${dark?" dark":""}" style="top:${y(m)}px"></div>`;
-    ticks += `<div class="tick${dark?" dark":""}" style="top:${y(m)}px">${fmt(m)}</div>`;
+    ticks += `<div class="tick" style="top:${y(m)}px">${fmt(m)}</div>`;
   }
 
   board.insertAdjacentHTML("beforeend", `
@@ -293,6 +410,7 @@ DAYS.forEach(day=>{
         <div class="canvas" style="height:${H}px">
           ${rules}
           <div class="dusk" style="top:${y(20*60)}px"></div>
+          ${markers}
           ${cards}
         </div>
       </div>

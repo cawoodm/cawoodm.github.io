@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Music for Life Openair 2026 — Samstag & Sonntag</title>
+<style>
+  :root{
+    --ink:#241F30;
+    --ink-soft:#5A5268;
+    --paper:#EFE9DD;
+    --line:rgba(36,31,48,.14);
+    --line-night:rgba(255,255,255,.16);
+
+    --c-konzert:#CE4A22;   --cl-konzert:#FF9A6E;
+    --c-bewegung:#2C7A66;  --cl-bewegung:#6FD9BC;
+    --c-stimme:#7B4AA6;    --cl-stimme:#C79BF0;
+    --c-natur:#6A7A24;     --cl-natur:#BDD05C;
+    --c-zeremonie:#B0801E; --cl-zeremonie:#F3C765;
+
+    --hour:90px;
+    --display:"Optima","Candara","Gill Sans","Gill Sans MT","Trebuchet MS",sans-serif;
+    --utility:ui-monospace,"SF Mono","Consolas","Liberation Mono",monospace;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--display);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:0 20px 80px}
+
+  /* ---- Kopf ---- */
+  .head{padding:56px 0 26px}
+  .eyebrow{
+    font-family:var(--utility);font-size:11px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--ink-soft);margin:0 0 18px
+  }
+  .title{
+    margin:0;font-size:clamp(30px,5.4vw,58px);font-weight:400;
+    letter-spacing:.06em;line-height:1.05
+  }
+  .title b{font-weight:600;display:block;letter-spacing:.02em}
+  .meta{
+    margin:22px 0 0;padding-top:16px;border-top:1px solid var(--line);
+    display:flex;flex-wrap:wrap;gap:8px 34px;
+    font-family:var(--utility);font-size:12px;letter-spacing:.06em;color:var(--ink-soft)
+  }
+
+  /* ---- Legende ---- */
+  .legend{
+    display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;
+    padding:18px 0 26px;font-family:var(--utility);font-size:11.5px;
+    letter-spacing:.08em;color:var(--ink-soft)
+  }
+  .key{display:flex;align-items:center;gap:8px}
+  .swatch{width:14px;height:14px;border-radius:3px;background:var(--k)}
+  .note{margin-left:auto;font-style:normal;opacity:.85}
+
+  /* ---- Board ---- */
+  .board{display:flex;gap:22px;align-items:flex-start}
+  .dayblock{display:flex;flex:1;min-width:0}
+  .dayblock + .dayblock .axis{display:none}
+
+  .axis{width:66px;flex:none;position:relative;padding-top:46px}
+  .axis-inner{position:relative}
+  .tick{
+    position:absolute;left:0;right:10px;text-align:right;transform:translateY(-50%);
+    font-family:var(--utility);font-size:11px;letter-spacing:.08em;color:var(--ink-soft)
+  }
+  .tick.dark{color:rgba(255,255,255,.62)}
+
+  .day{flex:1;min-width:0}
+  .dayname{
+    display:flex;align-items:baseline;gap:12px;height:46px;
+    border-bottom:1px solid var(--line)
+  }
+  .dayname h2{margin:0;font-size:19px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+  .dayname span{font-family:var(--utility);font-size:11.5px;letter-spacing:.1em;color:var(--ink-soft)}
+
+  /* Tageslauf: Dämmerung, Mittag, Abend, Nacht */
+  .canvas{
+    position:relative;overflow:hidden;border-radius:10px;
+    background:linear-gradient(180deg,
+      #F8DCB4 0%, #F2ECDB 11%, #E8EEE2 28%, #EFE2C9 50%,
+      #E3B894 65%, #B07C8E 72%, #5E4A78 80%, #1A1733 100%);
+  }
+  .rule{position:absolute;left:0;right:0;height:1px;background:var(--line)}
+  .rule.dark{background:var(--line-night)}
+  .dusk{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,.55)}
+  .dusk::after{
+    content:"Sonnenuntergang ≈ 20 Uhr";
+    position:absolute;right:8px;top:-16px;
+    font-family:var(--utility);font-size:10px;letter-spacing:.12em;
+    color:rgba(255,255,255,.8)
+  }
+
+  /* ---- Karten ---- */
+  .ev{
+    position:absolute;padding:8px 10px 8px 13px;border-radius:7px;overflow:hidden;
+    background:rgba(255,255,255,.88);
+    border:1px solid rgba(36,31,48,.10);
+    box-shadow:0 1px 2px rgba(36,31,48,.06);
+    opacity:0;transform:translateY(9px);
+    animation:rise .5s cubic-bezier(.2,.7,.3,1) forwards;
+  }
+  .ev::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--k)
+  }
+  .ev .t{
+    font-family:var(--utility);font-size:10.5px;letter-spacing:.07em;
+    color:var(--ink-soft);display:block;margin-bottom:3px
+  }
+  .ev .n{font-size:14px;font-weight:600;line-height:1.22;letter-spacing:.01em;display:block}
+  .ev .s{font-size:12px;line-height:1.3;color:var(--ink-soft);display:block;margin-top:2px}
+  .ev.konzert .n{letter-spacing:.09em;text-transform:uppercase;font-size:13.5px}
+  .ev.short{padding-top:6px;padding-bottom:6px}
+  .ev.short .s{display:none}
+
+  /* Abendkarten: heller Text auf dunklem Grund */
+  .ev.night{
+    background:rgba(24,20,46,.62);
+    border-color:rgba(255,255,255,.20);
+    backdrop-filter:blur(6px);
+    box-shadow:0 6px 22px rgba(10,8,26,.35);
+    color:#F3EDFF
+  }
+  .ev.night .t,.ev.night .s{color:rgba(243,237,255,.72)}
+  .ev.night::before{background:var(--kl);box-shadow:0 0 14px var(--kl)}
+
+  /* Ende nicht publiziert: Karte läuft unten aus */
+  .ev.open{
+    -webkit-mask-image:linear-gradient(180deg,#000 62%,rgba(0,0,0,.15) 100%);
+            mask-image:linear-gradient(180deg,#000 62%,rgba(0,0,0,.15) 100%);
+  }
+
+  @keyframes rise{to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){
+    .ev{animation:none;opacity:1;transform:none}
+  }
+
+  .foot{
+    margin-top:30px;padding-top:16px;border-top:1px solid var(--line);
+    font-family:var(--utility);font-size:11.5px;letter-spacing:.06em;color:var(--ink-soft)
+  }
+  .foot a{color:var(--ink);text-decoration-thickness:1px;text-underline-offset:3px}
+  .foot a:focus-visible{outline:2px solid var(--c-konzert);outline-offset:3px;border-radius:2px}
+
+  @media (max-width:820px){
+    :root{--hour:78px}
+    .board{flex-direction:column;gap:34px}
+    .dayblock + .dayblock .axis{display:block}
+    .axis{width:52px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <p class="eyebrow">Biohof Guyer · Ottenhausen, Seegräben ZH</p>
+    <h1 class="title">Music for Life Openair<b>Samstag &amp; Sonntag</b></h1>
+    <div class="meta">
+      <span>5.–6. September 2026</span>
+      <span>23 Programmpunkte</span>
+      <span>Zeitraster 07:00 – 01:00</span>
+    </div>
+  </header>
+
+  <div class="legend" id="legend"></div>
+
+  <div class="board" id="board"></div>
+
+  <p class="foot">
+    Karten mit weichem unterem Rand: Ende nicht publiziert, Dauer im Raster geschätzt.
+    Quelle: <a href="https://musicforlife-openair.ch/">musicforlife-openair.ch</a>
+  </p>
+</div>
+
+<script>
+const CATS = {
+  konzert:  {label:"Konzert",               c:"var(--c-konzert)",  l:"var(--cl-konzert)"},
+  bewegung: {label:"Körper & Bewegung",     c:"var(--c-bewegung)", l:"var(--cl-bewegung)"},
+  stimme:   {label:"Stimme",                c:"var(--c-stimme)",   l:"var(--cl-stimme)"},
+  natur:    {label:"Natur & Handwerk",      c:"var(--c-natur)",    l:"var(--cl-natur)"},
+  zeremonie:{label:"Zeremonie & Open Space",c:"var(--c-zeremonie)",l:"var(--cl-zeremonie)"}
+};
+
+// end === null: kein publiziertes Ende, `plan` ist die im Raster gezeigte Dauer in Minuten
+const DAYS = [
+  {key:"sa", name:"Samstag", date:"5. September 2026", events:[
+    {s:"07:30", e:"09:00", n:"Kundalini Yoga", w:"mit Birgit Wenzel & Karin Thomsson", c:"bewegung"},
+    {s:"10:00", e:"11:45", n:"Breathwork", w:"mit Halil Capri", c:"bewegung"},
+    {s:"10:00", e:"11:45", n:"Singcircle", w:"mit Machapapas", c:"stimme"},
+    {s:"10:00", e:"12:00", n:"Kräuterwanderung", w:"mit Sarah Zehnder", c:"natur"},
+    {s:"10:00", e:"12:00", n:"Zirkusworkshop", w:"mit Corinne Sohn", c:"natur"},
+    {s:"14:00", e:"16:00", n:"Umanaya", w:"Konzert", c:"konzert"},
+    {s:"14:00", e:"16:00", n:"Voice Activation", w:"mit Sari Seramor", c:"stimme"},
+    {s:"16:15", e:"17:15", n:"Rundgang Biohof Guyer", w:"", c:"natur"},
+    {s:"16:30", e:"17:30", n:"Community Singing", w:"mit Susie Ro", c:"stimme"},
+    {s:"18:00", e:null, plan:90, n:"Roaman", w:"Konzert", c:"konzert"},
+    {s:"20:30", e:null, plan:75, n:"Cacao Celebration", w:"mit SONQO", c:"zeremonie"},
+    {s:"21:00", e:null, plan:120, n:"Hanuman Project", w:"Konzert", c:"konzert"},
+    {s:"23:30", e:null, plan:90, n:"Meditatives Konzert", w:"mit Shai Peri", c:"zeremonie"}
+  ]},
+  {key:"so", name:"Sonntag", date:"6. September 2026", events:[
+    {s:"07:30", e:"08:30", n:"Morning Yoga", w:"mit Bettina Keller", c:"bewegung"},
+    {s:"09:00", e:"10:30", n:"Intuitives Malen", w:"mit Brit Cordes", c:"natur"},
+    {s:"10:00", e:"11:45", n:"5Rhythms®", w:"mit Susanna Dobos", c:"bewegung"},
+    {s:"10:00", e:"11:45", n:"Filzen", w:"mit Dorothea Peterhans", c:"natur"},
+    {s:"11:00", e:"12:30", n:"Singcircle", w:"mit Ananda & Friends", c:"stimme"},
+    {s:"13:00", e:null, plan:90, n:"Sari Seramor", w:"Konzert", c:"konzert"},
+    {s:"13:30", e:"14:30", n:"Open Space", w:"offenes Format", c:"zeremonie"},
+    {s:"15:00", e:"16:00", n:"Open Space", w:"offenes Format", c:"zeremonie"},
+    {s:"16:00", e:null, plan:90, n:"Susie Ro", w:"Konzert", c:"konzert"},
+    {s:"18:00", e:null, plan:90, n:"Abschlusszeremonie", w:"", c:"zeremonie"}
+  ]}
+];
+
+const START = 7*60, END = 25*60;          // 07:00 bis 01:00 des Folgetags
+const HOUR = parseInt(getComputedStyle(document.documentElement).getPropertyValue("--hour"));
+const PPM = HOUR/60;
+const H = (END-START)*PPM;
+
+const min = t => { const [h,m] = t.split(":").map(Number); return h*60+m; };
+const fmt = m => String(Math.floor(m/60)%24).padStart(2,"0")+":"+String(m%60).padStart(2,"0");
+const y = m => (m-START)*PPM;
+
+// Legende
+document.getElementById("legend").innerHTML =
+  Object.values(CATS).map(k=>`<span class="key"><i class="swatch" style="--k:${k.c}"></i>${k.label}</span>`).join("")
+  + `<span class="note">Farbe = Format · Hintergrund = Tageszeit</span>`;
+
+const board = document.getElementById("board");
+
+DAYS.forEach(day=>{
+  // Minuten auflösen und Spuren für parallele Programmpunkte vergeben
+  const evs = day.events.map(e=>{
+    const s = min(e.s);
+    const raw = e.e ? min(e.e) : s + e.plan;
+    return {...e, s, e:e.e?min(e.e):null, end:raw, view:Math.max(raw, s+40)};
+  }).sort((a,b)=> a.s-b.s || b.view-a.view);
+
+  let cluster = [], clusterEnd = -1;
+  const flush = () => {
+    const lanes = [];
+    cluster.forEach(ev=>{
+      let i = lanes.findIndex(end => end <= ev.s);
+      if(i === -1){ i = lanes.length; lanes.push(0); }
+      lanes[i] = ev.view; ev.lane = i;
+    });
+    cluster.forEach(ev => ev.lanes = lanes.length);
+    cluster = [];
+  };
+  evs.forEach(ev=>{
+    if(cluster.length && ev.s >= clusterEnd) flush();
+    cluster.push(ev);
+    clusterEnd = Math.max(clusterEnd, ev.view);
+  });
+  flush();
+
+  const cards = evs.map((ev,i)=>{
+    const w = 100/ev.lanes, night = ev.s >= 19*60;
+    const k = CATS[ev.c];
+    const time = ev.e ? `${fmt(ev.s)} – ${fmt(ev.e)}` : `${fmt(ev.s)} →`;
+    const cls = ["ev", ev.c, night?"night":"", ev.e===null?"open":"", (ev.view-ev.s)<55?"short":""].join(" ");
+    return `<div class="${cls}" style="
+        --k:${k.c};--kl:${k.l};
+        top:${y(ev.s)}px;height:${(ev.view-ev.s)*PPM-4}px;
+        left:calc(${ev.lane*w}% + 2px);width:calc(${w}% - 4px);
+        animation-delay:${40+i*38}ms">
+        <span class="t">${time}</span>
+        <span class="n">${ev.n}</span>
+        ${ev.w?`<span class="s">${ev.w}</span>`:""}
+      </div>`;
+  }).join("");
+
+  let rules = "", ticks = "";
+  for(let m = START; m <= END; m += 60){
+    const dark = m >= 21*60;
+    rules += `<div class="rule${dark?" dark":""}" style="top:${y(m)}px"></div>`;
+    ticks += `<div class="tick${dark?" dark":""}" style="top:${y(m)}px">${fmt(m)}</div>`;
+  }
+
+  board.insertAdjacentHTML("beforeend", `
+    <div class="dayblock">
+      <div class="axis"><div class="axis-inner" style="height:${H}px">${ticks}</div></div>
+      <div class="day">
+        <div class="dayname"><h2>${day.name}</h2><span>${day.date}</span></div>
+        <div class="canvas" style="height:${H}px">
+          ${rules}
+          <div class="dusk" style="top:${y(20*60)}px"></div>
+          ${cards}
+        </div>
+      </div>
+    </div>`);
+});
+</script>
+</body>
+</html>
